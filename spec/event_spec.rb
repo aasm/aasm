@@ -22,20 +22,20 @@ describe AASM::SupportingClasses::Event do
     new_event
   end
 
-  it 'should return an array of the next possible transitions for a state' do
-    new_event
-    @event.next_states(:open).size.should == 1
-    @event.next_states(:received).size.should == 1
-  end
+#  it 'should return an array of the next possible transitions for a state' do
+#    new_event
+#    @event.next_states(:open).size.should == 1
+#    @event.next_states(:received).size.should == 1
+#  end
 
-  it '#fire should run #perform on each state transition' do
-    st = mock('StateTransition')
-    st.should_receive(:perform)
-
-    new_event
-
-    @event.stub!(:next_states).and_return([st])
-    @event.fire(:closed)
-  end
+#  it '#fire should run #perform on each state transition' do
+#    st = mock('StateTransition')
+#    st.should_receive(:perform)
+#
+#    new_event
+#
+#    @event.stub!(:next_states).and_return([st])
+#    @event.fire(:closed)
+#  end
 end
 

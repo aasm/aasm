@@ -4,20 +4,19 @@ module AASM
   module SupportingClasses
     class Event
       attr_reader :name
-
+      
       def initialize(name, &block)
-        @name        = name.to_sym
+        @name = name
         @transitions = []
         instance_eval(&block) if block
       end
 
-      def next_states(from)
-        @transitions.select { |t| t.from == from }
-      end
-
-      def fire(record)
-        next_states(record).each do |transition|
-          break true if transition.perform(record)
+      def fire(obj)
+        transitions = @transitions.select { |t| t.from == obj.current_state }
+        if transitions.size == 0
+          raise AASM::InvalidTransition
+        else
+          transitions.first.to
         end
       end
 
