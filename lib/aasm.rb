@@ -49,8 +49,8 @@ module AASM
   private
   def aasm_current_state=(state)
     @aasm_current_state = state
-    if self.respond_to?(:aasm_after_update) || self.private_methods.include?('aasm_after_update')
-      aasm_after_update
+    if self.respond_to?(:aasm_persist) || self.private_methods.include?('aasm_persist')
+      aasm_persist
     end
   end
 end
