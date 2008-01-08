@@ -36,7 +36,7 @@ module AASM
       # Error if event defines no transitions?
     end
 
-    # TODO I don't much like exposing this
+    private
     def events
       @aasm_events ||= {}
     end
