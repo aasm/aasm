@@ -27,17 +27,16 @@ module AASM
 
     def event(name, &block)
       define_method("#{name.to_s}!") do
-        new_state = self.class.events[name].fire(self)
+        new_state = self.class.aasm_events[name].fire(self)
         self.aasm_current_state = new_state
         nil
       end
 
-      events[name] = AASM::SupportingClasses::Event.new(name, &block)
+      aasm_events[name] = AASM::SupportingClasses::Event.new(name, &block)
       # Error if event defines no transitions?
     end
 
-    private
-    def events
+    def aasm_events
       @aasm_events ||= {}
     end
   end
