@@ -20,7 +20,7 @@ module AASM
     
     def state(name, options={})
       define_method("#{name.to_s}?") do
-        current_state == name
+        aasm_current_state == name
       end
       self.aasm_initial_state = name unless self.aasm_initial_state
     end
@@ -28,7 +28,7 @@ module AASM
     def event(name, &block)
       define_method("#{name.to_s}!") do
         new_state = self.class.events[name].fire(self)
-        @aasm_current_state = new_state
+        self.aasm_current_state = new_state
         nil
       end
 
@@ -42,7 +42,15 @@ module AASM
     end
   end
 
-  def current_state
+  def aasm_current_state
     @aasm_current_state || self.class.aasm_initial_state
+  end
+
+  private
+  def aasm_current_state=(state)
+    @aasm_current_state = state
+    if self.respond_to?(:aasm_after_update) || self.private_methods.include?('aasm_after_update')
+      aasm_after_update
+    end
   end
 end

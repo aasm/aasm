@@ -12,11 +12,11 @@ module AASM
       end
 
       def fire(obj)
-        transitions = @transitions.select { |t| t.from == obj.current_state }
+        transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
         if transitions.size == 0
           raise AASM::InvalidTransition
         else
-          transitions.first.to
+          transitions.first.to # Should be performing here - but what's involved
         end
       end
 

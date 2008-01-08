@@ -60,7 +60,7 @@ describe AASM, '- initial states' do
   end
 
   it 'should set the initial state' do
-    @foo.current_state.should == :open
+    @foo.aasm_current_state.should == :open
   end
 
   it '#open? should be initially true' do
@@ -72,6 +72,6 @@ describe AASM, '- initial states' do
   end
 
   it 'should use the first state defined if no initial state is given' do
-    @bar.current_state.should == :read
+    @bar.aasm_current_state.should == :read
   end
 end
