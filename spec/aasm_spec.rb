@@ -1,6 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'lib', 'aasm')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'state')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'state_factory')
 
 class Foo
   include AASM
@@ -9,6 +8,7 @@ class Foo
   state :closed
 
   event :close do
+    transitions :to => :closed, :from => [:open]
   end
 end
 
@@ -45,12 +45,6 @@ describe AASM, '- instance level definitions' do
   it 'should define an event! inance method' do
     @foo.should respond_to(:close!)
   end
-
-  # TODO This isn't necessarily "in play" just yet
-  #it 'using the state macro should create a new State object' do
-  #  AASM::SupportingClasses::State.should_receive(:new).with(:open, {})
-  #  Foo.state :open
-  #end
 end
 
 describe AASM, '- initial states' do
@@ -73,5 +67,32 @@ describe AASM, '- initial states' do
 
   it 'should use the first state defined if no initial state is given' do
     @bar.aasm_current_state.should == :read
+  end
+end
+
+describe AASM, '- event firing' do
+  it 'should fire the Event' do
+    foo = Foo.new
+
+    Foo.aasm_events[:close].should_receive(:fire).with(foo)
+    foo.close!
+  end
+
+  it 'should update the current state' do
+    foo = Foo.new
+    foo.close!
+
+    foo.aasm_current_state.should == :closed
+  end
+
+  it 'should attempt to persist if aasm_persist is defined' do
+    foo = Foo.new
+    
+    def foo.aasm_persist
+    end
+
+    foo.should_receive(:aasm_persist)
+
+    foo.close!
   end
 end

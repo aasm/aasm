@@ -16,26 +16,28 @@ describe AASM::SupportingClasses::Event do
     @event.name.should == @name
   end
 
-  it 'create StateTransitions' do
+  it 'should create StateTransitions' do
     AASM::SupportingClasses::StateTransition.should_receive(:new).with({:to => :closed, :from => :open})
     AASM::SupportingClasses::StateTransition.should_receive(:new).with({:to => :closed, :from => :received})
     new_event
   end
-
-#  it 'should return an array of the next possible transitions for a state' do
-#    new_event
-#    @event.next_states(:open).size.should == 1
-#    @event.next_states(:received).size.should == 1
-#  end
-
-#  it '#fire should run #perform on each state transition' do
-#    st = mock('StateTransition')
-#    st.should_receive(:perform)
-#
-#    new_event
-#
-#    @event.stub!(:next_states).and_return([st])
-#    @event.fire(:closed)
-#  end
 end
 
+describe AASM::SupportingClasses::Event, 'when firing an event' do
+  it 'should raise an AASM::InvalidTransition error if the transitions are empty' do
+    event = AASM::SupportingClasses::Event.new(:event)
+
+    lambda { event.fire(nil) }.should raise_error(AASM::InvalidTransition)
+  end
+
+  it 'should return the state of the first matching transition it finds' do
+    event = AASM::SupportingClasses::Event.new(:event) do
+      transitions :to => :closed, :from => [:open, :received]
+    end
+
+    obj = mock('object')
+    obj.stub!(:aasm_current_state).and_return(:open)
+
+    event.fire(obj).should == :closed
+  end
+end

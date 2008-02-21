@@ -16,7 +16,7 @@ module AASM
         if transitions.size == 0
           raise AASM::InvalidTransition
         else
-          transitions.first.to # Should be performing here - but what's involved
+          transitions.first.to
         end
       end
 
