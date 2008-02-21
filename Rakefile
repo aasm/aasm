@@ -14,7 +14,6 @@ rescue Exception
   nil
 end
 
-# Version
 if `ruby -Ilib -rversion -e "print AASM::VERSION::STRING"` =~ /([0-9.]+)$/
   CURRENT_VERSION = $1
 else

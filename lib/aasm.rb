@@ -20,6 +20,7 @@ module AASM
     alias :initial_state :aasm_initial_state=
     
     def state(name, options={})
+      aasm_states << name unless aasm_states.include?(name)
       self.aasm_initial_state = name unless self.aasm_initial_state
 
       define_method("#{name.to_s}?") do
@@ -28,7 +29,9 @@ module AASM
     end
     
     def event(name, &block)
-      aasm_events[name] = AASM::SupportingClasses::Event.new(name, &block)
+      unless aasm_events.has_key?(name)
+        aasm_events[name] = AASM::SupportingClasses::Event.new(name, &block)
+      end
 
       define_method("#{name.to_s}!") do
         new_state = self.class.aasm_events[name].fire(self)
@@ -39,6 +42,10 @@ module AASM
           false
         end
       end
+    end
+
+    def aasm_states
+      @aasm_states ||= []
     end
 
     def aasm_events
