@@ -43,15 +43,20 @@ module AASM
 
   # Instance methods
   def aasm_current_state
-    # Persistance?  This won't work for activerecord objects
-    @aasm_current_state || self.class.aasm_initial_state
+    return @aasm_current_state if @aasm_current_state
+
+    if self.respond_to?(:aasm_read_state) || self.private_methods.include?('aasm_read_state')
+      @aasm_current_state = aasm_read_state
+    end
+    return @aasm_read_state if @aasm_current_state
+    self.class.aasm_initial_state
   end
 
   private
   def aasm_current_state=(state)
     @aasm_current_state = state
-    if self.respond_to?(:aasm_persist) || self.private_methods.include?('aasm_persist')
-      aasm_persist
+    if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
+      aasm_write_state
     end
   end
 end

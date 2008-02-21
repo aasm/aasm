@@ -85,14 +85,26 @@ describe AASM, '- event firing' do
     foo.aasm_current_state.should == :closed
   end
 
-  it 'should attempt to persist if aasm_persist is defined' do
+  it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
     
-    def foo.aasm_persist
+    def foo.aasm_write_state
     end
 
-    foo.should_receive(:aasm_persist)
+    foo.should_receive(:aasm_write_state)
 
     foo.close!
+  end
+end
+
+describe AASM, '- persistence' do
+  it 'should read the state if it has not been set and aasm_read_state is defined' do
+    foo = Foo.new
+    def foo.aasm_read_state
+    end
+
+    foo.should_receive(:aasm_read_state)
+
+    foo.aasm_current_state
   end
 end
