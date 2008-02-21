@@ -42,4 +42,4 @@ Spec::Rake::SpecTask.new('spec') do |t|
   t.spec_opts = ['-cfs']
 end
 
-#task :default => [:cruise]
+task :default => [:spec]
