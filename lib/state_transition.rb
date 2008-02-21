@@ -8,6 +8,17 @@ module AASM
         @opts = opts
       end
 
+      def perform(obj)
+        case @guard
+        when Symbol, String
+          obj.send(@guard)
+        when Proc
+          @guard.call(obj)
+        else
+          true
+        end
+      end
+      
       def ==(obj)
         @from == obj.from && @to == obj.to
       end

@@ -31,7 +31,7 @@ module AASM
 
       define_method("#{name.to_s}!") do
         new_state = self.class.aasm_events[name].fire(self)
-        self.aasm_current_state = new_state
+        self.aasm_current_state = new_state unless new_state.nil?
         nil
       end
     end

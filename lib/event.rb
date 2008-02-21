@@ -13,11 +13,16 @@ module AASM
 
       def fire(obj)
         transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
-        if transitions.size == 0
-          raise AASM::InvalidTransition
-        else
-          transitions.first.to
+        raise AASM::InvalidTransition if transitions.size == 0
+
+        next_state = nil
+        transitions.each do |transition|
+          if transition.perform(obj)
+            next_state = transition.to
+            break
+          end
         end
+        next_state
       end
 
       private
