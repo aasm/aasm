@@ -1,45 +1,82 @@
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-require 'spec/rake/spectask'
+# Copyright 2008 Scott Barron (scott@elitists.net)
+# All rights reserved
 
-desc 'Default: run unit tests.'
-task :default => [:clean_db, :test]
+# This file may be distributed under an MIT style license.
+# See MIT-LICENSE for details.
 
-desc 'Remove the stale db file'
-task :clean_db do
-  `rm -f #{File.dirname(__FILE__)}/test/state_machine.sqlite.db`
+begin
+  require 'rubygems'
+  require 'rake/gempackagetask'
+  require 'rake/testtask'
+  require 'rake/rdoctask'
+  require 'spec/rake/spectask'
+rescue Exception
+  nil
 end
 
-desc 'Test the acts as state machine plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
-end
+# Version
+CURRENT_VERSION = '0.0.0'
+$package_version = CURRENT_VERSION
+
+PKG_FILES = FileList['[A-Z]*',
+                     'lib/**/*.rb',
+                     'doc/**/*'
+                    ]
 
 desc 'Generate documentation for the acts as state machine plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
+rd = Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'html'
+  rdoc.template = 'doc/jamis.rb'
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Acts As State Machine'
-  rdoc.options << '--line-numbers --inline-source'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('TODO')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.title    = 'AASM'
+  rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README' << '--title' << 'AASM'
+  rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
+  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
 end
 
-desc "Run all examples with RCov"
-Spec::Rake::SpecTask.new('cruise') do |t|
-  t.spec_files = FileList['spec/*.rb']
-  t.rcov = true
-  t.rcov_opts = ['--exclude', 'spec']
+if !defined?(Gem)
+  puts "Package target requires RubyGEMs"
+else
+  spec = Gem::Specification.new do |s|
+    s.name = 'aasm'
+    s.version = $package_version
+    s.summary = 'State machine mixin for Ruby objects'
+    s.description = <<-EOF
+AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+EOF
+    s.files = PKG_FILES.to_a
+    s.require_path = 'lib'
+    s.has_rdoc = true
+    s.extra_rdoc_files = rd.rdoc_files.reject {|fn| fn =~ /\.rb$/}.to_a
+    s.rdoc_options = rd.options
+
+    s.author = 'Scott Barron'
+    s.email = 'scott@elitists.net'
+    s.homepage = 'http://rubyi.st/aasm'
+  end
+
+  package_task = Rake::GemPackageTask.new(spec) do |pkg|
+    pkg.need_zip = true
+    pkg.need_tar = true
+  end
 end
 
-desc "Run all examples"
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.spec_files = FileList['spec/*.rb']
-  t.rcov = false
-  t.spec_opts = ['-cfs']
+if !defined?(Spec)
+  puts "spec and cruise targets require RSpec"
+else
+  desc "Run all examples with RCov"
+  Spec::Rake::SpecTask.new('cruise') do |t|
+    t.spec_files = FileList['spec/*.rb']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec']
+  end
+  
+  desc "Run all examples"
+  Spec::Rake::SpecTask.new('spec') do |t|
+    t.spec_files = FileList['spec/*.rb']
+    t.rcov = false
+    t.spec_opts = ['-cfs']
+  end
 end
 
 task :default => [:spec]
