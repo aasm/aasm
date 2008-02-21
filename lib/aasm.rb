@@ -56,7 +56,7 @@ module AASM
   def aasm_current_state=(state)
     @aasm_current_state = state
     if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
-      aasm_write_state
+      aasm_write_state(state)
     end
   end
 end
