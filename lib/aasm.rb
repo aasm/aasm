@@ -10,16 +10,19 @@ module AASM
   end
 
   module ClassMethods
-    def aasm_initial_state
-      @aasm_initial_state
+    def aasm_initial_state(set_state=nil)
+      if set_state
+        aasm_initial_state = set_state
+      else
+        @aasm_initial_state
+      end
     end
     
     def aasm_initial_state=(state)
       @aasm_initial_state = state
     end
-    alias :initial_state :aasm_initial_state=
     
-    def state(name, options={})
+    def aasm_state(name, options={})
       aasm_states << name unless aasm_states.include?(name)
       self.aasm_initial_state = name unless self.aasm_initial_state
 
@@ -28,7 +31,7 @@ module AASM
       end
     end
     
-    def event(name, &block)
+    def aasm_event(name, &block)
       unless aasm_events.has_key?(name)
         aasm_events[name] = AASM::SupportingClasses::Event.new(name, &block)
       end

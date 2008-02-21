@@ -2,33 +2,33 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
 class Foo
   include AASM
-  initial_state :open
-  state :open
-  state :closed
+  aasm_initial_state :open
+  aasm_state :open
+  aasm_state :closed
 
-  event :close do
+  aasm_event :close do
     transitions :to => :closed, :from => [:open]
   end
 end
 
 class Bar
   include AASM
-  state :read
-  state :ended
+  aasm_state :read
+  aasm_state :ended
 end
 
 
 describe AASM, '- class level definitions' do
   it 'should define a class level initial_state() method on its including class' do
-    Foo.should respond_to(:initial_state)
+    Foo.should respond_to(:aasm_initial_state)
   end
 
   it 'should define a class level state() method on its including class' do
-    Foo.should respond_to(:state)
+    Foo.should respond_to(:aasm_state)
   end
 
   it 'should define a class level event() method on its including class' do
-    Foo.should respond_to(:event)
+    Foo.should respond_to(:aasm_event)
   end
 end
 

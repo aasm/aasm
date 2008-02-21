@@ -3,33 +3,33 @@ require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'aasm')
 class Conversation
   include AASM
 
-  initial_state :needs_attention
+  aasm_initial_state :needs_attention
 
-  state :needs_attention
-  state :read
-  state :closed
-  state :awaiting_response
-  state :junk
+  aasm_state :needs_attention
+  aasm_state :read
+  aasm_state :closed
+  aasm_state :awaiting_response
+  aasm_state :junk
 
-  event :new_message do
+  aasm_event :new_message do
   end
 
-  event :view do
+  aasm_event :view do
     transitions :to => :read, :from => [:needs_attention]
   end
 
-  event :reply do
+  aasm_event :reply do
   end
 
-  event :close do
+  aasm_event :close do
     transitions :to => :closed, :from => [:read, :awaiting_response]
   end
 
-  event :junk do
+  aasm_event :junk do
     transitions :to => :junk, :from => [:read]
   end
 
-  event :unjunk do
+  aasm_event :unjunk do
   end
 
   def initialize(persister)
