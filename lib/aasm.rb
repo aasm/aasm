@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'event')
+require File.join(File.dirname(__FILE__), 'state')
 
 module AASM
   class InvalidTransition < Exception
