@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'lib', 'event')
+require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
 describe AASM::SupportingClasses::Event do
   before(:each) do
