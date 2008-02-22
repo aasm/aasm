@@ -1,0 +1,19 @@
+This is AASM
+
+AASM is an evolution of the Rails plugin acts_as_state_machine.
+
+AASM Features
+
+Everything you've come to know and love from acts_as_state_machine, and then some:
+
+- Separation from Rails
+  * Mix into any Ruby class
+- Persistence hooks so state can be saved in whatever floats your boat
+  * e.g. ActiveRecord, Marshal, etc.
+
+See the TODO for more.
+
+
+gem install aasm
+
+scott@elitists.net
