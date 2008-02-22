@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), 'event')
 require File.join(File.dirname(__FILE__), 'state')
+require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
   class InvalidTransition < Exception
@@ -7,6 +8,7 @@ module AASM
   
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
+    AASM::Persistence.set_persistence(base)
   end
 
   module ClassMethods
@@ -63,7 +65,7 @@ module AASM
     if self.respond_to?(:aasm_read_state) || self.private_methods.include?('aasm_read_state')
       @aasm_current_state = aasm_read_state
     end
-    return @aasm_read_state if @aasm_current_state
+    return @aasm_current_state if @aasm_current_state
     self.class.aasm_initial_state
   end
 
