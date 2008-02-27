@@ -1,1 +1,7 @@
+* Ensure that a state is written for a new record even if aasm_current_state or
+  {state}= are never called.
+
+* Fix AR persistence so new records have their state set. [Joao Paulo Lins]
+
 * Make #event! methods return a boolean [Joel Chippindale]
+
