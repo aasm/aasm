@@ -25,6 +25,10 @@ module AASM
         next_state
       end
 
+      def transitions_from_state?(state)
+        @transitions.any? { |t| t.from == state }
+      end
+      
       private
       def transitions(trans_opts)
         Array(trans_opts[:from]).each do |s|

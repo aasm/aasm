@@ -1,3 +1,5 @@
+* Add #aasm_events_for_state and #aasm_events_for_current_state [Joao Paulo Lins]
+
 * Ensure that a state is written for a new record even if aasm_current_state or
   {state}= are never called.
 

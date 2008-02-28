@@ -69,6 +69,15 @@ module AASM
     self.class.aasm_initial_state
   end
 
+  def aasm_events_for_current_state
+    aasm_events_for_state(aasm_current_state)
+  end
+
+  def aasm_events_for_state(state)
+    events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
+    events.map {|event| event.name}
+  end
+
   private
   def aasm_current_state=(state)
     @aasm_current_state = state
