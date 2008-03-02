@@ -41,9 +41,17 @@ module AASM
       define_method("#{name.to_s}!") do
         new_state = self.class.aasm_events[name].fire(self)
         unless new_state.nil?
+          if self.respond_to?(:aasm_event_fired)
+            self.aasm_event_fired(self.aasm_current_state, new_state)
+          end
+          
           self.aasm_current_state = new_state
           true
         else
+          if self.respond_to?(:aasm_event_failed)
+            self.aasm_event_failed(name)
+          end
+          
           false
         end
       end
