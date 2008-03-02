@@ -107,3 +107,18 @@ describe AASM, '- persistence' do
     foo.aasm_current_state
   end
 end
+
+describe AASM, '- getting events for a state' do
+  it '#aasm_events_for_current_state should use current state' do
+    foo = Foo.new
+    foo.should_receive(:aasm_current_state)
+    foo.aasm_events_for_current_state
+  end
+
+  it '#aasm_events_for_current_state should use aasm_events_for_state' do
+    foo = Foo.new
+    foo.stub!(:aasm_current_state).and_return(:foo)
+    foo.should_receive(:aasm_events_for_state).with(:foo)
+    foo.aasm_events_for_current_state
+  end
+end

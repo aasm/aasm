@@ -9,6 +9,5 @@ Cool ideas from users:
 
 * Support multiple state machines on one object (Chris Nelson)
 * http://justbarebones.blogspot.com/2007/11/actsasstatemachine-enhancements.html (Chetan Patil)
-* next_events_for_current_state (Nick Plante)
 * transition logging (Artem Vasiliev)
 * timestamp column for state change on AR (Mike Ferrier)
