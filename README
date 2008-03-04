@@ -1,19 +1,67 @@
-This is AASM
+= AASM - Ruby state machines
 
-AASM is an evolution of the Rails plugin acts_as_state_machine.
+This package contains AASM, a library for adding finite state machines to Ruby classes.
 
-AASM Features
+AASM started as the acts_as_state_machine plugin but has evolved into a more generic library that no longer targets only ActiveRecord models.
 
-Everything you've come to know and love from acts_as_state_machine, and then some:
+AASM has the following features:
 
-- Separation from Rails
-  * Mix into any Ruby class
-- Persistence hooks so state can be saved in whatever floats your boat
-  * e.g. ActiveRecord, Marshal, etc.
+* Feature
 
-See the TODO for more.
+* Feature
 
 
-gem install aasm
+== Download
 
-scott@elitists.net
+The latest AASM can currently be pulled from the git repository on github.
+
+* http://github.com/rubyist/aasm/tree/master
+
+A release and a gem are forthcoming.
+
+
+
+== Installation
+
+Until the gem release is made your best bet is to build the gem yourself and install it.
+
+  % rake gem
+  % sudo gem install pkg/aasm-3.0.0.gem
+
+
+== Simple Example
+
+Here's a quick example highlighting some of the features.
+
+  class Conversation
+    include AASM
+
+    aasm_initial_state :new
+
+    aasm_state :new
+    aasm_state :read
+    aasm_state :closed
+
+
+    aasm_event :view do
+      transitions :to => :read, :from => [:new]
+    end
+
+    aasm_event :close do
+      transitions :to => :closed, :from => [:read, :new]
+    end
+  end
+
+= Other Stuff
+
+Author::  Scott Barron <scott@elitists.net>
+License:: Copyright 2006, 2007, 2008 by Scott Barron.
+          Released under an MIT-style license.  See the LICENSE  file
+          included in the distribution.
+
+== Warranty
+
+This software is provided "as is" and without any express or
+implied warranties, including, without limitation, the implied
+warranties of merchantibility and fitness for a particular
+purpose.
