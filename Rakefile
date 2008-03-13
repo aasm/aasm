@@ -32,8 +32,8 @@ rd = Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.template = 'doc/jamis.rb'
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'AASM'
-  rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README' << '--title' << 'AASM'
-  rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
+  rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
+  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
 end
 
