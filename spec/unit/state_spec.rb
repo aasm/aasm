@@ -1,13 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-
-
-
 # TODO These are specs ported from original aasm
 describe AASM::SupportingClasses::State do
   before(:each) do
     @name    = :astate
-    @options = {}
+    @options = { :crazy_custom_key => 'key' }
     @record  = mock('record')
   end
 
@@ -19,6 +16,12 @@ describe AASM::SupportingClasses::State do
     new_state
 
     @state.name.should == :astate
+  end
+  
+  it 'should set the options and expose them as options' do
+    new_state
+    
+    @state.options.should == @options
   end
 
   it '#entering should not run_transition_action if :enter option is not passed' do

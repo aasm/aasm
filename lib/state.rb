@@ -1,19 +1,19 @@
 module AASM
   module SupportingClasses
     class State
-      attr_reader :name
+      attr_reader :name, :options
 
-      def initialize(name, opts={})
-        @name, @opts = name, opts
+      def initialize(name, options={})
+        @name, @options = name, options
       end
 
       def entering(record)
-        enteract = @opts[:enter]
+        enteract = @options[:enter]
         record.send(:run_transition_action, enteract) if enteract
       end
 
       def entered(record)
-        afteractions = @opts[:after]
+        afteractions = @options[:after]
         return unless afteractions
         Array(afteractions).each do |afteract|
           record.send(:run_transition_action, afteract)
@@ -21,7 +21,7 @@ module AASM
       end
 
       def exited(record)
-        exitact  = @opts[:exit]
+        exitact  = @options[:exit]
         record.send(:run_transition_action, exitact) if exitact
       end
     end
