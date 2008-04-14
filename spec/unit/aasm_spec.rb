@@ -27,16 +27,36 @@ end
 
 
 describe AASM, '- class level definitions' do
-  it 'should define a class level initial_state() method on its including class' do
+  it 'should define a class level aasm_initial_state() method on its including class' do
     Foo.should respond_to(:aasm_initial_state)
   end
 
-  it 'should define a class level state() method on its including class' do
+  it 'should define a class level aasm_state() method on its including class' do
     Foo.should respond_to(:aasm_state)
   end
 
-  it 'should define a class level event() method on its including class' do
+  it 'should define a class level aasm_event() method on its including class' do
     Foo.should respond_to(:aasm_event)
+  end
+  
+  it 'should define a class level aasm_states() method on its including class' do
+    Foo.should respond_to(:aasm_states)
+  end
+  
+  it 'should define a class level aasm_states_for_select() method on its including class' do
+    Foo.should respond_to(:aasm_states_for_select)
+  end
+
+  it 'should define a class level aasm_events() method on its including class' do
+    Foo.should respond_to(:aasm_events)
+  end
+
+end
+
+
+describe AASM, '- aasm_states_for_select' do
+  it "should return a select friendly array of states in the form of [['Friendly name', :state_name]]" do
+    Foo.aasm_states_for_select.should == [['Open', :open], ['Closed', :closed]]
   end
 end
 

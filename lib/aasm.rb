@@ -64,6 +64,11 @@ module AASM
     def aasm_events
       @aasm_events ||= {}
     end
+    
+    def aasm_states_for_select
+      aasm_states.collect { |state| [state.to_s.gsub(/_/, ' ').capitalize, state] }
+    end
+    
   end
 
   # Instance methods
