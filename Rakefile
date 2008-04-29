@@ -22,9 +22,9 @@ end
 $package_version = CURRENT_VERSION
 
 PKG_FILES = FileList['[A-Z]*',
-                     'lib/**/*.rb',
-                     'doc/**/*'
-                    ]
+'lib/**/*.rb',
+'doc/**/*'
+]
 
 desc 'Generate documentation for the acts as state machine plugin.'
 rd = Rake::RDocTask.new(:rdoc) do |rdoc|
@@ -45,8 +45,8 @@ else
     s.version = $package_version
     s.summary = 'State machine mixin for Ruby objects'
     s.description = <<-EOF
-AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
-EOF
+    AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+    EOF
     s.files = PKG_FILES.to_a
     s.require_path = 'lib'
     s.has_rdoc = true
@@ -73,12 +73,21 @@ else
     t.rcov = true
     t.rcov_opts = ['--exclude', 'spec']
   end
-  
+
   desc "Run all examples"
   Spec::Rake::SpecTask.new('spec') do |t|
     t.spec_files = FileList['spec/**/*.rb']
     t.rcov = false
     t.spec_opts = ['-cfs']
+  end
+end
+
+if !defined?(Gem)
+  puts "Package target requires RubyGEMs"
+else
+  desc "sudo gem uninstall aasm && rake gem && sudo gem install pkg/aasm-3.0.0.gem"
+  task :reinstall do
+    puts `sudo gem uninstall aasm && rake gem && sudo gem install pkg/aasm-3.0.0.gem`
   end
 end
 

@@ -11,6 +11,10 @@ module AASM
       # * WriteState
       # * WriteStateWithoutPersistence
       #
+      # Adds
+      #
+      #   before_validation_on_create :aasm_ensure_initial_state
+      #
       # As a result, it doesn't matter when you define your methods - the following 2 are equivalent
       #
       #   class Foo < ActiveRecord::Base
@@ -94,13 +98,20 @@ module AASM
 
         private
         
-        # Called from before_validation_on_create to ensure
-        # that if there is a nil value in the underlying aasm_state
-        # column, the initial state is used instead
+        # Ensures that if the aasm_state column is nil and the record is new
+        # that the initial state gets populated before validation on create
         #
         #   foo = Foo.new
-        #   foo.save
-        #   foo.aasm_state # => the initial state
+        #   foo.aasm_state # => nil
+        #   foo.valid?
+        #   foo.aasm_state # => "open" (where :open is the initial state)
+        #
+        #
+        #   foo = Foo.find(:first)
+        #   foo.aasm_state # => 1
+        #   foo.aasm_state = nil
+        #   foo.valid?
+        #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
           send("#{self.class.aasm_column}=", self.aasm_current_state.to_s)
