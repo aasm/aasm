@@ -33,6 +33,7 @@ module AASM
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::ReadState) unless base.method_defined?(:aasm_read_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)        
+        base.before_validation_on_create :aasm_ensure_initial_state
       end
 
       module ClassMethods
@@ -89,6 +90,20 @@ module AASM
         #
         def aasm_current_state
           @current_state = aasm_read_state
+        end
+
+        private
+        
+        # Called from before_validation_on_create to ensure
+        # that if there is a nil value in the underlying aasm_state
+        # column, the initial state is used instead
+        #
+        #   foo = Foo.new
+        #   foo.save
+        #   foo.aasm_state # => the initial state
+        #
+        def aasm_ensure_initial_state
+          send("#{self.class.aasm_column}=", self.aasm_current_state.to_s)
         end
 
       end

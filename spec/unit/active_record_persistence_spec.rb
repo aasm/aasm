@@ -157,6 +157,24 @@ begin
       foo.aasm_current_state.should be_nil
     end
 
+    it "should have aasm_ensure_initial_state" do
+      foo = Foo.new
+      foo.send :aasm_ensure_initial_state
+    end
+
+    it "should call aasm_ensure_initial_state on validation before create" do
+      foo = Foo.new
+      foo.should_receive(:aasm_ensure_initial_state).and_return(true)
+      foo.valid?
+    end
+
+    it "should call aasm_ensure_initial_state on validation before create" do
+      foo = Foo.new
+      foo.stub!(:new_record?).and_return(false)
+      foo.should_not_receive(:aasm_ensure_initial_state)
+      foo.valid?
+    end
+    
   end
 
   # TODO: figure out how to test ActiveRecord reload! without a database
