@@ -1,3 +1,7 @@
+* Specs and bug fixes for the ActiveRecordPersistence, keeping persistence columns in sync
+  Allowing for nil values in states for active record
+  New non-(!) methods that allow for firing events without persisting [Jeff Dean]
+
 * Added aasm_states_for_select that will return a select friendly collection of states. 
 
 * Add some event callbacks, #aasm_event_fired(from, to), and #aasm_event_failed(event)

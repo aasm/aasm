@@ -97,7 +97,7 @@ describe AASM, '- initial states' do
   end
 end
 
-describe AASM, '- event firing' do
+describe AASM, '- event firing with persistence' do
   it 'should fire the Event' do
     foo = Foo.new
 
@@ -121,6 +121,33 @@ describe AASM, '- event firing' do
     foo.should_receive(:aasm_write_state)
 
     foo.close!
+  end
+end
+
+describe AASM, '- event firing without persistence' do
+  it 'should fire the Event' do
+    foo = Foo.new
+
+    Foo.aasm_events[:close].should_receive(:fire).with(foo)
+    foo.close
+  end
+
+  it 'should update the current state' do
+    foo = Foo.new
+    foo.close
+
+    foo.aasm_current_state.should == :closed
+  end
+
+  it 'should attempt to persist if aasm_write_state is defined' do
+    foo = Foo.new
+    
+    def foo.aasm_write_state
+    end
+
+    foo.should_receive(:aasm_write_state_without_persistence)
+
+    foo.close
   end
 end
 

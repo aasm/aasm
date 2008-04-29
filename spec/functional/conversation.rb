@@ -45,4 +45,5 @@ class Conversation
   def aasm_write_state(state)
     @persister.write_state(state)
   end
+
 end

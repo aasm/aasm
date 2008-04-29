@@ -1,5 +1,8 @@
 module AASM
   module Persistence
+    
+    # Checks to see this class or any of it's superclasses inherit from
+    # ActiveRecord::Base and if so includes ActiveRecordPersistence
     def self.set_persistence(base)
       # Use a fancier auto-loading thingy, perhaps.  When there are more persistence engines.
       hierarchy = base.ancestors.map {|klass| klass.to_s}
