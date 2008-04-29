@@ -1,0 +1,24 @@
+require 'rake'
+
+PKG_FILES = FileList['[A-Z]*',
+'lib/**/*.rb',
+'doc/**/*'
+]
+
+Gem::Specification.new do |s|
+  s.name = 'aasm'
+  s.version = "0.0.1"
+  s.summary = 'State machine mixin for Ruby objects'
+  s.description = <<-EOF
+AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+EOF
+  s.files = PKG_FILES.to_a
+  s.require_path = 'lib'
+  s.has_rdoc = true
+  s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG']
+  s.rdoc_options = '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
+  
+  s.author = 'Scott Barron'
+  s.email = 'scott@elitists.net'
+  s.homepage = 'http://rubyi.st/aasm'
+end
