@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = <<-EOF
 AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
 EOF
-  s.files = PKG_FILES.to_a
+  s.files = PKG_FILES
   s.require_path = 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG']
@@ -15,5 +15,5 @@ EOF
   
   s.author = 'Scott Barron'
   s.email = 'scott@elitists.net'
-  s.homepage = 'http://rubyi.st/aasm'
+  s.homepage = 'http://github.com/rubyist/aasm'
 end
