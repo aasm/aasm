@@ -54,7 +54,7 @@ Here's a quick example highlighting some of the features.
 
 = Other Stuff
 
-Author::  Scott Barron <scott@elitists.net>
+Author::  Scott Barron <scott at elitists dot net>
 License:: Copyright 2006, 2007, 2008 by Scott Barron.
           Released under an MIT-style license.  See the LICENSE  file
           included in the distribution.

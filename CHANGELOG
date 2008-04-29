@@ -2,6 +2,7 @@
   Allowing for nil values in states for active record
   Only set state to default state before_validation_on_create
   New rake task to uninstall, build and reinstall the gem (useful for development)
+  Changed scott's email address to protect it from spambots when publishing rdocs
   New non-(!) methods that allow for firing events without persisting [Jeff Dean]
 
 * Added aasm_states_for_select that will return a select friendly collection of states. 
