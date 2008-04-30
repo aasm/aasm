@@ -1,5 +1,5 @@
 module AASM
   module VERSION
-    STRING = '3.0.0'
+    STRING = '0.0.2'
   end
 end

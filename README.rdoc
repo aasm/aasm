@@ -23,10 +23,15 @@ A release and a gem are forthcoming.
 
 == Installation
 
-Until the gem release is made your best bet is to build the gem yourself and install it.
+=== From GitHub hosted gems
+
+  % sudo gem sources -a http://gems.github.com # (you only need to do this once)
+  % sudo gem install rubyist-aasm
+
+=== Building your own gems
 
   % rake gem
-  % sudo gem install pkg/aasm-3.0.0.gem
+  % sudo gem install pkg/aasm-0.0.2.gem
 
 
 == Simple Example
