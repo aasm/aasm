@@ -6,7 +6,7 @@ class Foo
   aasm_state :open
   aasm_state :closed
 
-  aasm_event :close do
+  aasm_event :close, :success => :success_callback do
     transitions :to => :closed, :from => [:open]
   end
 
@@ -16,6 +16,9 @@ class Foo
 
   def always_false
     false
+  end
+
+  def success_callback
   end
 end
 
@@ -110,6 +113,14 @@ describe AASM, '- event firing with persistence' do
     foo.close!
 
     foo.aasm_current_state.should == :closed
+  end
+
+  it 'should call the success callback if one was provided' do
+    foo = Foo.new
+
+    foo.should_receive(:success_callback)
+
+    foo.close!
   end
 
   it 'should attempt to persist if aasm_write_state is defined' do

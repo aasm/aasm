@@ -3,10 +3,11 @@ require File.join(File.dirname(__FILE__), 'state_transition')
 module AASM
   module SupportingClasses
     class Event
-      attr_reader :name
+      attr_reader :name, :success
       
-      def initialize(name, &block)
+      def initialize(name, options = {}, &block)
         @name = name
+        @success = options[:success]
         @transitions = []
         instance_eval(&block) if block
       end

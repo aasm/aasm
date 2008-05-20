@@ -33,9 +33,9 @@ module AASM
       end
     end
     
-    def aasm_event(name, &block)
+    def aasm_event(name, options = {}, &block)
       unless aasm_events.has_key?(name)
-        aasm_events[name] = AASM::SupportingClasses::Event.new(name, &block)
+        aasm_events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
       end
 
       define_method("#{name.to_s}!") do
@@ -46,6 +46,9 @@ module AASM
           end
           
           self.aasm_current_state_with_persistence = new_state
+
+          self.send(self.class.aasm_events[name].success) if self.class.aasm_events[name].success
+
           true
         else
           if self.respond_to?(:aasm_event_failed)

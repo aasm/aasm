@@ -3,10 +3,11 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 describe AASM::SupportingClasses::Event do
   before(:each) do
     @name = :close_order
+    @success = :success_callback
   end
 
   def new_event
-    @event = AASM::SupportingClasses::Event.new(@name) do
+    @event = AASM::SupportingClasses::Event.new(@name, {:success => @success}) do
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -14,6 +15,11 @@ describe AASM::SupportingClasses::Event do
   it 'should set the name' do
     new_event
     @event.name.should == @name
+  end
+
+  it 'should set the success option' do
+    new_event
+    @event.success.should == @success
   end
 
   it 'should create StateTransitions' do
