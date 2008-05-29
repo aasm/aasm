@@ -1,13 +1,14 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'aasm')
 
 begin
+  require 'rubygems'
   require 'active_record'
 
   # A dummy class for mocking the activerecord connection class
   class Connection
   end
 
-  class Foo < ActiveRecord::Base
+  class FooBar < ActiveRecord::Base
     include AASM
 
     # Fake this column for testing purposes
@@ -51,9 +52,9 @@ begin
     end    
   end
 
-  describe Foo, "class methods" do
+  describe FooBar, "class methods" do
     before(:each) do
-      @klass = Foo
+      @klass = FooBar
     end
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
@@ -115,61 +116,61 @@ begin
     end    
   end
 
-  describe Foo, "instance methods" do
+  describe FooBar, "instance methods" do
     before(:each) do
       connection = mock(Connection, :columns => [])
-      Foo.stub!(:connection).and_return(connection)
+      FooBar.stub!(:connection).and_return(connection)
     end
 
     it "should respond to aasm read state when not previously defined" do
-      Foo.new.should respond_to(:aasm_read_state)
+      FooBar.new.should respond_to(:aasm_read_state)
     end
 
     it "should respond to aasm write state when not previously defined" do
-      Foo.new.should respond_to(:aasm_write_state)
+      FooBar.new.should respond_to(:aasm_write_state)
     end
 
     it "should respond to aasm write state without persistence when not previously defined" do
-      Foo.new.should respond_to(:aasm_write_state_without_persistence)
+      FooBar.new.should respond_to(:aasm_write_state_without_persistence)
     end
 
     it "should return the initial state when new and the aasm field is nil" do
-      Foo.new.aasm_current_state.should == :open
+      FooBar.new.aasm_current_state.should == :open
     end
 
     it "should return the aasm column when new and the aasm field is not nil" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.aasm_state = "closed"
       foo.aasm_current_state.should == :closed
     end
 
     it "should return the aasm column when not new and the aasm_column is not nil" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.stub!(:new_record?).and_return(false)
       foo.aasm_state = "state"
       foo.aasm_current_state.should == :state
     end
 
     it "should allow a nil state" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.stub!(:new_record?).and_return(false)
       foo.aasm_state = nil
       foo.aasm_current_state.should be_nil
     end
 
     it "should have aasm_ensure_initial_state" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.send :aasm_ensure_initial_state
     end
 
     it "should call aasm_ensure_initial_state on validation before create" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.should_receive(:aasm_ensure_initial_state).and_return(true)
       foo.valid?
     end
 
     it "should call aasm_ensure_initial_state on validation before create" do
-      foo = Foo.new
+      foo = FooBar.new
       foo.stub!(:new_record?).and_return(false)
       foo.should_not_receive(:aasm_ensure_initial_state)
       foo.valid?
