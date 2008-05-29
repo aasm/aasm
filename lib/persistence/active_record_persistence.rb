@@ -74,6 +74,30 @@ module AASM
           @aasm_column
         end
 
+        def find_in_state(number, state, *args)
+          with_state_scope state do
+            find(number, *args)
+          end
+        end
+
+        def count_in_state(state, *args)
+          with_state_scope state do
+            count(*args)
+          end
+        end
+
+        def calculate_in_state(state, *args)
+          with_state_scope state do
+            calculate(*args)
+          end
+        end
+
+        protected
+        def with_state_scope(state)
+          with_scope :find => {:conditions => ["#{table_name}.#{aasm_column} = ?", state.to_s]} do
+            yield if block_given?
+          end
+        end
       end
 
       module InstanceMethods
