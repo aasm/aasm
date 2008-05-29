@@ -1,3 +1,5 @@
+* Incremented version number
+* Cleaned up aasm_states_for_select to return the value as a string
 * Specs and bug fixes for the ActiveRecordPersistence, keeping persistence columns in sync
   Allowing for nil values in states for active record
   Only set state to default state before_validation_on_create
