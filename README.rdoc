@@ -6,10 +6,10 @@ AASM started as the acts_as_state_machine plugin but has evolved into a more gen
 
 AASM has the following features:
 
-* Feature
-
-* Feature
-
+* States
+* Machines
+* Events
+* Transitions
 
 == Download
 
