@@ -58,8 +58,8 @@ end
 
 
 describe AASM, '- aasm_states_for_select' do
-  it "should return a select friendly array of states in the form of [['Friendly name', :state_name]]" do
-    Foo.aasm_states_for_select.should == [['Open', :open], ['Closed', :closed]]
+  it "should return a select friendly array of states in the form of [['Friendly name', 'state_name']]" do
+    Foo.aasm_states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
   end
 end
 

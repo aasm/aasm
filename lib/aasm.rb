@@ -88,7 +88,7 @@ module AASM
     end
     
     def aasm_states_for_select
-      aasm_states.collect { |state| [state.to_s.gsub(/_/, ' ').capitalize, state] }
+      aasm_states.collect { |state| [state.to_s.gsub(/_/, ' ').capitalize, state.to_s] }
     end
     
   end
