@@ -36,7 +36,19 @@ module AASM
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::ReadState) unless base.method_defined?(:aasm_read_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
-        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)        
+        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
+        
+        if base.respond_to?(:named_scope)
+          base.extend(AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods)
+          
+          base.class_eval do
+            class << self
+              alias_method :aasm_state_without_named_scope, :aasm_state
+              alias_method :aasm_state, :aasm_state_with_named_scope
+            end
+          end
+        end
+        
         base.before_validation_on_create :aasm_ensure_initial_state
       end
 
@@ -210,6 +222,13 @@ module AASM
             send(self.class.aasm_column).nil? ? nil : send(self.class.aasm_column).to_sym
           end
         end
+      end
+
+      module NamedScopeMethods
+        def aasm_state_with_named_scope name, options = {}
+          aasm_state_without_named_scope name, options
+          self.named_scope name, :conditions => {self.aasm_column => name.to_s} unless self.scopes.include?(name)
+        end       
       end
     end
   end
