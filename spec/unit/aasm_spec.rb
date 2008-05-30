@@ -190,7 +190,7 @@ describe AASM, '- getting events for a state' do
 end
 
 describe AASM, '- event callbacks' do
-  it 'should call aasm_event_fired if defined and successful' do
+  it 'should call aasm_event_fired if defined and successful for bang fire' do
     foo = Foo.new
     def foo.aasm_event_fired(from, to)
     end
@@ -200,7 +200,17 @@ describe AASM, '- event callbacks' do
     foo.close!
   end
 
-  it 'should call aasm_event_failed if defined and transition failed' do
+    it 'should call aasm_event_fired if defined and successful for non-bang fire' do
+    foo = Foo.new
+    def foo.aasm_event_fired(from, to)
+    end
+
+    foo.should_receive(:aasm_event_fired)
+
+    foo.close
+  end
+
+  it 'should call aasm_event_failed if defined and transition failed for bang fire' do
     foo = Foo.new
     def foo.aasm_event_failed(event)
     end
@@ -208,6 +218,16 @@ describe AASM, '- event callbacks' do
     foo.should_receive(:aasm_event_failed)
 
     foo.null!
+  end
+
+  it 'should call aasm_event_failed if defined and transition failed for non-bang fire' do
+    foo = Foo.new
+    def foo.aasm_event_failed(event)
+    end
+
+    foo.should_receive(:aasm_event_failed)
+
+    foo.null
   end
 end
 
