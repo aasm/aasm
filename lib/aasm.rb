@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), 'event')
 require File.join(File.dirname(__FILE__), 'state')
+require File.join(File.dirname(__FILE__), 'state_machine')
 require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
@@ -9,19 +10,20 @@ module AASM
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
     AASM::Persistence.set_persistence(base)
+    AASM::StateMachineFactory[base] = AASM::StateMachine.new('')
   end
 
   module ClassMethods
     def aasm_initial_state(set_state=nil)
       if set_state
-        aasm_initial_state = set_state
+        AASM::StateMachineFactory[self].initial_state = set_state
       else
-        @aasm_initial_state
+        AASM::StateMachineFactory[self].initial_state
       end
     end
     
     def aasm_initial_state=(state)
-      @aasm_initial_state = state
+      AASM::StateMachineFactory[self].initial_state = state
     end
     
     def aasm_state(name, options={})
