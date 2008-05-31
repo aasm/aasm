@@ -13,5 +13,9 @@ module AASM
       @states = []
       @events = []
     end
+
+    def create_state(name, options)
+      @states << AASM::SupportingClasses::State.new(name, options) unless @states.include?(name)
+    end
   end
 end

@@ -27,8 +27,9 @@ module AASM
     end
     
     def aasm_state(name, options={})
-      aasm_states << AASM::SupportingClasses::State.new(name, options) unless aasm_states.include?(name)
-      self.aasm_initial_state = name unless self.aasm_initial_state
+      sm = AASM::StateMachineFactory[self]
+      sm.create_state(name, options)
+      sm.initial_state = name unless sm.initial_state
 
       define_method("#{name.to_s}?") do
         aasm_current_state == name
@@ -50,7 +51,7 @@ module AASM
     end
 
     def aasm_states
-      @aasm_states ||= []
+      AASM::StateMachineFactory[self].states
     end
 
     def aasm_events
@@ -58,7 +59,7 @@ module AASM
     end
     
     def aasm_states_for_select
-      aasm_states.map { |state| state.for_select }
+      AASM::StateMachineFactory[self].states.map { |state| state.for_select }
     end
     
   end
@@ -99,7 +100,7 @@ module AASM
   end
 
   def aasm_state_object_for_state(name)
-    self.class.aasm_states.find {|s| s == name}
+    AASM::StateMachineFactory[self.class].states.find {|s| s == name}
   end
 
   def aasm_fire_event(name, persist)
