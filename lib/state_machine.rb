@@ -11,7 +11,7 @@ module AASM
       @name   = name
       @initial_state = nil
       @states = []
-      @events = []
+      @events = {}
     end
 
     def create_state(name, options)

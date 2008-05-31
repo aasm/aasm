@@ -37,8 +37,10 @@ module AASM
     end
     
     def aasm_event(name, options = {}, &block)
-      unless aasm_events.has_key?(name)
-        aasm_events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
+      sm = AASM::StateMachineFactory[self]
+      
+      unless sm.events.has_key?(name)
+        sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
       end
 
       define_method("#{name.to_s}!") do
@@ -55,7 +57,7 @@ module AASM
     end
 
     def aasm_events
-      @aasm_events ||= {}
+      AASM::StateMachineFactory[self].events
     end
     
     def aasm_states_for_select
@@ -100,7 +102,7 @@ module AASM
   end
 
   def aasm_state_object_for_state(name)
-    AASM::StateMachineFactory[self.class].states.find {|s| s == name}
+    self.class.aasm_states.find {|s| s == name}
   end
 
   def aasm_fire_event(name, persist)
