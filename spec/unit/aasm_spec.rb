@@ -3,8 +3,8 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 class Foo
   include AASM
   aasm_initial_state :open
-  aasm_state :open
-  aasm_state :closed
+  aasm_state :open, :exit => :exit
+  aasm_state :closed, :enter => :enter
 
   aasm_event :close, :success => :success_callback do
     transitions :to => :closed, :from => [:open]
@@ -19,6 +19,11 @@ class Foo
   end
 
   def success_callback
+  end
+
+  def enter
+  end
+  def exit
   end
 end
 
@@ -231,4 +236,18 @@ describe AASM, '- event callbacks' do
   end
 end
 
+describe AASM, '- state actions' do
+  it "should call enter when entering state" do
+    foo = Foo.new
+    foo.should_receive(:enter)
 
+    foo.close
+  end
+
+  it "should call exit when exiting state" do
+    foo = Foo.new
+    foo.should_receive(:exit)
+
+    foo.close
+  end
+end

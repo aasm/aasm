@@ -1,6 +1,5 @@
 Before Next Release:
 
-* Add state actions (enter, exit, after)
 * Add #aasm_next_state_for_event
 * Add #aasm_next_states_for_event
 

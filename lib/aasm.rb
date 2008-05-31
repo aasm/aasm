@@ -96,9 +96,18 @@ module AASM
     @aasm_current_state = state
   end
 
+  def aasm_state_object_for_state(name)
+    self.class.aasm_states.find {|s| s == name}
+  end
+
   def aasm_fire_event(name, persist)
+    aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
+
     new_state = self.class.aasm_events[name].fire(self)
+    
     unless new_state.nil?
+      aasm_state_object_for_state(new_state).call_action(:enter, self)
+      
       if self.respond_to?(:aasm_event_fired)
         self.aasm_event_fired(self.aasm_current_state, new_state)
       end
