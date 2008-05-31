@@ -5,68 +5,58 @@ describe AASM::SupportingClasses::State do
   before(:each) do
     @name    = :astate
     @options = { :crazy_custom_key => 'key' }
-    @record  = mock('record')
   end
 
-  def new_state
-    @state = AASM::SupportingClasses::State.new(@name, @options)
+  def new_state(options={})
+    AASM::SupportingClasses::State.new(@name, @options.merge(options))
   end
 
   it 'should set the name' do
-    new_state
+    state = new_state
 
-    @state.name.should == :astate
+    state.name.should == :astate
   end
   
   it 'should set the options and expose them as options' do
-    new_state
+    state = new_state
     
-    @state.options.should == @options
+    state.options.should == @options
   end
 
-  it '#entering should not run_transition_action if :enter option is not passed' do
-    new_state
-    @record.should_not_receive(:run_transition_action)
+  it 'should be equal to a symbol of the same name' do
+    state = new_state
 
-    @state.entering(@record)
+    state.should == :astate
   end
 
-  it '#entered should not run_transition_action if :after option is not passed' do
-    new_state
-    @record.should_not_receive(:run_transition_action)
-
-    @state.entered(@record)
-  end
-  
-  it '#exited should not run_transition_action if :exit option is not passed' do
-    new_state
-    @record.should_not_receive(:run_transition_action)
-
-    @state.exited(@record)
+  it 'should be equal to a State of the same name' do
+    new_state.should == new_state
   end
 
-  it '#entering should run_transition_action when :enter option is passed' do
-    @options[:enter] = true
-    new_state
-    @record.should_receive(:run_transition_action).with(true)
+  it 'should send a message to the record for an action if the action is present as a symbol' do
+    state = new_state(:entering => :foo)
 
-    @state.entering(@record)
+    record = mock('record')
+    record.should_receive(:foo)
+
+    state.call_action(:entering, record)
   end
 
-  it '#entered should run_transition_action for each option when :after option is passed' do
-    @options[:after] = ['a', 'b']
-    new_state
-    @record.should_receive(:run_transition_action).once.with('a')
-    @record.should_receive(:run_transition_action).once.with('b')
+  it 'should send a message to the record for an action if the action is present as a string' do
+    state = new_state(:entering => 'foo')
 
-    @state.entered(@record)
+    record = mock('record')
+    record.should_receive(:foo)
+
+    state.call_action(:entering, record)
   end
 
-  it '#exited should run_transition_action when :exit option is passed' do
-    @options[:exit] = true
-    new_state
-    @record.should_receive(:run_transition_action).with(true)
+  it 'should call a proc, passing in the record for an action if the action is present' do
+    state = new_state(:entering => Proc.new {|r| r.foobar})
 
-    @state.exited(@record)
+    record = mock('record')
+    record.should_receive(:foobar)
+    
+    state.call_action(:entering, record)
   end
 end

@@ -7,22 +7,23 @@ module AASM
         @name, @options = name, options
       end
 
-      def entering(record)
-        enteract = @options[:enter]
-        record.send(:run_transition_action, enteract) if enteract
-      end
-
-      def entered(record)
-        afteractions = @options[:after]
-        return unless afteractions
-        Array(afteractions).each do |afteract|
-          record.send(:run_transition_action, afteract)
+      def ==(state)
+        if state.is_a? Symbol
+          name == state
+        else
+          name == state.name
         end
       end
 
-      def exited(record)
-        exitact  = @options[:exit]
-        record.send(:run_transition_action, exitact) if exitact
+      def call_action(action, record)
+        action = @options[action]
+        case action
+        when Symbol, String
+          record.send(action)
+        when Proc
+          action.call(record)
+        end
+        # symbol, proc, lambda
       end
     end
   end
