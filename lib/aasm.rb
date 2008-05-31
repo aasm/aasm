@@ -25,7 +25,7 @@ module AASM
     end
     
     def aasm_state(name, options={})
-      aasm_states << name unless aasm_states.include?(name)
+      aasm_states << AASM::SupportingClasses::State.new(name, options) unless aasm_states.include?(name)
       self.aasm_initial_state = name unless self.aasm_initial_state
 
       define_method("#{name.to_s}?") do
@@ -88,7 +88,7 @@ module AASM
     end
     
     def aasm_states_for_select
-      aasm_states.collect { |state| [state.to_s.gsub(/_/, ' ').capitalize, state.to_s] }
+      aasm_states.collect { |state| [state.name.to_s.gsub(/_/, ' ').capitalize, state.name.to_s] }
     end
     
   end
