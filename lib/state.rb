@@ -23,7 +23,6 @@ module AASM
         when Proc
           action.call(record)
         end
-        # symbol, proc, lambda
       end
     end
   end
