@@ -39,44 +39,12 @@ module AASM
       end
 
       define_method("#{name.to_s}!") do
-        new_state = self.class.aasm_events[name].fire(self)
-        unless new_state.nil?
-          if self.respond_to?(:aasm_event_fired)
-            self.aasm_event_fired(self.aasm_current_state, new_state)
-          end
-          
-          self.aasm_current_state_with_persistence = new_state
-
-          self.send(self.class.aasm_events[name].success) if self.class.aasm_events[name].success
-
-          true
-        else
-          if self.respond_to?(:aasm_event_failed)
-            self.aasm_event_failed(name)
-          end
-          
-          false
-        end
+        aasm_fire_event(name, true)
       end
 
       define_method("#{name.to_s}") do
-        new_state = self.class.aasm_events[name].fire(self)
-        unless new_state.nil?
-          if self.respond_to?(:aasm_event_fired)
-            self.aasm_event_fired(self.aasm_current_state, new_state)
-          end
-          
-          self.aasm_current_state = new_state
-          true
-        else
-          if self.respond_to?(:aasm_event_failed)
-            self.aasm_event_failed(name)
-          end
-          
-          false
-        end
+        aasm_fire_event(name, false)
       end
-
     end
 
     def aasm_states
@@ -128,4 +96,27 @@ module AASM
     @aasm_current_state = state
   end
 
+  def aasm_fire_event(name, persist)
+    new_state = self.class.aasm_events[name].fire(self)
+    unless new_state.nil?
+      if self.respond_to?(:aasm_event_fired)
+        self.aasm_event_fired(self.aasm_current_state, new_state)
+      end
+
+      if persist
+        self.aasm_current_state_with_persistence = new_state
+        self.send(self.class.aasm_events[name].success) if self.class.aasm_events[name].success
+      else
+        self.aasm_current_state = new_state
+      end
+
+      true
+    else
+      if self.respond_to?(:aasm_event_failed)
+        self.aasm_event_failed(name)
+      end
+      
+      false
+    end
+  end
 end
