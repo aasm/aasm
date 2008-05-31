@@ -24,6 +24,10 @@ module AASM
           action.call(record)
         end
       end
+
+      def for_select
+        [name.to_s.gsub(/_/, ' ').capitalize, name.to_s]
+      end
     end
   end
 end

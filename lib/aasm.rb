@@ -56,7 +56,7 @@ module AASM
     end
     
     def aasm_states_for_select
-      aasm_states.collect { |state| [state.name.to_s.gsub(/_/, ' ').capitalize, state.name.to_s] }
+      aasm_states.map { |state| state.for_select }
     end
     
   end
