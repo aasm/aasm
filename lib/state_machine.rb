@@ -1,9 +1,14 @@
 module AASM
-  unless AASM.const_defined?('StateMachineFactory')
-    StateMachineFactory = {}
-  end
-  
   class StateMachine
+    def self.[](*args)
+      (@machines ||= {})[args]
+    end
+
+    def self.[]=(*args)
+      val = args.pop
+      (@machines ||= {})[args] = val
+    end
+    
     attr_accessor :states, :events, :initial_state
     attr_reader :name
     

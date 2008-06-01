@@ -10,24 +10,24 @@ module AASM
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
     AASM::Persistence.set_persistence(base)
-    AASM::StateMachineFactory[base] = AASM::StateMachine.new('')
+    AASM::StateMachine[base] = AASM::StateMachine.new('')
   end
 
   module ClassMethods
     def aasm_initial_state(set_state=nil)
       if set_state
-        AASM::StateMachineFactory[self].initial_state = set_state
+        AASM::StateMachine[self].initial_state = set_state
       else
-        AASM::StateMachineFactory[self].initial_state
+        AASM::StateMachine[self].initial_state
       end
     end
     
     def aasm_initial_state=(state)
-      AASM::StateMachineFactory[self].initial_state = state
+      AASM::StateMachine[self].initial_state = state
     end
     
     def aasm_state(name, options={})
-      sm = AASM::StateMachineFactory[self]
+      sm = AASM::StateMachine[self]
       sm.create_state(name, options)
       sm.initial_state = name unless sm.initial_state
 
@@ -37,7 +37,7 @@ module AASM
     end
     
     def aasm_event(name, options = {}, &block)
-      sm = AASM::StateMachineFactory[self]
+      sm = AASM::StateMachine[self]
       
       unless sm.events.has_key?(name)
         sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
@@ -53,15 +53,15 @@ module AASM
     end
 
     def aasm_states
-      AASM::StateMachineFactory[self].states
+      AASM::StateMachine[self].states
     end
 
     def aasm_events
-      AASM::StateMachineFactory[self].events
+      AASM::StateMachine[self].events
     end
     
     def aasm_states_for_select
-      AASM::StateMachineFactory[self].states.map { |state| state.for_select }
+      AASM::StateMachine[self].states.map { |state| state.for_select }
     end
     
   end
