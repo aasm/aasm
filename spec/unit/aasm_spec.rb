@@ -29,8 +29,16 @@ end
 
 class Bar
   include AASM
+
   aasm_state :read
   aasm_state :ended
+
+  aasm_event :foo do
+    transitions :to => :ended, :from => [:read]
+  end
+end
+
+class Baz < Bar
 end
 
 
@@ -249,5 +257,16 @@ describe AASM, '- state actions' do
     foo.should_receive(:exit)
 
     foo.close
+  end
+end
+
+
+describe Baz do
+  it "should have the same states as it's parent" do
+    Baz.aasm_states.should == Bar.aasm_states
+  end
+
+  it "should have the same events as it's parent" do
+    Baz.aasm_events.should == Bar.aasm_events
   end
 end
