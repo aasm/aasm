@@ -1,3 +1,5 @@
+* allowed :to array and :on_transition callback [Kevin Triplett]
+
 * Support enter and exit actions on states
 
 * Use named_scope in AR persistence layer, if available [Jan De Poorter]
