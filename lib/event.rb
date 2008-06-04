@@ -12,14 +12,16 @@ module AASM
         instance_eval(&block) if block
       end
 
-      def fire(obj)
+      def fire(obj, to_state=nil, *args)
         transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
         raise AASM::InvalidTransition if transitions.size == 0
 
         next_state = nil
         transitions.each do |transition|
+          next if to_state and !Array(transition.to).include?(to_state)
           if transition.perform(obj)
-            next_state = transition.to
+            next_state = to_state || Array(transition.to).first
+            transition.execute(obj, *args)
             break
           end
         end

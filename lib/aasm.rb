@@ -49,12 +49,12 @@ module AASM
         sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
       end
 
-      define_method("#{name.to_s}!") do
-        aasm_fire_event(name, true)
+      define_method("#{name.to_s}!") do |*args|
+        aasm_fire_event(name, true, *args)
       end
 
-      define_method("#{name.to_s}") do
-        aasm_fire_event(name, false)
+      define_method("#{name.to_s}") do |*args|
+        aasm_fire_event(name, false, *args)
       end
     end
 
@@ -111,10 +111,10 @@ module AASM
     self.class.aasm_states.find {|s| s == name}
   end
 
-  def aasm_fire_event(name, persist)
+  def aasm_fire_event(name, persist, *args)
     aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
 
-    new_state = self.class.aasm_events[name].fire(self)
+    new_state = self.class.aasm_events[name].fire(self, *args)
     
     unless new_state.nil?
       aasm_state_object_for_state(new_state).call_action(:enter, self)

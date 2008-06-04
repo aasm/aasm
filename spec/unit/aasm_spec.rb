@@ -270,3 +270,72 @@ describe Baz do
     Baz.aasm_events.should == Bar.aasm_events
   end
 end
+
+
+class ChetanPatil
+  include AASM
+  aasm_initial_state :sleeping
+  aasm_state :sleeping
+  aasm_state :showering
+  aasm_state :working
+  aasm_state :dating
+
+  aasm_event :wakeup do
+    transitions :from => :sleeping, :to => [:showering, :working]
+  end
+
+  aasm_event :dress do
+    transitions :from => :sleeping, :to => :working, :on_transition => :wear_clothes
+    transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |obj, *args| obj.wear_clothes(*args) }
+  end
+
+  def wear_clothes(shirt_color, trouser_type)
+  end
+end
+
+
+describe ChetanPatil do
+  it 'should transition to specified next state (sleeping to showering)' do
+    cp = ChetanPatil.new
+    cp.wakeup! :showering
+    
+    cp.aasm_current_state.should == :showering
+  end
+
+  it 'should transition to specified next state (sleeping to working)' do
+    cp = ChetanPatil.new
+    cp.wakeup! :working
+
+    cp.aasm_current_state.should == :working
+  end
+
+  it 'should transition to default (first or showering) state' do
+    cp = ChetanPatil.new
+    cp.wakeup!
+
+    cp.aasm_current_state.should == :showering
+  end
+
+  it 'should transition to default state when on_transition invoked' do
+    cp = ChetanPatil.new
+    cp.dress!(nil, 'purple', 'dressy')
+
+    cp.aasm_current_state.should == :working
+  end
+
+  it 'should call on_transition method with args' do
+    cp = ChetanPatil.new
+    cp.wakeup! :showering
+
+    cp.should_receive(:wear_clothes).with('blue', 'jeans')
+    cp.dress! :working, 'blue', 'jeans'
+  end
+
+  it 'should call on_transition proc' do
+    cp = ChetanPatil.new
+    cp.wakeup! :showering
+
+    cp.should_receive(:wear_clothes).with('purple', 'slacks')
+    cp.dress!(:dating, 'purple', 'slacks')
+  end
+end
