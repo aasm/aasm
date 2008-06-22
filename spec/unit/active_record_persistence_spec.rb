@@ -43,6 +43,14 @@ begin
     include AASM
   end
 
+  class June < ActiveRecord::Base
+    include AASM
+    aasm_column :status
+  end
+  
+  class Beaver < June
+  end
+
   describe "aasm model", :shared => true do
     it "should include AASM::Persistence::ActiveRecordPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
@@ -177,6 +185,21 @@ begin
     end
     
   end
+
+  describe 'Beavers' do
+    it "should have the same states as it's parent" do
+      Beaver.aasm_states.should == June.aasm_states
+    end
+    
+    it "should have the same events as it's parent" do
+      Beaver.aasm_events.should == June.aasm_events
+    end
+    
+    it "should have the same column as it's parent" do
+      Beaver.aasm_column.should == :status
+    end
+  end
+  
 
   # TODO: figure out how to test ActiveRecord reload! without a database
 

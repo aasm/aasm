@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module AASM
   class StateMachine
     def self.[](*args)
@@ -9,7 +11,7 @@ module AASM
       (@machines ||= {})[args] = val
     end
     
-    attr_accessor :states, :events, :initial_state
+    attr_accessor :states, :events, :initial_state, :config
     attr_reader :name
     
     def initialize(name)
@@ -17,6 +19,7 @@ module AASM
       @initial_state = nil
       @states = []
       @events = {}
+      @config = OpenStruct.new
     end
 
     def create_state(name, options)
