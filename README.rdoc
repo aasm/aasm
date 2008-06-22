@@ -64,7 +64,7 @@ License:: Copyright 2006, 2007, 2008 by Scott Barron.
           Released under an MIT-style license.  See the LICENSE  file
           included in the distribution.
 Bugs::    http://rubyist.lighthouseapp.com/projects/13207-aasm/
-Github::  http://github.com/rubyist/aasm/tree/master
+GitHub::  http://github.com/rubyist/aasm/tree/master
 
 == Warranty
 
