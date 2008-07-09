@@ -31,7 +31,7 @@ A release and a gem are forthcoming.
 === Building your own gems
 
   % rake gem
-  % sudo gem install pkg/aasm-0.0.2.gem
+  % sudo gem install pkg/aasm-2.0.1.gem
 
 
 == Simple Example
