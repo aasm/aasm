@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__), 'state_machine')
 require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
-  class InvalidTransition < Exception
+  class InvalidTransition < RuntimeError
   end
   
   def self.included(base) #:nodoc:
