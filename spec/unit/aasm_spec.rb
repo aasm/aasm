@@ -147,6 +147,16 @@ describe AASM, '- event firing with persistence' do
     foo.close!
   end
 
+  it 'should return true if aasm_write_state is defined and returns true' do
+    foo = Foo.new
+    
+    def foo.aasm_write_state(state)
+      true
+    end
+
+    foo.close!.should be_true
+  end
+
   it 'should return false if aasm_write_state is defined and returns false' do
     foo = Foo.new
     
