@@ -96,7 +96,7 @@ module AASM
   end
 
   private
-  def aasm_current_state_with_persistence=(state)
+  def set_aasm_current_state_with_persistence(state)
     save_success = true
     if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
       save_success = aasm_write_state(state)
@@ -125,18 +125,21 @@ module AASM
     unless new_state.nil?
       aasm_state_object_for_state(new_state).call_action(:enter, self)
       
-      if self.respond_to?(:aasm_event_fired)
-        self.aasm_event_fired(self.aasm_current_state, new_state)
-      end
-
+      persist_successful = true
       if persist
-        persist_successful = (self.aasm_current_state_with_persistence = new_state)
+        persist_successful = set_aasm_current_state_with_persistence(new_state)
         self.send(self.class.aasm_events[name].success) if persist_successful && self.class.aasm_events[name].success
       else
         self.aasm_current_state = new_state
       end
 
-      !persist && persist_successful
+      if persist_successful 
+        self.aasm_event_fired(self.aasm_current_state, new_state) if self.respond_to?(:aasm_event_fired)
+      else
+        self.aasm_event_failed(name) if self.respond_to?(:aasm_event_failed)
+      end
+
+      persist_successful
     else
       if self.respond_to?(:aasm_event_failed)
         self.aasm_event_failed(name)
