@@ -146,6 +146,31 @@ describe AASM, '- event firing with persistence' do
 
     foo.close!
   end
+
+  it 'should return false if aasm_write_state is defined and returns false' do
+    foo = Foo.new
+    
+    def foo.aasm_write_state
+      false
+    end
+
+    foo.should_receive(:aasm_write_state)
+
+    foo.close!.should be_false
+  end
+
+  it "should not update the aasm_current_state if the write fails" do
+    foo = Foo.new
+    
+    def foo.aasm_write_state
+      false
+    end
+
+    foo.should_receive(:aasm_write_state)
+
+    foo.close!
+    foo.aasm_current_state.should == :open
+  end
 end
 
 describe AASM, '- event firing without persistence' do
