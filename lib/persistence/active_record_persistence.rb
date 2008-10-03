@@ -188,7 +188,8 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state)
-          update_attribute(self.class.aasm_column, state.to_s)
+          write_attribute(self.class.aasm_column, state.to_s)
+          self.save!
         end
       end
 
