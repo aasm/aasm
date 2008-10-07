@@ -4,6 +4,10 @@ require File.join(File.dirname(__FILE__), 'state_machine')
 require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
+  def self.Version
+    '0.0.2'
+  end
+
   class InvalidTransition < RuntimeError
   end
   
