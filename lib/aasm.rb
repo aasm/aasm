@@ -18,15 +18,14 @@ module AASM
     base.extend AASM::ClassMethods
     AASM::Persistence.set_persistence(base)
     AASM::StateMachine[base] = AASM::StateMachine.new('')
-
-    base.class_eval do
-      def base.inherited(klass)
-        AASM::StateMachine[klass] = AASM::StateMachine[self].dup
-      end
-    end
   end
 
   module ClassMethods
+    def inherited(klass)
+      AASM::StateMachine[klass] = AASM::StateMachine[self].dup
+      super
+    end
+
     def aasm_initial_state(set_state=nil)
       if set_state
         AASM::StateMachine[self].initial_state = set_state
