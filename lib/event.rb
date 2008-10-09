@@ -32,6 +32,17 @@ module AASM
         @transitions.any? { |t| t.from == state }
       end
       
+      def execute_success_callback(obj)
+        case success
+        when String, Symbol:
+          obj.send(success)
+        when Array:
+          success.each { |meth| obj.send(meth) }
+        when Proc:
+          success.call(obj)
+        end
+      end
+
       private
       def transitions(trans_opts)
         Array(trans_opts[:from]).each do |s|

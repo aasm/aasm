@@ -132,7 +132,7 @@ module AASM
       persist_successful = true
       if persist
         persist_successful = set_aasm_current_state_with_persistence(new_state)
-        self.send(self.class.aasm_events[name].success) if persist_successful && self.class.aasm_events[name].success
+        self.class.aasm_events[name].execute_success_callback(self) if persist_successful
       else
         self.aasm_current_state = new_state
       end
