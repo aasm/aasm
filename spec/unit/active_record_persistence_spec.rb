@@ -25,21 +25,21 @@ begin
   class Fi < ActiveRecord::Base
     def aasm_read_state
       "fi"
-    end    
+    end
     include AASM
   end
 
   class Fo < ActiveRecord::Base
     def aasm_write_state(state)
       "fo"
-    end    
+    end
     include AASM
   end
 
   class Fum < ActiveRecord::Base
     def aasm_write_state_without_persistence(state)
       "fum"
-    end    
+    end
     include AASM
   end
 
@@ -47,17 +47,17 @@ begin
     include AASM
     aasm_column :status
   end
-  
+
   class Beaver < June
   end
 
   describe "aasm model", :shared => true do
     it "should include AASM::Persistence::ActiveRecordPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::InstanceMethods" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
-    end    
+    end
   end
 
   describe FooBar, "class methods" do
@@ -67,13 +67,13 @@ begin
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
-    end    
+    end
   end
 
   describe Fi, "class methods" do
@@ -83,13 +83,13 @@ begin
     it_should_behave_like "aasm model"
     it "should not include AASM::Persistence::ActiveRecordPersistence::ReadState" do
       @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
-    end    
+    end
   end
 
   describe Fo, "class methods" do
@@ -99,13 +99,13 @@ begin
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    end    
+    end
     it "should not include AASM::Persistence::ActiveRecordPersistence::WriteState" do
       @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
-    end    
+    end
   end
 
   describe Fum, "class methods" do
@@ -115,13 +115,13 @@ begin
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    end    
+    end
     it "should include AASM::Persistence::ActiveRecordPersistence::WriteState" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    end    
+    end
     it "should not include AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence" do
       @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
-    end    
+    end
   end
 
   describe FooBar, "instance methods" do
@@ -183,23 +183,42 @@ begin
       foo.should_not_receive(:aasm_ensure_initial_state)
       foo.valid?
     end
-    
+
   end
 
   describe 'Beavers' do
     it "should have the same states as it's parent" do
       Beaver.aasm_states.should == June.aasm_states
     end
-    
+
     it "should have the same events as it's parent" do
       Beaver.aasm_events.should == June.aasm_events
     end
-    
+
     it "should have the same column as it's parent" do
       Beaver.aasm_column.should == :status
     end
   end
-  
+
+  describe AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods do
+    class NamedScopeExample < ActiveRecord::Base
+      include AASM
+    end
+
+    context "Does not already respond_to? the scope name" do
+      it "should add a named_scope" do
+        NamedScopeExample.should_receive(:named_scope)
+        NamedScopeExample.aasm_state :unknown_scope
+      end
+    end
+
+    context "Already respond_to? the scope name" do
+      it "should not add a named_scope" do
+        NamedScopeExample.should_not_receive(:named_scope)
+        NamedScopeExample.aasm_state :new
+      end
+    end
+  end
 
   # TODO: figure out how to test ActiveRecord reload! without a database
 

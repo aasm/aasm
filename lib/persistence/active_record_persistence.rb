@@ -37,10 +37,10 @@ module AASM
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::ReadState) unless base.method_defined?(:aasm_read_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
-        
+
         if base.respond_to?(:named_scope)
           base.extend(AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods)
-          
+
           base.class_eval do
             class << self
               alias_method :aasm_state_without_named_scope, :aasm_state
@@ -48,7 +48,7 @@ module AASM
             end
           end
         end
-        
+
         base.before_validation_on_create :aasm_ensure_initial_state
       end
 
@@ -119,7 +119,7 @@ module AASM
 
         # Returns the current aasm_state of the object.  Respects reload and
         # any changes made to the aasm_state field directly
-        # 
+        #
         # Internally just calls <tt>aasm_read_state</tt>
         #
         #   foo = Foo.find(1)
@@ -136,7 +136,7 @@ module AASM
         end
 
         private
-        
+
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
         #
@@ -160,7 +160,7 @@ module AASM
 
       module WriteStateWithoutPersistence
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
-        # 
+        #
         #   foo = Foo.find(1)
         #   foo.aasm_current_state # => :opened
         #   foo.close
@@ -179,7 +179,7 @@ module AASM
       module WriteState
         # Writes <tt>state</tt> to the state column and persists it to the database
         # using update_attribute (which bypasses validation)
-        # 
+        #
         #   foo = Foo.find(1)
         #   foo.aasm_current_state # => :opened
         #   foo.close!
@@ -190,12 +190,12 @@ module AASM
         def aasm_write_state(state)
           old_value = read_attribute(self.class.aasm_column)
           write_attribute(self.class.aasm_column, state.to_s)
-          
+
           unless self.save
             write_attribute(self.class.aasm_column, old_value)
             return false
           end
-          
+
           true
         end
       end
@@ -212,17 +212,17 @@ module AASM
         #     aasm_state :opened
         #     aasm_state :closed
         #   end
-        # 
+        #
         #   foo = Foo.new
         #   foo.current_state # => :opened
         #   foo.close
         #   foo.current_state # => :closed
-        #   
+        #
         #   foo = Foo.find(1)
         #   foo.current_state # => :opened
         #   foo.aasm_state = nil
         #   foo.current_state # => nil
-        # 
+        #
         # NOTE: intended to be called from an event
         #
         # This allows for nil aasm states - be sure to add validation to your model
@@ -238,8 +238,8 @@ module AASM
       module NamedScopeMethods
         def aasm_state_with_named_scope name, options = {}
           aasm_state_without_named_scope name, options
-          self.named_scope name, :conditions => {self.aasm_column => name.to_s} unless self.scopes.include?(name)
-        end       
+          self.named_scope name, :conditions => {self.aasm_column => name.to_s} unless self.respond_to?(name)
+        end
       end
     end
   end
