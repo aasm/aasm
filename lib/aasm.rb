@@ -22,7 +22,7 @@ module AASM
 
   module ClassMethods
     def inherited(klass)
-      AASM::StateMachine[klass] = AASM::StateMachine[self].dup
+      AASM::StateMachine[klass] = AASM::StateMachine[self].clone
       super
     end
 

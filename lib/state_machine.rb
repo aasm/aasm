@@ -22,6 +22,12 @@ module AASM
       @config = OpenStruct.new
     end
 
+    def clone
+      klone = super
+      klone.states = states.clone
+      klone
+    end
+
     def create_state(name, options)
       @states << AASM::SupportingClasses::State.new(name, options) unless @states.include?(name)
     end
