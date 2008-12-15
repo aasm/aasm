@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
   def self.Version
-    '0.0.2'
+    '2.0.3'
   end
 
   class InvalidTransition < RuntimeError
