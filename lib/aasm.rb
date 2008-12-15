@@ -10,6 +10,9 @@ module AASM
 
   class InvalidTransition < RuntimeError
   end
+
+  class UndefinedState < RuntimeError
+  end
   
   def self.included(base) #:nodoc:
     # TODO - need to ensure that a machine is being created because
@@ -117,7 +120,9 @@ module AASM
   end
 
   def aasm_state_object_for_state(name)
-    self.class.aasm_states.find {|s| s == name}
+    obj = self.class.aasm_states.find {|s| s == name}
+    rasie AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
+    obj
   end
 
   def aasm_fire_event(name, persist, *args)
