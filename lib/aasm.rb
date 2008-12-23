@@ -121,7 +121,7 @@ module AASM
 
   def aasm_state_object_for_state(name)
     obj = self.class.aasm_states.find {|s| s == name}
-    rasie AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
+    raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
     obj
   end
 
