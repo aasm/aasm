@@ -41,19 +41,19 @@ Here's a quick example highlighting some of the features.
   class Conversation
     include AASM
 
-    aasm_initial_state :new
+    aasm_initial_state :unread
 
-    aasm_state :new
+    aasm_state :unread
     aasm_state :read
     aasm_state :closed
 
 
     aasm_event :view do
-      transitions :to => :read, :from => [:new]
+      transitions :to => :read, :from => [:unread]
     end
 
     aasm_event :close do
-      transitions :to => :closed, :from => [:read, :new]
+      transitions :to => :closed, :from => [:read, :unread]
     end
   end
 
