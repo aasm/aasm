@@ -25,6 +25,7 @@ module AASM
     def clone
       klone = super
       klone.states = states.clone
+      klone.events = events.clone
       klone
     end
 
