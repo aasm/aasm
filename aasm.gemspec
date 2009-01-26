@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version = "2.0.5"
   s.summary = 'State machine mixin for Ruby objects'
   s.description = <<-EOF
-AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects. This fork adds Ruby 1.9.1 compatibility.
 EOF
   s.files = PKG_FILES
   s.require_path = 'lib'
@@ -13,7 +13,7 @@ EOF
   s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG']
   s.rdoc_options = ['--line-numbers', '--inline-source', '--main', 'README.rdoc', '--title', 'AASM']
   
-  s.author = 'Scott Barron'
-  s.email = 'scott@elitists.net'
-  s.homepage = 'http://github.com/rubyist/aasm'
+  s.author = 'Scott Barron, David Palm'
+  s.email = 'scott@elitists.net, dvdplm@gmail.com'
+  s.homepage = 'http://github.com/dvdplm/aasm'
 end
