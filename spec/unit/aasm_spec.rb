@@ -54,11 +54,11 @@ describe AASM, '- class level definitions' do
   it 'should define a class level aasm_event() method on its including class' do
     Foo.should respond_to(:aasm_event)
   end
-  
+
   it 'should define a class level aasm_states() method on its including class' do
     Foo.should respond_to(:aasm_states)
   end
-  
+
   it 'should define a class level aasm_states_for_select() method on its including class' do
     Foo.should respond_to(:aasm_states_for_select)
   end
@@ -157,7 +157,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
     end
 
@@ -168,7 +168,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should return true if aasm_write_state is defined and returns true' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state(state)
       true
     end
@@ -178,7 +178,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should return false if aasm_write_state is defined and returns false' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state(state)
       false
     end
@@ -188,7 +188,7 @@ describe AASM, '- event firing with persistence' do
 
   it "should not update the aasm_current_state if the write fails" do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
       false
     end
@@ -217,7 +217,7 @@ describe AASM, '- event firing without persistence' do
 
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
     end
 
@@ -353,6 +353,7 @@ class ChetanPatil
   aasm_state :showering
   aasm_state :working
   aasm_state :dating
+  aasm_state :prettying_up
 
   aasm_event :wakeup do
     transitions :from => :sleeping, :to => [:showering, :working]
@@ -361,9 +362,16 @@ class ChetanPatil
   aasm_event :dress do
     transitions :from => :sleeping, :to => :working, :on_transition => :wear_clothes
     transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |obj, *args| obj.wear_clothes(*args) }
+    transitions :from => :showering, :to => :prettying_up, :on_transition => [:condition_hair, :fix_hair]
   end
 
   def wear_clothes(shirt_color, trouser_type)
+  end
+
+  def condition_hair
+  end
+
+  def fix_hair
   end
 end
 
@@ -372,7 +380,7 @@ describe ChetanPatil do
   it 'should transition to specified next state (sleeping to showering)' do
     cp = ChetanPatil.new
     cp.wakeup! :showering
-    
+
     cp.aasm_current_state.should == :showering
   end
 
@@ -411,5 +419,13 @@ describe ChetanPatil do
 
     cp.should_receive(:wear_clothes).with('purple', 'slacks')
     cp.dress!(:dating, 'purple', 'slacks')
+  end
+
+  it 'should call on_transition with an array of methods' do
+    cp = ChetanPatil.new
+    cp.wakeup! :showering
+    cp.should_receive(:condition_hair)
+    cp.should_receive(:fix_hair)
+    cp.dress!(:prettying_up)
   end
 end
