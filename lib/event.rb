@@ -34,11 +34,11 @@ module AASM
       
       def execute_success_callback(obj)
         case success
-        when String, Symbol:
+        when String, Symbol
           obj.send(success)
-        when Array:
+        when Array
           success.each { |meth| obj.send(meth) }
-        when Proc:
+        when Proc
           success.call(obj)
         end
       end
