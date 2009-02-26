@@ -2,3 +2,4 @@ rdoc
 pkg
 coverage
 *~
+*.sw?
