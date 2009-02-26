@@ -126,23 +126,37 @@ module AASM
   end
 
   def aasm_fire_event(name, persist, *args)
-    aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
+    old_state = aasm_state_object_for_state(aasm_current_state)
+    event = self.class.aasm_events[name]
 
-    new_state = self.class.aasm_events[name].fire(self, *args)
+    old_state.call_action(:exit, self)
+
+    new_state_name = event.fire(self, *args)
+
+    unless new_state_name.nil?
+      new_state = aasm_state_object_for_state(new_state_name)
     
-    unless new_state.nil?
-      aasm_state_object_for_state(new_state).call_action(:enter, self)
+      # new before_ callbacks
+      old_state.call_action(:before_exit, self)
+      new_state.call_action(:before_enter, self)
+      event.call_action(:before, self)
+      
+      new_state.call_action(:enter, self)
       
       persist_successful = true
       if persist
-        persist_successful = set_aasm_current_state_with_persistence(new_state)
-        self.class.aasm_events[name].execute_success_callback(self) if persist_successful
+        persist_successful = set_aasm_current_state_with_persistence(new_state_name)
+        event.execute_success_callback(self) if persist_successful
       else
-        self.aasm_current_state = new_state
+        self.aasm_current_state = new_state_name
       end
 
       if persist_successful 
-        self.aasm_event_fired(self.aasm_current_state, new_state) if self.respond_to?(:aasm_event_fired)
+        old_state.call_action(:after_exit, self)
+        new_state.call_action(:after_enter, self)
+        event.call_action(:after, self)
+
+        self.aasm_event_fired(self.aasm_current_state, new_state_name) if self.respond_to?(:aasm_event_fired)
       else
         self.aasm_event_failed(name) if self.respond_to?(:aasm_event_failed)
       end

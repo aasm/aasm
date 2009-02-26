@@ -9,6 +9,7 @@ module AASM
         @name = name
         @success = options[:success]
         @transitions = []
+        @options = options
         instance_eval(&block) if block
       end
 
@@ -40,6 +41,16 @@ module AASM
           success.each { |meth| obj.send(meth) }
         when Proc
           success.call(obj)
+        end
+      end
+
+      def call_action(action, record)
+        action = @options[action]
+        case action
+        when Symbol, String
+          record.send(action)
+        when Proc
+          action.call(record)
         end
       end
 
