@@ -53,9 +53,9 @@ else
     s.extra_rdoc_files = rd.rdoc_files.reject {|fn| fn =~ /\.rb$/}.to_a
     s.rdoc_options = rd.options
 
-    s.author = 'Scott Barron'
-    s.email = 'scott@elitists.net'
-    s.homepage = 'http://rubyi.st/aasm'
+    s.authors = ['Scott Barron', 'Scott Petersen']
+    s.email = 'petersen@dunedain289.com'
+    s.homepage = 'http://github.com/dunedain289/aasm'
   end
 
   package_task = Rake::GemPackageTask.new(spec) do |pkg|

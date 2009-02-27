@@ -51,6 +51,8 @@ module AASM
           record.send(action)
         when Proc
           action.call(record)
+        when Array
+          action.each { |a| record.send(a) }
         end
       end
 
