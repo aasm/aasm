@@ -17,18 +17,21 @@ The only changes I've made are creating more callbacks with slightly more obviou
 
 The callback chain & order on a successful event looks like:
 
-  oldstate:exit
-  transition:on_transition
-  newstate:enter
+  oldstate:exit*
+  event:before
+  __find transition, if possible__
+  transition:on_transition*
+  newstate:enter*
   oldstate:before_exit
   newstate:before_enter
-  event:before
   __update state__
   oldstate:after_exit
   oldstate:after_enter
   event:after
-  event:success
-  obj:aasm_event_fired
+  event:success*
+  obj:aasm_event_fired*
+
+  (*) marks old callbacks
 
 Note that the old callbacks haven't been removed and still have their same semantics.  All of this behavior was added without removing any old behavior.
 

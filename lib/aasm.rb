@@ -131,6 +131,9 @@ module AASM
 
     old_state.call_action(:exit, self)
 
+    # new event before callback
+    event.call_action(:before, self)
+
     new_state_name = event.fire(self, *args)
 
     unless new_state_name.nil?
@@ -139,7 +142,6 @@ module AASM
       # new before_ callbacks
       old_state.call_action(:before_exit, self)
       new_state.call_action(:before_enter, self)
-      event.call_action(:before, self)
       
       new_state.call_action(:enter, self)
       
