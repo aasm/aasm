@@ -43,8 +43,10 @@ module AASM
 
           base.class_eval do
             class << self
-              alias_method :aasm_state_without_named_scope, :aasm_state
-              alias_method :aasm_state, :aasm_state_with_named_scope
+              unless method_defined?(:aasm_state_without_named_scope)
+                alias_method :aasm_state_without_named_scope, :aasm_state 
+                alias_method :aasm_state, :aasm_state_with_named_scope
+              end
             end
           end
         end
