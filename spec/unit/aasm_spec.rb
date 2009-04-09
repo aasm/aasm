@@ -54,11 +54,11 @@ describe AASM, '- class level definitions' do
   it 'should define a class level aasm_event() method on its including class' do
     Foo.should respond_to(:aasm_event)
   end
-  
+
   it 'should define a class level aasm_states() method on its including class' do
     Foo.should respond_to(:aasm_states)
   end
-  
+
   it 'should define a class level aasm_states_for_select() method on its including class' do
     Foo.should respond_to(:aasm_states_for_select)
   end
@@ -157,7 +157,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
     end
 
@@ -168,7 +168,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should return true if aasm_write_state is defined and returns true' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state(state)
       true
     end
@@ -178,7 +178,7 @@ describe AASM, '- event firing with persistence' do
 
   it 'should return false if aasm_write_state is defined and returns false' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state(state)
       false
     end
@@ -188,7 +188,7 @@ describe AASM, '- event firing with persistence' do
 
   it "should not update the aasm_current_state if the write fails" do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
       false
     end
@@ -217,7 +217,7 @@ describe AASM, '- event firing without persistence' do
 
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
-    
+
     def foo.aasm_write_state
     end
 
@@ -372,7 +372,7 @@ describe ChetanPatil do
   it 'should transition to specified next state (sleeping to showering)' do
     cp = ChetanPatil.new
     cp.wakeup! :showering
-    
+
     cp.aasm_current_state.should == :showering
   end
 

@@ -4,7 +4,7 @@ module AASM
   module SupportingClasses
     class Event
       attr_reader :name, :success
-      
+
       def initialize(name, options = {}, &block)
         @name = name
         @success = options[:success]

@@ -31,7 +31,7 @@ describe AASM::SupportingClasses::StateTransition do
 
     st.should_not == obj
   end
-  
+
   it 'should fail equality check if to are not the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::SupportingClasses::StateTransition.new(opts)
@@ -58,7 +58,7 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
 
     obj = mock('object')
     obj.should_receive(:test)
-    
+
     st.perform(obj)
   end
 
@@ -68,7 +68,7 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
 
     obj = mock('object')
     obj.should_receive(:test)
-    
+
     st.perform(obj)
   end
 

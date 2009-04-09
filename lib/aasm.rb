@@ -13,7 +13,7 @@ module AASM
 
   class UndefinedState < RuntimeError
   end
-  
+
   def self.included(base) #:nodoc:
     # TODO - need to ensure that a machine is being created because
     # AASM was either included or arrived at via inheritance.  It
@@ -36,11 +36,11 @@ module AASM
         AASM::StateMachine[self].initial_state
       end
     end
-    
+
     def aasm_initial_state=(state)
       AASM::StateMachine[self].initial_state = state
     end
-    
+
     def aasm_state(name, options={})
       sm = AASM::StateMachine[self]
       sm.create_state(name, options)
@@ -50,10 +50,10 @@ module AASM
         aasm_current_state == name
       end
     end
-    
+
     def aasm_event(name, options = {}, &block)
       sm = AASM::StateMachine[self]
-      
+
       unless sm.events.has_key?(name)
         sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
       end
@@ -74,11 +74,11 @@ module AASM
     def aasm_events
       AASM::StateMachine[self].events
     end
-    
+
     def aasm_states_for_select
       AASM::StateMachine[self].states.map { |state| state.for_select }
     end
-    
+
   end
 
   # Instance methods
@@ -129,10 +129,10 @@ module AASM
     aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
 
     new_state = self.class.aasm_events[name].fire(self, *args)
-    
+
     unless new_state.nil?
       aasm_state_object_for_state(new_state).call_action(:enter, self)
-      
+
       persist_successful = true
       if persist
         persist_successful = set_aasm_current_state_with_persistence(new_state)
@@ -141,7 +141,7 @@ module AASM
         self.aasm_current_state = new_state
       end
 
-      if persist_successful 
+      if persist_successful
         self.aasm_event_fired(self.aasm_current_state, new_state) if self.respond_to?(:aasm_event_fired)
       else
         self.aasm_event_failed(name) if self.respond_to?(:aasm_event_failed)
@@ -152,7 +152,7 @@ module AASM
       if self.respond_to?(:aasm_event_failed)
         self.aasm_event_failed(name)
       end
-      
+
       false
     end
   end
