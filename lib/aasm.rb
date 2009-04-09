@@ -128,6 +128,7 @@ module AASM
   def aasm_fire_event(name, persist, *args)
     aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
 
+    old_state = self.aasm_current_state
     new_state = self.class.aasm_events[name].fire(self, *args)
 
     unless new_state.nil?
@@ -142,15 +143,15 @@ module AASM
       end
 
       if persist_successful
-        self.aasm_event_fired(self.aasm_current_state, new_state) if self.respond_to?(:aasm_event_fired)
+        self.aasm_event_fired(name, old_state, self.aasm_current_state) if self.respond_to?(:aasm_event_fired)
       else
-        self.aasm_event_failed(name) if self.respond_to?(:aasm_event_failed)
+        self.aasm_event_failed(name, old_state) if self.respond_to?(:aasm_event_failed)
       end
 
       persist_successful
     else
       if self.respond_to?(:aasm_event_failed)
-        self.aasm_event_failed(name)
+        self.aasm_event_failed(name, old_state)
       end
 
       false
