@@ -16,10 +16,10 @@ describe AASM::SupportingClasses::State do
 
     state.name.should == :astate
   end
-  
+
   it 'should set the options and expose them as options' do
     state = new_state
-    
+
     state.options.should == @options
   end
 
@@ -56,7 +56,7 @@ describe AASM::SupportingClasses::State do
 
     record = mock('record')
     record.should_receive(:foobar)
-    
+
     state.call_action(:entering, record)
   end
 end
