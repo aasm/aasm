@@ -89,7 +89,7 @@ module AASM
       @aasm_current_state = aasm_read_state
     end
     return @aasm_current_state if @aasm_current_state
-    self.class.aasm_initial_state
+    aasm_determine_state_name(self.class.aasm_initial_state)
   end
 
   def aasm_events_for_current_state
@@ -117,6 +117,17 @@ module AASM
       aasm_write_state_without_persistence(state)
     end
     @aasm_current_state = state
+  end
+  
+  def aasm_determine_state_name(state)
+    case state
+    when Symbol, String
+      state
+    when Proc
+      state.call(self)
+    else
+      raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+    end
   end
 
   def aasm_state_object_for_state(name)

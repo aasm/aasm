@@ -41,6 +41,17 @@ end
 class Baz < Bar
 end
 
+class Banker
+  include AASM
+  aasm_initial_state  Proc.new { |banker| banker.rich? ? :retired : :selling_bad_mortgages }
+  aasm_state          :retired
+  aasm_state          :selling_bad_mortgages
+  RICH = 1_000_000
+  attr_accessor :balance
+  def initialize(balance = 0); self.balance = balance; end
+  def rich?; self.balance >= RICH; end
+end
+
 
 describe AASM, '- class level definitions' do
   it 'should define a class level aasm_initial_state() method on its including class' do
@@ -129,6 +140,11 @@ describe AASM, '- initial states' do
 
   it 'should use the first state defined if no initial state is given' do
     @bar.aasm_current_state.should == :read
+  end
+  
+  it 'should determine initial state from the Proc results' do
+    Banker.new(Banker::RICH - 1).aasm_current_state.should == :selling_bad_mortgages
+    Banker.new(Banker::RICH + 1).aasm_current_state.should == :retired
   end
 end
 
