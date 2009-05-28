@@ -50,7 +50,7 @@ begin
 
   class Beaver < June
   end
-  
+
   class Thief < ActiveRecord::Base
     include AASM
     aasm_initial_state  Proc.new { |thief| thief.skilled ? :rich : :jailed }
@@ -227,17 +227,17 @@ begin
       end
     end
   end
-  
+
   describe 'Thieves' do
     before(:each) do
       connection = mock(Connection, :columns => [])
       Thief.stub!(:connection).and_return(connection)
     end
-    
+
     it 'should be rich if they\'re skilled' do
       Thief.new(:skilled => true).aasm_current_state.should == :rich
     end
-    
+
     it 'should be jailed if they\'re unskilled' do
       Thief.new(:skilled => false).aasm_current_state.should == :jailed
     end

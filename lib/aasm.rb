@@ -118,7 +118,7 @@ module AASM
     end
     @aasm_current_state = state
   end
-  
+
   def aasm_determine_state_name(state)
     case state
     when Symbol, String

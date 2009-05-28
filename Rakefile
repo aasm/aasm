@@ -22,8 +22,8 @@ end
 $package_version = CURRENT_VERSION
 
 PKG_FILES = FileList['[A-Z]*',
-'lib/**/*.rb',
-'doc/**/*'
+  'lib/**/*.rb',
+  'doc/**/*'
 ]
 
 desc 'Generate documentation for the acts as state machine plugin.'
@@ -44,9 +44,10 @@ else
     s.name = 'aasm'
     s.version = $package_version
     s.summary = 'State machine mixin for Ruby objects'
-    s.description = <<-EOF
-    AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
-    EOF
+    s.description = <<EOF
+AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+EOF
+
     s.files = PKG_FILES.to_a
     s.require_path = 'lib'
     s.has_rdoc = true

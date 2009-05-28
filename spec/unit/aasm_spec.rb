@@ -141,7 +141,7 @@ describe AASM, '- initial states' do
   it 'should use the first state defined if no initial state is given' do
     @bar.aasm_current_state.should == :read
   end
-  
+
   it 'should determine initial state from the Proc results' do
     Banker.new(Banker::RICH - 1).aasm_current_state.should == :selling_bad_mortgages
     Banker.new(Banker::RICH + 1).aasm_current_state.should == :retired
