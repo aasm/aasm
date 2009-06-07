@@ -3,12 +3,13 @@ require File.join(File.dirname(__FILE__), 'state_transition')
 module AASM
   module SupportingClasses
     class Event
-      attr_reader :name, :success
-
+      attr_reader :name, :success, :options
+      
       def initialize(name, options = {}, &block)
         @name = name
         @success = options[:success]
         @transitions = []
+        @options = options
         instance_eval(&block) if block
       end
 
@@ -32,6 +33,10 @@ module AASM
         @transitions.any? { |t| t.from == state }
       end
 
+      def transitions_from_state(state)
+        @transitions.select { |t| t.from == state }
+      end
+
       def execute_success_callback(obj, success = nil)
         callback = success || @success
         case(callback)
@@ -42,6 +47,22 @@ module AASM
         when Array
           callback.each{|meth|self.execute_success_callback(obj, meth)}
         end
+      end
+
+      def call_action(action, record)
+        action = @options[action]
+        case action
+        when Symbol, String
+          record.send(action)
+        when Proc
+          action.call(record)
+        when Array
+          action.each { |a| record.send(a) }
+        end
+      end
+
+      def all_transitions
+        @transitions
       end
 
       private

@@ -2,7 +2,7 @@ PKG_FILES = ["CHANGELOG", "MIT-LICENSE", "Rakefile", "README.rdoc", "TODO", "lib
 
 Gem::Specification.new do |s|
   s.name = 'aasm'
-  s.version = "2.0.7.1"
+  s.version = "2.1.0"
   s.summary = %q{State machine mixin for Ruby objects}
   s.description = %q{AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.}
 
