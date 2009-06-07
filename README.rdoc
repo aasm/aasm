@@ -13,33 +13,30 @@ AASM has the following features:
 
 == New Callbacks
 
-The only changes I've made are creating more callbacks with slightly more obvious semantics ;).
-
 The callback chain & order on a successful event looks like:
 
   oldstate:exit*
   event:before
   __find transition, if possible__
   transition:on_transition*
-  newstate:enter*
   oldstate:before_exit
   newstate:before_enter
+  newstate:enter*
   __update state__
+  event:success*
   oldstate:after_exit
   oldstate:after_enter
   event:after
-  event:success*
   obj:aasm_event_fired*
 
   (*) marks old callbacks
 
-Note that the old callbacks haven't been removed and still have their same semantics.  All of this behavior was added without removing any old behavior.
 
 == Download
 
 The latest AASM can currently be pulled from the git repository on github.
 
-* http://github.com/dunedain289/aasm/tree/master
+* http://github.com/ttilley/aasm/tree/master
 
 
 == Installation
@@ -47,7 +44,7 @@ The latest AASM can currently be pulled from the git repository on github.
 === From GitHub hosted gems
 
   % sudo gem sources -a http://gems.github.com # (you only need to do this once)
-  % sudo gem install dunedain289-aasm
+  % sudo gem install ttilley-aasm
 
 === Building your own gems
 
@@ -114,7 +111,6 @@ This example uses a few of the more complex features available.
 
 Author::  Scott Barron <scott at elitists dot net>
 License:: Original code Copyright 2006, 2007, 2008 by Scott Barron.
-          New changes Copyright 2009 by Scott Petersen.
           Released under an MIT-style license.  See the LICENSE  file
           included in the distribution.
 
