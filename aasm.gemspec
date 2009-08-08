@@ -1,8 +1,8 @@
-PKG_FILES = ["CHANGELOG", "MIT-LICENSE", "Rakefile", "README.rdoc", "TODO", "lib/aasm.rb", "lib/event.rb", "lib/persistence/active_record_persistence.rb", "lib/persistence.rb", "lib/state.rb", "lib/state_machine.rb", "lib/state_transition.rb", "lib/version.rb", "doc/jamis.rb"]
+PKG_FILES = ["CHANGELOG", "MIT-LICENSE", "Rakefile", "README.rdoc", "TODO", "lib/aasm.rb", "lib/event.rb", "lib/persistence/active_record_persistence.rb", "lib/persistence.rb", "lib/state.rb", "lib/state_machine.rb", "lib/state_transition.rb", "doc/jamis.rb"]
 
 Gem::Specification.new do |s|
   s.name = 'aasm'
-  s.version = "2.0.5"
+  s.version = "2.0.6"
   s.summary = 'State machine mixin for Ruby objects'
   s.description = <<-EOF
 AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
