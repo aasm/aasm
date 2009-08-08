@@ -15,12 +15,11 @@ module AASM
   end
 
   def self.included(base) #:nodoc:
-    # TODO - need to ensure that a machine is being created because
-    # AASM was either included or arrived at via inheritance.  It
-    # cannot be both.
     base.extend AASM::ClassMethods
     AASM::Persistence.set_persistence(base)
-    AASM::StateMachine[base] = AASM::StateMachine.new('')
+    unless AASM::StateMachine[base]
+      AASM::StateMachine[base] = AASM::StateMachine.new('')
+    end
   end
 
   module ClassMethods
