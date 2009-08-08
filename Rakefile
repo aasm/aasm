@@ -34,7 +34,7 @@ rd = Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.title    = 'AASM'
   rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
   rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
-  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.include('lib/*.rb', 'lib/**/*.rb', 'doc/**/*.rdoc')
 end
 
 if !defined?(Gem)
