@@ -27,6 +27,11 @@ class Foo
   end
 end
 
+class FooTwo < Foo
+  include AASM
+  aasm_state :foo
+end
+
 class Bar
   include AASM
 
@@ -71,20 +76,14 @@ end
 
 
 describe AASM, '- subclassing' do
-  before(:each) do
-    @parent = Class.new do
-      include AASM
+  it 'should have the parent states' do
+    Foo.aasm_states.each do |state|
+      FooTwo.aasm_states.should include(state)
     end
   end
-
-  it 'should invoke the original inherited callback' do
-    @parent.should_receive(:inherited)
-    Class.new(@parent)
-  end
-
-  it 'should have a unique states hash' do
-    child = Class.new(@parent)
-    child.aasm_states.equal?(@parent.aasm_states).should be_false
+  
+  it 'should not add the child states to the parent machine' do
+    Foo.aasm_states.should_not include(:foo)
   end
 end
 
