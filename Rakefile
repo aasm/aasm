@@ -34,7 +34,7 @@ rd = Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.title    = 'AASM'
   rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
   rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
-  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.include('lib/*.rb', 'lib/**/*.rb', 'doc/**/*.rdoc')
 end
 
 if !defined?(Gem)
@@ -54,9 +54,9 @@ EOF
     s.extra_rdoc_files = rd.rdoc_files.reject {|fn| fn =~ /\.rb$/}.to_a
     s.rdoc_options = rd.options
 
-    s.authors = ['Scott Barron', 'Scott Petersen']
-    s.email = 'petersen@dunedain289.com'
-    s.homepage = 'http://github.com/dunedain289/aasm'
+    s.authors = ['Scott Barron', 'Scott Petersen', 'Travis Tilley']
+    s.email = 'ttilley@gmail.com'
+    s.homepage = 'http://github.com/ttilley/aasm'
   end
 
   package_task = Rake::GemPackageTask.new(spec) do |pkg|
