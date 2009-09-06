@@ -36,7 +36,7 @@ The callback chain & order on a successful event looks like:
 
 The latest AASM can currently be pulled from the git repository on github.
 
-* http://github.com/ttilley/aasm/tree/master
+* http://github.com/rubyist/aasm/tree/master
 
 
 == Installation
@@ -44,7 +44,7 @@ The latest AASM can currently be pulled from the git repository on github.
 === From GitHub hosted gems
 
   % sudo gem sources -a http://gems.github.com # (you only need to do this once)
-  % sudo gem install ttilley-aasm
+  % sudo gem install rubyist-aasm
 
 === Building your own gems
 
