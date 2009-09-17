@@ -22,8 +22,8 @@ end
 $package_version = CURRENT_VERSION
 
 PKG_FILES = FileList['[A-Z]*',
-'lib/**/*.rb',
-'doc/**/*'
+  'lib/**/*.rb',
+  'doc/**/*'
 ]
 
 desc 'Generate documentation for the acts as state machine plugin.'
@@ -34,7 +34,7 @@ rd = Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.title    = 'AASM'
   rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
   rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
-  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.include('lib/*.rb', 'lib/**/*.rb', 'doc/**/*.rdoc')
 end
 
 if !defined?(Gem)
@@ -44,18 +44,19 @@ else
     s.name = 'aasm'
     s.version = $package_version
     s.summary = 'State machine mixin for Ruby objects'
-    s.description = <<-EOF
-    AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
-    EOF
+    s.description = <<EOF
+AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
+EOF
+
     s.files = PKG_FILES.to_a
     s.require_path = 'lib'
     s.has_rdoc = true
     s.extra_rdoc_files = rd.rdoc_files.reject {|fn| fn =~ /\.rb$/}.to_a
     s.rdoc_options = rd.options
 
-    s.author = 'Scott Barron'
-    s.email = 'scott@elitists.net'
-    s.homepage = 'http://rubyi.st/aasm'
+    s.authors = ['Scott Barron', 'Scott Petersen', 'Travis Tilley']
+    s.email = 'ttilley@gmail.com'
+    s.homepage = 'http://github.com/ttilley/aasm'
   end
 
   package_task = Rake::GemPackageTask.new(spec) do |pkg|

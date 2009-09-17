@@ -10,10 +10,10 @@ module AASM
       val = args.pop
       (@machines ||= {})[args] = val
     end
-    
+
     attr_accessor :states, :events, :initial_state, :config
     attr_reader :name
-    
+
     def initialize(name)
       @name   = name
       @initial_state = nil

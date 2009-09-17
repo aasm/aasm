@@ -11,14 +11,32 @@ AASM has the following features:
 * Events
 * Transitions
 
+== New Callbacks
+
+The callback chain & order on a successful event looks like:
+
+  oldstate:exit*
+  event:before
+  __find transition, if possible__
+  transition:on_transition*
+  oldstate:before_exit
+  newstate:before_enter
+  newstate:enter*
+  __update state__
+  event:success*
+  oldstate:after_exit
+  oldstate:after_enter
+  event:after
+  obj:aasm_event_fired*
+
+  (*) marks old callbacks
+
+
 == Download
 
 The latest AASM can currently be pulled from the git repository on github.
 
 * http://github.com/rubyist/aasm/tree/master
-
-A release and a gem are forthcoming.
-
 
 
 == Installation
@@ -31,7 +49,7 @@ A release and a gem are forthcoming.
 === Building your own gems
 
   % rake gem
-  % sudo gem install pkg/aasm-2.0.1.gem
+  % sudo gem install pkg/aasm-2.1.gem
 
 
 == Simple Example
@@ -57,14 +75,44 @@ Here's a quick example highlighting some of the features.
     end
   end
 
+== A Slightly More Complex Example
+
+This example uses a few of the more complex features available.
+
+  class Relationship
+    include AASM
+    
+    aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
+    
+    aasm_state :dating,   :enter => :make_happy,        :exit => :make_depressed
+    aasm_state :intimate, :enter => :make_very_happy,   :exit => :never_speak_again
+    aasm_state :married,  :enter => :give_up_intimacy,  :exit => :buy_exotic_car_and_wear_a_combover
+    
+    aasm_event :get_intimate do
+      transitions :to => :intimate, :from => [:dating], :guard => :drunk?
+    end
+    
+    aasm_event :get_married do
+      transitions :to => :married, :from => [:dating, :intimate], :guard => :willing_to_give_up_manhood?
+    end
+    
+    def strictly_for_fun?; end
+    def drunk?; end
+    def willing_to_give_up_manhood?; end
+    def make_happy; end
+    def make_depressed; end
+    def make_very_happy; end
+    def never_speak_again; end
+    def give_up_intimacy; end
+    def buy_exotic_car_and_wear_a_combover; end
+  end
+
 = Other Stuff
 
 Author::  Scott Barron <scott at elitists dot net>
-License:: Copyright 2006, 2007, 2008 by Scott Barron.
+License:: Original code Copyright 2006, 2007, 2008 by Scott Barron.
           Released under an MIT-style license.  See the LICENSE  file
           included in the distribution.
-Bugs::    http://rubyist.lighthouseapp.com/projects/13207-aasm/
-GitHub::  http://github.com/rubyist/aasm/tree/master
 
 == Warranty
 

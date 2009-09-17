@@ -51,6 +51,14 @@ begin
   class Beaver < June
   end
 
+  class Thief < ActiveRecord::Base
+    include AASM
+    aasm_initial_state  Proc.new { |thief| thief.skilled ? :rich : :jailed }
+    aasm_state          :rich
+    aasm_state          :jailed
+    attr_accessor :skilled, :aasm_state
+  end
+
   describe "aasm model", :shared => true do
     it "should include AASM::Persistence::ActiveRecordPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
@@ -217,6 +225,21 @@ begin
         NamedScopeExample.should_not_receive(:named_scope)
         NamedScopeExample.aasm_state :new
       end
+    end
+  end
+
+  describe 'Thieves' do
+    before(:each) do
+      connection = mock(Connection, :columns => [])
+      Thief.stub!(:connection).and_return(connection)
+    end
+
+    it 'should be rich if they\'re skilled' do
+      Thief.new(:skilled => true).aasm_current_state.should == :rich
+    end
+
+    it 'should be jailed if they\'re unskilled' do
+      Thief.new(:skilled => false).aasm_current_state.should == :jailed
     end
   end
 

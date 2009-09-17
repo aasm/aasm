@@ -27,6 +27,11 @@ class Foo
   end
 end
 
+class FooTwo < Foo
+  include AASM
+  aasm_state :foo
+end
+
 class Bar
   include AASM
 
@@ -39,6 +44,17 @@ class Bar
 end
 
 class Baz < Bar
+end
+
+class Banker
+  include AASM
+  aasm_initial_state  Proc.new { |banker| banker.rich? ? :retired : :selling_bad_mortgages }
+  aasm_state          :retired
+  aasm_state          :selling_bad_mortgages
+  RICH = 1_000_000
+  attr_accessor :balance
+  def initialize(balance = 0); self.balance = balance; end
+  def rich?; self.balance >= RICH; end
 end
 
 
@@ -71,20 +87,14 @@ end
 
 
 describe AASM, '- subclassing' do
-  before(:each) do
-    @parent = Class.new do
-      include AASM
+  it 'should have the parent states' do
+    Foo.aasm_states.each do |state|
+      FooTwo.aasm_states.should include(state)
     end
   end
-
-  it 'should invoke the original inherited callback' do
-    @parent.should_receive(:inherited)
-    Class.new(@parent)
-  end
-
-  it 'should have a unique states hash' do
-    child = Class.new(@parent)
-    child.aasm_states.equal?(@parent.aasm_states).should be_false
+  
+  it 'should not add the child states to the parent machine' do
+    Foo.aasm_states.should_not include(:foo)
   end
 end
 
@@ -129,6 +139,11 @@ describe AASM, '- initial states' do
 
   it 'should use the first state defined if no initial state is given' do
     @bar.aasm_current_state.should == :read
+  end
+
+  it 'should determine initial state from the Proc results' do
+    Banker.new(Banker::RICH - 1).aasm_current_state.should == :selling_bad_mortgages
+    Banker.new(Banker::RICH + 1).aasm_current_state.should == :retired
   end
 end
 
@@ -255,66 +270,52 @@ describe AASM, '- getting events for a state' do
 end
 
 describe AASM, '- event callbacks' do
-  it 'should call aasm_event_fired if defined and successful for bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_fired(from, to)
+  describe "with aasm_event_fired defined" do
+    before do
+      @foo = Foo.new
+      def @foo.aasm_event_fired(event, from, to)
+      end
     end
 
-    foo.should_receive(:aasm_event_fired)
+    it 'should call it for successful bang fire' do
+      @foo.should_receive(:aasm_event_fired).with(:close, :open, :closed)
+      @foo.close!
+    end
 
-    foo.close!
+    it 'should call it for successful non-bang fire' do
+      @foo.should_receive(:aasm_event_fired)
+      @foo.close
+    end
+
+    it 'should not call it for failing bang fire' do
+      @foo.stub!(:set_aasm_current_state_with_persistence).and_return(false)
+      @foo.should_not_receive(:aasm_event_fired)
+      @foo.close!
+    end
   end
 
-  it 'should not call aasm_event_fired if defined but persist fails for bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_fired(from, to)
-    end
-    foo.stub!(:set_aasm_current_state_with_persistence).and_return(false)
-
-    foo.should_not_receive(:aasm_event_fired)
-
-    foo.close!
-  end
-
-  it 'should not call aasm_event_failed if defined and persist fails for bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_failed(from, to)
-    end
-    foo.stub!(:set_aasm_current_state_with_persistence).and_return(false)
-
-    foo.should_receive(:aasm_event_failed)
-
-    foo.close!
-  end
-
-  it 'should call aasm_event_fired if defined and successful for non-bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_fired(from, to)
+  describe "with aasm_event_failed defined" do
+    before do
+      @foo = Foo.new
+      def @foo.aasm_event_failed(event, from)
+      end
     end
 
-    foo.should_receive(:aasm_event_fired)
-
-    foo.close
-  end
-
-  it 'should call aasm_event_failed if defined and transition failed for bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_failed(event)
+    it 'should call it when transition failed for bang fire' do
+      @foo.should_receive(:aasm_event_failed).with(:null, :open)
+      @foo.null!
     end
 
-    foo.should_receive(:aasm_event_failed)
-
-    foo.null!
-  end
-
-  it 'should call aasm_event_failed if defined and transition failed for non-bang fire' do
-    foo = Foo.new
-    def foo.aasm_event_failed(event)
+    it 'should call it when transition failed for non-bang fire' do
+      @foo.should_receive(:aasm_event_failed).with(:null, :open)
+      @foo.null
     end
 
-    foo.should_receive(:aasm_event_failed)
-
-    foo.null
+    it 'should not call it if persist fails for bang fire' do
+      @foo.stub!(:set_aasm_current_state_with_persistence).and_return(false)
+      @foo.should_receive(:aasm_event_failed)
+      @foo.close!
+    end
   end
 end
 
