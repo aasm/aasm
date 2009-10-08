@@ -17,6 +17,21 @@ module AASM
 
       def call_action(action, record)
         action = @options[action]
+        if action.is_a? Array
+          action.each do |a|
+            _call(a, record)
+          end
+        else
+          _call(action, record)
+        end
+      end
+
+      def for_select
+        [name.to_s.gsub(/_/, ' ').capitalize, name.to_s]
+      end
+      
+      private
+      def _call(action, record)
         case action
         when Symbol, String
           record.send(action)
@@ -25,10 +40,6 @@ module AASM
         when Array
           action.each { |a| record.send(a) }
         end
-      end
-
-      def for_select
-        [name.to_s.gsub(/_/, ' ').capitalize, name.to_s]
       end
     end
   end
