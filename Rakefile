@@ -11,6 +11,7 @@ begin
     gem.authors = ["Scott Barron", "Scott Petersen", "Travis Tilley"]
     gem.email = "ttilley@gmail.com"
     gem.add_development_dependency "rspec"
+    gem.add_development_dependency 'sdoc'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
@@ -60,16 +61,24 @@ end
 
 task :default => :spec
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION')
-    version = File.read('VERSION')
-  else
-    version = ""
-  end
+begin
+  require 'rake/rdoctask'
+  require 'sdoc'
+  Rake::RDocTask.new do |rdoc|
+    if File.exist?('VERSION')
+      version = File.read('VERSION')
+    else
+      version = ""
+    end
 
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "ttilley-aasm #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+    rdoc.rdoc_dir = 'rdoc'
+    rdoc.title = "ttilley-aasm #{version}"
+    rdoc.rdoc_files.include('README*')
+    rdoc.rdoc_files.include('lib/**/*.rb')
+
+    rdoc.options << '--fmt' << 'shtml'
+    rdoc.template = 'direct'
+  end
+rescue LoadError
+  puts "ttilley-aasm makes use of the sdoc gem. Install it with: sudo gem install sdoc"
 end
