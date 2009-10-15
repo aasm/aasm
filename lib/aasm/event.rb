@@ -4,13 +4,11 @@ module AASM
   module SupportingClasses
     class Event
       attr_reader :name, :success, :options
-      
+
       def initialize(name, options = {}, &block)
         @name = name
-        @success = options[:success]
         @transitions = []
-        @options = options
-        instance_eval(&block) if block
+        update(options, &block)
       end
 
       def fire(obj, to_state=nil, *args)
@@ -37,35 +35,59 @@ module AASM
         @transitions.select { |t| t.from == state }
       end
 
-      def execute_success_callback(obj, success = nil)
-        callback = success || @success
-        case(callback)
-        when String, Symbol
-          obj.send(callback)
-        when Proc
-          callback.call(obj)
-        when Array
-          callback.each{|meth|self.execute_success_callback(obj, meth)}
-        end
-      end
-
-      def call_action(action, record)
-        action = @options[action]
-        case action
-        when Symbol, String
-          record.send(action)
-        when Proc
-          action.call(record)
-        when Array
-          action.each { |a| record.send(a) }
-        end
-      end
-
       def all_transitions
         @transitions
       end
 
+      def call_action(action, record)
+        action = @options[action]
+        action.is_a?(Array) ?
+                action.each {|a| _call_action(a, record)} :
+                _call_action(action, record)
+      end
+
+      def ==(event)
+        if event.is_a? Symbol
+          name == event
+        else
+          name == event.name
+        end
+      end
+
+      def update(options = {}, &block)
+        if options.key?(:success) then
+          @success = options[:success]
+        end
+        if block then
+          instance_eval(&block)
+        end
+        @options = options
+        self
+      end
+
+      def execute_success_callback(obj, success = nil)
+        callback = success || @success
+        case(callback)
+          when String, Symbol
+            obj.send(callback)
+          when Proc
+            callback.call(obj)
+          when Array
+            callback.each{|meth|self.execute_success_callback(obj, meth)}
+        end
+      end
+
       private
+
+      def _call_action(action, record)
+        case action
+          when Symbol, String
+            record.send(action)
+          when Proc
+            action.call(record)
+        end
+      end
+
       def transitions(trans_opts)
         Array(trans_opts[:from]).each do |s|
           @transitions << SupportingClasses::StateTransition.new(trans_opts.merge({:from => s.to_sym}))

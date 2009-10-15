@@ -15,7 +15,7 @@ module AASM
     attr_reader :name
 
     def initialize(name)
-      @name   = name
+      @name = name
       @initial_state = nil
       @states = []
       @events = {}
