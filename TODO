@@ -1,9 +1,0 @@
-Before Next Release:
-
-* Add #aasm_next_state_for_event
-* Add #aasm_next_states_for_event
-
-Cool ideas from users:
-
-* Support multiple state machines on one object (Chris Nelson)
-* http://justbarebones.blogspot.com/2007/11/actsasstatemachine-enhancements.html (Chetan Patil)

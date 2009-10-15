@@ -1,5 +1,6 @@
-rdoc
-pkg
-coverage
-*~
 *.sw?
+*~
+.DS_Store
+coverage
+pkg
+rdoc
