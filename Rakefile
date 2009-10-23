@@ -95,7 +95,7 @@ begin
     end
 
     rdoc.rdoc_dir = 'rdoc'
-    rdoc.title = "ttilley-aasm #{version}"
+    rdoc.title = "aasm #{version}"
     rdoc.rdoc_files.include('README*')
     rdoc.rdoc_files.include('lib/**/*.rb')
 
