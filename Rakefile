@@ -55,8 +55,8 @@ EOF
     s.rdoc_options = rd.options
 
     s.authors = ['Scott Barron', 'Scott Petersen', 'Travis Tilley']
-    s.email = 'ttilley@gmail.com'
-    s.homepage = 'http://github.com/ttilley/aasm'
+    s.email = 'scott@elitists.net'
+    s.homepage = 'http://github.com/rubyist/aasm'
   end
 
   package_task = Rake::GemPackageTask.new(spec) do |pkg|
