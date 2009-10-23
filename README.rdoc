@@ -41,7 +41,13 @@ The latest AASM can currently be pulled from the git repository on github.
 
 == Installation
 
-=== From GitHub hosted gems
+=== From gemcutter
+
+  % sudo gem install gemcutter
+  % sudo gem tumble
+  % sudo gem install aasm
+
+=== From GitHub hosted gems (only older releases are available)
 
   % sudo gem sources -a http://gems.github.com # (you only need to do this once)
   % sudo gem install rubyist-aasm
