@@ -25,7 +25,7 @@ The callback chain & order on a successful event looks like:
   __update state__
   event:success*
   oldstate:after_exit
-  oldstate:after_enter
+  newstate:after_enter
   event:after
   obj:aasm_event_fired*
 

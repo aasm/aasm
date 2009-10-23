@@ -354,6 +354,7 @@ class ChetanPatil
   aasm_state :showering
   aasm_state :working
   aasm_state :dating
+  aasm_state :prettying_up
 
   aasm_event :wakeup do
     transitions :from => :sleeping, :to => [:showering, :working]
@@ -362,9 +363,16 @@ class ChetanPatil
   aasm_event :dress do
     transitions :from => :sleeping, :to => :working, :on_transition => :wear_clothes
     transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |obj, *args| obj.wear_clothes(*args) }
+    transitions :from => :showering, :to => :prettying_up, :on_transition => [:condition_hair, :fix_hair]
   end
 
   def wear_clothes(shirt_color, trouser_type)
+  end
+
+  def condition_hair
+  end
+
+  def fix_hair
   end
 end
 
@@ -412,5 +420,13 @@ describe ChetanPatil do
 
     cp.should_receive(:wear_clothes).with('purple', 'slacks')
     cp.dress!(:dating, 'purple', 'slacks')
+  end
+
+  it 'should call on_transition with an array of methods' do
+    cp = ChetanPatil.new
+    cp.wakeup! :showering
+    cp.should_receive(:condition_hair)
+    cp.should_receive(:fix_hair)
+    cp.dress!(:prettying_up)
   end
 end

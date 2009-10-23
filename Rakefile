@@ -1,95 +1,108 @@
-# Copyright 2008 Scott Barron (scott@elitists.net)
-# All rights reserved
-
-# This file may be distributed under an MIT style license.
-# See MIT-LICENSE for details.
+require 'rubygems'
+require 'rake'
 
 begin
-  require 'rubygems'
-  require 'rake/gempackagetask'
-  require 'rake/testtask'
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "aasm"
+    gem.summary = %Q{State machine mixin for Ruby objects}
+    gem.description = %Q{AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.}
+    gem.homepage = "http://github.com/rubyist/aasm"
+    gem.authors = ["Scott Barron", "Scott Petersen", "Travis Tilley"]
+    gem.email = "scott@elitists.net, ttilley@gmail.com"
+    gem.add_development_dependency "rspec"
+    gem.add_development_dependency "shoulda"
+    gem.add_development_dependency 'sdoc'
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
+
+require 'spec/rake/spectask'
+require 'rake/testtask'
+
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/*_test.rb'
+  test.verbose = true
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new(:rcov_shoulda) do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/*_test.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+  end
+end
+
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.spec_opts = ['-cfs']
+end
+
+Spec::Rake::SpecTask.new(:rcov_rspec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+task :test => :check_dependencies
+task :spec => :check_dependencies
+
+begin
+  require 'reek/rake_task'
+  Reek::RakeTask.new do |t|
+    t.fail_on_error = true
+    t.verbose = false
+    t.source_files = 'lib/**/*.rb'
+  end
+rescue LoadError
+  task :reek do
+    abort "Reek is not available. In order to run reek, you must: sudo gem install reek"
+  end
+end
+
+begin
+  require 'roodi'
+  require 'roodi_task'
+  RoodiTask.new do |t|
+    t.verbose = false
+  end
+rescue LoadError
+  task :roodi do
+    abort "Roodi is not available. In order to run roodi, you must: sudo gem install roodi"
+  end
+end
+
+task :default => :test
+
+begin
   require 'rake/rdoctask'
-  require 'spec/rake/spectask'
-rescue Exception
-  nil
-end
+  require 'sdoc'
+  Rake::RDocTask.new do |rdoc|
+    if File.exist?('VERSION')
+      version = File.read('VERSION')
+    else
+      version = ""
+    end
 
-if `ruby -Ilib -raasm -e "print AASM.Version"` =~ /([0-9.]+)$/
-  CURRENT_VERSION = $1
-else
-  CURRENT_VERSION = '0.0.0'
-end
-$package_version = CURRENT_VERSION
+    rdoc.rdoc_dir = 'rdoc'
+    rdoc.title = "ttilley-aasm #{version}"
+    rdoc.rdoc_files.include('README*')
+    rdoc.rdoc_files.include('lib/**/*.rb')
 
-PKG_FILES = FileList['[A-Z]*',
-  'lib/**/*.rb',
-  'doc/**/*'
-]
-
-desc 'Generate documentation for the acts as state machine plugin.'
-rd = Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'html'
-  rdoc.template = 'doc/jamis.rb'
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'AASM'
-  rdoc.options << '--line-numbers' << '--inline-source' <<  '--main' << 'README.rdoc' << '--title' << 'AASM'
-  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGELOG')
-  rdoc.rdoc_files.include('lib/*.rb', 'lib/**/*.rb', 'doc/**/*.rdoc')
-end
-
-if !defined?(Gem)
-  puts "Package target requires RubyGEMs"
-else
-  spec = Gem::Specification.new do |s|
-    s.name = 'aasm'
-    s.version = $package_version
-    s.summary = 'State machine mixin for Ruby objects'
-    s.description = <<EOF
-AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.
-EOF
-
-    s.files = PKG_FILES.to_a
-    s.require_path = 'lib'
-    s.has_rdoc = true
-    s.extra_rdoc_files = rd.rdoc_files.reject {|fn| fn =~ /\.rb$/}.to_a
-    s.rdoc_options = rd.options
-
-    s.authors = ['Scott Barron', 'Scott Petersen', 'Travis Tilley']
-    s.email = 'scott@elitists.net'
-    s.homepage = 'http://github.com/rubyist/aasm'
+    rdoc.options << '--fmt' << 'shtml'
+    rdoc.template = 'direct'
   end
-
-  package_task = Rake::GemPackageTask.new(spec) do |pkg|
-    pkg.need_zip = true
-    pkg.need_tar = true
-  end
+rescue LoadError
+  puts "aasm makes use of the sdoc gem. Install it with: sudo gem install sdoc"
 end
 
-if !defined?(Spec)
-  puts "spec and cruise targets require RSpec"
-else
-  desc "Run all examples with RCov"
-  Spec::Rake::SpecTask.new('cruise') do |t|
-    t.spec_files = FileList['spec/**/*.rb']
-    t.rcov = true
-    t.rcov_opts = ['--exclude', 'spec', '--exclude', 'Library', '--exclude', 'rcov.rb']
-  end
-
-  desc "Run all examples"
-  Spec::Rake::SpecTask.new('spec') do |t|
-    t.spec_files = FileList['spec/**/*.rb']
-    t.rcov = false
-    t.spec_opts = ['-cfs']
-  end
-end
-
-if !defined?(Gem)
-  puts "Package target requires RubyGEMs"
-else
-  desc "sudo gem uninstall aasm && rake gem && sudo gem install pkg/aasm-3.0.0.gem"
-  task :reinstall do
-    puts `sudo gem uninstall aasm && rake gem && sudo gem install pkg/aasm-3.0.0.gem`
-  end
-end
-
-task :default => [:spec]

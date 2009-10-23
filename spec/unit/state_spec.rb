@@ -50,6 +50,18 @@ describe AASM::SupportingClasses::State do
 
     state.call_action(:entering, record)
   end
+  
+  it 'should send a message to the record for each action' do
+    state = new_state(:entering => [:a, :b, "c", lambda {|r| r.foobar }])
+    
+    record = mock('record')
+    record.should_receive(:a)
+    record.should_receive(:b)
+    record.should_receive(:c)
+    record.should_receive(:foobar)
+    
+    state.call_action(:entering, record)
+  end
 
   it 'should call a proc, passing in the record for an action if the action is present' do
     state = new_state(:entering => Proc.new {|r| r.foobar})

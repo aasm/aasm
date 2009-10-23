@@ -4,10 +4,6 @@ require File.join(File.dirname(__FILE__), 'state_machine')
 require File.join(File.dirname(__FILE__), 'persistence')
 
 module AASM
-  def self.Version
-    '2.1.1'
-  end
-
   class InvalidTransition < RuntimeError
   end
 
@@ -88,7 +84,20 @@ module AASM
       @aasm_current_state = aasm_read_state
     end
     return @aasm_current_state if @aasm_current_state
-    aasm_determine_state_name(self.class.aasm_initial_state)
+
+    aasm_enter_initial_state
+  end
+
+  def aasm_enter_initial_state
+    state_name = aasm_determine_state_name(self.class.aasm_initial_state)
+    state = aasm_state_object_for_state(state_name)
+
+    state.call_action(:before_enter, self)
+    state.call_action(:enter, self)
+    self.aasm_current_state = state_name
+    state.call_action(:after_enter, self)
+
+    state_name
   end
 
   def aasm_events_for_current_state
@@ -101,6 +110,7 @@ module AASM
   end
 
   private
+
   def set_aasm_current_state_with_persistence(state)
     save_success = true
     if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
@@ -120,12 +130,12 @@ module AASM
 
   def aasm_determine_state_name(state)
     case state
-    when Symbol, String
-      state
-    when Proc
-      state.call(self)
-    else
-      raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+      when Symbol, String
+        state
+      when Proc
+        state.call(self)
+      else
+        raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
     end
   end
 
@@ -148,13 +158,13 @@ module AASM
 
     unless new_state_name.nil?
       new_state = aasm_state_object_for_state(new_state_name)
-    
+
       # new before_ callbacks
       old_state.call_action(:before_exit, self)
       new_state.call_action(:before_enter, self)
-      
+
       new_state.call_action(:enter, self)
-      
+
       persist_successful = true
       if persist
         persist_successful = set_aasm_current_state_with_persistence(new_state_name)
@@ -163,7 +173,7 @@ module AASM
         self.aasm_current_state = new_state_name
       end
 
-      if persist_successful 
+      if persist_successful
         old_state.call_action(:after_exit, self)
         new_state.call_action(:after_enter, self)
         event.call_action(:after, self)

@@ -15,7 +15,7 @@ module AASM
     attr_reader :name
 
     def initialize(name)
-      @name   = name
+      @name = name
       @initial_state = nil
       @states = []
       @events = {}
@@ -25,6 +25,7 @@ module AASM
     def clone
       klone = super
       klone.states = states.clone
+      klone.events = events.clone
       klone
     end
 
