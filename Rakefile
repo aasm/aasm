@@ -7,7 +7,7 @@ begin
     gem.name = "aasm"
     gem.summary = %Q{State machine mixin for Ruby objects}
     gem.description = %Q{AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.}
-    gem.homepage = "http://github.com/rubyist/aasm"
+    gem.homepage = "http://rubyist.github.com/aasm/"
     gem.authors = ["Scott Barron", "Scott Petersen", "Travis Tilley"]
     gem.email = "scott@elitists.net, ttilley@gmail.com"
     gem.add_development_dependency "rspec"
