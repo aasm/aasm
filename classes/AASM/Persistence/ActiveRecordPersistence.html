@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>AASM::Persistence::ActiveRecordPersistence</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../../../css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../css/main.css" type="text/css" media="screen" />
+    <script src="../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>     
+    <div class="banner">
+        <h1>
+            <span class="type">Module</span> 
+            AASM::Persistence::ActiveRecordPersistence 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../files/lib/aasm/persistence/active_record_persistence_rb.html">lib/aasm/persistence/active_record_persistence.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+    
+
+    
+
+    
+    
+
+    
+    
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+    
+        <dt>I</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000029">included</a></li>
+                
+            </ul>
+        </dd>
+    
+    </dl>
+    
+
+    
+
+    
+
+    
+    <div class="sectiontitle">Classes and Modules</div>
+    <ul>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/ClassMethods.html">AASM::Persistence::ActiveRecordPersistence::ClassMethods</a></li>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/InstanceMethods.html">AASM::Persistence::ActiveRecordPersistence::InstanceMethods</a></li>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/NamedScopeMethods.html">AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods</a></li>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/ReadState.html">AASM::Persistence::ActiveRecordPersistence::ReadState</a></li>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/WriteState.html">AASM::Persistence::ActiveRecordPersistence::WriteState</a></li>
+        
+        <li><span class="type">MODULE</span> <a href="ActiveRecordPersistence/WriteStateWithoutPersistence.html">AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence</a></li>
+        
+    </ul>
+    
+
+    
+
+    
+
+    
+            <div class="sectiontitle">Class Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000029">
+                    
+                    <a name="M000029"></a><b>included</b>(base)
+                    
+                </div>
+                
+                <div class="description">
+                  <p>
+This method:
+</p>
+<ul>
+<li>extends the model with <a
+href="ActiveRecordPersistence/ClassMethods.html">ClassMethods</a>
+
+</li>
+<li>includes <a
+href="ActiveRecordPersistence/InstanceMethods.html">InstanceMethods</a>
+
+</li>
+</ul>
+<p>
+Unless the corresponding methods are already defined, it includes
+</p>
+<ul>
+<li><a href="ActiveRecordPersistence/ReadState.html">ReadState</a>
+
+</li>
+<li><a href="ActiveRecordPersistence/WriteState.html">WriteState</a>
+
+</li>
+<li><a
+href="ActiveRecordPersistence/WriteStateWithoutPersistence.html">WriteStateWithoutPersistence</a>
+
+</li>
+</ul>
+<p>
+Adds
+</p>
+<pre>
+  before_validation_on_create :aasm_ensure_initial_state
+</pre>
+<p>
+As a result, it doesn&#8217;t matter when you define your methods - the
+following 2 are equivalent
+</p>
+<pre>
+  class Foo &lt; ActiveRecord::Base
+    def aasm_write_state(state)
+      &quot;bar&quot;
+    end
+    include AASM
+  end
+
+  class Foo &lt; ActiveRecord::Base
+    include AASM
+    def aasm_write_state(state)
+      &quot;bar&quot;
+    end
+  end
+</pre>
+
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000029_source')" id="l_M000029_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L34" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000029_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 34</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">base</span>)
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">extend</span> <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ClassMethods</span>
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">InstanceMethods</span>)
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ReadState</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">base</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">:aasm_read_state</span>)
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">WriteState</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">base</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">:aasm_write_state</span>)
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">WriteStateWithoutPersistence</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">base</span>.<span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">:aasm_write_state_without_persistence</span>)
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">base</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:named_scope</span>)
+          <span class="ruby-identifier">base</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span><span class="ruby-operator">::</span><span class="ruby-constant">NamedScopeMethods</span>)
+
+          <span class="ruby-identifier">base</span>.<span class="ruby-identifier">class_eval</span> <span class="ruby-keyword kw">do</span>
+            <span class="ruby-keyword kw">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword kw">self</span>
+              <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">:aasm_state_without_named_scope</span>)
+                <span class="ruby-identifier">alias_method</span> <span class="ruby-identifier">:aasm_state_without_named_scope</span>, <span class="ruby-identifier">:aasm_state</span>
+                <span class="ruby-identifier">alias_method</span> <span class="ruby-identifier">:aasm_state</span>, <span class="ruby-identifier">:aasm_state_with_named_scope</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">before_validation_on_create</span> <span class="ruby-identifier">:aasm_ensure_initial_state</span>
+      <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+</div>
+    </div>
+  </body>
+</html>    

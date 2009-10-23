@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>AASM::ClassMethods</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+    <script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>     
+    <div class="banner">
+        <h1>
+            <span class="type">Module</span> 
+            AASM::ClassMethods 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/aasm/aasm_rb.html">lib/aasm/aasm.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+    
+
+    
+
+    
+    
+
+    
+    
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+    
+        <dt>A</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000005">aasm_event</a>,</li>
+                
+                <li><a href="#M000007">aasm_events</a>,</li>
+                
+                <li><a href="#M000002">aasm_initial_state</a>,</li>
+                
+                <li><a href="#M000003">aasm_initial_state=</a>,</li>
+                
+                <li><a href="#M000004">aasm_state</a>,</li>
+                
+                <li><a href="#M000006">aasm_states</a>,</li>
+                
+                <li><a href="#M000008">aasm_states_for_select</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>I</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000001">inherited</a></li>
+                
+            </ul>
+        </dd>
+    
+    </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+            <div class="sectiontitle">Instance Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000005">
+                    
+                    <a name="M000005"></a><b>aasm_event</b>(name, options = {}, &amp;block)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000005_source')" id="l_M000005_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L49" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000005_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 49</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_event</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+      <span class="ruby-identifier">sm</span> = <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>]
+
+      <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">sm</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">name</span>)
+        <span class="ruby-identifier">sm</span>.<span class="ruby-identifier">events</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">SupportingClasses</span><span class="ruby-operator">::</span><span class="ruby-constant">Event</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">define_method</span>(<span class="ruby-node">&quot;#{name.to_s}!&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">aasm_fire_event</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">true</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">define_method</span>(<span class="ruby-node">&quot;#{name.to_s}&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">aasm_fire_event</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">false</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000007">
+                    
+                    <a name="M000007"></a><b>aasm_events</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000007_source')" id="l_M000007_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L69" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000007_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 69</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_events</span>
+      <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">events</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000002">
+                    
+                    <a name="M000002"></a><b>aasm_initial_state</b>(set_state=nil)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000002_source')" id="l_M000002_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L27" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000002_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 27</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_initial_state</span>(<span class="ruby-identifier">set_state</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">set_state</span>
+        <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">initial_state</span> = <span class="ruby-identifier">set_state</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">initial_state</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000003">
+                    
+                    <a name="M000003"></a><b>aasm_initial_state=</b>(state)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000003_source')" id="l_M000003_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L35" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000003_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 35</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_initial_state=</span>(<span class="ruby-identifier">state</span>)
+      <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">initial_state</span> = <span class="ruby-identifier">state</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000004">
+                    
+                    <a name="M000004"></a><b>aasm_state</b>(name, options={})
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000004_source')" id="l_M000004_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L39" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000004_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 39</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_state</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>={})
+      <span class="ruby-identifier">sm</span> = <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>]
+      <span class="ruby-identifier">sm</span>.<span class="ruby-identifier">create_state</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>)
+      <span class="ruby-identifier">sm</span>.<span class="ruby-identifier">initial_state</span> = <span class="ruby-identifier">name</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">sm</span>.<span class="ruby-identifier">initial_state</span>
+
+      <span class="ruby-identifier">define_method</span>(<span class="ruby-node">&quot;#{name.to_s}?&quot;</span>) <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">aasm_current_state</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000006">
+                    
+                    <a name="M000006"></a><b>aasm_states</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000006_source')" id="l_M000006_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L65" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000006_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 65</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_states</span>
+      <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">states</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000008">
+                    
+                    <a name="M000008"></a><b>aasm_states_for_select</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000008_source')" id="l_M000008_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L73" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000008_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 73</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_states_for_select</span>
+      <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">states</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">state</span><span class="ruby-operator">|</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">for_select</span> }
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000001">
+                    
+                    <a name="M000001"></a><b>inherited</b>(klass)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000001_source')" id="l_M000001_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L22" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000001_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 22</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inherited</span>(<span class="ruby-identifier">klass</span>)
+      <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-identifier">klass</span>] = <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">StateMachine</span>[<span class="ruby-keyword kw">self</span>].<span class="ruby-identifier">clone</span>
+      <span class="ruby-keyword kw">super</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+</div>
+    </div>
+  </body>
+</html>    
