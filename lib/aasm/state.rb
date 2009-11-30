@@ -18,9 +18,11 @@ module AASM
 
       def call_action(action, record)
         action = @options[action]
-        action.is_a?(Array) ?
-                action.each {|a| _call_action(a, record)} :
-                _call_action(action, record)
+        catch :halt_aasm_chain do
+          action.is_a?(Array) ?
+          action.each {|a| _call_action(a, record)} :
+          _call_action(action, record)
+        end
       end
 
       def display_name
