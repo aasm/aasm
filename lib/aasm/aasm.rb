@@ -193,7 +193,7 @@ module AASM
         false
       end
     rescue => e
-      if self.responds_to?(:aasm_error_callback)
+      if self.respond_to?(:aasm_error_callback)
         self.aasm_error_callback(e) 
       else
         raise e
