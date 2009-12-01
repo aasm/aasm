@@ -84,11 +84,12 @@ module AASM
         callback = error_callback || @error
         case(callback)
           when String, Symbol
+            raise error unless obj.respond_to?(callback.to_sym)
             obj.send(callback, error)
           when Proc
             callback.call(obj, error)
           when Array
-            callback.each{|meth|self.execute_success_callback(obj, error, meth)}
+            callback.each{|meth|self.execute_error_callback(obj, error, meth)}
         end
       end
 

@@ -6,7 +6,7 @@ class Foo
   aasm_state :open, :exit => :exit
   aasm_state :closed, :enter => :enter
 
-   aasm_event :close, :success => :success_callback, :error => :error_callback do
+  aasm_event :close, :success => :success_callback, :error => :error_callback do
     transitions :to => :closed, :from => [:open]
   end
 
@@ -19,9 +19,6 @@ class Foo
   end
 
   def success_callback
-  end
-  
-  def error_callback(e)
   end
 
   def enter
@@ -95,7 +92,7 @@ describe AASM, '- subclassing' do
       FooTwo.aasm_states.should include(state)
     end
   end
-  
+
   it 'should not add the child states to the parent machine' do
     Foo.aasm_states.should_not include(:foo)
   end
@@ -274,25 +271,24 @@ end
 
 describe AASM, '- event callbacks' do
   describe "with an error callback defined" do
-     before do
-        @foo = Foo.new
-      end
-    
-    
-    it "should run error_callback if an exception is raised" do
-       @foo.stub!(:enter).and_raise(StandardError)
-       @foo.should_receive(:error_callback)
-       @foo.close!
-     end
+    before do
+      @foo = Foo.new
+    end
 
-     it "should propograte an exception if error_callback is not defined" do
-       @foo.stub!(:enter).and_raise(StandardError)
-       @foo.stub!(:respond_to?).with(:error_callback).and_return(false)
-       @foo.should_not_receive(:error_callback)
-       lambda{@foo.close!}.should raise_error
-     end
+    it "should run error_callback if an exception is raised and error_callback defined" do
+      def @foo.error_callback(e)
+      end
+      @foo.stub!(:enter).and_raise(e=StandardError.new)
+      @foo.should_receive(:error_callback).with(e)
+      @foo.close!
+    end
+
+    it "should propagrate an exception if exceptionis raised and error_callback is not defined" do
+      @foo.stub!(:enter).and_raise("ErrorPropagated")
+      lambda{@foo.close!}.should raise_error(StandardError, "ErrorPropagated")
+    end
   end
-  
+
   describe "with aasm_event_fired defined" do
     before do
       @foo = Foo.new

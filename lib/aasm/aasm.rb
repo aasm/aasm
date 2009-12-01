@@ -146,9 +146,10 @@ module AASM
   end
 
   def aasm_fire_event(name, persist, *args)
+    event = self.class.aasm_events[name]
     begin
       old_state = aasm_state_object_for_state(aasm_current_state)
-      event = self.class.aasm_events[name]
+      
 
       old_state.call_action(:exit, self)
 
@@ -194,11 +195,6 @@ module AASM
       end
     rescue StandardError => e
       event.execute_error_callback(self, e)
-      # if self.respond_to?(:aasm_error_callback)
-      #         self.aasm_error_callback(e) 
-      #       else
-      #         raise e
-      #       end
     end
   end
 end
