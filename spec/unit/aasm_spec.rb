@@ -292,6 +292,20 @@ describe AASM, '- event callbacks' do
       @foo.should_not_receive(:aasm_event_fired)
       @foo.close!
     end
+    
+    it "should run aasm_error_callback if an exception is raised" do
+      @foo.stub!(:enter).and_raise(StandardError)
+      @foo.stub!(:responds_to?).with(:aasm_error_callback).and_return(true)
+      @foo.should_receive(:aasm_error_callback)
+      @foo.close!
+    end
+    
+    it "should propograte an exception if aasm_error_callback is not defined" do
+      @foo.stub!(:enter).and_raise(StandardError)
+      @foo.stub!(:responds_to?).with(:aasm_error_callback).and_return(false)
+      @foo.should_not_receive(:aasm_error_callback)
+      lambda{@foo.close!}.should raise_error
+    end
   end
 
   describe "with aasm_event_failed defined" do

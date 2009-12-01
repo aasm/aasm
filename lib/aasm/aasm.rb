@@ -130,12 +130,12 @@ module AASM
 
   def aasm_determine_state_name(state)
     case state
-      when Symbol, String
-        state
-      when Proc
-        state.call(self)
-      else
-        raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+    when Symbol, String
+      state
+    when Proc
+      state.call(self)
+    else
+      raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
     end
   end
 
@@ -146,50 +146,58 @@ module AASM
   end
 
   def aasm_fire_event(name, persist, *args)
-    old_state = aasm_state_object_for_state(aasm_current_state)
-    event = self.class.aasm_events[name]
+    begin
+      old_state = aasm_state_object_for_state(aasm_current_state)
+      event = self.class.aasm_events[name]
 
-    old_state.call_action(:exit, self)
+      old_state.call_action(:exit, self)
 
-    # new event before callback
-    event.call_action(:before, self)
+      # new event before callback
+      event.call_action(:before, self)
 
-    new_state_name = event.fire(self, *args)
+      new_state_name = event.fire(self, *args)
 
-    unless new_state_name.nil?
-      new_state = aasm_state_object_for_state(new_state_name)
+      unless new_state_name.nil?
+        new_state = aasm_state_object_for_state(new_state_name)
 
-      # new before_ callbacks
-      old_state.call_action(:before_exit, self)
-      new_state.call_action(:before_enter, self)
+        # new before_ callbacks
+        old_state.call_action(:before_exit, self)
+        new_state.call_action(:before_enter, self)
 
-      new_state.call_action(:enter, self)
+        new_state.call_action(:enter, self)
 
-      persist_successful = true
-      if persist
-        persist_successful = set_aasm_current_state_with_persistence(new_state_name)
-        event.execute_success_callback(self) if persist_successful
+        persist_successful = true
+        if persist
+          persist_successful = set_aasm_current_state_with_persistence(new_state_name)
+          event.execute_success_callback(self) if persist_successful
+        else
+          self.aasm_current_state = new_state_name
+        end
+
+        if persist_successful
+          old_state.call_action(:after_exit, self)
+          new_state.call_action(:after_enter, self)
+          event.call_action(:after, self)
+
+          self.aasm_event_fired(name, old_state.name, self.aasm_current_state) if self.respond_to?(:aasm_event_fired)
+        else
+          self.aasm_event_failed(name, old_state.name) if self.respond_to?(:aasm_event_failed)
+        end
+
+        persist_successful
       else
-        self.aasm_current_state = new_state_name
+        if self.respond_to?(:aasm_event_failed)
+          self.aasm_event_failed(name, old_state.name)
+        end
+
+        false
       end
-
-      if persist_successful
-        old_state.call_action(:after_exit, self)
-        new_state.call_action(:after_enter, self)
-        event.call_action(:after, self)
-
-        self.aasm_event_fired(name, old_state.name, self.aasm_current_state) if self.respond_to?(:aasm_event_fired)
+    rescue => e
+      if self.responds_to?(:aasm_error_callback)
+        self.aasm_error_callback(e) 
       else
-        self.aasm_event_failed(name, old_state.name) if self.respond_to?(:aasm_event_failed)
+        raise e
       end
-
-      persist_successful
-    else
-      if self.respond_to?(:aasm_event_failed)
-        self.aasm_event_failed(name, old_state.name)
-      end
-
-      false
     end
   end
 end
