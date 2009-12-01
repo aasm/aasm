@@ -58,6 +58,9 @@ module AASM
         if options.key?(:success) then
           @success = options[:success]
         end
+        if options.key?(:error) then
+          @error = options[:error]
+        end
         if block then
           instance_eval(&block)
         end
@@ -74,6 +77,18 @@ module AASM
             callback.call(obj)
           when Array
             callback.each{|meth|self.execute_success_callback(obj, meth)}
+        end
+      end
+
+      def execute_error_callback(obj, error, error_callback=nil)
+        callback = error_callback || @error
+        case(callback)
+          when String, Symbol
+            obj.send(callback, error)
+          when Proc
+            callback.call(obj, error)
+          when Array
+            callback.each{|meth|self.execute_success_callback(obj, error, meth)}
         end
       end
 

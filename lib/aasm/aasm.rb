@@ -192,12 +192,13 @@ module AASM
 
         false
       end
-    rescue => e
-      if self.respond_to?(:aasm_error_callback)
-        self.aasm_error_callback(e) 
-      else
-        raise e
-      end
+    rescue StandardError => e
+      event.execute_error_callback(self, e)
+      # if self.respond_to?(:aasm_error_callback)
+      #         self.aasm_error_callback(e) 
+      #       else
+      #         raise e
+      #       end
     end
   end
 end

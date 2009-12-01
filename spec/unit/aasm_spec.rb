@@ -6,7 +6,7 @@ class Foo
   aasm_state :open, :exit => :exit
   aasm_state :closed, :enter => :enter
 
-  aasm_event :close, :success => :success_callback do
+   aasm_event :close, :success => :success_callback, :error => :error_callback do
     transitions :to => :closed, :from => [:open]
   end
 
@@ -19,6 +19,9 @@ class Foo
   end
 
   def success_callback
+  end
+  
+  def error_callback(e)
   end
 
   def enter
@@ -270,6 +273,26 @@ describe AASM, '- getting events for a state' do
 end
 
 describe AASM, '- event callbacks' do
+  describe "with an error callback defined" do
+     before do
+        @foo = Foo.new
+      end
+    
+    
+    it "should run error_callback if an exception is raised" do
+       @foo.stub!(:enter).and_raise(StandardError)
+       @foo.should_receive(:error_callback)
+       @foo.close!
+     end
+
+     it "should propograte an exception if error_callback is not defined" do
+       @foo.stub!(:enter).and_raise(StandardError)
+       @foo.stub!(:respond_to?).with(:error_callback).and_return(false)
+       @foo.should_not_receive(:error_callback)
+       lambda{@foo.close!}.should raise_error
+     end
+  end
+  
   describe "with aasm_event_fired defined" do
     before do
       @foo = Foo.new
@@ -291,20 +314,6 @@ describe AASM, '- event callbacks' do
       @foo.stub!(:set_aasm_current_state_with_persistence).and_return(false)
       @foo.should_not_receive(:aasm_event_fired)
       @foo.close!
-    end
-    
-    it "should run aasm_error_callback if an exception is raised" do
-      @foo.stub!(:enter).and_raise(StandardError)
-      @foo.stub!(:respond_to?).with(:aasm_error_callback).and_return(true)
-      @foo.should_receive(:aasm_error_callback)
-      @foo.close!
-    end
-    
-    it "should propograte an exception if aasm_error_callback is not defined" do
-      @foo.stub!(:enter).and_raise(StandardError)
-      @foo.stub!(:respond_to?).with(:aasm_error_callback).and_return(false)
-      @foo.should_not_receive(:aasm_error_callback)
-      lambda{@foo.close!}.should raise_error
     end
   end
 
