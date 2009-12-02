@@ -82,9 +82,10 @@ module AASM
 
       def execute_error_callback(obj, error, error_callback=nil)
         callback = error_callback || @error
+        raise error unless callback
         case(callback)
           when String, Symbol
-            raise error unless obj.respond_to?(callback.to_sym)
+            raise NoMethodError unless obj.respond_to?(callback.to_sym)
             obj.send(callback, error)
           when Proc
             callback.call(obj, error)

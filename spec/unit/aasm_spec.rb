@@ -6,7 +6,7 @@ class Foo
   aasm_state :open, :exit => :exit
   aasm_state :closed, :enter => :enter
 
-  aasm_event :close, :success => :success_callback, :error => :error_callback do
+  aasm_event :close, :success => :success_callback do
     transitions :to => :closed, :from => [:open]
   end
 
@@ -272,6 +272,12 @@ end
 describe AASM, '- event callbacks' do
   describe "with an error callback defined" do
     before do
+      class Foo
+        aasm_event :safe_close, :success => :success_callback, :error => :error_callback do
+          transitions :to => :closed, :from => [:open]
+        end
+      end
+
       @foo = Foo.new
     end
 
@@ -280,12 +286,17 @@ describe AASM, '- event callbacks' do
       end
       @foo.stub!(:enter).and_raise(e=StandardError.new)
       @foo.should_receive(:error_callback).with(e)
-      @foo.close!
+      @foo.safe_close!
     end
 
-    it "should propagrate an exception if exceptionis raised and error_callback is not defined" do
-      @foo.stub!(:enter).and_raise("ErrorPropagated")
-      lambda{@foo.close!}.should raise_error(StandardError, "ErrorPropagated")
+    it "should raise NoMethodError if exceptionis raised and error_callback is declared but not defined" do
+      @foo.stub!(:enter).and_raise(StandardError)
+      lambda{@foo.safe_close!}.should raise_error(NoMethodError)
+    end
+    
+    it "should propagate an error if no error callback is declared" do
+        @foo.stub!(:enter).and_raise("Cannot enter safe")
+        lambda{@foo.close!}.should raise_error(StandardError, "Cannot enter safe")  
     end
   end
 
