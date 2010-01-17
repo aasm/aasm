@@ -49,9 +49,9 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000049">[]</a>,</li>
+                <li><a href="#M000050">[]</a>,</li>
                 
-                <li><a href="#M000050">[]=</a></li>
+                <li><a href="#M000051">[]=</a></li>
                 
             </ul>
         </dd>
@@ -60,9 +60,9 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000052">clone</a>,</li>
+                <li><a href="#M000053">clone</a>,</li>
                 
-                <li><a href="#M000053">create_state</a></li>
+                <li><a href="#M000057">create_state</a></li>
                 
             </ul>
         </dd>
@@ -71,7 +71,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000051">new</a></li>
+                <li><a href="#M000052">new</a></li>
                 
             </ul>
         </dd>
@@ -138,36 +138,9 @@
             <div class="sectiontitle">Class Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000049">
-                    
-                    <a name="M000049"></a><b>[]</b>(*args)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000049_source')" id="l_M000049_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state_machine.rb#L5" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000049_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 5</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-operator">[]</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-      (<span class="ruby-ivar">@machines</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">args</span>]
-    <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
                 <div class="title" id="M000050">
                     
-                    <a name="M000050"></a><b>[]=</b>(*args)
+                    <a name="M000050"></a><b>[]</b>(*args)
                     
                 </div>
                 
@@ -178,15 +151,14 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000050_source')" id="l_M000050_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state_machine.rb#L9" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/state_machine.rb#L2" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000050_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 9</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-operator">[]=</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-      <span class="ruby-identifier">val</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
-      (<span class="ruby-ivar">@machines</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">args</span>] = <span class="ruby-identifier">val</span>
-    <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 2</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-operator">[]</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    (<span class="ruby-ivar">@machines</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">args</span>]
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
@@ -195,7 +167,7 @@
             <div class="method">
                 <div class="title" id="M000051">
                     
-                    <a name="M000051"></a><b>new</b>(name)
+                    <a name="M000051"></a><b>[]=</b>(*args)
                     
                 </div>
                 
@@ -206,29 +178,24 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000051_source')" id="l_M000051_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state_machine.rb#L17" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/state_machine.rb#L6" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000051_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 17</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
-      <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
-      <span class="ruby-ivar">@initial_state</span> = <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@states</span> = []
-      <span class="ruby-ivar">@events</span> = {}
-      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">OpenStruct</span>.<span class="ruby-identifier">new</span>
-    <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 6</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-operator">[]=</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-identifier">val</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
+    (<span class="ruby-ivar">@machines</span> <span class="ruby-operator">||=</span> {})[<span class="ruby-identifier">args</span>] = <span class="ruby-identifier">val</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
             </div>
             
-            <div class="sectiontitle">Instance Public methods</div>
-            
             <div class="method">
                 <div class="title" id="M000052">
                     
-                    <a name="M000052"></a><b>clone</b>()
+                    <a name="M000052"></a><b>new</b>(name)
                     
                 </div>
                 
@@ -239,26 +206,29 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000052_source')" id="l_M000052_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state_machine.rb#L25" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/state_machine.rb#L14" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000052_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 25</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clone</span>
-      <span class="ruby-identifier">klone</span> = <span class="ruby-keyword kw">super</span>
-      <span class="ruby-identifier">klone</span>.<span class="ruby-identifier">states</span> = <span class="ruby-identifier">states</span>.<span class="ruby-identifier">clone</span>
-      <span class="ruby-identifier">klone</span>.<span class="ruby-identifier">events</span> = <span class="ruby-identifier">events</span>.<span class="ruby-identifier">clone</span>
-      <span class="ruby-identifier">klone</span>
-    <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 14</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
+    <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+    <span class="ruby-ivar">@initial_state</span> = <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-ivar">@states</span> = []
+    <span class="ruby-ivar">@events</span> = {}
+    <span class="ruby-ivar">@config</span> = <span class="ruby-constant">OpenStruct</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
             </div>
             
+            <div class="sectiontitle">Instance Public methods</div>
+            
             <div class="method">
                 <div class="title" id="M000053">
                     
-                    <a name="M000053"></a><b>create_state</b>(name, options)
+                    <a name="M000053"></a><b>clone</b>()
                     
                 </div>
                 
@@ -269,14 +239,44 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000053_source')" id="l_M000053_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state_machine.rb#L32" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/state_machine.rb#L22" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000053_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 32</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_state</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>)
-      <span class="ruby-ivar">@states</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">SupportingClasses</span><span class="ruby-operator">::</span><span class="ruby-constant">State</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@states</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">name</span>)
-    <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 22</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clone</span>
+    <span class="ruby-identifier">klone</span> = <span class="ruby-keyword kw">super</span>
+    <span class="ruby-identifier">klone</span>.<span class="ruby-identifier">states</span> = <span class="ruby-identifier">states</span>.<span class="ruby-identifier">clone</span>
+    <span class="ruby-identifier">klone</span>.<span class="ruby-identifier">events</span> = <span class="ruby-identifier">events</span>.<span class="ruby-identifier">clone</span>
+    <span class="ruby-identifier">klone</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000057">
+                    
+                    <a name="M000057"></a><b>create_state</b>(name, options)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000057_source')" id="l_M000057_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/state_machine.rb#L29" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000057_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state_machine.rb, line 29</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_state</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>)
+    <span class="ruby-ivar">@states</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">SupportingClasses</span><span class="ruby-operator">::</span><span class="ruby-constant">State</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@states</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 

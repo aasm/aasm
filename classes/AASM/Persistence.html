@@ -21,9 +21,9 @@
         </h1>
         <ul class="files">
             
-            <li><a href="../../files/lib/aasm/persistence/active_record_persistence_rb.html">lib/aasm/persistence/active_record_persistence.rb</a></li>
-            
             <li><a href="../../files/lib/aasm/persistence_rb.html">lib/aasm/persistence.rb</a></li>
+            
+            <li><a href="../../files/lib/aasm/persistence/active_record_persistence_rb.html">lib/aasm/persistence/active_record_persistence.rb</a></li>
             
         </ul>
     </div>
@@ -96,20 +96,20 @@ href="Persistence/ActiveRecordPersistence.html">ActiveRecordPersistence</a>
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000030_source')" id="l_M000030_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/1e4c038eeec9c6a2a751196a9e36f165e144b721/lib/aasm/persistence.rb#L6" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/ef0eb257158eb52277a8b543a7d238dbaa326303/lib/aasm/persistence.rb#L5" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000030_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/persistence.rb, line 6</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_persistence</span>(<span class="ruby-identifier">base</span>)
-      <span class="ruby-comment cmt"># Use a fancier auto-loading thingy, perhaps.  When there are more persistence engines.</span>
-      <span class="ruby-identifier">hierarchy</span> = <span class="ruby-identifier">base</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">to_s</span>}
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/persistence.rb, line 5</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_persistence</span>(<span class="ruby-identifier">base</span>)
+    <span class="ruby-comment cmt"># Use a fancier auto-loading thingy, perhaps.  When there are more persistence engines.</span>
+    <span class="ruby-identifier">hierarchy</span> = <span class="ruby-identifier">base</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">to_s</span>}
 
-      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hierarchy</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ActiveRecord::Base&quot;</span>)
-        <span class="ruby-identifier">require</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword kw">__FILE__</span>), <span class="ruby-value str">'persistence'</span>, <span class="ruby-value str">'active_record_persistence'</span>)
-        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span>)
-      <span class="ruby-keyword kw">end</span>
-    <span class="ruby-keyword kw">end</span></pre>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hierarchy</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ActiveRecord::Base&quot;</span>)
+      <span class="ruby-identifier">require</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword kw">__FILE__</span>), <span class="ruby-value str">'persistence'</span>, <span class="ruby-value str">'active_record_persistence'</span>)
+      <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:include</span>, <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">Persistence</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordPersistence</span>)
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 

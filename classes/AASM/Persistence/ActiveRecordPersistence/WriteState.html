@@ -43,7 +43,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000044">aasm_write_state</a></li>
+                <li><a href="#M000040">aasm_write_state</a></li>
                 
             </ul>
         </dd>
@@ -65,9 +65,9 @@
             <div class="sectiontitle">Instance Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000044">
+                <div class="title" id="M000040">
                     
-                    <a name="M000044"></a><b>aasm_write_state</b>(state)
+                    <a name="M000040"></a><b>aasm_write_state</b>(state)
                     
                 </div>
                 
@@ -94,12 +94,12 @@ NOTE: intended to be called from an event
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000044_source')" id="l_M000044_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000040_source')" id="l_M000040_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L192" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000044_source" class="dyn-source">
+                    <div id="M000040_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 192</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_write_state</span>(<span class="ruby-identifier">state</span>)
           <span class="ruby-identifier">old_value</span> = <span class="ruby-identifier">read_attribute</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">aasm_column</span>)

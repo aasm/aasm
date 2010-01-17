@@ -19,7 +19,7 @@
         </h1>
         <ul class="files">
             <li>README.rdoc</li>
-            <li>Last modified: Fri Oct 23 16:40:42 -0400 2009</li>
+            <li>Last modified: Sun Jan 17 01:17:01 -0500 2010</li>
         </ul>
     </div>
 
@@ -100,7 +100,8 @@ href="http://github.com/rubyist/aasm/tree/master">github.com/rubyist/aasm/tree/m
 </pre>
 <h3>Building your own gems</h3>
 <pre>
-  % rake gem
+  % rake gemspec
+  % rake build
   % sudo gem install pkg/aasm-2.1.gem
 </pre>
 <h2>Simple Example</h2>
@@ -110,6 +111,8 @@ Here&#8217;s a quick example highlighting some of the features.
 <pre>
   class Conversation
     include AASM
+
+    aasm_column :current_state # defaults to aasm_state
 
     aasm_initial_state :unread
 
@@ -133,6 +136,8 @@ This example uses a few of the more complex features available.
 <pre>
   class Relationship
     include AASM
+
+    aasm_column :status
 
     aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
 

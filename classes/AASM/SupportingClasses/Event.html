@@ -49,7 +49,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000020">==</a></li>
+                <li><a href="#M000024">==</a></li>
                 
             </ul>
         </dd>
@@ -58,7 +58,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000018">all_transitions</a></li>
+                <li><a href="#M000020">all_transitions</a></li>
                 
             </ul>
         </dd>
@@ -67,7 +67,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000019">call_action</a></li>
+                <li><a href="#M000021">call_action</a></li>
                 
             </ul>
         </dd>
@@ -76,7 +76,9 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000025">execute_success_callback</a></li>
+                <li><a href="#M000027">execute_error_callback</a>,</li>
+                
+                <li><a href="#M000026">execute_success_callback</a></li>
                 
             </ul>
         </dd>
@@ -85,7 +87,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000010">fire</a></li>
+                <li><a href="#M000015">fire</a></li>
                 
             </ul>
         </dd>
@@ -94,7 +96,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000009">new</a></li>
+                <li><a href="#M000014">new</a></li>
                 
             </ul>
         </dd>
@@ -103,9 +105,9 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000014">transitions_from_state</a>,</li>
+                <li><a href="#M000019">transitions_from_state</a>,</li>
                 
-                <li><a href="#M000013">transitions_from_state?</a></li>
+                <li><a href="#M000018">transitions_from_state?</a></li>
                 
             </ul>
         </dd>
@@ -114,7 +116,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000021">update</a></li>
+                <li><a href="#M000025">update</a></li>
                 
             </ul>
         </dd>
@@ -165,202 +167,9 @@
             <div class="sectiontitle">Class Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000009">
-                    
-                    <a name="M000009"></a><b>new</b>(name, options = {}, &amp;block)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000009_source')" id="l_M000009_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L8" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000009_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 8</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-        <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
-        <span class="ruby-ivar">@transitions</span> = []
-        <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="sectiontitle">Instance Public methods</div>
-            
-            <div class="method">
-                <div class="title" id="M000020">
-                    
-                    <a name="M000020"></a><b>==</b>(event)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000020_source')" id="l_M000020_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L49" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000020_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 49</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">event</span>)
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Symbol</span>
-          <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">event</span>
-        <span class="ruby-keyword kw">else</span>
-          <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">name</span>
-        <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
-                <div class="title" id="M000018">
-                    
-                    <a name="M000018"></a><b>all_transitions</b>()
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000018_source')" id="l_M000018_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L38" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000018_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 38</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">all_transitions</span>
-        <span class="ruby-ivar">@transitions</span>
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
-                <div class="title" id="M000019">
-                    
-                    <a name="M000019"></a><b>call_action</b>(action, record)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000019_source')" id="l_M000019_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L42" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000019_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 42</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
-        <span class="ruby-identifier">action</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-identifier">action</span>]
-        <span class="ruby-identifier">action</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span>
-                <span class="ruby-identifier">action</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">record</span>)} <span class="ruby-operator">:</span>
-                <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
-                <div class="title" id="M000025">
-                    
-                    <a name="M000025"></a><b>execute_success_callback</b>(obj, success = nil)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000025_source')" id="l_M000025_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L68" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000025_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 68</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute_success_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">success</span> = <span class="ruby-keyword kw">nil</span>)
-        <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">success</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@success</span>
-        <span class="ruby-keyword kw">case</span>(<span class="ruby-identifier">callback</span>)
-          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>, <span class="ruby-constant">Symbol</span>
-            <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">callback</span>)
-          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Proc</span>
-            <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">obj</span>)
-          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Array</span>
-            <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">execute_success_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">meth</span>)}
-        <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
-                <div class="title" id="M000010">
-                    
-                    <a name="M000010"></a><b>fire</b>(obj, to_state=nil, *args)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000010_source')" id="l_M000010_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L14" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000010_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 14</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fire</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">to_state</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-        <span class="ruby-identifier">transitions</span> = <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">aasm_current_state</span> }
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidTransition</span>, <span class="ruby-node">&quot;Event '#{name}' cannot transition from '#{obj.aasm_current_state}'&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">transitions</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-
-        <span class="ruby-identifier">next_state</span> = <span class="ruby-keyword kw">nil</span>
-        <span class="ruby-identifier">transitions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">transition</span><span class="ruby-operator">|</span>
-          <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">to_state</span> <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-constant">Array</span>(<span class="ruby-identifier">transition</span>.<span class="ruby-identifier">to</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">to_state</span>)
-          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">transition</span>.<span class="ruby-identifier">perform</span>(<span class="ruby-identifier">obj</span>)
-            <span class="ruby-identifier">next_state</span> = <span class="ruby-identifier">to_state</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">transition</span>.<span class="ruby-identifier">to</span>).<span class="ruby-identifier">first</span>
-            <span class="ruby-identifier">transition</span>.<span class="ruby-identifier">execute</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-            <span class="ruby-keyword kw">break</span>
-          <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-identifier">next_state</span>
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
                 <div class="title" id="M000014">
                     
-                    <a name="M000014"></a><b>transitions_from_state</b>(state)
+                    <a name="M000014"></a><b>new</b>(name, options = {}, &amp;block)
                     
                 </div>
                 
@@ -371,23 +180,27 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000014_source')" id="l_M000014_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L34" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L4" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000014_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 34</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transitions_from_state</span>(<span class="ruby-identifier">state</span>)
-        <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span> }
-      <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 4</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+    <span class="ruby-ivar">@transitions</span> = []
+    <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
             </div>
             
+            <div class="sectiontitle">Instance Public methods</div>
+            
             <div class="method">
-                <div class="title" id="M000013">
+                <div class="title" id="M000024">
                     
-                    <a name="M000013"></a><b>transitions_from_state?</b>(state)
+                    <a name="M000024"></a><b>==</b>(event)
                     
                 </div>
                 
@@ -396,16 +209,47 @@
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000013_source')" id="l_M000013_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000024_source')" id="l_M000024_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L30" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L45" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000013_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 30</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transitions_from_state?</span>(<span class="ruby-identifier">state</span>)
-        <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span> }
-      <span class="ruby-keyword kw">end</span></pre>
+                    <div id="M000024_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 45</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">event</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Symbol</span>
+      <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">event</span>
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000020">
+                    
+                    <a name="M000020"></a><b>all_transitions</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000020_source')" id="l_M000020_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L34" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000020_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 34</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">all_transitions</span>
+    <span class="ruby-ivar">@transitions</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
@@ -414,7 +258,7 @@
             <div class="method">
                 <div class="title" id="M000021">
                     
-                    <a name="M000021"></a><b>update</b>(options = {}, &amp;block)
+                    <a name="M000021"></a><b>call_action</b>(action, record)
                     
                 </div>
                 
@@ -425,21 +269,219 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000021_source')" id="l_M000021_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/event.rb#L57" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L38" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000021_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 57</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:success</span>) <span class="ruby-keyword kw">then</span>
-          <span class="ruby-ivar">@success</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:success</span>]
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">then</span>
-          <span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
-        <span class="ruby-keyword kw">self</span>
-      <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 38</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
+    <span class="ruby-identifier">action</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-identifier">action</span>]
+    <span class="ruby-identifier">action</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span>
+            <span class="ruby-identifier">action</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">record</span>)} <span class="ruby-operator">:</span>
+            <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000027">
+                    
+                    <a name="M000027"></a><b>execute_error_callback</b>(obj, error, error_callback=nil)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000027_source')" id="l_M000027_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L79" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000027_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 79</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute_error_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">error</span>, <span class="ruby-identifier">error_callback</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">error_callback</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@error</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">callback</span>
+    <span class="ruby-keyword kw">case</span>(<span class="ruby-identifier">callback</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>, <span class="ruby-constant">Symbol</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMethodError</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">callback</span>.<span class="ruby-identifier">to_sym</span>)
+        <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">callback</span>, <span class="ruby-identifier">error</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Proc</span>
+        <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">error</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Array</span>
+        <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">execute_error_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">error</span>, <span class="ruby-identifier">meth</span>)}
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000026">
+                    
+                    <a name="M000026"></a><b>execute_success_callback</b>(obj, success = nil)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000026_source')" id="l_M000026_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L67" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000026_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 67</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute_success_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">success</span> = <span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">success</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@success</span>
+    <span class="ruby-keyword kw">case</span>(<span class="ruby-identifier">callback</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>, <span class="ruby-constant">Symbol</span>
+        <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">callback</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Proc</span>
+        <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">obj</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Array</span>
+        <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">execute_success_callback</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">meth</span>)}
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000015">
+                    
+                    <a name="M000015"></a><b>fire</b>(obj, to_state=nil, *args)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000015_source')" id="l_M000015_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L10" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000015_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 10</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fire</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">to_state</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-identifier">transitions</span> = <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">aasm_current_state</span> }
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">AASM</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidTransition</span>, <span class="ruby-node">&quot;Event '#{name}' cannot transition from '#{obj.aasm_current_state}'&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">transitions</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+    <span class="ruby-identifier">next_state</span> = <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-identifier">transitions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">transition</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">to_state</span> <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-constant">Array</span>(<span class="ruby-identifier">transition</span>.<span class="ruby-identifier">to</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">to_state</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">transition</span>.<span class="ruby-identifier">perform</span>(<span class="ruby-identifier">obj</span>)
+        <span class="ruby-identifier">next_state</span> = <span class="ruby-identifier">to_state</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">transition</span>.<span class="ruby-identifier">to</span>).<span class="ruby-identifier">first</span>
+        <span class="ruby-identifier">transition</span>.<span class="ruby-identifier">execute</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+        <span class="ruby-keyword kw">break</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">next_state</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000019">
+                    
+                    <a name="M000019"></a><b>transitions_from_state</b>(state)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000019_source')" id="l_M000019_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L30" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000019_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 30</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transitions_from_state</span>(<span class="ruby-identifier">state</span>)
+    <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span> }
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000018">
+                    
+                    <a name="M000018"></a><b>transitions_from_state?</b>(state)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000018_source')" id="l_M000018_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L26" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000018_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 26</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transitions_from_state?</span>(<span class="ruby-identifier">state</span>)
+    <span class="ruby-ivar">@transitions</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">from</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span> }
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000025">
+                    
+                    <a name="M000025"></a><b>update</b>(options = {}, &amp;block)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000025_source')" id="l_M000025_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/event.rb#L53" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000025_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/event.rb, line 53</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span> = {}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:success</span>) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-ivar">@success</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:success</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:error</span>) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-ivar">@error</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:error</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">then</span>
+      <span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+    <span class="ruby-keyword kw">self</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 

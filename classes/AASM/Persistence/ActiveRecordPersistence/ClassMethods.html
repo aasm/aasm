@@ -43,7 +43,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000031">aasm_column</a></li>
+                <li><a href="#M000032">aasm_column</a></li>
                 
             </ul>
         </dd>
@@ -52,9 +52,9 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000034">calculate_in_state</a>,</li>
+                <li><a href="#M000035">calculate_in_state</a>,</li>
                 
-                <li><a href="#M000033">count_in_state</a></li>
+                <li><a href="#M000034">count_in_state</a></li>
                 
             </ul>
         </dd>
@@ -63,7 +63,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000032">find_in_state</a></li>
+                <li><a href="#M000033">find_in_state</a></li>
                 
             </ul>
         </dd>
@@ -72,7 +72,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000035">with_state_scope</a></li>
+                <li><a href="#M000036">with_state_scope</a></li>
                 
             </ul>
         </dd>
@@ -94,15 +94,15 @@
             <div class="sectiontitle">Instance Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000031">
+                <div class="title" id="M000032">
                     
-                    <a name="M000031"></a><b>aasm_column</b>(column_name=nil)
+                    <a name="M000032"></a><b>aasm_column</b>(column_name=nil)
                     
                 </div>
                 
                 <div class="description">
                   <p>
-Maps to the <a href="ClassMethods.html#M000031">aasm_column</a> in the
+Maps to the <a href="ClassMethods.html#M000032">aasm_column</a> in the
 database. Deafults to &#8220;aasm_state&#8220;. You can write:
 </p>
 <pre>
@@ -140,12 +140,12 @@ This method is both a getter and a setter
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000031_source')" id="l_M000031_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000032_source')" id="l_M000032_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L82" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000031_source" class="dyn-source">
+                    <div id="M000032_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 82</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_column</span>(<span class="ruby-identifier">column_name</span>=<span class="ruby-keyword kw">nil</span>)
           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">column_name</span>
@@ -164,9 +164,9 @@ This method is both a getter and a setter
             </div>
             
             <div class="method">
-                <div class="title" id="M000034">
+                <div class="title" id="M000035">
                     
-                    <a name="M000034"></a><b>calculate_in_state</b>(state, *args)
+                    <a name="M000035"></a><b>calculate_in_state</b>(state, *args)
                     
                 </div>
                 
@@ -175,12 +175,12 @@ This method is both a getter and a setter
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000034_source')" id="l_M000034_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000035_source')" id="l_M000035_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L106" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000034_source" class="dyn-source">
+                    <div id="M000035_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 106</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">calculate_in_state</span>(<span class="ruby-identifier">state</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
           <span class="ruby-identifier">with_state_scope</span> <span class="ruby-identifier">state</span> <span class="ruby-keyword kw">do</span>
@@ -193,9 +193,9 @@ This method is both a getter and a setter
             </div>
             
             <div class="method">
-                <div class="title" id="M000033">
+                <div class="title" id="M000034">
                     
-                    <a name="M000033"></a><b>count_in_state</b>(state, *args)
+                    <a name="M000034"></a><b>count_in_state</b>(state, *args)
                     
                 </div>
                 
@@ -204,12 +204,12 @@ This method is both a getter and a setter
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000033_source')" id="l_M000033_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000034_source')" id="l_M000034_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L100" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000033_source" class="dyn-source">
+                    <div id="M000034_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 100</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">count_in_state</span>(<span class="ruby-identifier">state</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
           <span class="ruby-identifier">with_state_scope</span> <span class="ruby-identifier">state</span> <span class="ruby-keyword kw">do</span>
@@ -222,9 +222,9 @@ This method is both a getter and a setter
             </div>
             
             <div class="method">
-                <div class="title" id="M000032">
+                <div class="title" id="M000033">
                     
-                    <a name="M000032"></a><b>find_in_state</b>(number, state, *args)
+                    <a name="M000033"></a><b>find_in_state</b>(number, state, *args)
                     
                 </div>
                 
@@ -233,12 +233,12 @@ This method is both a getter and a setter
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000032_source')" id="l_M000032_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000033_source')" id="l_M000033_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L94" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000032_source" class="dyn-source">
+                    <div id="M000033_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 94</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_in_state</span>(<span class="ruby-identifier">number</span>, <span class="ruby-identifier">state</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
           <span class="ruby-identifier">with_state_scope</span> <span class="ruby-identifier">state</span> <span class="ruby-keyword kw">do</span>
@@ -253,9 +253,9 @@ This method is both a getter and a setter
             <div class="sectiontitle">Instance Protected methods</div>
             
             <div class="method">
-                <div class="title" id="M000035">
+                <div class="title" id="M000036">
                     
-                    <a name="M000035"></a><b>with_state_scope</b>(state)
+                    <a name="M000036"></a><b>with_state_scope</b>(state)
                     
                 </div>
                 
@@ -264,12 +264,12 @@ This method is both a getter and a setter
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000035_source')" id="l_M000035_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000036_source')" id="l_M000036_source">show</a>
                         
                         | <a href="http://github.com/rubyist/aasm/blob/e97a93089705ca55c8ac9c59afb8b75695f0c5cc/lib/aasm/persistence/active_record_persistence.rb#L113" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000035_source" class="dyn-source">
+                    <div id="M000036_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/persistence/active_record_persistence.rb, line 113</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">with_state_scope</span>(<span class="ruby-identifier">state</span>)
           <span class="ruby-identifier">with_scope</span> <span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-node">&quot;#{table_name}.#{aasm_column} = ?&quot;</span>, <span class="ruby-identifier">state</span>.<span class="ruby-identifier">to_s</span>]} <span class="ruby-keyword kw">do</span>

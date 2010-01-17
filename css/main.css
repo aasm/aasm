@@ -47,6 +47,21 @@ h4 {
     font-size: 1em;
 }
 
+table
+{
+    margin-bottom: 1em;
+}
+
+td, th
+{
+    padding: 0 0.7em 0.3em 0;
+}
+
+th
+{
+    font-weight: bold;
+}
+
 .clear
 {
     clear: both;

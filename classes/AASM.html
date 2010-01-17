@@ -23,17 +23,9 @@
             
             <li><a href="../files/lib/aasm/aasm_rb.html">lib/aasm/aasm.rb</a></li>
             
-            <li><a href="../files/lib/aasm/event_rb.html">lib/aasm/event.rb</a></li>
-            
             <li><a href="../files/lib/aasm/persistence/active_record_persistence_rb.html">lib/aasm/persistence/active_record_persistence.rb</a></li>
             
-            <li><a href="../files/lib/aasm/persistence_rb.html">lib/aasm/persistence.rb</a></li>
-            
-            <li><a href="../files/lib/aasm/state_rb.html">lib/aasm/state.rb</a></li>
-            
-            <li><a href="../files/lib/aasm/state_machine_rb.html">lib/aasm/state_machine.rb</a></li>
-            
-            <li><a href="../files/lib/aasm/state_transition_rb.html">lib/aasm/state_transition.rb</a></li>
+            <li><a href="../files/lib/aasm_rb.html">lib/aasm.rb</a></li>
             
         </ul>
     </div>
@@ -55,13 +47,13 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000011">aasm_current_state</a>,</li>
+                <li><a href="#M000009">aasm_current_state</a>,</li>
                 
-                <li><a href="#M000012">aasm_enter_initial_state</a>,</li>
+                <li><a href="#M000010">aasm_enter_initial_state</a>,</li>
                 
-                <li><a href="#M000015">aasm_events_for_current_state</a>,</li>
+                <li><a href="#M000011">aasm_events_for_current_state</a>,</li>
                 
-                <li><a href="#M000016">aasm_events_for_state</a></li>
+                <li><a href="#M000012">aasm_events_for_state</a></li>
                 
             </ul>
         </dd>
@@ -100,9 +92,9 @@
             <div class="sectiontitle">Instance Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000011">
+                <div class="title" id="M000009">
                     
-                    <a name="M000011"></a><b>aasm_current_state</b>()
+                    <a name="M000009"></a><b>aasm_current_state</b>()
                     
                 </div>
                 
@@ -118,13 +110,13 @@ Instance methods
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000011_source')" id="l_M000011_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000009_source')" id="l_M000009_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L80" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/aasm.rb#L75" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000011_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 80</span>
+                    <div id="M000009_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 75</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_current_state</span>
     <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@aasm_current_state</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@aasm_current_state</span>
 
@@ -141,9 +133,9 @@ Instance methods
             </div>
             
             <div class="method">
-                <div class="title" id="M000012">
+                <div class="title" id="M000010">
                     
-                    <a name="M000012"></a><b>aasm_enter_initial_state</b>()
+                    <a name="M000010"></a><b>aasm_enter_initial_state</b>()
                     
                 </div>
                 
@@ -152,13 +144,13 @@ Instance methods
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000012_source')" id="l_M000012_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000010_source')" id="l_M000010_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L91" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/aasm.rb#L86" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000012_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 91</span>
+                    <div id="M000010_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 86</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_enter_initial_state</span>
     <span class="ruby-identifier">state_name</span> = <span class="ruby-identifier">aasm_determine_state_name</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">aasm_initial_state</span>)
     <span class="ruby-identifier">state</span> = <span class="ruby-identifier">aasm_state_object_for_state</span>(<span class="ruby-identifier">state_name</span>)
@@ -176,9 +168,9 @@ Instance methods
             </div>
             
             <div class="method">
-                <div class="title" id="M000015">
+                <div class="title" id="M000011">
                     
-                    <a name="M000015"></a><b>aasm_events_for_current_state</b>()
+                    <a name="M000011"></a><b>aasm_events_for_current_state</b>()
                     
                 </div>
                 
@@ -187,13 +179,13 @@ Instance methods
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000015_source')" id="l_M000015_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000011_source')" id="l_M000011_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L103" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/aasm.rb#L98" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000015_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 103</span>
+                    <div id="M000011_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 98</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_events_for_current_state</span>
     <span class="ruby-identifier">aasm_events_for_state</span>(<span class="ruby-identifier">aasm_current_state</span>)
   <span class="ruby-keyword kw">end</span></pre>
@@ -203,9 +195,9 @@ Instance methods
             </div>
             
             <div class="method">
-                <div class="title" id="M000016">
+                <div class="title" id="M000012">
                     
-                    <a name="M000016"></a><b>aasm_events_for_state</b>(state)
+                    <a name="M000012"></a><b>aasm_events_for_state</b>(state)
                     
                 </div>
                 
@@ -214,13 +206,13 @@ Instance methods
                 
                 <div class="sourcecode">
                     <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000016_source')" id="l_M000016_source">show</a>
+                        Source: <a href="javascript:toggleSource('M000012_source')" id="l_M000012_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/aasm.rb#L107" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/aasm.rb#L102" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
-                    <div id="M000016_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 107</span>
+                    <div id="M000012_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/aasm.rb, line 102</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aasm_events_for_state</span>(<span class="ruby-identifier">state</span>)
     <span class="ruby-identifier">events</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">aasm_events</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">select</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">event</span><span class="ruby-operator">|</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">transitions_from_state?</span>(<span class="ruby-identifier">state</span>) }
     <span class="ruby-identifier">events</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">event</span><span class="ruby-operator">|</span> <span class="ruby-identifier">event</span>.<span class="ruby-identifier">name</span>}

@@ -49,7 +49,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000039">==</a></li>
+                <li><a href="#M000042">==</a></li>
                 
             </ul>
         </dd>
@@ -58,7 +58,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000040">call_action</a></li>
+                <li><a href="#M000043">call_action</a></li>
                 
             </ul>
         </dd>
@@ -67,7 +67,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000041">display_name</a></li>
+                <li><a href="#M000045">display_name</a></li>
                 
             </ul>
         </dd>
@@ -76,7 +76,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000042">for_select</a></li>
+                <li><a href="#M000046">for_select</a></li>
                 
             </ul>
         </dd>
@@ -85,7 +85,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000036">new</a></li>
+                <li><a href="#M000041">new</a></li>
                 
             </ul>
         </dd>
@@ -94,7 +94,7 @@
         <dd>
             <ul>
                 
-                <li><a href="#M000045">update</a></li>
+                <li><a href="#M000047">update</a></li>
                 
             </ul>
         </dd>
@@ -137,100 +137,9 @@
             <div class="sectiontitle">Class Public methods</div>
             
             <div class="method">
-                <div class="title" id="M000036">
-                    
-                    <a name="M000036"></a><b>new</b>(name, options={})
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000036_source')" id="l_M000036_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L6" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000036_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 6</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>={})
-        <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
-        <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span>)
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="sectiontitle">Instance Public methods</div>
-            
-            <div class="method">
-                <div class="title" id="M000039">
-                    
-                    <a name="M000039"></a><b>==</b>(state)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000039_source')" id="l_M000039_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L11" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000039_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 11</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">state</span>)
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Symbol</span>
-          <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span>
-        <span class="ruby-keyword kw">else</span>
-          <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">name</span>
-        <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
-                <div class="title" id="M000040">
-                    
-                    <a name="M000040"></a><b>call_action</b>(action, record)
-                    
-                </div>
-                
-                
-                
-                
-                <div class="sourcecode">
-                    <p class="source-link">
-                        Source: <a href="javascript:toggleSource('M000040_source')" id="l_M000040_source">show</a>
-                        
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L19" target="_blank" class="github_url">on GitHub</a>
-                        
-                    </p>
-                    <div id="M000040_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 19</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
-        <span class="ruby-identifier">action</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-identifier">action</span>]
-        <span class="ruby-identifier">action</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span>
-                <span class="ruby-identifier">action</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">record</span>)} <span class="ruby-operator">:</span>
-                <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
-      <span class="ruby-keyword kw">end</span></pre>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="method">
                 <div class="title" id="M000041">
                     
-                    <a name="M000041"></a><b>display_name</b>()
+                    <a name="M000041"></a><b>new</b>(name, options={})
                     
                 </div>
                 
@@ -241,23 +150,26 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000041_source')" id="l_M000041_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L26" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L4" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000041_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 26</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">display_name</span>
-        <span class="ruby-ivar">@display_name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/_/</span>, <span class="ruby-value str">' '</span>).<span class="ruby-identifier">capitalize</span>
-      <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 4</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>={})
+    <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+    <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span>)
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
             </div>
             
+            <div class="sectiontitle">Instance Public methods</div>
+            
             <div class="method">
                 <div class="title" id="M000042">
                     
-                    <a name="M000042"></a><b>for_select</b>()
+                    <a name="M000042"></a><b>==</b>(state)
                     
                 </div>
                 
@@ -268,14 +180,50 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000042_source')" id="l_M000042_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L30" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L9" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000042_source" class="dyn-source">
-                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 30</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">for_select</span>
-        [<span class="ruby-identifier">display_name</span>, <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>]
-      <span class="ruby-keyword kw">end</span></pre>
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 9</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">state</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Symbol</span>
+      <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span>
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000043">
+                    
+                    <a name="M000043"></a><b>call_action</b>(action, record)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000043_source')" id="l_M000043_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L17" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000043_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 17</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
+    <span class="ruby-identifier">action</span> = <span class="ruby-ivar">@options</span>[<span class="ruby-identifier">action</span>]
+    <span class="ruby-identifier">catch</span> <span class="ruby-identifier">:halt_aasm_chain</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-identifier">action</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span>
+              <span class="ruby-identifier">action</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">record</span>)} <span class="ruby-operator">:</span>
+              <span class="ruby-identifier">_call_action</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">record</span>)
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
@@ -284,7 +232,7 @@
             <div class="method">
                 <div class="title" id="M000045">
                     
-                    <a name="M000045"></a><b>update</b>(options = {})
+                    <a name="M000045"></a><b>display_name</b>()
                     
                 </div>
                 
@@ -295,18 +243,72 @@
                     <p class="source-link">
                         Source: <a href="javascript:toggleSource('M000045_source')" id="l_M000045_source">show</a>
                         
-                        | <a href="http://github.com/rubyist/aasm/blob/dc002d4684a481fed59c88b4916f7b0c29354d96/lib/aasm/state.rb#L34" target="_blank" class="github_url">on GitHub</a>
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L26" target="_blank" class="github_url">on GitHub</a>
                         
                     </p>
                     <div id="M000045_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 26</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">display_name</span>
+    <span class="ruby-ivar">@display_name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/_/</span>, <span class="ruby-value str">' '</span>).<span class="ruby-identifier">capitalize</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000046">
+                    
+                    <a name="M000046"></a><b>for_select</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000046_source')" id="l_M000046_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L30" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000046_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 30</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">for_select</span>
+    [<span class="ruby-identifier">display_name</span>, <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>]
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000047">
+                    
+                    <a name="M000047"></a><b>update</b>(options = {})
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000047_source')" id="l_M000047_source">show</a>
+                        
+                        | <a href="http://github.com/rubyist/aasm/blob/bb32281d2dfe7e1d2f6fba684fa8e913c5cdb025/lib/aasm/state.rb#L34" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000047_source" class="dyn-source">
                         <pre><span class="ruby-comment cmt"># File lib/aasm/state.rb, line 34</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span> = {})
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:display</span>) <span class="ruby-keyword kw">then</span>
-          <span class="ruby-ivar">@display_name</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:display</span>)
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
-        <span class="ruby-keyword kw">self</span>
-      <span class="ruby-keyword kw">end</span></pre>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span> = {})
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:display</span>) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-ivar">@display_name</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:display</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+    <span class="ruby-keyword kw">self</span>
+  <span class="ruby-keyword kw">end</span></pre>
                     </div>
                 </div>
                 
