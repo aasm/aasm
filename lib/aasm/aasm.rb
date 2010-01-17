@@ -125,12 +125,12 @@ module AASM
 
   def aasm_determine_state_name(state)
     case state
-    when Symbol, String
-      state
-    when Proc
-      state.call(self)
-    else
-      raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+      when Symbol, String
+        state
+      when Proc
+        state.call(self)
+      else
+        raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
     end
   end
 
@@ -144,7 +144,7 @@ module AASM
     event = self.class.aasm_events[name]
     begin
       old_state = aasm_state_object_for_state(aasm_current_state)
-      
+
 
       old_state.call_action(:exit, self)
 

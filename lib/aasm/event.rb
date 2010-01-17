@@ -50,19 +50,19 @@ class AASM::SupportingClasses::Event
     end
   end
 
-      def update(options = {}, &block)
-        if options.key?(:success) then
-          @success = options[:success]
-        end
-        if options.key?(:error) then
-          @error = options[:error]
-        end
-        if block then
-          instance_eval(&block)
-        end
-        @options = options
-        self
-      end
+  def update(options = {}, &block)
+    if options.key?(:success) then
+      @success = options[:success]
+    end
+    if options.key?(:error) then
+      @error = options[:error]
+    end
+    if block then
+      instance_eval(&block)
+    end
+    @options = options
+    self
+  end
 
   def execute_success_callback(obj, success = nil)
     callback = success || @success
@@ -76,21 +76,21 @@ class AASM::SupportingClasses::Event
     end
   end
 
-      def execute_error_callback(obj, error, error_callback=nil)
-        callback = error_callback || @error
-        raise error unless callback
-        case(callback)
-          when String, Symbol
-            raise NoMethodError unless obj.respond_to?(callback.to_sym)
-            obj.send(callback, error)
-          when Proc
-            callback.call(obj, error)
-          when Array
-            callback.each{|meth|self.execute_error_callback(obj, error, meth)}
-        end
-      end
+  def execute_error_callback(obj, error, error_callback=nil)
+    callback = error_callback || @error
+    raise error unless callback
+    case(callback)
+      when String, Symbol
+        raise NoMethodError unless obj.respond_to?(callback.to_sym)
+        obj.send(callback, error)
+      when Proc
+        callback.call(obj, error)
+      when Array
+        callback.each{|meth|self.execute_error_callback(obj, error, meth)}
+    end
+  end
 
-      private
+  private
 
   def _call_action(action, record)
     case action
