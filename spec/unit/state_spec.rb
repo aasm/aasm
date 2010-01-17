@@ -63,6 +63,17 @@ describe AASM::SupportingClasses::State do
     state.call_action(:entering, record)
   end
 
+  it "should stop calling actions if one of them raises :halt_aasm_chain" do
+    state = new_state(:entering => [:a, :b, :c])
+
+    record = mock('record')
+    record.should_receive(:a)
+    record.should_receive(:b).and_throw(:halt_aasm_chain)
+    record.should_not_receive(:c)
+
+    state.call_action(:entering, record)
+  end
+
   it 'should call a proc, passing in the record for an action if the action is present' do
     state = new_state(:entering => Proc.new {|r| r.foobar})
 

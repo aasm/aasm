@@ -14,12 +14,14 @@ class AASM::SupportingClasses::State
     end
   end
 
-  def call_action(action, record)
-    action = @options[action]
-    action.is_a?(Array) ?
-            action.each {|a| _call_action(a, record)} :
-            _call_action(action, record)
-  end
+      def call_action(action, record)
+        action = @options[action]
+        catch :halt_aasm_chain do
+          action.is_a?(Array) ?
+          action.each {|a| _call_action(a, record)} :
+          _call_action(action, record)
+        end
+      end
 
   def display_name
     @display_name ||= name.to_s.gsub(/_/, ' ').capitalize
