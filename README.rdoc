@@ -66,6 +66,8 @@ Here's a quick example highlighting some of the features.
   class Conversation
     include AASM
 
+    aasm_column :current_state # defaults to aasm_state
+
     aasm_initial_state :unread
 
     aasm_state :unread
@@ -88,6 +90,8 @@ This example uses a few of the more complex features available.
 
   class Relationship
     include AASM
+
+    aasm_column :status
     
     aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
     
