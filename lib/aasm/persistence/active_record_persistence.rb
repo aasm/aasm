@@ -180,7 +180,6 @@ module AASM
 
       module WriteState
         # Writes <tt>state</tt> to the state column and persists it to the database
-        # using update_attribute (which bypasses validation)
         #
         #   foo = Foo.find(1)
         #   foo.aasm_current_state # => :opened
@@ -193,7 +192,7 @@ module AASM
           old_value = read_attribute(self.class.aasm_column)
           write_attribute(self.class.aasm_column, state.to_s)
 
-          unless self.save(false)
+          unless self.save
             write_attribute(self.class.aasm_column, old_value)
             return false
           end
