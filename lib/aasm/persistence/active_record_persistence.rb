@@ -50,7 +50,7 @@ module AASM
             end
           end
         end
-        base.respond_to?(:before_validation_on_create) ? base.before_validation_on_create :aasm_ensure_initial_state : base.before_validation :aasm_ensure_initial_state, :on => :create
+        base.respond_to?(:before_validation_on_create) ? base.before_validation_on_create(:aasm_ensure_initial_state) : base.before_validation(:aasm_ensure_initial_state, :on => :create)
       end
 
       module ClassMethods
