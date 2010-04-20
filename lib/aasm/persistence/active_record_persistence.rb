@@ -54,7 +54,7 @@ module AASM
       end
 
       module ClassMethods
-        # Maps to the aasm_column in the database.  Deafults to "aasm_state".  You can write:
+        # Maps to the aasm_column in the database.  Defaults to "aasm_state".  You can write:
         #
         #   create_table :foos do |t|
         #     t.string :name
