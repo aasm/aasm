@@ -238,7 +238,7 @@ module AASM
       module NamedScopeMethods
         def aasm_state_with_named_scope name, options = {}
           aasm_state_without_named_scope name, options
-          self.named_scope name, :conditions => { "#{table_name}.#{self.aasm_column}" => name.to_s} unless self.respond_to?(name)
+          self.scope name, :conditions => { "#{table_name}.#{self.aasm_column}" => name.to_s} unless self.respond_to?(name)
         end
       end
     end
