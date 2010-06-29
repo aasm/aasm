@@ -11,6 +11,7 @@ module AASM
     unless AASM::StateMachine[base]
       AASM::StateMachine[base] = AASM::StateMachine.new('')
     end
+   super
   end
 
   module ClassMethods
