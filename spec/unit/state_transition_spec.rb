@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'spec_helper')
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
 
 describe AASM::SupportingClasses::StateTransition do
   it 'should set from, to, and opts attr readers' do

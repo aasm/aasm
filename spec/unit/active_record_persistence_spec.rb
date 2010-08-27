@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'aasm')
-
 begin
   require 'rubygems'
   require 'active_record'
@@ -214,15 +212,15 @@ begin
     end
 
     context "Does not already respond_to? the scope name" do
-      it "should add a named_scope" do
-        NamedScopeExample.should_receive(:named_scope)
+      it "should add a scope" do
+        NamedScopeExample.should_receive(:scope)
         NamedScopeExample.aasm_state :unknown_scope
       end
     end
 
     context "Already respond_to? the scope name" do
-      it "should not add a named_scope" do
-        NamedScopeExample.should_not_receive(:named_scope)
+      it "should not add a scope" do
+        NamedScopeExample.should_not_receive(:scope)
         NamedScopeExample.aasm_state :new
       end
     end
