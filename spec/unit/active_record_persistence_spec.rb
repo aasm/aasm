@@ -1,6 +1,9 @@
 begin
   require 'rubygems'
   require 'active_record'
+  require 'logger'
+  
+  ActiveRecord::Base.logger = Logger.new(STDERR)
 
   # A dummy class for mocking the activerecord connection class
   class Connection
