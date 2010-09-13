@@ -50,7 +50,12 @@ module AASM
             end
           end
         end
-        base.respond_to?(:before_validation_on_create) ? base.before_validation_on_create(:aasm_ensure_initial_state) : base.before_validation(:aasm_ensure_initial_state, :on => :create)
+        
+        if ActiveRecord::VERSION::MAJOR >= 3
+          base.before_validation(:aasm_ensure_initial_state, :on => :create)
+        else
+          base.before_validation_on_create(:aasm_ensure_initial_state)
+        end        
       end
 
       module ClassMethods
