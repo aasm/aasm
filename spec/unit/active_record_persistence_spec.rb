@@ -216,15 +216,15 @@ begin
 
     context "Does not already respond_to? the scope name" do
       it "should add a scope" do
-        NamedScopeExample.should_receive(:scope)
         NamedScopeExample.aasm_state :unknown_scope
+        NamedScopeExample.scopes.keys.should include(:unknown_scope)
       end
     end
 
     context "Already respond_to? the scope name" do
       it "should not add a scope" do
-        NamedScopeExample.should_not_receive(:scope)
         NamedScopeExample.aasm_state :new
+        NamedScopeExample.scopes.keys.should_not include(:new)
       end
     end
   end
