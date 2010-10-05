@@ -49,6 +49,13 @@ module AASM
         sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
       end
 
+      # an addition over standard aasm so that, before firing an event, you can ask
+      # may_event? and get back a boolean that tells you whether the guard method
+      # on the transition will let this happen.
+      define_method("may_#{name.to_s}?") do |*args|
+        aasm_test_event(name)
+      end
+      
       define_method("#{name.to_s}!") do |*args|
         aasm_fire_event(name, true, *args)
       end
@@ -100,6 +107,12 @@ module AASM
     aasm_events_for_state(aasm_current_state)
   end
 
+  # filters the results of events_for_current_state so that only those that
+  # are really currently possible (given transition guards) are shown.
+  def aasm_permissible_events_for_current_state
+    aasm_events_for_current_state.select{ |e| self.send(("may_" + e.to_s + "?").to_sym) }
+  end
+  
   def aasm_events_for_state(state)
     events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
     events.map {|event| event.name}
