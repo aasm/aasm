@@ -29,6 +29,11 @@ class AuthMachine
     transitions :from => [:passive, :pending, :active, :suspended], :to => :deleted
   end
 
+  # a dummy event that can never happen
+  aasm_event :unpassify do
+    transitions :from => :passive, :to => :active, :guard => Proc.new {|u| false }
+  end
+  
   aasm_event :unsuspend do
     transitions :from => :suspended, :to => :active,  :guard => Proc.new {|u| u.has_activated? }
     transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| u.has_activation_code? }
@@ -89,6 +94,29 @@ class AuthMachineTest < Test::Unit::TestCase
     end
 
     context 'when being unsuspended' do
+      
+      should 'be able to be unsuspended' do
+        @auth = AuthMachine.new
+        @auth.activate!
+        @auth.suspend!
+        assert @auth.may_unsuspend?
+      end
+      
+      should 'not be able to be unsuspended into active' do
+        @auth = AuthMachine.new
+        @auth.suspend!
+        assert_equal false, @auth.may_unsuspend?(:active)
+      end
+      
+      should 'not be able to be unpassified' do
+        @auth = AuthMachine.new
+        @auth.activate!
+        @auth.suspend!
+        @auth.unsuspend!
+        
+        assert_equal false, @auth.may_unpassify?
+      end
+      
       should 'be active if previously activated' do
         @auth = AuthMachine.new
         @auth.activate!
