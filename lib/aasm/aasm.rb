@@ -53,7 +53,7 @@ module AASM
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
       define_method("may_#{name.to_s}?") do |*args|
-        aasm_test_event(name)
+        aasm_test_event(name, *args)
       end
       
       define_method("#{name.to_s}!") do |*args|
@@ -154,6 +154,11 @@ module AASM
     obj
   end
 
+  def aasm_test_event(name, *args)
+    event = self.class.aasm_events[name]
+    event.may_fire?(self, *args)
+  end
+  
   def aasm_fire_event(name, persist, *args)
     event = self.class.aasm_events[name]
     begin
