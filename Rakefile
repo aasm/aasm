@@ -4,20 +4,21 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "aasm"
+    gem.name = 'aasm'
     gem.summary = %Q{State machine mixin for Ruby objects}
     gem.description = %Q{AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.}
-    gem.homepage = "http://rubyist.github.com/aasm/"
-    gem.authors = ["Scott Barron", "Scott Petersen", "Travis Tilley"]
-    gem.email = "scott@elitists.net, ttilley@gmail.com"
-    gem.add_development_dependency "rspec"
-    gem.add_development_dependency "shoulda"
+    gem.homepage = 'http://rubyist.github.com/aasm/'
+    gem.authors = ['Scott Barron', 'Scott Petersen', 'Travis Tilley']
+    gem.email = 'scott@elitists.net, ttilley@gmail.com'
+    gem.add_development_dependency 'ruby-debug-completion'
+    gem.add_development_dependency 'rspec'
+    gem.add_development_dependency 'shoulda'
     gem.add_development_dependency 'sdoc'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+  puts 'Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler'
 end
 
 require 'spec/rake/spectask'
@@ -38,7 +39,7 @@ begin
   end
 rescue LoadError
   task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+    abort 'RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov'
   end
 end
 
@@ -66,7 +67,7 @@ begin
   end
 rescue LoadError
   task :reek do
-    abort "Reek is not available. In order to run reek, you must: sudo gem install reek"
+    abort 'Reek is not available. In order to run reek, you must: sudo gem install reek'
   end
 end
 
@@ -78,7 +79,7 @@ begin
   end
 rescue LoadError
   task :roodi do
-    abort "Roodi is not available. In order to run roodi, you must: sudo gem install roodi"
+    abort 'Roodi is not available. In order to run roodi, you must: sudo gem install roodi'
   end
 end
 
@@ -91,7 +92,7 @@ begin
     if File.exist?('VERSION')
       version = File.read('VERSION')
     else
-      version = ""
+      version = ''
     end
 
     rdoc.rdoc_dir = 'rdoc'
@@ -103,6 +104,6 @@ begin
     rdoc.template = 'direct'
   end
 rescue LoadError
-  puts "aasm makes use of the sdoc gem. Install it with: sudo gem install sdoc"
+  puts 'aasm makes use of the sdoc gem. Install it with: sudo gem install sdoc'
 end
 

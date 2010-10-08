@@ -23,8 +23,8 @@ class Test::Unit::TestCase
 end
 
 begin
-  require 'ruby-debug'
-  Debugger.start
+  require 'ruby-debug'; Debugger.settings[:autoeval] = true; debugger; rubys_debugger = 'annoying'
+  require 'ruby-debug/completion'
 rescue LoadError
 end
 
