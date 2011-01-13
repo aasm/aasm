@@ -41,7 +41,7 @@ module AASM
         aasm_current_state == name
       end
     end
-
+    
     def aasm_event(name, options = {}, &block)
       sm = AASM::StateMachine[self]
 
@@ -103,6 +103,17 @@ module AASM
   def aasm_events_for_state(state)
     events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
     events.map {|event| event.name}
+  end
+
+  def human_state
+    begin
+      var_model = self.class.model_name
+      var = var_model.respond_to?(:i18n_key) ? var_model.i18n_key : var_model.underscore
+      key = "activerecord.attributes.#{var}_#{self.class.aasm_column}.#{aasm_current_state}"
+      translation = I18n.translate(key, :raise => true)
+    rescue I18n::MissingTranslationData
+      aasm_current_state.to_s.humanize
+    end
   end
 
   private
