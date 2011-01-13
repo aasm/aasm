@@ -107,10 +107,12 @@ module AASM
 
   def human_state
     begin
-      var_model = self.class.model_name
-      var = var_model.respond_to?(:i18n_key) ? var_model.i18n_key : var_model.underscore
-      key = "activerecord.attributes.#{var}_#{self.class.aasm_column}.#{aasm_current_state}"
-      translation = I18n.translate(key, :raise => true)
+      defaults = self.class.lookup_ancestors.map do |klass|
+        klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
+        :"#{klass_human}.#{aasm_current_state}"
+      end
+      scope = "#{self.class.i18n_scope}.attributes"
+      I18n.translate(defaults.shift, :default => defaults, :scope => scope, :raise => true)
     rescue I18n::MissingTranslationData
       aasm_current_state.to_s.humanize
     end
