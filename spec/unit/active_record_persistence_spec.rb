@@ -60,7 +60,7 @@ begin
     attr_accessor :skilled, :aasm_state
   end
 
-  describe "aasm model", :shared => true do
+  shared_examples_for "aasm model" do
     it "should include AASM::Persistence::ActiveRecordPersistence" do
       @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
     end
