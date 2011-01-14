@@ -16,7 +16,7 @@ module AASM::I18n
       end
       defaults = lookuped_ancestors.map do |klass|
         klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-        :"#{self.class.i18n_scope}.#{local_scope}.#{klass_human}.state_enum.#{attribute}"
+        :"#{self.class.i18n_scope}.#{local_scope}.#{klass_human}.#{attribute}"
       end
       defaults << attribute.to_s.humanize
 
