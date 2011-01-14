@@ -7,6 +7,8 @@ module AASM
 
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
+    base.send(:include, AASM::I18n::InstanceMethods)
+
     AASM::Persistence.set_persistence(base)
     unless AASM::StateMachine[base]
       AASM::StateMachine[base] = AASM::StateMachine.new('')
@@ -105,25 +107,25 @@ module AASM
     events.map {|event| event.name}
   end
   
-  def human_state
-    defaults = self.class.lookup_ancestors.map do |klass|
-      klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-      :"#{self.class.i18n_scope}.attributes.#{klass_human}.#{aasm_current_state}"
-    end
-    defaults << aasm_current_state.to_s.humanize
-  
-    I18n.translate(defaults.shift, :default => defaults, :raise => true)
-  end
-  
-  def human_event_name(event)
-    defaults = self.class.lookup_ancestors.map do |klass|
-      klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-      :"#{self.class.i18n_scope}.events.#{klass_human}.#{event}"
-    end
-    defaults << event.to_s.humanize
-  
-    I18n.translate(defaults.shift, :default => defaults, :raise => true)
-  end
+  # def human_state
+  #   defaults = self.class.lookup_ancestors.map do |klass|
+  #     klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
+  #     :"#{self.class.i18n_scope}.attributes.#{klass_human}.#{aasm_current_state}"
+  #   end
+  #   defaults << aasm_current_state.to_s.humanize
+  #
+  #   I18n.translate(defaults.shift, :default => defaults, :raise => true)
+  # end
+  #
+  # def human_event_name(event)
+  #   defaults = self.class.lookup_ancestors.map do |klass|
+  #     klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
+  #     :"#{self.class.i18n_scope}.events.#{klass_human}.#{event}"
+  #   end
+  #   defaults << event.to_s.humanize
+  #
+  #   I18n.translate(defaults.shift, :default => defaults, :raise => true)
+  # end
   
   private
 
