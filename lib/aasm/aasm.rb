@@ -106,27 +106,7 @@ module AASM
     events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
     events.map {|event| event.name}
   end
-  
-  # def human_state
-  #   defaults = self.class.lookup_ancestors.map do |klass|
-  #     klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-  #     :"#{self.class.i18n_scope}.attributes.#{klass_human}.#{aasm_current_state}"
-  #   end
-  #   defaults << aasm_current_state.to_s.humanize
-  #
-  #   I18n.translate(defaults.shift, :default => defaults, :raise => true)
-  # end
-  #
-  # def human_event_name(event)
-  #   defaults = self.class.lookup_ancestors.map do |klass|
-  #     klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-  #     :"#{self.class.i18n_scope}.events.#{klass_human}.#{event}"
-  #   end
-  #   defaults << event.to_s.humanize
-  #
-  #   I18n.translate(defaults.shift, :default => defaults, :raise => true)
-  # end
-  
+
   private
 
   def set_aasm_current_state_with_persistence(state)
