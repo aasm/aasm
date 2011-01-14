@@ -11,7 +11,10 @@ module AASM::I18n
     private
     
     def _translate(local_scope, attribute)
-      defaults = self.class.lookup_ancestors.map do |klass|
+      lookuped_ancestors = self.class.ancestors.select do |x|
+        x.respond_to?(:model_name) unless x == ActiveRecord::Base
+      end
+      defaults = lookuped_ancestors.map do |klass|
         klass_human = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
         :"#{self.class.i18n_scope}.#{local_scope}.#{klass_human}.state_enum.#{attribute}"
       end
