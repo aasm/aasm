@@ -18,10 +18,12 @@ class AASM::I18n
 
   private
 
+  # added for rails 2.x compatibility
   def i18n_scope(klass)
     klass.respond_to?(:i18n_scope) ? klass.i18n_scope : :activerecord
   end
 
+  # added for rails < 3.0.3 compatibility
   def i18n_klass(klass)
     klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
   end
