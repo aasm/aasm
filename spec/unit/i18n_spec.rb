@@ -35,7 +35,7 @@ describe AASM::I18n do
   end
 
   let (:foo_opened) { I18nTestModel.new }
-  let (:foo_closed) { I18nTestModel.new.tap {|x| x.aasm_state = :closed  } }
+  let (:foo_closed) { I18nTestModel.new.tap { |x| x.aasm_state = :closed  } }
 
   context '.human_state' do
     it 'should return translated state value' do
