@@ -7,6 +7,7 @@ module AASM
 
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
+    base.extend AASM::I18n::ClassMethods
     base.send(:include, AASM::I18n::InstanceMethods)
 
     AASM::Persistence.set_persistence(base)
