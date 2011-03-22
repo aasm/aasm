@@ -14,7 +14,7 @@ class AASM::SupportingClasses::Event
     next_state = nil
     transitions.each do |transition|
       next if to_state and !Array(transition.to).include?(to_state)
-      if transition.perform(obj)
+      if transition.perform(obj, *args)
         next_state = to_state || Array(transition.to).first
         transition.execute(obj, *args)
         break

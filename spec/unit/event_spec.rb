@@ -48,6 +48,20 @@ describe AASM::SupportingClasses::Event, 'when firing an event' do
 
     event.fire(obj).should == :closed
   end
+
+
+  it 'should call the guard with the params passed in' do
+    event = AASM::SupportingClasses::Event.new(:event) do
+      transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
+    end
+
+    obj = mock('object')
+    obj.stub!(:aasm_current_state).and_return(:open)
+    obj.should_receive(:guard_fn).with('arg1', 'arg2').and_return(true)
+
+    event.fire(obj, nil, 'arg1', 'arg2').should == :closed
+  end
+
 end
 
 describe AASM::SupportingClasses::Event, 'when executing the success callback' do

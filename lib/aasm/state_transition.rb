@@ -7,12 +7,12 @@ class AASM::SupportingClasses::StateTransition
     @opts = opts
   end
 
-  def perform(obj)
+  def perform(obj, *args)
     case @guard
       when Symbol, String
-        obj.send(@guard)
+        obj.send(@guard, *args)
       when Proc
-        @guard.call(obj)
+        @guard.call(obj, *args)
       else
         true
     end
