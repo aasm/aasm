@@ -3,7 +3,7 @@ class AASM::I18n
     defaults = ancestors_list(klass).map do |ancestor|
       :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
     end << event.to_s.humanize
-  
+
     I18n.translate(defaults.shift, :default => defaults, :raise => true)
   end
 

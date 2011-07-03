@@ -10,7 +10,7 @@ end
 
 class I18nTestModel < ActiveRecord::Base
   include AASM
-  
+
   attr_accessor :aasm_state
 
   aasm_initial_state :open
@@ -26,7 +26,7 @@ describe AASM::I18n do
     I18n.load_path << 'spec/en.yml'
     I18n.default_locale = :en
   end
-  
+
   after(:all) { I18n.load_path.clear }
 
   before do
