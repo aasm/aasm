@@ -1,6 +1,8 @@
 = Alternatives
 
-This project is essentially abandoned. If you are looking for an alternative to AASM, I would highly suggest transitions: http://github.com/qoobaa/transitions
+This project is essentially abandoned. Thorsten Böttger has volunteered to take over maintenance: https://github.com/alto/aasm
+
+If you are looking for an alternative to AASM, I would highly suggest transitions: http://github.com/qoobaa/transitions
 
 = AASM - Ruby state machines
 
