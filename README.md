@@ -1,17 +1,17 @@
-= AASM - Ruby state machines
+# AASM - Ruby state machines #
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
 AASM started as the acts_as_state_machine plugin but has evolved into a more generic library that no longer targets only ActiveRecord models.
 
-AASM has the following features:
+## Features ##
 
 * States
 * Machines
 * Events
 * Transitions
 
-== New Callbacks
+## New Callbacks ##
 
 The callback chain & order on a successful event looks like:
 
@@ -32,30 +32,34 @@ The callback chain & order on a successful event looks like:
   (*) marks old callbacks
 
 
-== Download
+## Download ##
 
 The latest AASM can currently be pulled from the git repository on github.
 
 * http://github.com/rubyist/aasm/tree/master
 
 
-== Installation
+## Installation ##
 
-=== From RubyGems.org
+### From RubyGems.org ###
 
-  % gem install aasm
+```sh
+% gem install aasm
+```
 
-=== Building your own gems
+### Building your own gems ###
 
-  % rake gemspec
-  % rake build
-  % sudo gem install pkg/aasm-2.2.1.gem
+```sh
+% rake gemspec
+% rake build
+% sudo gem install pkg/aasm-2.2.1.gem
+```
 
-
-== Simple Example
+## Simple Example ##
 
 Here's a quick example highlighting some of the features.
 
+```ruby
   class Conversation
     include AASM
 
@@ -76,11 +80,13 @@ Here's a quick example highlighting some of the features.
       transitions :to => :closed, :from => [:read, :unread]
     end
   end
+```
 
-== A Slightly More Complex Example
+## A Slightly More Complex Example ##
 
 This example uses a few of the more complex features available.
 
+```ruby
   class Relationship
     include AASM
 
@@ -110,15 +116,16 @@ This example uses a few of the more complex features available.
     def give_up_intimacy; end
     def buy_exotic_car_and_wear_a_combover; end
   end
+```
 
-= Other Stuff
+# Other Stuff #
 
 Author::  Scott Barron <scott at elitists dot net>
 License:: Original code Copyright 2006, 2007, 2008 by Scott Barron.
           Released under an MIT-style license.  See the LICENSE  file
           included in the distribution.
 
-== Warranty
+## Warranty ##
 
 This software is provided "as is" and without any express or
 implied warranties, including, without limitation, the implied
