@@ -1,21 +1,7 @@
 ActiveRecord::Schema.define(:version => 0) do
 
-  create_table :gates, :force => true do |t| 
-  end 
-
-  create_table :readers, :force => true do |t| 
-  end 
-
-  create_table :writers, :force => true do |t| 
-  end 
-
-  create_table :transients, :force => true do |t| 
-  end 
-
-  create_table :simples, :force => true do |t| 
-  end 
-
-  create_table :thieves, :force => true do |t| 
-  end 
+  %w{gates readers writers transients simples thieves}.each do |table_name|
+    create_table table_name, :force => true
+  end
 
 end
