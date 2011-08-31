@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-# require "aasm/version"
+require "aasm/version"
 
 Gem::Specification.new do |s|
   s.name        = "aasm"
-  s.version     = "2.2.1" #AASM::VERSION
+  s.version     = AASM::VERSION
   s.authors     = ["Scott Barron", "Scott Petersen", "Travis Tilley", "Thorsten Böttger"]
   s.email       = %q{scott@elitists.net, ttilley@gmail.com}
   s.homepage    = %q{http://rubyist.github.com/aasm/}

@@ -51,7 +51,7 @@ The latest AASM can currently be pulled from the git repository on github.
 
 ```sh
 % rake build
-% sudo gem install pkg/aasm-2.2.1.gem
+% sudo gem install pkg/aasm-x.y.z.gem
 ```
 
 ## Simple Example ##
