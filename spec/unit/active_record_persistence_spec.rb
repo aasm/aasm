@@ -2,20 +2,18 @@ begin
   require 'rubygems'
   require 'active_record'
   require 'logger'
-  
+
+  load_schema
+
   ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  # A dummy class for mocking the activerecord connection class
-  class Connection
-  end
-
-  class FooBar < ActiveRecord::Base
+  class Gate < ActiveRecord::Base
     include AASM
 
     # Fake this column for testing purposes
     attr_accessor :aasm_state
 
-    aasm_state :open
+    aasm_state :opened
     aasm_state :closed
 
     aasm_event :view do
@@ -23,36 +21,37 @@ begin
     end
   end
 
-  class Fi < ActiveRecord::Base
+  class Reader < ActiveRecord::Base
     def aasm_read_state
       "fi"
     end
     include AASM
   end
 
-  class Fo < ActiveRecord::Base
+  class Writer < ActiveRecord::Base
     def aasm_write_state(state)
       "fo"
     end
     include AASM
   end
 
-  class Fum < ActiveRecord::Base
+  class Transient < ActiveRecord::Base
     def aasm_write_state_without_persistence(state)
       "fum"
     end
     include AASM
   end
 
-  class June < ActiveRecord::Base
+  class Simple < ActiveRecord::Base
     include AASM
     aasm_column :status
   end
 
-  class Beaver < June
+  class Derivate < Simple
   end
 
   class Thief < ActiveRecord::Base
+    set_table_name "thieves"
     include AASM
     aasm_initial_state  Proc.new { |thief| thief.skilled ? :rich : :jailed }
     aasm_state          :rich
@@ -69,9 +68,9 @@ begin
     end
   end
 
-  describe FooBar, "class methods" do
+  describe Gate, "class methods" do
     before(:each) do
-      @klass = FooBar
+      @klass = Gate
     end
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
@@ -85,9 +84,9 @@ begin
     end
   end
 
-  describe Fi, "class methods" do
+  describe Reader, "class methods" do
     before(:each) do
-      @klass = Fi
+      @klass = Reader
     end
     it_should_behave_like "aasm model"
     it "should not include AASM::Persistence::ActiveRecordPersistence::ReadState" do
@@ -101,9 +100,9 @@ begin
     end
   end
 
-  describe Fo, "class methods" do
+  describe Writer, "class methods" do
     before(:each) do
-      @klass = Fo
+      @klass = Writer
     end
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
@@ -117,9 +116,9 @@ begin
     end
   end
 
-  describe Fum, "class methods" do
+  describe Transient, "class methods" do
     before(:each) do
-      @klass = Fum
+      @klass = Transient
     end
     it_should_behave_like "aasm model"
     it "should include AASM::Persistence::ActiveRecordPersistence::ReadState" do
@@ -133,61 +132,57 @@ begin
     end
   end
 
-  describe FooBar, "instance methods" do
-    before(:each) do
-      connection = mock(Connection, :columns => [])
-      FooBar.stub!(:connection).and_return(connection)
-    end
+  describe Gate, "instance methods" do
 
     it "should respond to aasm read state when not previously defined" do
-      FooBar.new.should respond_to(:aasm_read_state)
+      Gate.new.should respond_to(:aasm_read_state)
     end
 
     it "should respond to aasm write state when not previously defined" do
-      FooBar.new.should respond_to(:aasm_write_state)
+      Gate.new.should respond_to(:aasm_write_state)
     end
 
     it "should respond to aasm write state without persistence when not previously defined" do
-      FooBar.new.should respond_to(:aasm_write_state_without_persistence)
+      Gate.new.should respond_to(:aasm_write_state_without_persistence)
     end
 
     it "should return the initial state when new and the aasm field is nil" do
-      FooBar.new.aasm_current_state.should == :open
+      Gate.new.aasm_current_state.should == :opened
     end
 
     it "should return the aasm column when new and the aasm field is not nil" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.aasm_state = "closed"
       foo.aasm_current_state.should == :closed
     end
 
     it "should return the aasm column when not new and the aasm_column is not nil" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.stub!(:new_record?).and_return(false)
       foo.aasm_state = "state"
       foo.aasm_current_state.should == :state
     end
 
     it "should allow a nil state" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.stub!(:new_record?).and_return(false)
       foo.aasm_state = nil
       foo.aasm_current_state.should be_nil
     end
 
     it "should have aasm_ensure_initial_state" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.send :aasm_ensure_initial_state
     end
 
     it "should call aasm_ensure_initial_state on validation before create" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.should_receive(:aasm_ensure_initial_state).and_return(true)
       foo.valid?
     end
 
     it "should call aasm_ensure_initial_state on validation before create" do
-      foo = FooBar.new
+      foo = Gate.new
       foo.stub!(:new_record?).and_return(false)
       foo.should_not_receive(:aasm_ensure_initial_state)
       foo.valid?
@@ -195,45 +190,41 @@ begin
 
   end
 
-  describe 'Beavers' do
+  describe 'Derivates' do
     it "should have the same states as it's parent" do
-      Beaver.aasm_states.should == June.aasm_states
+      Derivate.aasm_states.should == Simple.aasm_states
     end
 
     it "should have the same events as it's parent" do
-      Beaver.aasm_events.should == June.aasm_events
+      Derivate.aasm_events.should == Simple.aasm_events
     end
 
     it "should have the same column as it's parent" do
-      Beaver.aasm_column.should == :status
+      Derivate.aasm_column.should == :status
     end
   end
 
   describe AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods do
-    class NamedScopeExample < ActiveRecord::Base
-      include AASM
-    end
 
     context "Does not already respond_to? the scope name" do
       it "should add a scope" do
-        NamedScopeExample.aasm_state :unknown_scope
-        NamedScopeExample.scopes.keys.should include(:unknown_scope)
+        Simple.should_not respond_to(:unknown_scope)
+        Simple.aasm_state :unknown_scope
+        Simple.should respond_to(:unknown_scope)
+        Simple.unknown_scope.class.should == ActiveRecord::Relation
       end
     end
 
     context "Already respond_to? the scope name" do
       it "should not add a scope" do
-        NamedScopeExample.aasm_state :new
-        NamedScopeExample.scopes.keys.should_not include(:new)
+        Simple.aasm_state :new
+        Simple.should respond_to(:new)
+        Simple.new.class.should == Simple
       end
     end
   end
 
   describe 'Thieves' do
-    before(:each) do
-      connection = mock(Connection, :columns => [])
-      Thief.stub!(:connection).and_return(connection)
-    end
 
     it 'should be rich if they\'re skilled' do
       Thief.new(:skilled => true).aasm_current_state.should == :rich
