@@ -15,21 +15,21 @@ AASM started as the acts_as_state_machine plugin but has evolved into a more gen
 
 The callback chain & order on a successful event looks like:
 
-  oldstate:exit*
-  event:before
-  __find transition, if possible__
-  transition:on_transition*
-  oldstate:before_exit
-  newstate:before_enter
-  newstate:enter*
-  __update state__
-  event:success*
-  oldstate:after_exit
-  newstate:after_enter
-  event:after
-  obj:aasm_event_fired*
+    oldstate:exit*
+      event:before
+        __find transition, if possible__
+        transition:on_transition*
+          oldstate:before_exit
+            newstate:before_enter
+              newstate:enter*
+              __update state__
+              event:success*
+            oldstate:after_exit
+          newstate:after_enter
+      event:after
+    obj:aasm_event_fired*
 
-  (*) marks old callbacks
+    (*) marks old callbacks
 
 
 ## Download ##
