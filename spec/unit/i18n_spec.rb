@@ -5,9 +5,6 @@ require 'i18n'
 
 ActiveRecord::Base.logger = Logger.new(STDERR)
 
-class Connection
-end
-
 class I18nTestModel < ActiveRecord::Base
   include AASM
 
@@ -28,11 +25,6 @@ describe AASM::I18n do
   end
 
   after(:all) { I18n.load_path.clear }
-
-  before do
-    connection = mock(Connection, :columns => [])
-    I18nTestModel.stub!(:connection).and_return(connection)
-  end
 
   let (:foo_opened) { I18nTestModel.new }
   let (:foo_closed) { I18nTestModel.new.tap { |x| x.aasm_state = :closed  } }
