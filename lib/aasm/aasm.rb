@@ -7,6 +7,7 @@ module AASM
 
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
+
     AASM::Persistence.set_persistence(base)
     unless AASM::StateMachine[base]
       AASM::StateMachine[base] = AASM::StateMachine.new('')
@@ -41,7 +42,7 @@ module AASM
         aasm_current_state == name
       end
     end
-
+    
     def aasm_event(name, options = {}, &block)
       sm = AASM::StateMachine[self]
 
@@ -70,8 +71,11 @@ module AASM
       AASM::StateMachine[self].states.map { |state| state.for_select }
     end
 
+    def human_event_name(event)
+      AASM::I18n.new.human_event_name(self, event)
+    end
   end
-
+  
   # Instance methods
   def aasm_current_state
     return @aasm_current_state if @aasm_current_state
@@ -103,6 +107,10 @@ module AASM
   def aasm_events_for_state(state)
     events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
     events.map {|event| event.name}
+  end
+
+  def human_state
+    AASM::I18n.new.human_state(self)
   end
 
   private
