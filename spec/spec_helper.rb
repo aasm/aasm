@@ -5,10 +5,6 @@ require 'aasm'
 require 'rspec'
 require 'rspec/autorun'
 
-RSpec.configure do |config|
-  
-end
-
 def load_schema
   config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
   ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
