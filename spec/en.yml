@@ -1,0 +1,10 @@
+en:
+  activerecord:
+    events:
+      i18n_test_model:
+        close: "Let's close it!"
+
+    attributes:
+      i18n_test_model:
+        aasm_state:
+          open: "It's opened now!"
