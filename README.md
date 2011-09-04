@@ -117,6 +117,23 @@ This example uses a few of the more complex features available.
   end
 ```
 
+## Callbacks around events
+```ruby
+  class Relationship
+    include AASM
+
+    aasm_state :dating
+    aasm_state :married
+
+    aasm_event :get_married
+      :before => :make_vows,
+      :after => :eat_wedding_cake
+      transitions :to => :married, :from => [:dating]
+    end
+  end
+```
+
+
 # Other Stuff #
 
 Author::  Scott Barron <scott at elitists dot net>
