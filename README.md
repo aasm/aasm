@@ -125,7 +125,7 @@ This example uses a few of the more complex features available.
     aasm_state :dating
     aasm_state :married
 
-    aasm_event :get_married
+    aasm_event :get_married,
       :before => :make_vows,
       :after => :eat_wedding_cake
       transitions :to => :married, :from => [:dating]
