@@ -4,6 +4,8 @@ require 'aasm'
 
 require 'rspec'
 require 'rspec/autorun'
+require 'ruby-debug'; Debugger.settings[:autoeval] = true; debugger; rubys_debugger = 'annoying'
+require 'ruby-debug/completion'
 
 def load_schema
   config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))

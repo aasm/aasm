@@ -36,10 +36,10 @@ class AASM::SupportingClasses::StateTransition
 
   def _execute(obj, on_transition, *args)
     case on_transition
-      when Symbol, String
-        obj.send(on_transition, *args)
-      when Proc
-        on_transition.call(obj, *args)
+    when Proc
+      on_transition.arity == 0 ? on_transition.call : on_transition.call(obj, *args)
+    when Symbol, String
+      obj.send(:method, on_transition.to_sym).arity == 0 ? obj.send(on_transition) : obj.send(on_transition, *args)
     end
   end
 

@@ -7,6 +7,24 @@ class AASM::SupportingClasses::Event
     update(options, &block)
   end
 
+  # a neutered version of fire - it doesn't actually fir the event, it just
+  # executes the transition guards to determine if a transition is even
+  # an option given current conditions.
+  def may_fire?(obj, to_state=nil)
+    transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
+    return false if transitions.size == 0
+    
+    result = false
+    transitions.each do |transition|
+      next if to_state and !Array(transition.to).include?(to_state)
+      if transition.perform(obj)
+        result = true
+        break
+      end
+    end
+    result
+  end
+  
   def fire(obj, to_state=nil, *args)
     transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
     raise AASM::InvalidTransition, "Event '#{name}' cannot transition from '#{obj.aasm_current_state}'" if transitions.size == 0

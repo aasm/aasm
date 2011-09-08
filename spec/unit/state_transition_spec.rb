@@ -82,3 +82,82 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
     st.perform(obj)
   end
 end
+
+describe AASM::SupportingClasses::StateTransition, '- when executing the transition with a Proc' do
+  it 'should call a Proc on the object with args' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|o| o.test}}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    opts[:on_transition].should_receive(:call).with(any_args)
+
+    st.execute(obj, args)
+  end
+
+  it 'should call a Proc on the object without args' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {||}}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    opts[:on_transition].should_receive(:call).with(no_args)
+
+    st.execute(obj, args)
+  end
+end
+
+describe AASM::SupportingClasses::StateTransition, '- when executing the transition with an :on_transtion method call' do
+  it 'should accept a String for the method name' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    obj.should_receive(:test)
+
+    st.execute(obj, args)    
+  end
+  
+  it 'should accept a Symbol for the method name' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    obj.should_receive(:test)
+
+    st.execute(obj, args)    
+  end
+  
+  it 'should pass args if the target method accepts them' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    obj.class.class_eval do
+      define_method(:test) {|*args| 'success'}
+    end
+
+    return_value = st.execute(obj, args)
+
+    return_value.should == 'success'
+  end
+  
+  it 'should NOT pass args if the target method does NOT accept them' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    st = AASM::SupportingClasses::StateTransition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = mock('object')
+
+    obj.class.class_eval do
+      define_method(:test) {|*args| 'success'}
+    end
+
+    return_value = st.execute(obj, args)
+
+    return_value.should == 'success'
+  end
+    
+end
