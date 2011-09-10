@@ -1,4 +1,4 @@
-class AASM::I18n
+class AASM::Localizer
   def human_event_name(klass, event)
     defaults = ancestors_list(klass).map do |ancestor|
       :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
