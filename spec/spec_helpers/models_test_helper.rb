@@ -54,3 +54,14 @@ class Banker
   def initialize(balance = 0); self.balance = balance; end
   def rich?; self.balance >= RICH; end
 end
+
+class Argument
+  include AASM
+  aasm_initial_state :invalid
+  aasm_state :invalid
+  aasm_state :valid
+
+  aasm_event :valid do
+    transitions :to => :valid, :from => [:invalid]
+  end
+end

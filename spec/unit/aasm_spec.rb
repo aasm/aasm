@@ -27,6 +27,20 @@ describe AASM, '- class level definitions' do
 
 end
 
+describe "naming" do
+  it "work for valid" do
+    Argument.aasm_states.should include(:invalid)
+    Argument.aasm_states.should include(:valid)
+
+    argument = Argument.new
+    argument.invalid?.should be_true
+    argument.aasm_current_state.should == :invalid
+
+    argument.valid!
+    argument.valid?.should be_true
+    argument.aasm_current_state.should == :valid
+  end
+end
 
 describe AASM, '- subclassing' do
   it 'should have the parent states' do
@@ -235,10 +249,10 @@ describe AASM, '- event callbacks' do
       @foo.stub!(:enter).and_raise(StandardError)
       lambda{@foo.safe_close!}.should raise_error(NoMethodError)
     end
-    
+
     it "should propagate an error if no error callback is declared" do
         @foo.stub!(:enter).and_raise("Cannot enter safe")
-        lambda{@foo.close!}.should raise_error(StandardError, "Cannot enter safe")  
+        lambda{@foo.close!}.should raise_error(StandardError, "Cannot enter safe")
     end
   end
 
