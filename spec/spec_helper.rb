@@ -14,3 +14,6 @@ def load_schema
   ActiveRecord::Base.establish_connection(config['sqlite3'])
   load(File.dirname(__FILE__) + "/schema.rb")
 end
+
+# Requiring custom spec helpers
+Dir[File.dirname(__FILE__) + "/spec_helpers/**/*.rb"].sort.each { |f| require File.expand_path(f) }
