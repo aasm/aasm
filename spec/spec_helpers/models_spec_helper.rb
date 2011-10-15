@@ -1,4 +1,4 @@
-Dir[File.dirname(__FILE__) + "/models/**/*.rb"].each { |f| require File.expand_path(f) }
+Dir[File.dirname(__FILE__) + "/../models/*.rb"].each { |f| require File.expand_path(f) }
 
 class Foo
   include AASM

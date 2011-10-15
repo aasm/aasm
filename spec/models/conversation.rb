@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'aasm')
-
 class Conversation
   include AASM
 
