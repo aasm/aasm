@@ -65,15 +65,6 @@ describe AASM::SupportingClasses::Event, 'when firing an event' do
 end
 
 describe AASM::SupportingClasses::Event, 'when executing the success callback' do
-  class ThisNameBetterNotBeInUse
-    include AASM
-
-    aasm_state :initial
-    aasm_state :symbol
-    aasm_state :string
-    aasm_state :array
-    aasm_state :proc
-  end
 
   it "should send the success callback if it's a symbol" do
     ThisNameBetterNotBeInUse.instance_eval {

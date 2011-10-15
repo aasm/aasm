@@ -13,8 +13,6 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :default => :test
-
 require 'rdoc/task'
 require 'aasm/version'
 require 'sdoc'
@@ -25,3 +23,5 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+task :default => :spec

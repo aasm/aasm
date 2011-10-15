@@ -1,6 +1,5 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
 
-# TODO These are specs ported from original aasm
 describe AASM::SupportingClasses::State do
   before(:each) do
     @name    = :astate
@@ -13,20 +12,23 @@ describe AASM::SupportingClasses::State do
 
   it 'should set the name' do
     state = new_state
-
     state.name.should == :astate
   end
 
-  it 'should set the options and expose them as options' do
-    state = new_state
+  it 'should set the display_name from name' do
+    new_state.display_name.should == 'Astate'
+  end
 
-    state.options.should == @options
+  it 'should set the display_name from options' do
+    new_state(:display => "A State").display_name.should == 'A State'
+  end
+
+  it 'should set the options and expose them as options' do
+    new_state.options.should == @options
   end
 
   it 'should be equal to a symbol of the same name' do
-    state = new_state
-
-    state.should == :astate
+    new_state.should == :astate
   end
 
   it 'should be equal to a State of the same name' do
@@ -50,16 +52,16 @@ describe AASM::SupportingClasses::State do
 
     state.call_action(:entering, record)
   end
-  
+
   it 'should send a message to the record for each action' do
     state = new_state(:entering => [:a, :b, "c", lambda {|r| r.foobar }])
-    
+
     record = mock('record')
     record.should_receive(:a)
     record.should_receive(:b)
     record.should_receive(:c)
     record.should_receive(:foobar)
-    
+
     state.call_action(:entering, record)
   end
 

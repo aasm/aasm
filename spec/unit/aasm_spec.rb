@@ -333,35 +333,6 @@ describe Baz do
 end
 
 
-class ChetanPatil
-  include AASM
-  aasm_initial_state :sleeping
-  aasm_state :sleeping
-  aasm_state :showering
-  aasm_state :working
-  aasm_state :dating
-  aasm_state :prettying_up
-
-  aasm_event :wakeup do
-    transitions :from => :sleeping, :to => [:showering, :working]
-  end
-
-  aasm_event :dress do
-    transitions :from => :sleeping, :to => :working, :on_transition => :wear_clothes
-    transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |obj, *args| obj.wear_clothes(*args) }
-    transitions :from => :showering, :to => :prettying_up, :on_transition => [:condition_hair, :fix_hair]
-  end
-
-  def wear_clothes(shirt_color, trouser_type)
-  end
-
-  def condition_hair
-  end
-
-  def fix_hair
-  end
-end
-
 
 describe ChetanPatil do
   it 'should transition to specified next state (sleeping to showering)' do
