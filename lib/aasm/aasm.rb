@@ -6,12 +6,6 @@ module AASM
   end
 
   def self.included(base) #:nodoc:
-    base.class_eval do
-      def self.aasm(&block)
-        AASM::Base.new(self, &block)
-      end
-    end
-
     base.extend AASM::ClassMethods
 
     AASM::Persistence.set_persistence(base)
@@ -27,61 +21,49 @@ module AASM
       super
     end
 
+    def aasm(&block)
+      @aasm ||= AASM::Base.new(self)
+      @aasm.instance_eval(&block) if block
+      @aasm
+    end
+
     def aasm_initial_state(set_state=nil)
       if set_state
+        # deprecated
         AASM::StateMachine[self].initial_state = set_state
       else
         AASM::StateMachine[self].initial_state
       end
     end
 
+    # deprecated
     def aasm_initial_state=(state)
       AASM::StateMachine[self].initial_state = state
     end
 
+    # deprecated
     def aasm_state(name, options={})
-      sm = AASM::StateMachine[self]
-      sm.create_state(name, options)
-      sm.initial_state = name if options[:initial] || !sm.initial_state
-
-      define_method("#{name.to_s}?") do
-        aasm_current_state == name
-      end
+      aasm.state(name, options)
     end
     
+    # deprecated
     def aasm_event(name, options = {}, &block)
-      sm = AASM::StateMachine[self]
-
-      unless sm.events.has_key?(name)
-        sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
-      end
-
-      # an addition over standard aasm so that, before firing an event, you can ask
-      # may_event? and get back a boolean that tells you whether the guard method
-      # on the transition will let this happen.
-      define_method("may_#{name.to_s}?") do |*args|
-        aasm_test_event(name, *args)
-      end
-      
-      define_method("#{name.to_s}!") do |*args|
-        aasm_fire_event(name, true, *args)
-      end
-
-      define_method("#{name.to_s}") do |*args|
-        aasm_fire_event(name, false, *args)
-      end
+      aasm.event(name, options, &block)
     end
 
+    # deprecated
     def aasm_states
-      AASM::StateMachine[self].states
+      aasm.states
     end
 
+    # deprecated
     def aasm_events
-      AASM::StateMachine[self].events
+      aasm.events
     end
 
+    # deprecated
     def aasm_states_for_select
-      AASM::StateMachine[self].states.map { |state| state.for_select }
+      aasm.states_for_select
     end
 
     def human_event_name(event)
@@ -132,7 +114,7 @@ module AASM
     AASM::Localizer.new.human_state(self)
   end
 
-  private
+private
 
   def set_aasm_current_state_with_persistence(state)
     save_success = true
