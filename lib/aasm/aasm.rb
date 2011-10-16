@@ -6,6 +6,12 @@ module AASM
   end
 
   def self.included(base) #:nodoc:
+    base.class_eval do
+      def self.aasm(&block)
+        AASM::Base.new(self, &block)
+      end
+    end
+
     base.extend AASM::ClassMethods
 
     AASM::Persistence.set_persistence(base)
@@ -36,7 +42,7 @@ module AASM
     def aasm_state(name, options={})
       sm = AASM::StateMachine[self]
       sm.create_state(name, options)
-      sm.initial_state = name unless sm.initial_state
+      sm.initial_state = name if options[:initial] || !sm.initial_state
 
       define_method("#{name.to_s}?") do
         aasm_current_state == name
