@@ -32,13 +32,6 @@ The callback chain & order on a successful event looks like:
     (*) marks old callbacks
 
 
-## Download ##
-
-The latest AASM can currently be pulled from the git repository on github.
-
-* http://github.com/rubyist/aasm/tree/master
-
-
 ## Installation ##
 
 ### From RubyGems.org ###
