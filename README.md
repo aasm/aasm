@@ -34,10 +34,17 @@ The callback chain & order on a successful event looks like:
 
 ## Installation ##
 
-### From RubyGems.org ###
+### Manually from RubyGems.org ###
 
 ```sh
 % gem install aasm
+```
+
+### Or if you are using Bundler ###
+
+```ruby
+# Gemfile
+gem 'aasm'
 ```
 
 ### Building your own gems ###
