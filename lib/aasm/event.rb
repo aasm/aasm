@@ -27,8 +27,8 @@ class AASM::SupportingClasses::Event
   
   def fire(obj, to_state=nil, *args)
     transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
-    raise AASM::InvalidTransition, "Event '#{name}' cannot transition from '#{obj.aasm_current_state}'" if transitions.size == 0
-
+    #raise AASM::InvalidTransition, "Event '#{name}' cannot transition from '#{obj.aasm_current_state}'" if transitions.size == 0
+    return false if transitions.size == 0
     next_state = nil
     transitions.each do |transition|
       next if to_state and !Array(transition.to).include?(to_state)
