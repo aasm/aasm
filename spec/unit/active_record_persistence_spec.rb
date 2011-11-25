@@ -46,7 +46,15 @@ class Simple < ActiveRecord::Base
   aasm_column :status
 end
 
+class SimpleNewDsl < ActiveRecord::Base
+  include AASM
+  aasm :column => :status
+end
+
 class Derivate < Simple
+end
+
+class DerivateNewDsl < SimpleNewDsl
 end
 
 class Thief < ActiveRecord::Base
@@ -190,16 +198,21 @@ describe Gate, "instance methods" do
 end
 
 describe 'Derivates' do
-  it "should have the same states as it's parent" do
+  it "should have the same states as its parent" do
     Derivate.aasm_states.should == Simple.aasm_states
   end
 
-  it "should have the same events as it's parent" do
+  it "should have the same events as its parent" do
     Derivate.aasm_events.should == Simple.aasm_events
   end
 
-  it "should have the same column as it's parent" do
+  it "should have the same column as its parent" do
     Derivate.aasm_column.should == :status
+  end
+
+  it "should have the same column as its parent even for the new dsl" do
+    SimpleNewDsl.aasm_column.should == :status
+    DerivateNewDsl.aasm_column.should == :status
   end
 end
 

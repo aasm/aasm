@@ -1,7 +1,9 @@
 module AASM
   class Base
-    def initialize(clazz, &block)
+    def initialize(clazz, options={}, &block)
       @clazz = clazz
+      sm = AASM::StateMachine[@clazz]
+      sm.config.column = options[:column].to_sym if options[:column]
     end
 
     def state(name, options={})

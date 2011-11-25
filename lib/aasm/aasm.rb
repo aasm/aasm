@@ -21,8 +21,8 @@ module AASM
       super
     end
 
-    def aasm(&block)
-      @aasm ||= AASM::Base.new(self)
+    def aasm(options={}, &block)
+      @aasm ||= AASM::Base.new(self, options)
       @aasm.instance_eval(&block) if block
       @aasm
     end
