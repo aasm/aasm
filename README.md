@@ -142,7 +142,7 @@ Look at the [CHANGELOG](https://github.com/rubyist/aasm/blob/master/CHANGELOG.md
 
 * [Scott Barron](https://github.com/rubyist)
 * [Travis Tilley](https://github.com/ttilley)
-* [Thorsten Böttger](http://github.com/alto),
+* [Thorsten Böttger](http://github.com/alto)
 
 
 ## Warranty ##
