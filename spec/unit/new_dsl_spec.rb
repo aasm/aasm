@@ -12,8 +12,10 @@ describe "the new dsl" do
   end
   
   it 'should have states and transitions' do
+    @process.flagged.should be_nil
     @process.start!
     @process.should be_running
+    @process.flagged.should be_true
     @process.stop!
     @process.should be_suspended
   end
