@@ -41,7 +41,7 @@ describe AASM::SupportingClasses::State do
     record = mock('record')
     record.should_receive(:foo)
 
-    state.call_action(:entering, record)
+    state.fire_callbacks(:entering, record)
   end
 
   it 'should send a message to the record for an action if the action is present as a string' do
@@ -50,7 +50,7 @@ describe AASM::SupportingClasses::State do
     record = mock('record')
     record.should_receive(:foo)
 
-    state.call_action(:entering, record)
+    state.fire_callbacks(:entering, record)
   end
 
   it 'should send a message to the record for each action' do
@@ -62,7 +62,7 @@ describe AASM::SupportingClasses::State do
     record.should_receive(:c)
     record.should_receive(:foobar)
 
-    state.call_action(:entering, record)
+    state.fire_callbacks(:entering, record)
   end
 
   it "should stop calling actions if one of them raises :halt_aasm_chain" do
@@ -73,7 +73,7 @@ describe AASM::SupportingClasses::State do
     record.should_receive(:b).and_throw(:halt_aasm_chain)
     record.should_not_receive(:c)
 
-    state.call_action(:entering, record)
+    state.fire_callbacks(:entering, record)
   end
 
   it 'should call a proc, passing in the record for an action if the action is present' do
@@ -82,6 +82,6 @@ describe AASM::SupportingClasses::State do
     record = mock('record')
     record.should_receive(:foobar)
 
-    state.call_action(:entering, record)
+    state.fire_callbacks(:entering, record)
   end
 end

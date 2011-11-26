@@ -16,12 +16,12 @@ module AASM
         end
       end
 
-      def call_action(action, record)
+      def fire_callbacks(action, record)
         action = @options[action]
         catch :halt_aasm_chain do
           action.is_a?(Array) ?
-                  action.each {|a| _call_action(a, record)} :
-                  _call_action(action, record)
+                  action.each {|a| _fire_callbacks(a, record)} :
+                  _fire_callbacks(action, record)
         end
       end
 
@@ -33,6 +33,8 @@ module AASM
         [display_name, name.to_s]
       end
 
+    private
+
       def update(options = {})
         if options.key?(:display) then
           @display_name = options.delete(:display)
@@ -41,9 +43,7 @@ module AASM
         self
       end
 
-      private
-
-      def _call_action(action, record)
+      def _fire_callbacks(action, record)
         case action
           when Symbol, String
             record.send(action)

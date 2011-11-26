@@ -55,11 +55,11 @@ module AASM
         @transitions
       end
 
-      def call_action(action, record)
+      def fire_callbacks(action, record)
         action = @options[action]
         action.is_a?(Array) ?
-                action.each {|a| _call_action(a, record)} :
-                _call_action(action, record)
+                action.each {|a| _fire_callbacks(a, record)} :
+                _fire_callbacks(action, record)
       end
 
       def ==(event)
@@ -68,20 +68,6 @@ module AASM
         else
           name == event.name
         end
-      end
-
-      def update(options = {}, &block)
-        if options.key?(:success) then
-          @success = options[:success]
-        end
-        if options.key?(:error) then
-          @error = options[:error]
-        end
-        if block then
-          instance_eval(&block)
-        end
-        @options = options
-        self
       end
 
       def execute_success_callback(obj, success = nil)
@@ -110,9 +96,23 @@ module AASM
         end
       end
 
-      private
+    private
 
-      def _call_action(action, record)
+      def update(options = {}, &block)
+        if options.key?(:success) then
+          @success = options[:success]
+        end
+        if options.key?(:error) then
+          @error = options[:error]
+        end
+        if block then
+          instance_eval(&block)
+        end
+        @options = options
+        self
+      end
+
+      def _fire_callbacks(action, record)
         case action
           when Symbol, String
             record.send(action)
@@ -126,6 +126,7 @@ module AASM
           @transitions << AASM::SupportingClasses::StateTransition.new(trans_opts.merge({:from => s.to_sym}))
         end
       end
+
     end
   end # SupportingClasses
 end # AASM

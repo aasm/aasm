@@ -77,10 +77,10 @@ module AASM
     state_name = aasm_determine_state_name(self.class.aasm_initial_state)
     state = aasm_state_object_for_state(state_name)
 
-    state.call_action(:before_enter, self)
-    state.call_action(:enter, self)
+    state.fire_callbacks(:before_enter, self)
+    state.fire_callbacks(:enter, self)
     self.aasm_current_state = state_name
-    state.call_action(:after_enter, self)
+    state.fire_callbacks(:after_enter, self)
 
     state_name
   end
@@ -156,10 +156,10 @@ private
       old_state = aasm_state_object_for_state(aasm_current_state)
 
 
-      old_state.call_action(:exit, self)
+      old_state.fire_callbacks(:exit, self)
 
       # new event before callback
-      event.call_action(:before, self)
+      event.fire_callbacks(:before, self)
 
       new_state_name = event.fire(self, *args)
 
@@ -167,10 +167,10 @@ private
         new_state = aasm_state_object_for_state(new_state_name)
 
         # new before_ callbacks
-        old_state.call_action(:before_exit, self)
-        new_state.call_action(:before_enter, self)
+        old_state.fire_callbacks(:before_exit, self)
+        new_state.fire_callbacks(:before_enter, self)
 
-        new_state.call_action(:enter, self)
+        new_state.fire_callbacks(:enter, self)
 
         persist_successful = true
         if persist
@@ -181,9 +181,9 @@ private
         end
 
         if persist_successful
-          old_state.call_action(:after_exit, self)
-          new_state.call_action(:after_enter, self)
-          event.call_action(:after, self)
+          old_state.fire_callbacks(:after_exit, self)
+          new_state.fire_callbacks(:after_enter, self)
+          event.fire_callbacks(:after, self)
 
           self.aasm_event_fired(name, old_state.name, self.aasm_current_state) if self.respond_to?(:aasm_event_fired)
         else
