@@ -1,9 +1,4 @@
 module AASM
-  class InvalidTransition < RuntimeError
-  end
-
-  class UndefinedState < RuntimeError
-  end
 
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
