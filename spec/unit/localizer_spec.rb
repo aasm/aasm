@@ -18,7 +18,7 @@ class LocalizerTestModel < ActiveRecord::Base
   aasm_event :open
 end
 
-describe AASM::Localizer do
+describe AASM::SupportingClasses::Localizer do
   before(:all) do
     I18n.load_path << 'spec/en.yml'
     I18n.default_locale = :en

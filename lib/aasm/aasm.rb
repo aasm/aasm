@@ -67,7 +67,7 @@ module AASM
     end
 
     def human_event_name(event)
-      AASM::Localizer.new.human_event_name(self, event)
+      AASM::SupportingClasses::Localizer.new.human_event_name(self, event)
     end
   end
 
@@ -106,7 +106,7 @@ module AASM
   end
 
   def human_state
-    AASM::Localizer.new.human_state(self)
+    AASM::SupportingClasses::Localizer.new.human_state(self)
   end
 
 private
