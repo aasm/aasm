@@ -29,7 +29,7 @@ module AASM
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
       @clazz.send(:define_method, "may_#{name.to_s}?") do |*args|
-        aasm_test_event(name, *args)
+        aasm_may_fire_event?(name, *args)
       end
 
       @clazz.send(:define_method, "#{name.to_s}!") do |*args|
@@ -52,5 +52,6 @@ module AASM
     def states_for_select
       states.map { |state| state.for_select }
     end
+
   end
 end

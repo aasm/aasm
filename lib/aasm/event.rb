@@ -7,7 +7,7 @@ class AASM::SupportingClasses::Event
     update(options, &block)
   end
 
-  # a neutered version of fire - it doesn't actually fir the event, it just
+  # a neutered version of fire - it doesn't actually fire the event, it just
   # executes the transition guards to determine if a transition is even
   # an option given current conditions.
   def may_fire?(obj, to_state=nil)
