@@ -128,6 +128,7 @@ This example uses a few of the more complex features available.
             :after => :eat_wedding_cake do
         transitions :to => :married, :from => [:dating]
       end
+    end
   end
 ```
 
