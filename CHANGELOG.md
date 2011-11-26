@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.0
+
+ * switched documentation to the new DSL
+ * whiny transactions: by default, raise an exception if an event transition is not possible
+ * you may disable whiny transactions
+
 ## 2.4.0 
 
  * supporting new DSL (which is much shorter)

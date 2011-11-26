@@ -59,26 +59,24 @@ gem 'aasm'
 Here's a quick example highlighting some of the features.
 
 ```ruby
-  class Conversation
-    include AASM
+class Conversation
+  include AASM
 
-    aasm_column :current_state # defaults to aasm_state
+  aasm :column => :current_state do  # defaults to aasm_state
+    state :unread, :initial => true
+    state :read
+    state :closed
 
-    aasm_initial_state :unread
-
-    aasm_state :unread
-    aasm_state :read
-    aasm_state :closed
-
-
-    aasm_event :view do
+    event :view do
       transitions :to => :read, :from => [:unread]
     end
 
-    aasm_event :close do
+    event :close do
       transitions :to => :closed, :from => [:read, :unread]
     end
   end
+
+end
 ```
 
 ## A Slightly More Complex Example ##
@@ -89,22 +87,21 @@ This example uses a few of the more complex features available.
   class Relationship
     include AASM
 
-    aasm_column :status
-    
+    aasm :column => :status
+      state :dating,   :enter => :make_happy,        :exit => :make_depressed
+      state :intimate, :enter => :make_very_happy,   :exit => :never_speak_again
+      state :married,  :enter => :give_up_intimacy,  :exit => :buy_exotic_car_and_wear_a_combover
+
+      event :get_intimate do
+        transitions :to => :intimate, :from => [:dating], :guard => :drunk?
+      end
+
+      event :get_married do
+        transitions :to => :married, :from => [:dating, :intimate], :guard => :willing_to_give_up_manhood?
+      end
+    end
     aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
-    
-    aasm_state :dating,   :enter => :make_happy,        :exit => :make_depressed
-    aasm_state :intimate, :enter => :make_very_happy,   :exit => :never_speak_again
-    aasm_state :married,  :enter => :give_up_intimacy,  :exit => :buy_exotic_car_and_wear_a_combover
-    
-    aasm_event :get_intimate do
-      transitions :to => :intimate, :from => [:dating], :guard => :drunk?
-    end
-    
-    aasm_event :get_married do
-      transitions :to => :married, :from => [:dating, :intimate], :guard => :willing_to_give_up_manhood?
-    end
-    
+
     def strictly_for_fun?; end
     def drunk?; end
     def willing_to_give_up_manhood?; end
@@ -122,14 +119,15 @@ This example uses a few of the more complex features available.
   class Relationship
     include AASM
 
-    aasm_state :dating
-    aasm_state :married
+    aasm do
+      state :dating
+      state :married
 
-    aasm_event :get_married,
-      :before => :make_vows,
-      :after => :eat_wedding_cake do
-      transitions :to => :married, :from => [:dating]
-    end
+      event :get_married,
+            :before => :make_vows,
+            :after => :eat_wedding_cake do
+        transitions :to => :married, :from => [:dating]
+      end
   end
 ```
 

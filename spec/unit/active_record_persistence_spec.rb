@@ -12,11 +12,13 @@ class Gate < ActiveRecord::Base
   # Fake this column for testing purposes
   attr_accessor :aasm_state
 
-  aasm_state :opened
-  aasm_state :closed
+  aasm do
+    state :opened
+    state :closed
 
-  aasm_event :view do
-    transitions :to => :read, :from => [:needs_attention]
+    event :view do
+      transitions :to => :read, :from => [:needs_attention]
+    end
   end
 end
 

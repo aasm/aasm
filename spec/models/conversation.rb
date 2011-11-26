@@ -1,33 +1,33 @@
 class Conversation
   include AASM
 
-  aasm_initial_state :needs_attention
+  aasm do
+    state :needs_attention, :initial => true
+    state :read
+    state :closed
+    state :awaiting_response
+    state :junk
 
-  aasm_state :needs_attention
-  aasm_state :read
-  aasm_state :closed
-  aasm_state :awaiting_response
-  aasm_state :junk
+    event :new_message do
+    end
 
-  aasm_event :new_message do
-  end
+    event :view do
+      transitions :to => :read, :from => [:needs_attention]
+    end
 
-  aasm_event :view do
-    transitions :to => :read, :from => [:needs_attention]
-  end
+    event :reply do
+    end
 
-  aasm_event :reply do
-  end
+    event :close do
+      transitions :to => :closed, :from => [:read, :awaiting_response]
+    end
 
-  aasm_event :close do
-    transitions :to => :closed, :from => [:read, :awaiting_response]
-  end
+    event :junk do
+      transitions :to => :junk, :from => [:read]
+    end
 
-  aasm_event :junk do
-    transitions :to => :junk, :from => [:read]
-  end
-
-  aasm_event :unjunk do
+    event :unjunk do
+    end
   end
 
   def initialize(persister)
