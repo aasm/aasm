@@ -29,23 +29,23 @@ describe AASM::SupportingClasses::Localizer do
   let (:foo_opened) { LocalizerTestModel.new }
   let (:foo_closed) { LocalizerTestModel.new.tap { |x| x.aasm_state = :closed  } }
 
-  context '.human_state' do
+  context 'aasm_human_state' do
     it 'should return translated state value' do
-       foo_opened.human_state.should == "It's opened now!"
+       foo_opened.aasm_human_state.should == "It's opened now!"
     end
 
     it 'should return humanized value if not localized' do
-      foo_closed.human_state.should == "Closed"
+      foo_closed.aasm_human_state.should == "Closed"
     end
   end
 
-  context '.human_event_name' do
+  context 'aasm_human_event_name' do
     it 'should return translated event name' do
-      LocalizerTestModel.human_event_name(:close).should == "Let's close it!"
+      LocalizerTestModel.aasm_human_event_name(:close).should == "Let's close it!"
     end
 
     it 'should return humanized event name' do
-      LocalizerTestModel.human_event_name(:open).should == "Open"
+      LocalizerTestModel.aasm_human_event_name(:open).should == "Open"
     end
   end
 end

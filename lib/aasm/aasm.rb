@@ -61,7 +61,7 @@ module AASM
       aasm.states_for_select
     end
 
-    def human_event_name(event)
+    def aasm_human_event_name(event)
       AASM::SupportingClasses::Localizer.new.human_event_name(self, event)
     end
   end
@@ -85,6 +85,7 @@ module AASM
     state_name
   end
 
+  # private?
   def aasm_events_for_current_state
     aasm_events_for_state(aasm_current_state)
   end
@@ -100,7 +101,7 @@ module AASM
     events.map {|event| event.name}
   end
 
-  def human_state
+  def aasm_human_state
     AASM::SupportingClasses::Localizer.new.human_state(self)
   end
 
