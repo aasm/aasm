@@ -150,7 +150,9 @@ private
     event.may_fire?(self, *args)
   end
 
-  def aasm_fire_event(name, persist, *args)
+  def aasm_fire_event(name, options, *args)
+    persist = options[:persist]
+
     event = self.class.aasm_events[name]
     begin
       old_state = aasm_state_object_for_state(aasm_current_state)
