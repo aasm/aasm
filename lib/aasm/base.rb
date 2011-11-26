@@ -4,6 +4,11 @@ module AASM
       @clazz = clazz
       sm = AASM::StateMachine[@clazz]
       sm.config.column = options[:column].to_sym if options[:column]
+      if options.key?(:whiny_transitions)
+        sm.config.whiny_transitions = options[:whiny_transitions]
+      else
+        sm.config.whiny_transitions = true # this is the default, so let's cry
+      end
     end
 
     def state(name, options={})

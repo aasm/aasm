@@ -197,7 +197,11 @@ private
           self.aasm_event_failed(name, old_state.name)
         end
 
-        raise AASM::InvalidTransition, "Event '#{event.name}' cannot transition from '#{self.aasm_current_state}'"
+        if AASM::StateMachine[self.class].config.whiny_transitions
+          raise AASM::InvalidTransition, "Event '#{event.name}' cannot transition from '#{self.aasm_current_state}'"
+        else
+          false
+        end
       end
     rescue StandardError => e
       event.execute_error_callback(self, e)

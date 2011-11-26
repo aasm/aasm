@@ -1,5 +1,21 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
 
+describe 'transitions' do
+
+  it 'should raise an exception when whiny' do
+    process = ProcessWithNewDsl.new
+    lambda { process.stop! }.should raise_error(AASM::InvalidTransition)
+    process.should be_sleeping
+  end
+
+  it 'should not raise an exception when whiny' do
+    silencer = Silencer.new
+    silencer.smile!.should be_false
+    silencer.should be_silent
+  end
+
+end
+
 describe AASM::SupportingClasses::StateTransition do
   it 'should set from, to, and opts attr readers' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
@@ -116,9 +132,9 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
     obj.should_receive(:test)
 
-    st.execute(obj, args)    
+    st.execute(obj, args)
   end
-  
+
   it 'should accept a Symbol for the method name' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::SupportingClasses::StateTransition.new(opts)
@@ -127,9 +143,9 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
     obj.should_receive(:test)
 
-    st.execute(obj, args)    
+    st.execute(obj, args)
   end
-  
+
   it 'should pass args if the target method accepts them' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::SupportingClasses::StateTransition.new(opts)
@@ -144,7 +160,7 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
     return_value.should == 'success'
   end
-  
+
   it 'should NOT pass args if the target method does NOT accept them' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::SupportingClasses::StateTransition.new(opts)
@@ -159,5 +175,5 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
     return_value.should == 'success'
   end
-    
+
 end
