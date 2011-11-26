@@ -30,12 +30,12 @@ describe AASM::SupportingClasses::Event do
 end
 
 describe AASM::SupportingClasses::Event, 'when firing an event' do
-  it 'should raise an AASM::InvalidTransition error if the transitions are empty' do
+  it 'should return nil if the transitions are empty' do
     obj = mock('object')
     obj.stub!(:aasm_current_state)
 
     event = AASM::SupportingClasses::Event.new(:event)
-    lambda { event.fire(obj) }.should raise_error(AASM::InvalidTransition)
+    event.fire(obj).should be_nil
   end
 
   it 'should return the state of the first matching transition it finds' do

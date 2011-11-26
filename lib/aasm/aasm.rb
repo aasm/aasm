@@ -163,9 +163,7 @@ private
       # new event before callback
       event.fire_callbacks(:before, self)
 
-      new_state_name = event.fire(self, *args)
-
-      unless new_state_name.nil?
+      if new_state_name = event.fire(self, *args)
         new_state = aasm_state_object_for_state(new_state_name)
 
         # new before_ callbacks
@@ -193,12 +191,13 @@ private
         end
 
         persist_successful
+
       else
         if self.respond_to?(:aasm_event_failed)
           self.aasm_event_failed(name, old_state.name)
         end
 
-        false
+        raise AASM::InvalidTransition, "Event '#{event.name}' cannot transition from '#{self.aasm_current_state}'"
       end
     rescue StandardError => e
       event.execute_error_callback(self, e)

@@ -104,13 +104,6 @@ describe AASM, '- initial states' do
 end
 
 describe AASM, '- event firing with persistence' do
-  it 'should fire the Event' do
-    foo = Foo.new
-
-    Foo.aasm_events[:close].should_receive(:fire).with(foo)
-    foo.close!
-  end
-
   it 'should update the current state' do
     foo = Foo.new
     foo.close!
@@ -172,13 +165,6 @@ describe AASM, '- event firing with persistence' do
 end
 
 describe AASM, '- event firing without persistence' do
-  it 'should fire the Event' do
-    foo = Foo.new
-
-    Foo.aasm_events[:close].should_receive(:fire).with(foo)
-    foo.close
-  end
-
   it 'should update the current state' do
     foo = Foo.new
     foo.close
@@ -289,12 +275,12 @@ describe AASM, '- event callbacks' do
 
     it 'should call it when transition failed for bang fire' do
       @foo.should_receive(:aasm_event_failed).with(:null, :open)
-      @foo.null!
+      lambda {@foo.null!}.should raise_error(AASM::InvalidTransition)
     end
 
     it 'should call it when transition failed for non-bang fire' do
       @foo.should_receive(:aasm_event_failed).with(:null, :open)
-      @foo.null
+      lambda {@foo.null}.should raise_error(AASM::InvalidTransition)
     end
 
     it 'should not call it if persist fails for bang fire' do
