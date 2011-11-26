@@ -45,7 +45,7 @@ module AASM
     def aasm_state(name, options={})
       aasm.state(name, options)
     end
-    
+
     # deprecated
     def aasm_event(name, options = {}, &block)
       aasm.event(name, options, &block)
@@ -70,19 +70,14 @@ module AASM
       AASM::Localizer.new.human_event_name(self, event)
     end
   end
-  
-  # Instance methods
+
+  # this method does what? does it deliver the current state?
   def aasm_current_state
-    return @aasm_current_state if @aasm_current_state
-
-    if self.respond_to?(:aasm_read_state) || self.private_methods.include?('aasm_read_state')
-      @aasm_current_state = aasm_read_state
-    end
-    return @aasm_current_state if @aasm_current_state
-
-    aasm_enter_initial_state
+    @aasm_current_state ||=
+      aasm_persistable? ? aasm_read_state : aasm_enter_initial_state
   end
 
+  # private?
   def aasm_enter_initial_state
     state_name = aasm_determine_state_name(self.class.aasm_initial_state)
     state = aasm_state_object_for_state(state_name)
@@ -104,7 +99,7 @@ module AASM
   def aasm_permissible_events_for_current_state
     aasm_events_for_current_state.select{ |e| self.send(("may_" + e.to_s + "?").to_sym) }
   end
-  
+
   def aasm_events_for_state(state)
     events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
     events.map {|event| event.name}
@@ -115,6 +110,10 @@ module AASM
   end
 
 private
+
+  def aasm_persistable?
+    self.respond_to?(:aasm_read_state) || self.private_methods.include?('aasm_read_state')
+  end
 
   def aasm_set_current_state_with_persistence(state)
     save_success = true
@@ -154,7 +153,7 @@ private
     event = self.class.aasm_events[name]
     event.may_fire?(self, *args)
   end
-  
+
   def aasm_fire_event(name, persist, *args)
     event = self.class.aasm_events[name]
     begin
