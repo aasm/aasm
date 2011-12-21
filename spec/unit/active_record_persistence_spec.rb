@@ -143,58 +143,56 @@ end
 
 describe Gate, "instance methods" do
 
+  before do
+    @gate = Gate.new
+  end
+
   it "should respond to aasm read state when not previously defined" do
-    Gate.new.should respond_to(:aasm_read_state)
+    @gate.should respond_to(:aasm_read_state)
   end
 
   it "should respond to aasm write state when not previously defined" do
-    Gate.new.should respond_to(:aasm_write_state)
+    @gate.should respond_to(:aasm_write_state)
   end
 
   it "should respond to aasm write state without persistence when not previously defined" do
-    Gate.new.should respond_to(:aasm_write_state_without_persistence)
+    @gate.should respond_to(:aasm_write_state_without_persistence)
   end
 
   it "should return the initial state when new and the aasm field is nil" do
-    Gate.new.aasm_current_state.should == :opened
+    @gate.aasm_current_state.should == :opened
   end
 
   it "should return the aasm column when new and the aasm field is not nil" do
-    foo = Gate.new
-    foo.aasm_state = "closed"
-    foo.aasm_current_state.should == :closed
+    @gate.aasm_state = "closed"
+    @gate.aasm_current_state.should == :closed
   end
 
   it "should return the aasm column when not new and the aasm_column is not nil" do
-    foo = Gate.new
-    foo.stub!(:new_record?).and_return(false)
-    foo.aasm_state = "state"
-    foo.aasm_current_state.should == :state
+    @gate.stub!(:new_record?).and_return(false)
+    @gate.aasm_state = "state"
+    @gate.aasm_current_state.should == :state
   end
 
   it "should allow a nil state" do
-    foo = Gate.new
-    foo.stub!(:new_record?).and_return(false)
-    foo.aasm_state = nil
-    foo.aasm_current_state.should be_nil
+    @gate.stub!(:new_record?).and_return(false)
+    @gate.aasm_state = nil
+    @gate.aasm_current_state.should be_nil
   end
 
   it "should have aasm_ensure_initial_state" do
-    foo = Gate.new
-    foo.send :aasm_ensure_initial_state
+    @gate.send :aasm_ensure_initial_state
   end
 
   it "should call aasm_ensure_initial_state on validation before create" do
-    foo = Gate.new
-    foo.should_receive(:aasm_ensure_initial_state).and_return(true)
-    foo.valid?
+    @gate.should_receive(:aasm_ensure_initial_state).and_return(true)
+    @gate.valid?
   end
 
   it "should call aasm_ensure_initial_state on validation before create" do
-    foo = Gate.new
-    foo.stub!(:new_record?).and_return(false)
-    foo.should_not_receive(:aasm_ensure_initial_state)
-    foo.valid?
+    @gate.stub!(:new_record?).and_return(false)
+    @gate.should_not_receive(:aasm_ensure_initial_state)
+    @gate.valid?
   end
 
 end
@@ -248,5 +246,3 @@ describe 'Thieves' do
     Thief.new(:skilled => false).aasm_current_state.should == :jailed
   end
 end
-
-# TODO: figure out how to test ActiveRecord reload! without a database
