@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.1
+
+ * added support for Mongoid (Thanks, Michał Taberski)
+
 ## 3.0.0
 
  * switched documentation to the new DSL
