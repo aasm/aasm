@@ -9,6 +9,7 @@ module AASM
         @opts = opts
       end
 
+      # TODO: should be named allowed? or similar
       def perform(obj, *args)
         case @guard
           when Symbol, String

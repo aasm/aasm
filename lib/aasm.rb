@@ -1,5 +1,6 @@
 require 'ostruct'
 
+# TODO shorten this [thorsten, 2011-12-20]
 require File.join(File.dirname(__FILE__), 'aasm', 'version')
 require File.join(File.dirname(__FILE__), 'aasm', 'errors')
 require File.join(File.dirname(__FILE__), 'aasm', 'base')
