@@ -191,7 +191,7 @@ module AASM
           old_value = read_attribute(self.class.aasm_column)
           write_attribute(self.class.aasm_column, state.to_s)
 
-          unless self.save(false)
+          unless self.save(:validate => false)
             write_attribute(self.class.aasm_column, old_value)
             return false
           end
