@@ -4,4 +4,9 @@ ActiveRecord::Schema.define(:version => 0) do
     create_table table_name, :force => true
   end
 
+  create_table "validators", :force => true do |t|
+    t.string "name"
+    t.string "status"
+  end
+
 end

@@ -68,6 +68,21 @@ class Thief < ActiveRecord::Base
   attr_accessor :skilled, :aasm_state
 end
 
+class Validator < ActiveRecord::Base
+  include AASM
+  aasm :column => :status do
+    state :sleeping, :initial => true
+    state :running
+    event :run do
+      transitions :to => :running, :from => :sleeping
+    end
+    event :sleep do
+      transitions :to => :sleeping, :from => :running
+    end
+  end
+  validates_presence_of :name
+end
+
 shared_examples_for "aasm model" do
   it "should include AASM::Persistence::ActiveRecordPersistence" do
     @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
@@ -245,4 +260,32 @@ describe 'Thieves' do
   it 'should be jailed if they\'re unskilled' do
     Thief.new(:skilled => false).aasm_current_state.should == :jailed
   end
+end
+
+describe 'transitions with persistence' do
+
+  it 'should succeed and store the new state' do
+    validator = Validator.create(:name => 'name')
+    validator.should be_valid
+    validator.should be_sleeping
+
+    # validator.name = nil
+    # validator.should_not be_valid
+    # validator.run!.should be_false
+    # validator.should be_running
+    #
+    # validator.reload
+    # validator.should_not be_running
+    # validator.should be_sleeping
+
+    validator.name = 'another name'
+    validator.should be_valid
+    validator.run!.should be_true
+    validator.should be_running
+
+    validator.reload
+    validator.should be_running
+    validator.should_not be_sleeping
+  end
+
 end

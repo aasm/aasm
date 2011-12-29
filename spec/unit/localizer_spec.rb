@@ -31,7 +31,7 @@ describe AASM::SupportingClasses::Localizer do
 
   context 'aasm_human_state' do
     it 'should return translated state value' do
-       foo_opened.aasm_human_state.should == "It's opened now!"
+      foo_opened.aasm_human_state.should == "It's opened now!"
     end
 
     it 'should return humanized value if not localized' do

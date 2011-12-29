@@ -103,75 +103,16 @@ describe AASM, '- initial states' do
   end
 end
 
-describe AASM, '- event firing with persistence' do
-  it 'should update the current state' do
-    foo = Foo.new
-    foo.close!
-
-    foo.aasm_current_state.should == :closed
-  end
-
+describe AASM, 'success callbacks' do
   it 'should call the success callback if one was provided' do
     foo = Foo.new
-
     foo.should_receive(:success_callback)
-
     foo.close!
   end
 
-  it 'should attempt to persist if aasm_write_state is defined' do
-    foo = Foo.new
-
-    def foo.aasm_write_state
-    end
-
-    foo.should_receive(:aasm_write_state)
-
-    foo.close!
-  end
-
-  it 'should return true if aasm_write_state is defined and returns true' do
-    foo = Foo.new
-
-    def foo.aasm_write_state(state)
-      true
-    end
-
-    foo.close!.should be_true
-  end
-
-  it 'should return false if aasm_write_state is defined and returns false' do
-    foo = Foo.new
-
-    def foo.aasm_write_state(state)
-      false
-    end
-
-    foo.close!.should be_false
-  end
-
-  it "should not update the aasm_current_state if the write fails" do
-    foo = Foo.new
-
-    def foo.aasm_write_state
-      false
-    end
-
-    foo.should_receive(:aasm_write_state)
-
-    foo.close!
-    foo.aasm_current_state.should == :open
-  end
 end
 
 describe AASM, '- event firing without persistence' do
-  it 'should update the current state' do
-    foo = Foo.new
-    foo.close
-
-    foo.aasm_current_state.should == :closed
-  end
-
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
 
@@ -181,18 +122,6 @@ describe AASM, '- event firing without persistence' do
     foo.should_receive(:aasm_write_state_without_persistence).twice
 
     foo.close
-  end
-end
-
-describe AASM, '- persistence' do
-  it 'should read the state if it has not been set and aasm_read_state is defined' do
-    foo = Foo.new
-    def foo.aasm_read_state
-    end
-
-    foo.should_receive(:aasm_read_state)
-
-    foo.aasm_current_state
   end
 end
 
