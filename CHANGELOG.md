@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.0.x
+## 3.0.2
 
  * ActiveRecord persistence can ignore validation when trying to save invalid models
 
