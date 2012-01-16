@@ -9,4 +9,9 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "status"
   end
 
+  create_table "invalid_persistors", :force => true do |t|
+    t.string "name"
+    t.string "status"
+  end
+
 end

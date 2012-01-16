@@ -57,7 +57,9 @@ gem 'aasm'
 % sudo gem install pkg/aasm-x.y.z.gem
 ```
 
-## Simple Example ##
+## Examples ##
+
+### Simple Example ###
 
 Here's a quick example highlighting some of the features.
 
@@ -82,7 +84,7 @@ class Conversation
 end
 ```
 
-## A Slightly More Complex Example ##
+### A Slightly More Complex Example ###
 
 This example uses a few of the more complex features available.
 
@@ -117,7 +119,7 @@ This example uses a few of the more complex features available.
   end
 ```
 
-## Callbacks around events
+### Callbacks around events ###
 ```ruby
   class Relationship
     include AASM
@@ -134,6 +136,27 @@ This example uses a few of the more complex features available.
     end
   end
 ```
+
+### Persistence example ###
+```ruby
+  class InvalidPersistor < ActiveRecord::Base
+    include AASM
+    aasm :column => :status, :skip_validation_on_save => true do
+      state :sleeping, :initial => true
+      state :running
+      event :run do
+        transitions :to => :running, :from => :sleeping
+      end
+      event :sleep do
+        transitions :to => :sleeping, :from => :running
+      end
+    end
+    validates_presence_of :name
+  end
+```
+This model can change AASM states which are stored into the database, even if the model itself is invalid!
+
+
 
 ## Changelog ##
 

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.x
+
+ * ActiveRecord persistence can ignore validation when trying to save invalid models
+
 ## 3.0.1
 
  * added support for Mongoid (Thanks, Michał Taberski)

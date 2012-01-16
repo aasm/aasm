@@ -4,10 +4,17 @@ module AASM
       @clazz = clazz
       sm = AASM::StateMachine[@clazz]
       sm.config.column = options[:column].to_sym if options[:column]
+
       if options.key?(:whiny_transitions)
         sm.config.whiny_transitions = options[:whiny_transitions]
       else
         sm.config.whiny_transitions = true # this is the default, so let's cry
+      end
+
+      if options.key?(:skip_validation_on_save)
+        sm.config.skip_validation_on_save = options[:skip_validation_on_save]
+      else
+        sm.config.skip_validation_on_save = false # this is the default, so don't store any new state if the model is invalid
       end
     end
 

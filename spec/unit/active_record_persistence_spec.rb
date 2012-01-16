@@ -68,21 +68,6 @@ class Thief < ActiveRecord::Base
   attr_accessor :skilled, :aasm_state
 end
 
-class Validator < ActiveRecord::Base
-  include AASM
-  aasm :column => :status do
-    state :sleeping, :initial => true
-    state :running
-    event :run do
-      transitions :to => :running, :from => :sleeping
-    end
-    event :sleep do
-      transitions :to => :sleeping, :from => :running
-    end
-  end
-  validates_presence_of :name
-end
-
 shared_examples_for "aasm model" do
   it "should include AASM::Persistence::ActiveRecordPersistence" do
     @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
@@ -264,19 +249,19 @@ end
 
 describe 'transitions with persistence' do
 
-  it 'should succeed and store the new state' do
+  it 'should not store states for invalid models' do
     validator = Validator.create(:name => 'name')
     validator.should be_valid
     validator.should be_sleeping
 
-    # validator.name = nil
-    # validator.should_not be_valid
-    # validator.run!.should be_false
-    # validator.should be_running
-    #
-    # validator.reload
-    # validator.should_not be_running
-    # validator.should be_sleeping
+    validator.name = nil
+    validator.should_not be_valid
+    validator.run!.should be_false
+    validator.should be_sleeping
+
+    validator.reload
+    validator.should_not be_running
+    validator.should be_sleeping
 
     validator.name = 'another name'
     validator.should be_valid
@@ -286,6 +271,27 @@ describe 'transitions with persistence' do
     validator.reload
     validator.should be_running
     validator.should_not be_sleeping
+  end
+
+  it 'should store states for invalid models if configured' do
+    persistor = InvalidPersistor.create(:name => 'name')
+    persistor.should be_valid
+    persistor.should be_sleeping
+
+    persistor.name = nil
+    persistor.should_not be_valid
+    persistor.run!.should be_true
+    persistor.should be_running
+
+    persistor = InvalidPersistor.find(persistor.id)
+    persistor.valid?
+    persistor.should be_valid
+    persistor.should be_running
+    persistor.should_not be_sleeping
+
+    persistor.reload
+    persistor.should be_running
+    persistor.should_not be_sleeping
   end
 
 end
