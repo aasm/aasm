@@ -22,9 +22,12 @@ describe AASM::SupportingClasses::Localizer do
   before(:all) do
     I18n.load_path << 'spec/en.yml'
     I18n.default_locale = :en
+    I18n.reload!
   end
 
-  after(:all) { I18n.load_path.clear }
+  after(:all) do
+    I18n.load_path.clear
+  end
 
   let (:foo_opened) { LocalizerTestModel.new }
   let (:foo_closed) { LocalizerTestModel.new.tap { |x| x.aasm_state = :closed  } }
