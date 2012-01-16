@@ -2,7 +2,10 @@
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
-AASM started as the acts_as_state_machine plugin but has evolved into a more generic library that no longer targets only ActiveRecord models.
+AASM started as the acts_as_state_machine plugin but has evolved into a more generic library
+that no longer targets only ActiveRecord models. It currently provides adapters for
+[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html) and
+[Mongoid](http://mongoid.org/).
 
 ## Features ##
 
