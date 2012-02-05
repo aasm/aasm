@@ -92,7 +92,7 @@ This example uses a few of the more complex features available.
   class Relationship
     include AASM
 
-    aasm :column => :status
+    aasm :column => :status do
       state :dating,   :enter => :make_happy,        :exit => :make_depressed
       state :intimate, :enter => :make_very_happy,   :exit => :never_speak_again
       state :married,  :enter => :give_up_intimacy,  :exit => :buy_exotic_car_and_wear_a_combover
