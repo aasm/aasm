@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.3
+
+ * bugfix: ActiveRecord scopes are generated when using the new DSL
+
 ## 3.0.2
 
  * ActiveRecord persistence can ignore validation when trying to save invalid models
