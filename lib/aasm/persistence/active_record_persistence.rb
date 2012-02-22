@@ -38,19 +38,6 @@ module AASM
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
-        if base.respond_to?(:named_scope) || base.respond_to?(:scope)
-          base.extend(AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods)
-
-          base.class_eval do
-            class << self
-              unless method_defined?(:aasm_state_without_scope)
-                alias_method :aasm_state_without_scope, :aasm_state
-                alias_method :aasm_state, :aasm_state_with_scope
-              end
-            end
-          end
-        end
-        
         if ActiveRecord::VERSION::MAJOR >= 3
           base.before_validation(:aasm_ensure_initial_state, :on => :create)
         else
@@ -245,18 +232,22 @@ module AASM
         end
       end
 
-      module NamedScopeMethods
-        def aasm_state_with_scope name, options = {}
-          aasm_state_without_scope name, options
-          
-          unless self.respond_to?(name)
-            scope_options = {:conditions => { "#{table_name}.#{self.aasm_column}" => name.to_s}}
-            scope_method = ActiveRecord::VERSION::MAJOR >= 3 ? :scope : :named_scope
-            self.send(scope_method, name, scope_options)
-          end
-          
-        end
-      end
     end
   end
+end
+
+class AASM::Base
+  def state_with_scope(name, *args)
+    state_without_scope(name, *args)
+    if @clazz.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base") && !@clazz.respond_to?(name)
+      # puts "setting scope #{@clazz.name}.#{name}"
+      scope_options = {:conditions => { "#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}}
+      scope_method = ActiveRecord::VERSION::MAJOR >= 3 ? :scope : :named_scope
+      @clazz.send(scope_method, name, scope_options)
+    # else
+    #   puts "not setting scope #{@clazz.name}.#{name}"
+    end
+  end
+  alias_method :state_without_scope, :state
+  alias_method :state, :state_with_scope
 end

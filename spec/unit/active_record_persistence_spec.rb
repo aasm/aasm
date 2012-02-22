@@ -46,11 +46,17 @@ end
 class Simple < ActiveRecord::Base
   include AASM
   aasm_column :status
+  aasm_state :unknown_scope
+  aasm_state :new
 end
 
 class SimpleNewDsl < ActiveRecord::Base
   include AASM
   aasm :column => :status
+  aasm do
+    state :unknown_scope
+    state :new
+  end
 end
 
 class Derivate < Simple
@@ -220,24 +226,36 @@ describe 'Derivates' do
   end
 end
 
-describe AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods do
+describe "AASM::Persistence::ActiveRecordPersistence::NamedScopeMethods" do
 
-  context "Does not already respond_to? the scope name" do
+  context "Old DSL Does not already respond_to? the scope name" do
     it "should add a scope" do
-      Simple.should_not respond_to(:unknown_scope)
-      Simple.aasm_state :unknown_scope
       Simple.should respond_to(:unknown_scope)
       Simple.unknown_scope.class.should == ActiveRecord::Relation
     end
   end
 
-  context "Already respond_to? the scope name" do
+  context "Old DSL Already respond_to? the scope name" do
     it "should not add a scope" do
-      Simple.aasm_state :new
       Simple.should respond_to(:new)
       Simple.new.class.should == Simple
     end
   end
+
+  context "New DSL Does not already respond_to? the scope name" do
+    it "should add a scope" do
+      SimpleNewDsl.should respond_to(:unknown_scope)
+      SimpleNewDsl.unknown_scope.class.should == ActiveRecord::Relation
+    end
+  end
+
+  context "New DSL Already respond_to? the scope name" do
+    it "should not add a scope" do
+      SimpleNewDsl.should respond_to(:new)
+      SimpleNewDsl.new.class.should == SimpleNewDsl
+    end
+  end
+
 end
 
 describe 'Thieves' do
