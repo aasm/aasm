@@ -60,7 +60,11 @@ class DerivateNewDsl < SimpleNewDsl
 end
 
 class Thief < ActiveRecord::Base
-  set_table_name "thieves"
+  if ActiveRecord::VERSION::MAJOR >= 3
+    self.table_name = 'thieves'
+  else
+    set_table_name "thieves"
+  end
   include AASM
   aasm_initial_state  Proc.new { |thief| thief.skilled ? :rich : :jailed }
   aasm_state          :rich
