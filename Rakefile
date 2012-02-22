@@ -15,7 +15,6 @@ end
 
 require 'rdoc/task'
 require 'aasm/version'
-require 'sdoc'
 
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
