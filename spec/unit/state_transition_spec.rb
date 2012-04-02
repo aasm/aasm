@@ -8,12 +8,18 @@ describe 'transitions' do
     process.should be_sleeping
   end
 
-  it 'should not raise an exception when whiny' do
+  it 'should not raise an exception when not whiny' do
     silencer = Silencer.new
     silencer.smile!.should be_false
     silencer.should be_silent
   end
 
+  it 'should not raise an exception when superclass not whiny' do
+    sub = SubClassing.new
+    sub.smile!.should be_false
+    sub.should be_silent
+  end
+  
 end
 
 describe AASM::SupportingClasses::StateTransition do
