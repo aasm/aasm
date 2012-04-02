@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.4
+
+ * bugfix: Subclasses of aasm-enabled classes don't lose settings anymore (thanks to codez)
+
 ## 3.0.3
 
  * bugfix: ActiveRecord scopes are generated when using the new DSL
