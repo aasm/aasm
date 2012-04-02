@@ -7,13 +7,13 @@ module AASM
 
       if options.key?(:whiny_transitions)
         sm.config.whiny_transitions = options[:whiny_transitions]
-      else
+      elsif sm.config.whiny_transitions.nil?
         sm.config.whiny_transitions = true # this is the default, so let's cry
       end
 
       if options.key?(:skip_validation_on_save)
         sm.config.skip_validation_on_save = options[:skip_validation_on_save]
-      else
+      elsif sm.config.skip_validation_on_save.nil?
         sm.config.skip_validation_on_save = false # this is the default, so don't store any new state if the model is invalid
       end
     end
