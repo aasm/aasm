@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.5
+
+ * bugfix: get rid of error with old rubygems versions
+
 ## 3.0.4
 
  * bugfix: Subclasses of aasm-enabled classes don't lose settings anymore (thanks to codez)
