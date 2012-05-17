@@ -183,7 +183,7 @@ module AASM
           old_value = read_attribute(self.class.aasm_column)
           write_attribute(self.class.aasm_column, state.to_s)
 
-          success = if AASM::StateMachine[self.class].config.skip_validation_on_save && !self.valid?
+          success = if AASM::StateMachine[self.class].config.skip_validation_on_save
             self.class.update_all({ self.class.aasm_column => state.to_s }, self.class.primary_key => self.id) == 1
           else
             self.save

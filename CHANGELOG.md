@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.6
+
+ * bugfix: if configured to skip validation the code does not validate anymore
+
 ## 3.0.5
 
  * bugfix: get rid of error with old rubygems versions
