@@ -4,7 +4,8 @@ require 'logger'
 
 load_schema
 
-ActiveRecord::Base.logger = Logger.new(STDERR)
+# if you want to see the statements while running the spec enable the following line
+# ActiveRecord::Base.logger = Logger.new(STDERR)
 
 class Gate < ActiveRecord::Base
   include AASM

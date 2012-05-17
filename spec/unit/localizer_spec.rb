@@ -3,8 +3,6 @@ require 'active_record'
 require 'logger'
 require 'i18n'
 
-ActiveRecord::Base.logger = Logger.new(STDERR)
-
 class LocalizerTestModel < ActiveRecord::Base
   include AASM
 
