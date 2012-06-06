@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.date        = Time.now
   s.licenses    = ["MIT"]
 
-  s.add_dependency             'activerecord'
+  s.add_development_dependency 'activerecord'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', '~> 2.0'
