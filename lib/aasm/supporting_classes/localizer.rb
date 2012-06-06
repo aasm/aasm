@@ -2,20 +2,35 @@ module AASM
   module SupportingClasses
     class Localizer
       def human_event_name(klass, event)
-        defaults = ancestors_list(klass).map do |ancestor|
-          :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
-        end << event.to_s.humanize
-
-        I18n.translate(defaults.shift, :default => defaults, :raise => true)
+        checklist = ancestors_list(klass).inject([]) do |list, ancestor|
+          list << :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
+          list
+        end
+        (0...(checklist.size-1)).each do |i|
+          begin
+            return I18n.translate(checklist.shift, :raise => true)
+          rescue I18n::MissingTranslationData
+            # that's okay
+          end
+        end
+        I18n.translate(checklist.shift, :default => event.to_s.humanize)
       end
 
       def human_state(obj)
         klass = obj.class
-        defaults = ancestors_list(klass).map do |ancestor|
-          :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}.#{obj.aasm_current_state}"
-        end << obj.aasm_current_state.to_s.humanize
-
-        I18n.translate(defaults.shift, :default => defaults, :raise => true)
+        checklist = ancestors_list(klass).inject([]) do |list, ancestor|
+          list << :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}/#{obj.aasm_current_state}"
+          list << :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}.#{obj.aasm_current_state}"
+          list
+        end
+        (0...(checklist.size-1)).each do |i|
+          begin
+            return I18n.translate(checklist.shift, :raise => true)
+          rescue I18n::MissingTranslationData
+            # that's okay
+          end
+        end
+        I18n.translate(checklist.shift, :default => obj.aasm_current_state.to_s.humanize)
       end
 
       private

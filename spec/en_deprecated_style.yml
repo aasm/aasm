@@ -6,4 +6,5 @@ en:
 
     attributes:
       localizer_test_model:
-        aasm_state/open: "It's opened now!"
+        aasm_state:
+          open: "It's opened now!"

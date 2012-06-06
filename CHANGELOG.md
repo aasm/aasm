@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.7 (not yet released)
+
+ * removed deprecation warning when localizing aasm state names (look at https://github.com/rubyist/aasm/issues/38 for details)
+
 ## 3.0.6
 
  * bugfix: if configured to skip validation the code does not validate anymore
