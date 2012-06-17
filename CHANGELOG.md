@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.8
+
+ * fixed issue with generating docs using yard
+
 ## 3.0.7
 
  * removed deprecation warning when localizing aasm state names (look at https://github.com/rubyist/aasm/issues/38 for details)
