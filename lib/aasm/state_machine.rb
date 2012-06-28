@@ -3,11 +3,11 @@ module AASM
     def self.[](clazz)
       (@machines ||= {})[clazz.to_s]
     end
-  
+
     def self.[]=(clazz, machine)
       (@machines ||= {})[clazz.to_s] = machine
     end
-  
+
     attr_accessor :states, :events, :initial_state, :config
     attr_reader :name
 
@@ -19,11 +19,10 @@ module AASM
       @config = OpenStruct.new
     end
 
-    def clone
-      klone = super
-      klone.states = states.clone
-      klone.events = events.clone
-      klone
+    def initialize_copy(orig)
+      super
+      @states = @states.dup
+      @events = @events.dup
     end
 
     def create_state(name, options)
