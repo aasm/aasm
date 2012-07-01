@@ -160,7 +160,7 @@ This model can change AASM states which are stored into the database, even if th
 
 ## Changelog ##
 
-Look at the [CHANGELOG](https://github.com/rubyist/aasm/blob/master/CHANGELOG.md) for details.
+Look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details.
 
 
 ## Authors ##
