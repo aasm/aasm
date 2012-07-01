@@ -1,4 +1,4 @@
-# AASM - Ruby state machines #
+# AASM - Ruby state machines [![Build Status](https://secure.travis-ci.org/aasm/aasm.png)](http://travis-ci.org/aasm/aasm)
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
