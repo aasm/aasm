@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "aasm"
   s.version     = AASM::VERSION
   s.authors     = ["Scott Barron", "Scott Petersen", "Travis Tilley", "Thorsten Boettger"]
-  s.email       = %q{scott@elitists.net, ttilley@gmail.com, @aasm@mt7.de}
+  s.email       = %q{scott@elitists.net, ttilley@gmail.com, aasm@mt7.de}
   s.homepage    = %q{https://github.com/aasm/aasm}
   s.summary     = %q{State machine mixin for Ruby objects}
   s.description = %q{AASM is a continuation of the acts as state machine rails plugin, built for plain Ruby objects.}
