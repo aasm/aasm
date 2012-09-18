@@ -111,6 +111,7 @@ class AuthMachine
   
     event :unsuspend do
       transitions :from => :suspended, :to => :active,  :guard => Proc.new {|u| u.has_activated? }
+      transitions :from => :suspended, :to => :active,  :guard => :if_polite?
       transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| u.has_activation_code? }
       transitions :from => :suspended, :to => :passive
     end
@@ -149,6 +150,10 @@ class AuthMachine
 
   def has_activation_code?
     !!@activation_code
+  end
+
+  def if_polite?(phrase = nil)
+    phrase == :please
   end
 end
 
