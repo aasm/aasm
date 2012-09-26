@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.9
+
+ * guard checks (e.g. may_edit?) now support guard parameters as well
+
 ## 3.0.8
 
  * fixed issue with generating docs using yard
