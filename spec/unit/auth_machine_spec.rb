@@ -32,7 +32,17 @@ describe 'AuthMachine when being unsuspended' do
   it 'should be able to be unsuspended into active if polite' do
     @auth = AuthMachine.new
     @auth.suspend!
-    @auth.may_unsuspend?(:active, :please).should be_true
+    @auth.may_wait?(:waiting, :please).should be_true
+    @auth.wait!(nil, :please)
+  end
+
+  it 'should not be able to be unsuspended into active if not polite' do
+    @auth = AuthMachine.new
+    @auth.suspend!
+    @auth.may_wait?(:waiting).should_not be_true
+    @auth.may_wait?(:waiting, :rude).should_not be_true
+    lambda {@auth.wait!(nil, :rude)}.should raise_error(AASM::InvalidTransition)
+    lambda {@auth.wait!}.should raise_error(AASM::InvalidTransition)
   end
   
   it 'should not be able to be unpassified' do
@@ -42,6 +52,7 @@ describe 'AuthMachine when being unsuspended' do
     @auth.unsuspend!
     
     @auth.may_unpassify?.should_not be_true
+    lambda {@auth.unpassify!}.should raise_error(AASM::InvalidTransition)
   end
   
   it 'should be active if previously activated' do

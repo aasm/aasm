@@ -87,6 +87,7 @@ class AuthMachine
     state :active,  :enter => :do_activate
     state :suspended
     state :deleted, :enter => :do_delete, :exit => :do_undelete
+    state :waiting
 
     event :register do
       transitions :from => :passive, :to => :pending, :guard => Proc.new {|u| u.can_register? }
@@ -111,9 +112,12 @@ class AuthMachine
   
     event :unsuspend do
       transitions :from => :suspended, :to => :active,  :guard => Proc.new {|u| u.has_activated? }
-      transitions :from => :suspended, :to => :active,  :guard => :if_polite?
       transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| u.has_activation_code? }
       transitions :from => :suspended, :to => :passive
+    end
+
+    event :wait do
+      transitions :from => :suspended, :to => :waiting, :guard => :if_polite?
     end
   end
 
