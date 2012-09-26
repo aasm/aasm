@@ -28,6 +28,12 @@ describe 'AuthMachine when being unsuspended' do
     @auth.suspend!
     @auth.may_unsuspend?(:active).should_not be_true
   end
+
+  it 'should be able to be unsuspended into active if polite' do
+    @auth = AuthMachine.new
+    @auth.suspend!
+    @auth.may_unsuspend?(:active, :please).should be_true
+  end
   
   it 'should not be able to be unpassified' do
     @auth = AuthMachine.new

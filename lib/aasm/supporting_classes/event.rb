@@ -12,14 +12,14 @@ module AASM
       # a neutered version of fire - it doesn't actually fire the event, it just
       # executes the transition guards to determine if a transition is even
       # an option given current conditions.
-      def may_fire?(obj, to_state=nil)
+      def may_fire?(obj, to_state=nil, *args)
         transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
         return false if transitions.size == 0
-    
+
         result = false
         transitions.each do |transition|
           next if to_state and !Array(transition.to).include?(to_state)
-          if transition.perform(obj)
+          if transition.perform(obj, *args)
             result = true
             break
           end
