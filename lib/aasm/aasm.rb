@@ -31,6 +31,10 @@ module AASM
       end
     end
 
+    def aasm_from_states_for_state(state)
+      aasm.events.map {|k,v| v.transitions_to_state(:active)}.flatten.map(&:from).flatten
+    end
+
     # deprecated
     def aasm_initial_state=(state)
       AASM::StateMachine[self].initial_state = state

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.11
+
+ * added class method aasm_from_states_for_state to retrieve all from states (regarding transitions) for a given state
+
 ## 3.0.10
 
  * added support for transitions from all other states (thanks to Stefan 'swrobel' Wrobel)

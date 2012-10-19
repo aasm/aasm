@@ -1,30 +1,15 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
 
 describe AASM, '- class level definitions' do
-  it 'should define a class level aasm_initial_state() method on its including class' do
+  it 'should define a class level methods on its including class' do
     Foo.should respond_to(:aasm_initial_state)
-  end
-
-  it 'should define a class level aasm_state() method on its including class' do
     Foo.should respond_to(:aasm_state)
-  end
-
-  it 'should define a class level aasm_event() method on its including class' do
     Foo.should respond_to(:aasm_event)
-  end
-
-  it 'should define a class level aasm_states() method on its including class' do
     Foo.should respond_to(:aasm_states)
-  end
-
-  it 'should define a class level aasm_states_for_select() method on its including class' do
     Foo.should respond_to(:aasm_states_for_select)
-  end
-
-  it 'should define a class level aasm_events() method on its including class' do
     Foo.should respond_to(:aasm_events)
+    Foo.should respond_to(:aasm_from_states_for_state)
   end
-
 end
 
 describe "naming" do
@@ -58,6 +43,13 @@ end
 describe AASM, '- aasm_states_for_select' do
   it "should return a select friendly array of states in the form of [['Friendly name', 'state_name']]" do
     Foo.aasm_states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
+  end
+end
+
+describe "aasm_from_states_for_state" do
+  it "should return all from states for a state" do
+    froms = AuthMachine.aasm_from_states_for_state(:active)
+    [:pending, :passive, :suspended].each {|from| froms.should include(:pending)}
   end
 end
 

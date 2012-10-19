@@ -28,6 +28,10 @@ module AASM
         @transitions.select { |t| t.from == state }
       end
 
+      def transitions_to_state(state)
+        @transitions.select { |t| t.to == state }
+      end
+
       def all_transitions
         @transitions
       end
