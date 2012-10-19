@@ -1,4 +1,4 @@
-# AASM - Ruby state machines [![Build Status](https://secure.travis-ci.org/aasm/aasm.png)](http://travis-ci.org/aasm/aasm)
+# AASM - Ruby state machines [![Build Status](https://secure.travis-ci.org/aasm/aasm.png)](http://travis-ci.org/aasm/aasm) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/aasm/aasm)
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
@@ -101,8 +101,9 @@ This example uses a few of the more complex features available.
         transitions :to => :intimate, :from => [:dating], :guard => :drunk?
       end
 
+      # Will allow transitioning from any state if guard allows it
       event :get_married do
-        transitions :to => :married, :from => [:dating, :intimate], :guard => :willing_to_give_up_manhood?
+        transitions :to => :married, :guard => :willing_to_give_up_manhood?
       end
     end
     aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
