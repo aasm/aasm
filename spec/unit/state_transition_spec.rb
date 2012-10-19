@@ -19,6 +19,12 @@ describe 'transitions' do
     sub.smile!.should be_false
     sub.should be_silent
   end
+
+  it 'should not raise an exception when from is nil even if whiny' do
+    silencer = Silencer.new
+    silencer.smile_any!.should be_true
+    silencer.should be_smiling
+  end
   
 end
 
