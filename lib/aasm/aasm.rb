@@ -31,8 +31,12 @@ module AASM
       end
     end
 
-    def aasm_from_states_for_state(state)
-      aasm.events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+    def aasm_from_states_for_state(state, options={})
+      if options[:transition]
+        aasm.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
+      else
+        aasm.events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+      end
     end
 
     # deprecated

@@ -49,7 +49,12 @@ end
 describe "aasm_from_states_for_state" do
   it "should return all from states for a state" do
     froms = AuthMachine.aasm_from_states_for_state(:active)
-    [:pending, :passive, :suspended].each {|from| froms.should include(:pending)}
+    [:pending, :passive, :suspended].each {|from| froms.should include(from)}
+  end
+
+  it "should return from states for a state for a particular transition only" do
+    froms = AuthMachine.aasm_from_states_for_state(:active, :transition => :unsuspend)
+    [:suspended].each {|from| froms.should include(from)}
   end
 end
 

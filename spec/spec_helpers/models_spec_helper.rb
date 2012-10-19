@@ -109,7 +109,7 @@ class AuthMachine
     event :unpassify do
       transitions :from => :passive, :to => :active, :guard => Proc.new {|u| false }
     end
-  
+
     event :unsuspend do
       transitions :from => :suspended, :to => :active,  :guard => Proc.new {|u| u.has_activated? }
       transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| u.has_activation_code? }

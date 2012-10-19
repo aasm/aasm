@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.12
+
+ * aasm_from_states_for_state now supports to filter for specific transition
+
 ## 3.0.11
 
  * added class method aasm_from_states_for_state to retrieve all from states (regarding transitions) for a given state
