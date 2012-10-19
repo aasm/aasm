@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.10
+
+ * added support for transitions from all other states (thanks to Stefan 'swrobel' Wrobel)
+
 ## 3.0.9
 
  * guard checks (e.g. may_edit?) now support guard parameters as well
