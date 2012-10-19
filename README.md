@@ -101,8 +101,9 @@ This example uses a few of the more complex features available.
         transitions :to => :intimate, :from => [:dating], :guard => :drunk?
       end
 
+      # Will allow transitioning from any state if guard allows it
       event :get_married do
-        transitions :to => :married, :from => [:dating, :intimate], :guard => :willing_to_give_up_manhood?
+        transitions :to => :married, :guard => :willing_to_give_up_manhood?
       end
     end
     aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
