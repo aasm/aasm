@@ -5,7 +5,13 @@ This package contains AASM, a library for adding finite state machines to Ruby c
 AASM started as the acts_as_state_machine plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for
 [ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html) and
-[Mongoid](http://mongoid.org/).
+[Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter its
+parent class.
+
+### Transaction support
+
+Since version 3.0.13 AASM supports ActiveRecord transactions. So whenever a transition
+callback fails, all changes to any database record are rolled back.
 
 ## Features ##
 

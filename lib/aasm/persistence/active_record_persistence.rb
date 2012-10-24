@@ -149,6 +149,12 @@ module AASM
           aasm_enter_initial_state if send(self.class.aasm_column).blank?
         end
 
+        def aasm_fire_event(name, options, *args)
+          transaction do
+            super
+          end
+        end
+
       end
 
       module WriteStateWithoutPersistence

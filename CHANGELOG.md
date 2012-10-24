@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.13
+
+ * supporting ActiveRecord transactions when firing an event
+
 ## 3.0.12
 
  * aasm_from_states_for_state now supports to filter for specific transition

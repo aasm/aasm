@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'active_record'
 require 'logger'
+require 'spec_helper'
 
 load_schema
 
@@ -315,6 +316,19 @@ describe 'transitions with persistence' do
     persistor.reload
     persistor.should be_running
     persistor.should_not be_sleeping
+  end
+
+  describe 'transactions' do
+    it 'should rollback all changes' do
+      worker = Worker.create!(:name => 'worker', :status => 'sleeping')
+      transactor = Transactor.create!(:name => 'transactor', :worker => worker)
+      transactor.should be_sleeping
+      worker.status.should == 'sleeping'
+
+      lambda {transactor.run!}.should raise_error(StandardError, 'failed on purpose')
+      transactor.should be_running
+      worker.reload.status.should == 'sleeping'
+    end
   end
 
 end

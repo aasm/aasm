@@ -7,7 +7,7 @@ module AASM
       AASM::StateMachine[base] = AASM::StateMachine.new('')
     end
     AASM::Persistence.set_persistence(base)
-   super
+    super
   end
 
   module ClassMethods
@@ -72,7 +72,7 @@ module AASM
     def aasm_human_event_name(event)
       AASM::SupportingClasses::Localizer.new.human_event_name(self, event)
     end
-  end
+  end # ClassMethods
 
   # this method does what? does it deliver the current state?
   def aasm_current_state
