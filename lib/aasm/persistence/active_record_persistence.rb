@@ -42,7 +42,7 @@ module AASM
           base.before_validation(:aasm_ensure_initial_state, :on => :create)
         else
           base.before_validation_on_create(:aasm_ensure_initial_state)
-        end        
+        end
       end
 
       module ClassMethods
