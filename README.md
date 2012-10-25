@@ -5,8 +5,103 @@ This package contains AASM, a library for adding finite state machines to Ruby c
 AASM started as the acts_as_state_machine plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for
 [ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html) and
-[Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter its
-parent class.
+[Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter what
+parent class it has (if any).
+
+## Usage
+
+Adding a state machine is as simple as including the AASM module and start defining states and
+events together with their transitions:
+
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping
+    end
+  end
+
+end
+```
+
+This provides you with a couple of public methods for instances of the class Job:
+
+```ruby
+job = Job.new
+job.sleeping? # => true
+job.may_run?  # => true
+job.run
+job.running?  # => true
+job.sleeping? # => false
+job.may_run?  # => false
+job.run       # => raises AASM::InvalidTransition
+```
+
+If you don't like exceptions and prefer a simple true or false as response, tell
+AASM not to be whiny:
+
+```ruby
+class Job
+  ...
+  aasm :whiny_transitions => false do
+    ...
+  end
+end
+
+job.running?  # => true
+job.may_run?  # => false
+job.run       # => false
+```
+
+### Callbacks
+
+You can define a number of callbacks for your transitions. tbc
+
+
+### ActiveRecord
+
+AASM comes with support for ActiveRecord and allows automatical persisting of the object's
+state in the database.
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm do # default column: aasm_state
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping
+    end
+  end
+
+end
+```
+
+You can tell AASM to auto-save the object or leave it unsaved
+
+```ruby
+job = Job.new
+job.run   # not saved
+job.run!  # saved
+```
+
+
+
 
 ### Transaction support
 
