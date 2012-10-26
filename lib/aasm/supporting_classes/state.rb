@@ -16,6 +16,14 @@ module AASM
         end
       end
 
+      def <=>(state)
+        if state.is_a? Symbol
+          name <=> state
+        else
+          name <=> state.name
+        end
+      end
+
       def fire_callbacks(action, record)
         action = @options[action]
         catch :halt_aasm_chain do
