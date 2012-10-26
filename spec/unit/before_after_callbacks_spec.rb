@@ -65,10 +65,10 @@ describe Foo2, '- new callbacks' do
 
   it "should get open callbacks" do
     @foo.close!
-    
-    @foo.should_receive(:before).once.ordered                                                                       
+
+    @foo.should_receive(:before).once.ordered
     @foo.should_receive(:before_exit_closed).once.ordered                # these should be before the state changes
-    @foo.should_receive(:before_enter_open).once.ordered                                                            
+    @foo.should_receive(:before_enter_open).once.ordered
     @foo.should_receive(:aasm_write_state).once.ordered.and_return(true) # this is when the state changes
     @foo.should_receive(:after_exit_closed).once.ordered                 # these should be after the state changes
     @foo.should_receive(:after_enter_open).once.ordered
