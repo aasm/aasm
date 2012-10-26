@@ -141,12 +141,11 @@ class Job
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :guard => :too_dirty?
+      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed?
     end
   end
 
-  def too_dirty?
-    ... yes, too dirty
+  def cleaning_needed?
     false
   end
 
