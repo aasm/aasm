@@ -10,104 +10,94 @@ load_schema
 
 shared_examples_for "aasm model" do
   it "should include persistence mixins" do
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
   end
 end
 
 describe "class methods for classes without own read or write state" do
-  before(:each) do
-    @klass = Gate
-  end
+  let(:klass) {Gate}
   it_should_behave_like "aasm model"
   it "should include all persistence mixins" do
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
 
 describe "class methods for classes with own read state" do
-  before(:each) do
-    @klass = Reader
-  end
+  let(:klass) {Reader}
   it_should_behave_like "aasm model"
   it "should include all persistence mixins but read state" do
-    @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
+    klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
 
 describe "class methods for classes with own write state" do
-  before(:each) do
-    @klass = Writer
-  end
+  let(:klass) {Writer}
   it_should_behave_like "aasm model"
   it "should include include all persistence mixins but write state" do
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
+    klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
 
 describe "class methods for classes without persistence" do
-  before(:each) do
-    @klass = Transient
-  end
+  let(:klass) {Transient}
   it_should_behave_like "aasm model"
   it "should include all mixins but persistence" do
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
-    @klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
-    @klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::ReadState)
+    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
+    klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
 
 describe "instance methods" do
-  before do
-    @gate = Gate.new
-  end
+  let(:gate) {Gate.new}
 
   it "should respond to aasm states" do
-    @gate.should respond_to(:aasm_read_state)
-    @gate.should respond_to(:aasm_write_state)
-    @gate.should respond_to(:aasm_write_state_without_persistence)
+    gate.should respond_to(:aasm_read_state)
+    gate.should respond_to(:aasm_write_state)
+    gate.should respond_to(:aasm_write_state_without_persistence)
   end
 
   it "should return the initial state when new and the aasm field is nil" do
-    @gate.aasm_current_state.should == :opened
+    gate.aasm_current_state.should == :opened
   end
 
   it "should return the aasm column when new and the aasm field is not nil" do
-    @gate.aasm_state = "closed"
-    @gate.aasm_current_state.should == :closed
+    gate.aasm_state = "closed"
+    gate.aasm_current_state.should == :closed
   end
 
   it "should return the aasm column when not new and the aasm_column is not nil" do
-    @gate.stub!(:new_record?).and_return(false)
-    @gate.aasm_state = "state"
-    @gate.aasm_current_state.should == :state
+    gate.stub!(:new_record?).and_return(false)
+    gate.aasm_state = "state"
+    gate.aasm_current_state.should == :state
   end
 
   it "should allow a nil state" do
-    @gate.stub!(:new_record?).and_return(false)
-    @gate.aasm_state = nil
-    @gate.aasm_current_state.should be_nil
+    gate.stub!(:new_record?).and_return(false)
+    gate.aasm_state = nil
+    gate.aasm_current_state.should be_nil
   end
 
   it "should have aasm_ensure_initial_state" do
-    @gate.send :aasm_ensure_initial_state
+    gate.send :aasm_ensure_initial_state
   end
 
   it "should call aasm_ensure_initial_state on validation before create" do
-    @gate.should_receive(:aasm_ensure_initial_state).and_return(true)
-    @gate.valid?
+    gate.should_receive(:aasm_ensure_initial_state).and_return(true)
+    gate.valid?
   end
 
   it "should call aasm_ensure_initial_state on validation before create" do
-    @gate.stub!(:new_record?).and_return(false)
-    @gate.should_not_receive(:aasm_ensure_initial_state)
-    @gate.valid?
+    gate.stub!(:new_record?).and_return(false)
+    gate.should_not_receive(:aasm_ensure_initial_state)
+    gate.valid?
   end
 
 end
