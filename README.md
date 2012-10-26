@@ -2,7 +2,7 @@
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
-AASM started as the acts_as_state_machine plugin but has evolved into a more generic library
+AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for
 [ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html) and
 [Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter what
@@ -10,8 +10,8 @@ parent class it has (if any).
 
 ## Usage
 
-Adding a state machine is as simple as including the AASM module and start defining states and
-events together with their transitions:
+Adding a state machine is as simple as including the AASM module and start defining
+**states** and **events** together with their **transitions**:
 
 ```ruby
 class Job
@@ -20,20 +20,25 @@ class Job
   aasm do
     state :sleeping, :initial => true
     state :running
+    state :cleaning
 
     event :run do
       transitions :from => :sleeping, :to => :running
     end
 
+    event :clean do
+      transitions :from => :running, :to => :cleaning
+    end
+
     event :sleep do
-      transitions :from => :running, :to => :sleeping
+      transitions :from => [:running, :cleaning], :to => :sleeping
     end
   end
 
 end
 ```
 
-This provides you with a couple of public methods for instances of the class Job:
+This provides you with a couple of public methods for instances of the class `Job`:
 
 ```ruby
 job = Job.new
@@ -46,8 +51,8 @@ job.may_run?  # => false
 job.run       # => raises AASM::InvalidTransition
 ```
 
-If you don't like exceptions and prefer a simple true or false as response, tell
-AASM not to be whiny:
+If you don't like exceptions and prefer a simple `true` or `false` as response, tell
+AASM not to be *whiny*:
 
 ```ruby
 class Job
@@ -64,7 +69,94 @@ job.run       # => false
 
 ### Callbacks
 
-You can define a number of callbacks for your transitions. tbc
+You can define a number of callbacks for your transitions. These methods will be
+called, when certain criteria are met, like entering a particular state:
+
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true, :before_enter => :do_something
+    state :running
+
+    event :run, :after => :notify_somebody do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping
+    end
+  end
+
+  def do_something
+    ...
+  end
+
+  def notify_somebody
+    ...
+  end
+
+end
+```
+
+In this case `do_something` is called before actually entering the state `sleeping`,
+while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
+is finished.
+
+Here you can see a list of all possible callbacks, together with their order of calling:
+
+```ruby
+  event:before
+    previous_state:before_exit
+      new_state:before_enter
+        ...update state...
+      previous_state:after_exit
+    new_state:after_enter
+  event:after
+```
+
+### Guards
+
+Let's assume you want to allow particular transitions only if a defined condition is
+given. For this you can set up a guard per transition, which will run before actually
+running the transition. If the guard returns `false` the transition will be
+denied (raising `AASM::InvalidTransition` or returning `false` itself):
+
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running
+    state :cleaning
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :clean do
+      transitions :from => :running, :to => :cleaning
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :guard => :too_dirty?
+    end
+  end
+
+  def too_dirty?
+    ... yes, too dirty
+    false
+  end
+
+end
+
+job = Job.new
+job.run
+job.may_sleep?  # => false
+job.sleep       # => raises AASM::InvalidTransition
+```
 
 
 ### ActiveRecord
@@ -100,41 +192,65 @@ job.run   # not saved
 job.run!  # saved
 ```
 
+Saving includes running all validations on the `Job` class. If you want make sure
+the state gets saved without running validations (and thereby maybe persisting an
+invalid object state), simply tell AASM to skip the validations:
 
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
 
+  aasm :skip_validation_on_save => true do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping
+    end
+  end
+
+end
+```
 
 ### Transaction support
 
-Since version 3.0.13 AASM supports ActiveRecord transactions. So whenever a transition
-callback fails, all changes to any database record are rolled back.
+Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a transition
+callback or the state update fails, all changes to any database record are rolled back.
 
-## Features ##
+### Column name & migration
 
-* States
-* Machines
-* Events
-* Transitions
+As a default AASM uses the column `aasm_state` to store the states. You can override
+this by defining your favorite column name, using `:column` like this:
 
-## New Callbacks ##
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
 
-The callback chain & order on a successful event looks like:
+  aasm :column => 'my_state' do
+    ...
+  end
 
-    oldstate:exit*
-      event:before
-        __find transition, if possible__
-        transition:on_transition*
-          oldstate:before_exit
-            newstate:before_enter
-              newstate:enter*
-              __update state__
-              event:success*
-            oldstate:after_exit
-          newstate:after_enter
-      event:after
-    obj:aasm_event_fired*
+end
+```
 
-    (*) marks old callbacks
+Whatever column name is used, make sure to add a migration to provide this column
+(of type `string`):
 
+```ruby
+class AddJobState < ActiveRecord::Migration
+  def self.up
+    add_column :jobs, :aasm_state, :string
+  end
+
+  def self.down
+    remove_column :job, :aasm_state
+  end
+end
+```
 
 ## Installation ##
 
@@ -158,109 +274,7 @@ gem 'aasm'
 % sudo gem install pkg/aasm-x.y.z.gem
 ```
 
-## Examples ##
-
-### Simple Example ###
-
-Here's a quick example highlighting some of the features.
-
-```ruby
-class Conversation
-  include AASM
-
-  aasm :column => :current_state do  # defaults to aasm_state
-    state :unread, :initial => true
-    state :read
-    state :closed
-
-    event :view do
-      transitions :to => :read, :from => [:unread]
-    end
-
-    event :close do
-      transitions :to => :closed, :from => [:read, :unread]
-    end
-  end
-
-end
-```
-
-### A Slightly More Complex Example ###
-
-This example uses a few of the more complex features available.
-
-```ruby
-  class Relationship
-    include AASM
-
-    aasm :column => :status do
-      state :dating,   :enter => :make_happy,        :exit => :make_depressed
-      state :intimate, :enter => :make_very_happy,   :exit => :never_speak_again
-      state :married,  :enter => :give_up_intimacy,  :exit => :buy_exotic_car_and_wear_a_combover
-
-      event :get_intimate do
-        transitions :to => :intimate, :from => [:dating], :guard => :drunk?
-      end
-
-      # Will allow transitioning from any state if guard allows it
-      event :get_married do
-        transitions :to => :married, :guard => :willing_to_give_up_manhood?
-      end
-    end
-    aasm_initial_state Proc.new { |relationship| relationship.strictly_for_fun? ? :intimate : :dating }
-
-    def strictly_for_fun?; end
-    def drunk?; end
-    def willing_to_give_up_manhood?; end
-    def make_happy; end
-    def make_depressed; end
-    def make_very_happy; end
-    def never_speak_again; end
-    def give_up_intimacy; end
-    def buy_exotic_car_and_wear_a_combover; end
-  end
-```
-
-### Callbacks around events ###
-```ruby
-  class Relationship
-    include AASM
-
-    aasm do
-      state :dating
-      state :married
-
-      event :get_married,
-            :before => :make_vows,
-            :after => :eat_wedding_cake do
-        transitions :to => :married, :from => [:dating]
-      end
-    end
-  end
-```
-
-### Persistence example ###
-```ruby
-  class InvalidPersistor < ActiveRecord::Base
-    include AASM
-    aasm :column => :status, :skip_validation_on_save => true do
-      state :sleeping, :initial => true
-      state :running
-      event :run do
-        transitions :to => :running, :from => :sleeping
-      end
-      event :sleep do
-        transitions :to => :sleeping, :from => :running
-      end
-    end
-    validates_presence_of :name
-  end
-```
-This model can change AASM states which are stored into the database, even if the model itself is invalid!
-
-
-
-## Changelog ##
+## Latest changes ##
 
 Look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details.
 
