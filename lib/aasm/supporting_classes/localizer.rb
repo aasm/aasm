@@ -6,14 +6,7 @@ module AASM
           list << :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
           list
         end
-        (0...(checklist.size-1)).each do |i|
-          begin
-            return I18n.translate(checklist.shift, :raise => true)
-          rescue I18n::MissingTranslationData
-            # that's okay
-          end
-        end
-        I18n.translate(checklist.shift, :default => event.to_s.humanize)
+        translate_queue(checklist) || I18n.translate(checklist.shift, :default => event.to_s.humanize)
       end
 
       def human_state(obj)
@@ -23,6 +16,12 @@ module AASM
           list << :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}.#{obj.aasm_current_state}"
           list
         end
+        translate_queue(checklist) || I18n.translate(checklist.shift, :default => obj.aasm_current_state.to_s.humanize)
+      end
+
+    private
+
+      def translate_queue(checklist)
         (0...(checklist.size-1)).each do |i|
           begin
             return I18n.translate(checklist.shift, :raise => true)
@@ -30,10 +29,8 @@ module AASM
             # that's okay
           end
         end
-        I18n.translate(checklist.shift, :default => obj.aasm_current_state.to_s.humanize)
+        nil
       end
-
-      private
 
       # added for rails 2.x compatibility
       def i18n_scope(klass)
