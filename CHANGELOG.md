@@ -1,24 +1,28 @@
 # CHANGELOG
 
+## 3.0.14
+
+ * supporting event inspection for to-states transitions (`Event#transitions_to_state?`)
+
 ## 3.0.13
 
- * supporting ActiveRecord transactions when firing an event
+ * supporting *ActiveRecord* transactions when firing an event
 
 ## 3.0.12
 
- * aasm_from_states_for_state now supports to filter for specific transition
+ * `aasm_from_states_for_state` now supports to filter for specific transition
 
 ## 3.0.11
 
- * added class method aasm_from_states_for_state to retrieve all from states (regarding transitions) for a given state
+ * added class method `aasm_from_states_for_state` to retrieve all from states (regarding transitions) for a given state
 
 ## 3.0.10
 
- * added support for transitions from all other states (thanks to Stefan 'swrobel' Wrobel)
+ * added support for transitions from all other states (thanks to *Stefan 'swrobel' Wrobel*)
 
 ## 3.0.9
 
- * guard checks (e.g. may_edit?) now support guard parameters as well
+ * guard checks (e.g. `may_edit?`) now support guard parameters as well
 
 ## 3.0.8
 
@@ -58,7 +62,7 @@
  * whiny transactions: by default, raise an exception if an event transition is not possible
  * you may disable whiny transactions
 
-## 2.4.0 
+## 2.4.0
 
  * supporting new DSL (which is much shorter)
 

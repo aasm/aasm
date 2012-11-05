@@ -21,11 +21,15 @@ module AASM
       end
 
       def transitions_from_state?(state)
-        @transitions.any? { |t| t.from == state }
+        transitions_from_state(state).any?
       end
 
       def transitions_from_state(state)
         @transitions.select { |t| t.from == state }
+      end
+
+      def transitions_to_state?(state)
+        transitions_to_state(state).any?
       end
 
       def transitions_to_state(state)

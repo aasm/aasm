@@ -25,6 +25,30 @@ describe 'adding an event' do
   end
 end
 
+describe 'transition inspection' do
+  before do
+    @event = AASM::SupportingClasses::Event.new(:run) do
+      transitions :to => :running, :from => :sleeping
+    end
+  end
+
+  it 'should support inspecting transitions from states' do
+    @event.transitions_from_state(:sleeping).map(&:to).should == [:running]
+    @event.transitions_from_state?(:sleeping).should be_true
+
+    @event.transitions_from_state(:cleaning).map(&:to).should == []
+    @event.transitions_from_state?(:cleaning).should be_false
+  end
+
+  it 'should support inspecting transitions to states' do
+    @event.transitions_to_state(:running).map(&:from).should == [:sleeping]
+    @event.transitions_to_state?(:running).should be_true
+
+    @event.transitions_to_state(:cleaning).map(&:to).should == []
+    @event.transitions_to_state?(:cleaning).should be_false
+  end
+end
+
 describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
     obj = mock('object')
