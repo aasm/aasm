@@ -12,14 +12,19 @@ module AASM
       def human_state(obj)
         klass = obj.class
         checklist = ancestors_list(klass).inject([]) do |list, ancestor|
-          list << :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}/#{obj.aasm_current_state}"
-          list << :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}.#{obj.aasm_current_state}"
+          list << item_for(obj, klass, ancestor)
+          list << item_for(obj, klass, ancestor, :old_style => true)
           list
         end
         translate_queue(checklist) || I18n.translate(checklist.shift, :default => obj.aasm_current_state.to_s.humanize)
       end
 
     private
+
+      def item_for(obj, klass, ancestor, options={})
+        separator = options[:old_style] ? '.' : '/'
+        :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}#{separator}#{obj.aasm_current_state}"
+      end
 
       def translate_queue(checklist)
         (0...(checklist.size-1)).each do |i|
