@@ -43,7 +43,7 @@ module AASM
 
         # if base.respond_to?(:named_scope)
         #   base.extend(AASM::Persistence::MongoidPersistence::NamedScopeMethods)
-        # 
+        #
         #   base.class_eval do
         #     class << self
         #       unless method_defined?(:aasm_state_without_named_scope)

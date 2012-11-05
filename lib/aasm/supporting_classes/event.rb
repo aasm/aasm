@@ -15,7 +15,7 @@ module AASM
       def may_fire?(obj, to_state=nil, *args)
         _fire(obj, true, to_state, *args) # true indicates test firing
       end
-  
+
       def fire(obj, to_state=nil, *args)
         _fire(obj, false, to_state, *args) # false indicates this is not a test (fire!)
       end
