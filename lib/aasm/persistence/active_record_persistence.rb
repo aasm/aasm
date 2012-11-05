@@ -32,6 +32,7 @@ module AASM
       #   end
       #
       def self.included(base)
+        base.extend AASM::Persistence::Base::ClassMethods
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
         base.send(:include, AASM::Persistence::ReadState) unless base.method_defined?(:aasm_read_state)
@@ -46,41 +47,6 @@ module AASM
       end
 
       module ClassMethods
-        # Maps to the aasm_column in the database.  Defaults to "aasm_state".  You can write:
-        #
-        #   create_table :foos do |t|
-        #     t.string :name
-        #     t.string :aasm_state
-        #   end
-        #
-        #   class Foo < ActiveRecord::Base
-        #     include AASM
-        #   end
-        #
-        # OR:
-        #
-        #   create_table :foos do |t|
-        #     t.string :name
-        #     t.string :status
-        #   end
-        #
-        #   class Foo < ActiveRecord::Base
-        #     include AASM
-        #     aasm_column :status
-        #   end
-        #
-        # This method is both a getter and a setter
-        def aasm_column(column_name=nil)
-          if column_name
-            AASM::StateMachine[self].config.column = column_name.to_sym
-            # @aasm_column = column_name.to_sym
-          else
-            AASM::StateMachine[self].config.column ||= :aasm_state
-            # @aasm_column ||= :aasm_state
-          end
-          # @aasm_column
-          AASM::StateMachine[self].config.column
-        end
 
         def find_in_state(number, state, *args)
           with_state_scope state do

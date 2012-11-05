@@ -34,6 +34,7 @@ module AASM
       #   end
       #
       def self.included(base)
+        base.extend AASM::Persistence::Base::ClassMethods
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
         base.send(:include, AASM::Persistence::ReadState) unless base.method_defined?(:aasm_read_state)
@@ -59,60 +60,6 @@ module AASM
       end
 
       module ClassMethods
-        # Maps to the aasm_column in the database.  Deafults to "aasm_state".  You can write:
-        #
-        #   class Foo
-        #     include Mongoid::Document
-        #     include AASM
-        #     field :aasm_state
-        #   end
-        #
-        # OR:
-        #
-        #   class Foo
-        #     include Mongoid::Document
-        #     include AASM
-        #     field :status
-        #     aasm_column :status
-        #   end
-        #
-        # This method is both a getter and a setter
-        def aasm_column(column_name=nil)
-          if column_name
-            AASM::StateMachine[self].config.column = column_name.to_sym
-            # @aasm_column = column_name.to_sym
-          else
-            AASM::StateMachine[self].config.column ||= :aasm_state
-            # @aasm_column ||= :aasm_state
-          end
-          # @aasm_column
-          AASM::StateMachine[self].config.column
-        end
-
-        # def find_in_state(number, state, *args)
-        #   with_state_scope state do
-        #     find(number, *args)
-        #   end
-        # end
-        # 
-        # def count_in_state(state, *args)
-        #   with_state_scope state do
-        #     count(*args)
-        #   end
-        # end
-        # 
-        # def calculate_in_state(state, *args)
-        #   with_state_scope state do
-        #     calculate(*args)
-        #   end
-        # end
-
-        protected
-        def with_state_scope(state)
-          with_scope :find => {:conditions => ["#{table_name}.#{aasm_column} = ?", state.to_s]} do
-            yield if block_given?
-          end
-        end
       end
 
       module InstanceMethods
