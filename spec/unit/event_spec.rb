@@ -1,25 +1,21 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+require 'spec_helper'
 
-describe AASM::SupportingClasses::Event do
-  before(:each) do
-    @name = :close_order
-    @success = :success_callback
-  end
+describe 'adding an event' do
 
   def new_event
-    @event = AASM::SupportingClasses::Event.new(@name, {:success => @success}) do
+    @event = AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
       transitions :to => :closed, :from => [:open, :received]
     end
   end
 
   it 'should set the name' do
     new_event
-    @event.name.should == @name
+    @event.name.should == :close_order
   end
 
   it 'should set the success option' do
     new_event
-    @event.success.should == @success
+    @event.success.should == :success_callback
   end
 
   it 'should create StateTransitions' do
@@ -29,7 +25,7 @@ describe AASM::SupportingClasses::Event do
   end
 end
 
-describe AASM::SupportingClasses::Event, 'when firing an event' do
+describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
     obj = mock('object')
     obj.stub!(:aasm_current_state)
@@ -49,7 +45,6 @@ describe AASM::SupportingClasses::Event, 'when firing an event' do
     event.fire(obj).should == :closed
   end
 
-
   it 'should call the guard with the params passed in' do
     event = AASM::SupportingClasses::Event.new(:event) do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
@@ -64,7 +59,7 @@ describe AASM::SupportingClasses::Event, 'when firing an event' do
 
 end
 
-describe AASM::SupportingClasses::Event, 'when executing the success callback' do
+describe 'executing the success callback' do
 
   it "should send the success callback if it's a symbol" do
     ThisNameBetterNotBeInUse.instance_eval {
