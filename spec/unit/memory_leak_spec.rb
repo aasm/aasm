@@ -1,11 +1,11 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+require 'spec_helper'
 
 describe "state machines" do
 
   def number_of_objects(clazz)
     ObjectSpace.each_object(clazz) {}
   end
-  
+
   def machines
     AASM::StateMachine.instance_variable_get("@machines")
   end
@@ -27,6 +27,7 @@ describe "state machines" do
     load File.expand_path(File.dirname(__FILE__) + '/../models/not_auto_loaded/process.rb')
     machines.size.should == machines_count + 1                                                  # + Process
     number_of_objects(AASM::SupportingClasses::State).should == state_count + 3                 # + Process
+    ObjectSpace.each_object(AASM::SupportingClasses::Event) {|o| puts o.inspect}
     number_of_objects(AASM::SupportingClasses::Event).should == event_count + 2                 # + Process
     number_of_objects(AASM::SupportingClasses::StateTransition).should == transition_count + 2  # + Process
   end
