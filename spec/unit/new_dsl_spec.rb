@@ -1,23 +1,21 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+require 'spec_helper'
 
 describe "the new dsl" do
 
-  before(:each) do
-    @process = ProcessWithNewDsl.new
-  end
-  
+  let(:process) {ProcessWithNewDsl.new}
+
   it 'should use an initial event' do
-    @process.aasm_current_state.should == :sleeping
-    @process.should be_sleeping
+    process.aasm_current_state.should == :sleeping
+    process.should be_sleeping
   end
-  
+
   it 'should have states and transitions' do
-    @process.flagged.should be_nil
-    @process.start!
-    @process.should be_running
-    @process.flagged.should be_true
-    @process.stop!
-    @process.should be_suspended
+    process.flagged.should be_nil
+    process.start!
+    process.should be_running
+    process.flagged.should be_true
+    process.stop!
+    process.should be_suspended
   end
 
   it 'should not conflict with other event or state methods' do

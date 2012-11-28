@@ -25,7 +25,7 @@ describe 'inspection for common cases' do
   it 'should support the new DSL' do
     Foo.aasm.states.should include(:open)
     Foo.aasm.states.should include(:closed)
-    # Foo.aasm.initial_state.should == :open # does not work yet
+    Foo.aasm.initial_state.should == :open
     Foo.aasm.events.should include(:close)
     Foo.aasm.events.should include(:null)
   end

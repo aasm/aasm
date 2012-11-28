@@ -18,6 +18,10 @@ module AASM
       end
     end
 
+    def initial_state
+      AASM::StateMachine[@clazz].initial_state
+    end
+
     def state(name, options={})
       # @clazz.aasm_state(name, options)
       sm = AASM::StateMachine[@clazz]
