@@ -2,15 +2,14 @@ module AASM
 
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
-
-    unless AASM::StateMachine[base]
-      AASM::StateMachine[base] = AASM::StateMachine.new('')
-    end
+    AASM::StateMachine[base] ||= AASM::StateMachine.new('')
     AASM::Persistence.set_persistence(base)
     super
   end
 
   module ClassMethods
+
+    # make sure inheritance (aka subclassing) works with AASM
     def inherited(klass)
       AASM::StateMachine[klass] = AASM::StateMachine[self].clone
       super
@@ -18,13 +17,13 @@ module AASM
 
     def aasm(options={}, &block)
       @aasm ||= AASM::Base.new(self, options)
-      @aasm.instance_eval(&block) if block
+      @aasm.instance_eval(&block) if block # new DSL
       @aasm
     end
 
     def aasm_initial_state(set_state=nil)
       if set_state
-        # deprecated
+        # deprecated way to set the value
         AASM::StateMachine[self].initial_state = set_state
       else
         AASM::StateMachine[self].initial_state

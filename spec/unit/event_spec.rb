@@ -148,3 +148,46 @@ describe 'executing the success callback' do
     model.with_proc!
   end
 end
+
+describe 'parametrised events' do
+  let(:cp) {ChetanPatil.new}
+
+  it 'should transition to specified next state (sleeping to showering)' do
+    cp.wakeup!(:showering)
+    cp.aasm_current_state.should == :showering
+  end
+
+  it 'should transition to specified next state (sleeping to working)' do
+    cp.wakeup!(:working)
+    cp.aasm_current_state.should == :working
+  end
+
+  it 'should transition to default (first or showering) state' do
+    cp.wakeup!
+    cp.aasm_current_state.should == :showering
+  end
+
+  it 'should transition to default state when on_transition invoked' do
+    cp.dress!(nil, 'purple', 'dressy')
+    cp.aasm_current_state.should == :working
+  end
+
+  it 'should call on_transition method with args' do
+    cp.wakeup!(:showering)
+    cp.should_receive(:wear_clothes).with('blue', 'jeans')
+    cp.dress!(:working, 'blue', 'jeans')
+  end
+
+  it 'should call on_transition proc' do
+    cp.wakeup!(:showering)
+    cp.should_receive(:wear_clothes).with('purple', 'slacks')
+    cp.dress!(:dating, 'purple', 'slacks')
+  end
+
+  it 'should call on_transition with an array of methods' do
+    cp.wakeup!(:showering)
+    cp.should_receive(:condition_hair)
+    cp.should_receive(:fix_hair)
+    cp.dress!(:prettying_up)
+  end
+end

@@ -1,19 +1,42 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+require 'spec_helper'
 
-describe AASM, '- class level definitions' do
-  it 'should define a class level methods on its including class' do
-    Foo.should respond_to(:aasm_initial_state)
-    Foo.should respond_to(:aasm_state)
-    Foo.should respond_to(:aasm_event)
-    Foo.should respond_to(:aasm_states)
-    Foo.should respond_to(:aasm_states_for_select)
-    Foo.should respond_to(:aasm_events)
-    Foo.should respond_to(:aasm_from_states_for_state)
+# all of these should be tested per case
+# describe AASM, '- class level definitions' do
+#   it 'should define a class level methods on its including class' do
+#     Foo.should respond_to(:aasm_initial_state)
+#     Foo.should respond_to(:aasm_state)
+#     Foo.should respond_to(:aasm_event)
+#     Foo.should respond_to(:aasm_states)
+#     Foo.should respond_to(:aasm_states_for_select)
+#     Foo.should respond_to(:aasm_events)
+#     Foo.should respond_to(:aasm_from_states_for_state)
+#   end
+# end
+
+describe 'inspection for common cases' do
+  it 'should support the old DSL' do
+    Foo.aasm_states.should include(:open)
+    Foo.aasm_states.should include(:closed)
+    Foo.aasm_initial_state.should == :open
+    Foo.aasm_events.should include(:close)
+    Foo.aasm_events.should include(:null)
+  end
+
+  it 'should support the new DSL' do
+    Foo.aasm.states.should include(:open)
+    Foo.aasm.states.should include(:closed)
+    # Foo.aasm.initial_state.should == :open # does not work yet
+    Foo.aasm.events.should include(:close)
+    Foo.aasm.events.should include(:null)
+  end
+
+  it 'should list states in the order they have been defined' do
+    Conversation.aasm.states.should == [:needs_attention, :read, :closed, :awaiting_response, :junk]
   end
 end
 
-describe "naming" do
-  it "work for valid" do
+describe "special cases" do
+  it "should support valid a state name" do
     Argument.aasm_states.should include(:invalid)
     Argument.aasm_states.should include(:valid)
 
@@ -27,26 +50,30 @@ describe "naming" do
   end
 end
 
-describe AASM, '- subclassing' do
+describe 'subclassing' do
   it 'should have the parent states' do
     Foo.aasm_states.each do |state|
       FooTwo.aasm_states.should include(state)
     end
+    Baz.aasm_states.should == Bar.aasm_states
   end
 
   it 'should not add the child states to the parent machine' do
     Foo.aasm_states.should_not include(:foo)
   end
+
+  it "should have the same events as its parent" do
+    Baz.aasm_events.should == Bar.aasm_events
+  end
 end
 
-
-describe AASM, '- aasm_states_for_select' do
+describe :aasm_states_for_select do
   it "should return a select friendly array of states" do
     Foo.aasm_states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
   end
 end
 
-describe "aasm_from_states_for_state" do
+describe :aasm_from_states_for_state do
   it "should return all from states for a state" do
     froms = AuthMachine.aasm_from_states_for_state(:active)
     [:pending, :passive, :suspended].each {|from| froms.should include(from)}
@@ -58,40 +85,35 @@ describe "aasm_from_states_for_state" do
   end
 end
 
-describe AASM, '- instance level definitions' do
-  before(:each) do
-    @foo = Foo.new
-  end
+describe 'instance methods' do
+  let(:foo) {Foo.new}
 
   it 'should define a state querying instance method on including class' do
-    @foo.should respond_to(:open?)
+    foo.should respond_to(:open?)
+    foo.should be_open
   end
 
-  it 'should define an event! inance method' do
-    @foo.should respond_to(:close!)
+  it 'should define an event! instance method' do
+    foo.should respond_to(:close!)
+    foo.close!
+    foo.should be_closed
   end
 end
 
 describe AASM, '- initial states' do
-  before(:each) do
-    @foo = Foo.new
-    @bar = Bar.new
-  end
+  let(:foo) {Foo.new}
+  let(:bar) {Bar.new}
 
   it 'should set the initial state' do
-    @foo.aasm_current_state.should == :open
-  end
-
-  it '#open? should be initially true' do
-    @foo.open?.should be_true
-  end
-
-  it '#closed? should be initially false' do
-    @foo.closed?.should be_false
+    foo.aasm_current_state.should == :open
+    # foo.aasm.current_state.should == :open # not yet supported
+    foo.should be_open
+    foo.should_not be_closed
   end
 
   it 'should use the first state defined if no initial state is given' do
-    @bar.aasm_current_state.should == :read
+    bar.aasm_current_state.should == :read
+    # bar.aasm.current_state.should == :read # not yet supported
   end
 
   it 'should determine initial state from the Proc results' do
@@ -100,202 +122,24 @@ describe AASM, '- initial states' do
   end
 end
 
-describe AASM, 'success callbacks' do
-  it 'should call the success callback if one was provided' do
-    foo = Foo.new
-    foo.should_receive(:success_callback)
-    foo.close!
-  end
-
-end
-
-describe AASM, '- event firing without persistence' do
+describe 'event firing without persistence' do
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
-
-    def foo.aasm_write_state
-    end
+    def foo.aasm_write_state; end
 
     foo.should_receive(:aasm_write_state_without_persistence).twice
-
     foo.close
   end
 end
 
-describe AASM, '- getting events for a state' do
-  it '#aasm_events_for_current_state should use current state' do
-    foo = Foo.new
-    foo.should_receive(:aasm_current_state)
-    foo.aasm_events_for_current_state
-  end
+describe :aasm_events_for_current_state do
+  let(:foo) {Foo.new}
 
-  it '#aasm_events_for_current_state should use aasm_events_for_state' do
-    foo = Foo.new
-    foo.stub!(:aasm_current_state).and_return(:foo)
-    foo.should_receive(:aasm_events_for_state).with(:foo)
-    foo.aasm_events_for_current_state
-  end
-end
-
-describe AASM, '- event callbacks' do
-  describe "with an error callback defined" do
-    before do
-      class Foo
-        aasm_event :safe_close, :success => :success_callback, :error => :error_callback do
-          transitions :to => :closed, :from => [:open]
-        end
-      end
-
-      @foo = Foo.new
-    end
-
-    it "should run error_callback if an exception is raised and error_callback defined" do
-      def @foo.error_callback(e)
-      end
-      @foo.stub!(:enter).and_raise(e=StandardError.new)
-      @foo.should_receive(:error_callback).with(e)
-      @foo.safe_close!
-    end
-
-    it "should raise NoMethodError if exceptionis raised and error_callback is declared but not defined" do
-      @foo.stub!(:enter).and_raise(StandardError)
-      lambda{@foo.safe_close!}.should raise_error(NoMethodError)
-    end
-
-    it "should propagate an error if no error callback is declared" do
-        @foo.stub!(:enter).and_raise("Cannot enter safe")
-        lambda{@foo.close!}.should raise_error(StandardError, "Cannot enter safe")
-    end
-  end
-
-  describe "with aasm_event_fired defined" do
-    before do
-      @foo = Foo.new
-      def @foo.aasm_event_fired(event, from, to)
-      end
-    end
-
-    it 'should call it for successful bang fire' do
-      @foo.should_receive(:aasm_event_fired).with(:close, :open, :closed)
-      @foo.close!
-    end
-
-    it 'should call it for successful non-bang fire' do
-      @foo.should_receive(:aasm_event_fired)
-      @foo.close
-    end
-
-    it 'should not call it for failing bang fire' do
-      @foo.stub!(:aasm_set_current_state_with_persistence).and_return(false)
-      @foo.should_not_receive(:aasm_event_fired)
-      @foo.close!
-    end
-  end
-
-  describe "with aasm_event_failed defined" do
-    before do
-      @foo = Foo.new
-      def @foo.aasm_event_failed(event, from)
-      end
-    end
-
-    it 'should call it when transition failed for bang fire' do
-      @foo.should_receive(:aasm_event_failed).with(:null, :open)
-      lambda {@foo.null!}.should raise_error(AASM::InvalidTransition)
-    end
-
-    it 'should call it when transition failed for non-bang fire' do
-      @foo.should_receive(:aasm_event_failed).with(:null, :open)
-      lambda {@foo.null}.should raise_error(AASM::InvalidTransition)
-    end
-
-    it 'should not call it if persist fails for bang fire' do
-      @foo.stub!(:aasm_set_current_state_with_persistence).and_return(false)
-      @foo.should_receive(:aasm_event_failed)
-      @foo.close!
-    end
-  end
-end
-
-describe AASM, '- state actions' do
-  it "should call enter when entering state" do
-    foo = Foo.new
-    foo.should_receive(:enter)
-
+  it 'work' do
+    foo.aasm_events_for_current_state.should == [:close, :null]
     foo.close
-  end
-
-  it "should call exit when exiting state" do
-    foo = Foo.new
-    foo.should_receive(:exit)
-
-    foo.close
+    foo.aasm_events_for_current_state.should be_empty
   end
 end
 
 
-describe Baz do
-  it "should have the same states as it's parent" do
-    Baz.aasm_states.should == Bar.aasm_states
-  end
-
-  it "should have the same events as it's parent" do
-    Baz.aasm_events.should == Bar.aasm_events
-  end
-end
-
-
-
-describe ChetanPatil do
-  it 'should transition to specified next state (sleeping to showering)' do
-    cp = ChetanPatil.new
-    cp.wakeup! :showering
-
-    cp.aasm_current_state.should == :showering
-  end
-
-  it 'should transition to specified next state (sleeping to working)' do
-    cp = ChetanPatil.new
-    cp.wakeup! :working
-
-    cp.aasm_current_state.should == :working
-  end
-
-  it 'should transition to default (first or showering) state' do
-    cp = ChetanPatil.new
-    cp.wakeup!
-
-    cp.aasm_current_state.should == :showering
-  end
-
-  it 'should transition to default state when on_transition invoked' do
-    cp = ChetanPatil.new
-    cp.dress!(nil, 'purple', 'dressy')
-
-    cp.aasm_current_state.should == :working
-  end
-
-  it 'should call on_transition method with args' do
-    cp = ChetanPatil.new
-    cp.wakeup! :showering
-
-    cp.should_receive(:wear_clothes).with('blue', 'jeans')
-    cp.dress! :working, 'blue', 'jeans'
-  end
-
-  it 'should call on_transition proc' do
-    cp = ChetanPatil.new
-    cp.wakeup! :showering
-
-    cp.should_receive(:wear_clothes).with('purple', 'slacks')
-    cp.dress!(:dating, 'purple', 'slacks')
-  end
-
-  it 'should call on_transition with an array of methods' do
-    cp = ChetanPatil.new
-    cp.wakeup! :showering
-    cp.should_receive(:condition_hair)
-    cp.should_receive(:fix_hair)
-    cp.dress!(:prettying_up)
-  end
-end

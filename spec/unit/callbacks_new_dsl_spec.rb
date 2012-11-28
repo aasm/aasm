@@ -31,3 +31,19 @@ describe 'callbacks for the new DSL' do
     @callback.open!
   end
 end
+
+describe AASM, '- state actions' do
+  it "should call enter when entering state" do
+    foo = Foo.new
+    foo.should_receive(:enter)
+
+    foo.close
+  end
+
+  it "should call exit when exiting state" do
+    foo = Foo.new
+    foo.should_receive(:exit)
+
+    foo.close
+  end
+end
