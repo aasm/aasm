@@ -136,7 +136,8 @@ describe :aasm_events_for_current_state do
   let(:foo) {Foo.new}
 
   it 'work' do
-    foo.aasm_events_for_current_state.should == [:close, :null]
+    foo.aasm_events_for_current_state.should include(:close)
+    foo.aasm_events_for_current_state.should include(:null)
     foo.close
     foo.aasm_events_for_current_state.should be_empty
   end
