@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+require 'spec_helper'
 
 describe 'transitions' do
 
@@ -25,7 +25,7 @@ describe 'transitions' do
     silencer.smile_any!.should be_true
     silencer.should be_smiling
   end
-  
+
 end
 
 describe AASM::SupportingClasses::StateTransition do
