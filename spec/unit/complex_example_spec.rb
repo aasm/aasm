@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'AuthMachine on initialization' do
+describe 'on initialization' do
   let(:auth) {AuthMachine.new}
 
   it 'should be in the pending state' do
@@ -13,7 +13,7 @@ describe 'AuthMachine on initialization' do
   end
 end
 
-describe 'AuthMachine when being unsuspended' do
+describe 'when being unsuspended' do
   let(:auth) {AuthMachine.new}
 
   it 'should be able to be unsuspended' do
