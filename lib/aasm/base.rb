@@ -1,5 +1,6 @@
 module AASM
   class Base
+
     def initialize(clazz, options={}, &block)
       @clazz = clazz
       sm = AASM::StateMachine[@clazz]

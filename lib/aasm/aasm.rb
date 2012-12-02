@@ -21,6 +21,7 @@ module AASM
       @aasm
     end
 
+    # TODO: maybe better: aasm.initial_state
     def aasm_initial_state(set_state=nil)
       if set_state
         # deprecated way to set the value
@@ -68,7 +69,8 @@ module AASM
       aasm.states_for_select
     end
 
-    def aasm_human_event_name(event)
+    # aasm.event(:event_name).human?
+    def aasm_human_event_name(event) # event_name?
       AASM::SupportingClasses::Localizer.new.human_event_name(self, event)
     end
   end # ClassMethods

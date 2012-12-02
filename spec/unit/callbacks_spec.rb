@@ -1,38 +1,42 @@
 require 'spec_helper'
 
 describe 'callbacks for the old DSL' do
-  before(:each) do
-    @callback = CallbackOldDsl.new
-  end
+  let(:callback) {CallbackOldDsl.new}
 
   it "should get close callbacks" do
-    @callback.should_receive(:before).once.ordered
-    @callback.should_receive(:before_exit_open).once.ordered                   # these should be before the state changes
-    @callback.should_receive(:before_enter_closed).once.ordered
-    @callback.should_receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
-    @callback.should_receive(:after_exit_open).once.ordered                    # these should be after the state changes
-    @callback.should_receive(:after_enter_closed).once.ordered
-    @callback.should_receive(:after).once.ordered
+    callback.should_receive(:exit_open).once.ordered
+    callback.should_receive(:before).once.ordered
+    callback.should_receive(:before_exit_open).once.ordered                   # these should be before the state changes
+    callback.should_receive(:before_enter_closed).once.ordered
+    callback.should_receive(:enter_closed).once.ordered
+    callback.should_receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+    callback.should_receive(:after_exit_open).once.ordered                    # these should be after the state changes
+    callback.should_receive(:after_enter_closed).once.ordered
+    callback.should_receive(:after).once.ordered
 
-    @callback.close!
-  end
-
-  it "should get open callbacks" do
-    @callback.close!
-
-    @callback.should_receive(:before).once.ordered
-    @callback.should_receive(:before_exit_closed).once.ordered                # these should be before the state changes
-    @callback.should_receive(:before_enter_open).once.ordered
-    @callback.should_receive(:aasm_write_state).once.ordered.and_return(true) # this is when the state changes
-    @callback.should_receive(:after_exit_closed).once.ordered                 # these should be after the state changes
-    @callback.should_receive(:after_enter_open).once.ordered
-    @callback.should_receive(:after).once.ordered
-
-    @callback.open!
+    callback.close!
   end
 end
 
-describe AASM, '- event callbacks' do
+describe 'callbacks for the new DSL' do
+  let(:callback) {CallbackNewDsl.new}
+
+  it "be called in order" do
+    callback.should_receive(:exit_open).once.ordered
+    callback.should_receive(:before).once.ordered
+    callback.should_receive(:before_exit_open).once.ordered                   # these should be before the state changes
+    callback.should_receive(:before_enter_closed).once.ordered
+    callback.should_receive(:enter_closed).once.ordered
+    callback.should_receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+    callback.should_receive(:after_exit_open).once.ordered                    # these should be after the state changes
+    callback.should_receive(:after_enter_closed).once.ordered
+    callback.should_receive(:after).once.ordered
+
+    callback.close!
+  end
+end
+
+describe 'event callbacks' do
   describe "with an error callback defined" do
     before do
       class Foo
@@ -45,10 +49,11 @@ describe AASM, '- event callbacks' do
     end
 
     it "should run error_callback if an exception is raised and error_callback defined" do
-      def @foo.error_callback(e)
-      end
+      def @foo.error_callback(e); end
+
       @foo.stub!(:enter).and_raise(e=StandardError.new)
       @foo.should_receive(:error_callback).with(e)
+
       @foo.safe_close!
     end
 
@@ -66,8 +71,7 @@ describe AASM, '- event callbacks' do
   describe "with aasm_event_fired defined" do
     before do
       @foo = Foo.new
-      def @foo.aasm_event_fired(event, from, to)
-      end
+      def @foo.aasm_event_fired(event, from, to); end
     end
 
     it 'should call it for successful bang fire' do
@@ -90,8 +94,7 @@ describe AASM, '- event callbacks' do
   describe "with aasm_event_failed defined" do
     before do
       @foo = Foo.new
-      def @foo.aasm_event_failed(event, from)
-      end
+      def @foo.aasm_event_failed(event, from); end
     end
 
     it 'should call it when transition failed for bang fire' do
