@@ -191,3 +191,14 @@ describe 'parametrised events' do
     pe.dress!(:prettying_up)
   end
 end
+
+describe 'event firing without persistence' do
+  it 'should attempt to persist if aasm_write_state is defined' do
+    foo = Foo.new
+    def foo.aasm_write_state; end
+    foo.should be_open
+
+    foo.should_receive(:aasm_write_state_without_persistence)
+    foo.close
+  end
+end
