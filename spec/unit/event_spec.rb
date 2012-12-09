@@ -1,51 +1,50 @@
 require 'spec_helper'
 
 describe 'adding an event' do
-
-  def new_event
-    @event = AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
+  let(:event) do
+    AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
       transitions :to => :closed, :from => [:open, :received]
     end
   end
 
   it 'should set the name' do
-    new_event
-    @event.name.should == :close_order
+    event.name.should == :close_order
   end
 
-  it 'should set the success option' do
-    new_event
-    @event.success.should == :success_callback
+  it 'should set the success callback' do
+    event.success.should == :success_callback
   end
 
-  it 'should create StateTransitions' do
-    AASM::SupportingClasses::StateTransition.should_receive(:new).with({:to => :closed, :from => :open})
-    AASM::SupportingClasses::StateTransition.should_receive(:new).with({:to => :closed, :from => :received})
-    new_event
+  it 'should create transitions' do
+    transitions = event.all_transitions
+    transitions[0].from.should == :open
+    transitions[0].to.should == :closed
+    transitions[1].from.should == :received
+    transitions[1].to.should == :closed
   end
 end
 
 describe 'transition inspection' do
-  before do
-    @event = AASM::SupportingClasses::Event.new(:run) do
+  let(:event) do
+    AASM::SupportingClasses::Event.new(:run) do
       transitions :to => :running, :from => :sleeping
     end
   end
 
-  it 'should support inspecting transitions from states' do
-    @event.transitions_from_state(:sleeping).map(&:to).should == [:running]
-    @event.transitions_from_state?(:sleeping).should be_true
+  it 'should support inspecting transitions from other states' do
+    event.transitions_from_state(:sleeping).map(&:to).should == [:running]
+    event.transitions_from_state?(:sleeping).should be_true
 
-    @event.transitions_from_state(:cleaning).map(&:to).should == []
-    @event.transitions_from_state?(:cleaning).should be_false
+    event.transitions_from_state(:cleaning).map(&:to).should == []
+    event.transitions_from_state?(:cleaning).should be_false
   end
 
-  it 'should support inspecting transitions to states' do
-    @event.transitions_to_state(:running).map(&:from).should == [:sleeping]
-    @event.transitions_to_state?(:running).should be_true
+  it 'should support inspecting transitions to other states' do
+    event.transitions_to_state(:running).map(&:from).should == [:sleeping]
+    event.transitions_to_state?(:running).should be_true
 
-    @event.transitions_to_state(:cleaning).map(&:to).should == []
-    @event.transitions_to_state?(:cleaning).should be_false
+    event.transitions_to_state(:cleaning).map(&:to).should == []
+    event.transitions_to_state?(:cleaning).should be_false
   end
 end
 
