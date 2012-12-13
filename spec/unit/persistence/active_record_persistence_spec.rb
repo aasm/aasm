@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'active_record'
 require 'logger'
 require 'spec_helper'
@@ -58,7 +57,7 @@ end
 describe "instance methods" do
   let(:gate) {Gate.new}
 
-  it "should respond to aasm states" do
+  it "should respond to aasm persistence methods" do
     gate.should respond_to(:aasm_read_state)
     gate.should respond_to(:aasm_write_state)
     gate.should respond_to(:aasm_write_state_without_persistence)
@@ -85,16 +84,12 @@ describe "instance methods" do
     gate.aasm_current_state.should be_nil
   end
 
-  it "should have aasm_ensure_initial_state" do
-    gate.send :aasm_ensure_initial_state
-  end
-
   it "should call aasm_ensure_initial_state on validation before create" do
     gate.should_receive(:aasm_ensure_initial_state).and_return(true)
     gate.valid?
   end
 
-  it "should call aasm_ensure_initial_state on validation before create" do
+  it "should not call aasm_ensure_initial_state on validation before update" do
     gate.stub!(:new_record?).and_return(false)
     gate.should_not_receive(:aasm_ensure_initial_state)
     gate.valid?
