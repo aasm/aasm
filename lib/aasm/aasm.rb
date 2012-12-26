@@ -111,7 +111,7 @@ module AASM
   end
 
   def aasm_human_state
-    AASM::SupportingClasses::Localizer.new.human_state(self)
+    AASM::SupportingClasses::Localizer.new.human_state_name(self.class, aasm_current_state)
   end
 
 private

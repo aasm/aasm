@@ -26,7 +26,7 @@ module AASM
     def state(name, options={})
       # @clazz.aasm_state(name, options)
       sm = AASM::StateMachine[@clazz]
-      sm.create_state(name, options)
+      sm.create_state(name, @clazz, options)
       sm.initial_state = name if options[:initial] || !sm.initial_state
 
       @clazz.send(:define_method, "#{name.to_s}?") do

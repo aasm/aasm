@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.15
+
+ * added support for localized state names (on a class level, like Record.aasm.states.map(&:localized_name))
+
 ## 3.0.14
 
  * supporting event inspection for to-states transitions (`Event#transitions_to_state?`)

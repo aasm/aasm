@@ -10,12 +10,32 @@ class LocalizerTestModel < ActiveRecord::Base
 
   attr_accessor :aasm_state
 
-  aasm_initial_state :open
+  aasm_initial_state :opened
   aasm_state :opened
   aasm_state :closed
 
   aasm_event :close
   aasm_event :open
+end
+
+describe 'localized state names' do
+  before(:all) do
+    I18n.load_path << 'spec/en.yml'
+    I18n.default_locale = :en
+    I18n.reload!
+  end
+
+  after(:all) do
+    I18n.load_path.clear
+  end
+
+  it 'should localize' do
+    LocalizerTestModel.aasm.states.detect {|s| s == :opened}.localized_name.should == "It's open now!"
+  end
+
+  it 'should use fallback' do
+    LocalizerTestModel.aasm.states.detect {|s| s == :closed}.localized_name.should == 'Closed'
+  end
 end
 
 describe AASM::SupportingClasses::Localizer, "new style" do
@@ -34,7 +54,7 @@ describe AASM::SupportingClasses::Localizer, "new style" do
 
   context 'aasm_human_state' do
     it 'should return translated state value' do
-      foo_opened.aasm_human_state.should == "It's opened now!"
+      foo_opened.aasm_human_state.should == "It's open now!"
     end
 
     it 'should return humanized value if not localized' do
@@ -69,7 +89,7 @@ describe AASM::SupportingClasses::Localizer, "deprecated style" do
 
   context 'aasm_human_state' do
     it 'should return translated state value' do
-      foo_opened.aasm_human_state.should == "It's opened now!"
+      foo_opened.aasm_human_state.should == "It's open now!"
     end
 
     it 'should return humanized value if not localized' do

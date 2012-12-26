@@ -3,8 +3,9 @@ module AASM
     class State
       attr_reader :name, :options
 
-      def initialize(name, options={})
+      def initialize(name, clazz, options={})
         @name = name
+        @clazz = clazz
         update(options)
       end
 
@@ -24,6 +25,10 @@ module AASM
         end
       end
 
+      def to_s
+        name.to_s
+      end
+
       def fire_callbacks(action, record)
         action = @options[action]
         catch :halt_aasm_chain do
@@ -34,7 +39,17 @@ module AASM
       end
 
       def display_name
-        @display_name ||= name.to_s.gsub(/_/, ' ').capitalize
+        @display_name ||= begin
+          if Module.const_defined?(:I18n)
+            localized_name
+          else
+            name.to_s.gsub(/_/, ' ').capitalize
+          end
+        end
+      end
+
+      def localized_name
+        AASM::SupportingClasses::Localizer.new.human_state_name(@clazz, self)
       end
 
       def for_select

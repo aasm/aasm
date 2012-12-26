@@ -9,21 +9,20 @@ module AASM
         translate_queue(checklist) || I18n.translate(checklist.shift, :default => event.to_s.humanize)
       end
 
-      def human_state(obj)
-        klass = obj.class
+      def human_state_name(klass, state)
         checklist = ancestors_list(klass).inject([]) do |list, ancestor|
-          list << item_for(obj, klass, ancestor)
-          list << item_for(obj, klass, ancestor, :old_style => true)
+          list << item_for(klass, state, ancestor)
+          list << item_for(klass, state, ancestor, :old_style => true)
           list
         end
-        translate_queue(checklist) || I18n.translate(checklist.shift, :default => obj.aasm_current_state.to_s.humanize)
+        translate_queue(checklist) || I18n.translate(checklist.shift, :default => state.to_s.humanize)
       end
 
     private
 
-      def item_for(obj, klass, ancestor, options={})
+      def item_for(klass, state, ancestor, options={})
         separator = options[:old_style] ? '.' : '/'
-        :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}#{separator}#{obj.aasm_current_state}"
+        :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}#{separator}#{state}"
       end
 
       def translate_queue(checklist)

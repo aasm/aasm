@@ -7,7 +7,7 @@ describe AASM::SupportingClasses::State do
   end
 
   def new_state(options={})
-    AASM::SupportingClasses::State.new(@name, @options.merge(options))
+    AASM::SupportingClasses::State.new(@name, Conversation, @options.merge(options))
   end
 
   it 'should set the name' do
