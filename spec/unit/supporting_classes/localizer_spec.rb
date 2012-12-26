@@ -3,6 +3,8 @@ require 'active_record'
 require 'logger'
 require 'i18n'
 
+load_schema
+
 class LocalizerTestModel < ActiveRecord::Base
   include AASM
 
