@@ -215,6 +215,35 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Automatic Scopes
+
+AASM will automatically create scope methods for each state in the model.
+
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running
+    state :cleaning
+  end
+
+  def sleeping
+    "This method name is in already use"
+  end
+end
+
+class JobController
+  def index
+    @running_jobs = jobs.running
+    @recent_cleaning_jobs = jobs.cleaning.where('created_at >=  ?', 3.days.ago)
+
+    # @sleeping_jobs = jobs.sleeping   #=> "This method name is in already use"
+  end
+end
+```
+
 ### Transaction support
 
 Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a transition
