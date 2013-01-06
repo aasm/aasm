@@ -41,25 +41,31 @@ module AASM
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
-        # if base.respond_to?(:named_scope)
-        #   base.extend(AASM::Persistence::MongoidPersistence::NamedScopeMethods)
-        #
-        #   base.class_eval do
-        #     class << self
-        #       unless method_defined?(:aasm_state_without_named_scope)
-        #         alias_method :aasm_state_without_named_scope, :aasm_state
-        #         alias_method :aasm_state, :aasm_state_with_named_scope
-        #       end
-        #     end
-        #   end
-        # end
-
         # Mongoid's Validatable gem dependency goes not have a before_validation_on_xxx hook yet.
         # base.before_validation_on_create :aasm_ensure_initial_state
         base.before_validation :aasm_ensure_initial_state
       end
 
       module ClassMethods
+
+        def find_in_state(number, state, *args)
+          with_state_scope state do
+            find(number, *args)
+          end
+        end
+
+        def count_in_state(state, *args)
+          with_state_scope state do
+            count(*args)
+          end
+        end
+
+        def with_state_scope(state)
+          with_scope where(aasm_column.to_sym => state.to_s) do
+            yield if block_given?
+          end
+        end
+
       end
 
       module InstanceMethods
