@@ -53,7 +53,7 @@ module AASM
           scope_method = ActiveRecord::VERSION::MAJOR >= 3 ? :scope : :named_scope
           @clazz.send(scope_method, name, scope_options)
         elsif @clazz.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
-          scope_options = -> { @clazz.send(:where, {@clazz.aasm_column.to_sym => name.to_s}) }
+          scope_options = lambda { @clazz.send(:where, {@clazz.aasm_column.to_sym => name.to_s}) }
           @clazz.send(:scope, name, scope_options)
         end
       end
