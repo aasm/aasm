@@ -1,4 +1,4 @@
-describe 'mongoid', if: Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
+describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
 
   before(:all) do
     require 'mongoid'
@@ -58,7 +58,7 @@ describe 'mongoid', if: Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.cr
 
   describe "#find_in_state" do
 
-    let!(:model)    { SimpleNewDslMongoid.create!(status: :unknown_scope) }
+    let!(:model)    { SimpleNewDslMongoid.create!(:status => :unknown_scope) }
     let!(:model_id) { model._id }
 
     it "should respond to method" do
@@ -83,7 +83,7 @@ describe 'mongoid', if: Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.cr
   describe "#count_in_state" do
 
     before do
-      3.times { SimpleNewDslMongoid.create!(status: :unknown_scope) }
+      3.times { SimpleNewDslMongoid.create!(:status => :unknown_scope) }
     end
 
     it "should respond to method" do
@@ -105,8 +105,8 @@ describe 'mongoid', if: Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.cr
   describe "#with_state_scope" do
 
     before do
-      3.times { SimpleNewDslMongoid.create!(status: :unknown_scope) }
-      2.times { SimpleNewDslMongoid.create!(status: :new) }
+      3.times { SimpleNewDslMongoid.create!(:status => :unknown_scope) }
+      2.times { SimpleNewDslMongoid.create!(:status => :new) }
     end
 
     it "should respond to method" do
