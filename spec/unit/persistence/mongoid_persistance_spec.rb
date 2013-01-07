@@ -6,7 +6,7 @@ require File.dirname(__FILE__) + '/../../models/mongoid/mongoid_models'
 # if you want to see the statements while running the spec enable the following line
 # Mongoid.logger = Logger.new(STDERR)
 
-describe Mongoid do
+describe Mongoid, if: Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
   before(:all) do
     DATABASE_NAME = "mongoid_#{Process.pid}"
 
