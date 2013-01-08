@@ -43,4 +43,23 @@ module AASM
 
     end # Base
   end # Persistence
+
+  class Base
+    def state_with_scope(name, *args)
+      state_without_scope(name, *args)
+      unless @clazz.respond_to?(name)
+        if @clazz.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
+          scope_options = {:conditions => { "#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}}
+          scope_method = ActiveRecord::VERSION::MAJOR >= 3 ? :scope : :named_scope
+          @clazz.send(scope_method, name, scope_options)
+        elsif @clazz.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
+          scope_options = lambda { @clazz.send(:where, {@clazz.aasm_column.to_sym => name.to_s}) }
+          @clazz.send(:scope, name, scope_options)
+        end
+      end
+    end
+    alias_method :state_without_scope, :state
+    alias_method :state, :state_with_scope
+  end # Base
+
 end # AASM

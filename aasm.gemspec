@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.licenses    = ["MIT"]
 
   s.add_development_dependency 'activerecord'
+  s.add_development_dependency 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', '~> 2.0'
