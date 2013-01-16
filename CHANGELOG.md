@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.16
+
+ * added autocreation of state scopes for Mongoid (thanks to [@jonnyshields](https://github.com/johnnyshields))
+
 ## 3.0.15
 
  * added support for localized state names (on a class level, like Record.aasm.states.map(&:localized_name))
