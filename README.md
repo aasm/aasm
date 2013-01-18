@@ -1,5 +1,7 @@
 # AASM - Ruby state machines [![Build Status](https://secure.travis-ci.org/aasm/aasm.png)](http://travis-ci.org/aasm/aasm) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/aasm/aasm)
 
+**The main repository for AASM has been moved to an organization [https://github.com/aasm/aasm](https://github.com/aasm/aasm).**
+
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
