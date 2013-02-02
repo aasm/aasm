@@ -128,7 +128,7 @@ module AASM
           when Symbol, String
             record.send(action)
           when Proc
-            action.call(record)
+            record.instance_eval &action
         end
       end
 
