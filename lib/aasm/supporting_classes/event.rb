@@ -90,10 +90,10 @@ module AASM
         if options.key?(:error) then
           @error = options[:error]
         end
+        @options = options
         if block then
           instance_eval(&block)
         end
-        @options = options
         self
       end
 
@@ -132,6 +132,7 @@ module AASM
         end
       end
 
+      ## DSL interface
       def transitions(trans_opts)
         # Create a separate transition for each from state to the given state
         Array(trans_opts[:from]).each do |s|
@@ -141,6 +142,11 @@ module AASM
         @transitions << AASM::SupportingClasses::StateTransition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
       end
 
+      [:after, :before].each do |callback_name| # add :success, :error ?
+        define_method callback_name do |*args, &block|
+          options[callback_name] = block ? block : args
+        end
+      end
     end
   end # SupportingClasses
 end # AASM

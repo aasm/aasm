@@ -3,6 +3,8 @@ require 'spec_helper'
 describe 'adding an event' do
   let(:event) do
     AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
+      before :before_callback
+      after :after_callback
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -13,6 +15,14 @@ describe 'adding an event' do
 
   it 'should set the success callback' do
     event.success.should == :success_callback
+  end
+
+  it 'should set the after callback' do
+    event.options[:after].should == :after_callback
+  end
+
+  it 'should set the before callback' do
+    event.options[:before].should == :before_callback
   end
 
   it 'should create transitions' do
