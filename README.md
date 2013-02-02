@@ -81,12 +81,16 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running
+      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
     end
 
     event :sleep do
       transitions :from => :running, :to => :sleeping
     end
+  end
+
+  def set_process(name)
+    ...
   end
 
   def do_something
@@ -115,6 +119,15 @@ Here you can see a list of all possible callbacks, together with their order of 
     new_state:after_enter
   event:after
 ```
+
+Also, you can pass parameters to events:
+
+```ruby
+  job = Job.new
+  job.run(:running, :defragmentation)
+```
+
+In this case the set_process would be called with `:defagmentation` argument.
 
 ### Guards
 
