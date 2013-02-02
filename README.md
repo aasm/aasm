@@ -127,7 +127,7 @@ Also, you can pass parameters to events:
   job.run(:running, :defragmentation)
 ```
 
-In this case the set_process would be called with `:defagmentation` argument.
+In this case the `set_process` would be called with `:defagmentation` argument.
 
 ### Guards
 
