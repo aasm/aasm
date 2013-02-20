@@ -144,7 +144,9 @@ module AASM
 
       [:after, :before].each do |callback_name| # add :success, :error ?
         define_method callback_name do |*args, &block|
-          options[callback_name] = block ? block : args
+          options[callback_name] = Array(options[callback_name])
+          options[callback_name] << block if block
+          options[callback_name] += Array(args)
         end
       end
     end

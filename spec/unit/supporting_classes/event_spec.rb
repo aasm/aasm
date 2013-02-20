@@ -1,10 +1,14 @@
 require 'spec_helper'
 
 describe 'adding an event' do
+  let(:fake_proc_callback) do
+    Proc.new {}
+  end
   let(:event) do
     AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
+      after &fake_proc_callback
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -18,11 +22,13 @@ describe 'adding an event' do
   end
 
   it 'should set the after callback' do
-    event.options[:after].should == :after_callback
+    event.options[:after].should_have(2)
+    event.options[:after].first.should == :after_callback
+    event.options[:after].last.should == fake_proc_callback
   end
 
   it 'should set the before callback' do
-    event.options[:before].should == :before_callback
+    event.options[:before].should == [:before_callback]
   end
 
   it 'should create transitions' do
