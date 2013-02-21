@@ -85,6 +85,9 @@ class Job
     end
 
     event :sleep do
+      after do
+        ...
+      end
       transitions :from => :running, :to => :sleeping
     end
   end
