@@ -92,74 +92,114 @@ describe 'firing an event' do
 
 end
 
-describe 'executing the success callback' do
+describe 'should fire callbacks' do
+  describe 'success' do
+    it "if it's a symbol" do
+      ThisNameBetterNotBeInUse.instance_eval {
+        aasm_event :with_symbol, :success => :symbol_success_callback do
+          transitions :to => :symbol, :from => [:initial]
+        end
+      }
 
-  it "should send the success callback if it's a symbol" do
-    ThisNameBetterNotBeInUse.instance_eval {
-      aasm_event :with_symbol, :success => :symbol_success_callback do
-        transitions :to => :symbol, :from => [:initial]
-      end
-    }
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:symbol_success_callback)
+      model.with_symbol!
+    end
 
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:symbol_success_callback)
-    model.with_symbol!
+    it "if it's a string" do
+      ThisNameBetterNotBeInUse.instance_eval {
+        aasm_event :with_string, :success => 'string_success_callback' do
+          transitions :to => :string, :from => [:initial]
+        end
+      }
+
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:string_success_callback)
+      model.with_string!
+    end
+
+    it "if passed an array of strings and/or symbols" do
+      ThisNameBetterNotBeInUse.instance_eval {
+        aasm_event :with_array, :success => [:success_callback1, 'success_callback2'] do
+          transitions :to => :array, :from => [:initial]
+        end
+      }
+
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:success_callback1)
+      model.should_receive(:success_callback2)
+      model.with_array!
+    end
+
+    it "if passed an array of strings and/or symbols and/or procs" do
+      ThisNameBetterNotBeInUse.instance_eval {
+        aasm_event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { |obj| obj.proc_success_callback }] do
+          transitions :to => :array, :from => [:initial]
+        end
+      }
+
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:success_callback1)
+      model.should_receive(:success_callback2)
+      model.should_receive(:proc_success_callback)
+      model.with_array_including_procs!
+    end
+
+    it "if it's a proc" do
+      ThisNameBetterNotBeInUse.instance_eval {
+        aasm_event :with_proc, :success => lambda { |obj| obj.proc_success_callback } do
+          transitions :to => :proc, :from => [:initial]
+        end
+      }
+
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:proc_success_callback)
+      model.with_proc!
+    end
   end
 
-  it "should send the success callback if it's a string" do
-    ThisNameBetterNotBeInUse.instance_eval {
-      aasm_event :with_string, :success => 'string_success_callback' do
-        transitions :to => :string, :from => [:initial]
+  describe 'after' do
+    it "if they set different ways" do
+      ThisNameBetterNotBeInUse.instance_eval do
+        aasm_event :with_afters, :after => :do_one_thing_after do
+          after do
+            do_another_thing_after_too
+          end
+          after do
+            do_third_thing_at_last
+          end
+          transitions :to => :proc, :from => [:initial]
+        end
       end
-    }
 
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:string_success_callback)
-    model.with_string!
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:do_one_thing_after).once.ordered
+      model.should_receive(:do_another_thing_after_too).once.ordered
+      model.should_receive(:do_third_thing_at_last).once.ordered
+      model.with_afters!
+    end
   end
 
-  it "should call each success callback if passed an array of strings and/or symbols" do
-    ThisNameBetterNotBeInUse.instance_eval {
-      aasm_event :with_array, :success => [:success_callback1, 'success_callback2'] do
-        transitions :to => :array, :from => [:initial]
+  describe 'before' do
+    it "if it's a proc" do
+      ThisNameBetterNotBeInUse.instance_eval do
+        aasm_event :before_as_proc do
+          before do
+            do_something_before
+          end
+          transitions :to => :proc, :from => [:initial]
+        end
       end
-    }
 
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:success_callback1)
-    model.should_receive(:success_callback2)
-    model.with_array!
+      model = ThisNameBetterNotBeInUse.new
+      model.should_receive(:do_something_before).once
+      model.before_as_proc!
+    end
   end
 
-  it "should call each success callback if passed an array of strings and/or symbols and/or procs" do
-    ThisNameBetterNotBeInUse.instance_eval {
-      aasm_event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { |obj| obj.proc_success_callback }] do
-        transitions :to => :array, :from => [:initial]
-      end
-    }
-
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:success_callback1)
-    model.should_receive(:success_callback2)
-    model.should_receive(:proc_success_callback)
-    model.with_array_including_procs!
-  end
-
-  it "should call the success callback if it's a proc" do
-    ThisNameBetterNotBeInUse.instance_eval {
-      aasm_event :with_proc, :success => lambda { |obj| obj.proc_success_callback } do
-        transitions :to => :proc, :from => [:initial]
-      end
-    }
-
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:proc_success_callback)
-    model.with_proc!
-  end
-
-  it "should call the before callback if it's a proc" do
+  it 'in right order' do
     ThisNameBetterNotBeInUse.instance_eval do
-      aasm_event :with_proc do
+      aasm_event :in_right_order, :after => :do_something_after do
         before do
           do_something_before
         end
@@ -168,28 +208,9 @@ describe 'executing the success callback' do
     end
 
     model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:do_something_before).once
-    model.with_proc!
-  end
-
-  it "should call the after callbacks if they set different ways" do
-    ThisNameBetterNotBeInUse.instance_eval do
-      aasm_event :with_afters, :after => :do_one_thing_after do
-        after do
-          do_another_thing_after_too
-        end
-        after do
-          do_third_thing_at_last
-        end
-        transitions :to => :proc, :from => [:initial]
-      end
-    end
-
-    model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:do_one_thing_after).once.ordered
-    model.should_receive(:do_another_thing_after_too).once.ordered
-    model.should_receive(:do_third_thing_at_last).once.ordered
-    model.with_afters!
+    model.should_receive(:do_something_before).once.ordered
+    model.should_receive(:do_something_after).once.ordered
+    model.in_right_order!
   end
 end
 
