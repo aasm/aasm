@@ -92,10 +92,15 @@ module AASM
         case code
           when Symbol, String
             record.send(code, *args)
+            true
           when Proc
             record.instance_exec(*args, &code)
+            true
           when Array
             code.each {|a| invoke_callbacks(a, record, args)}
+            true
+          else
+            false
         end
       end
 

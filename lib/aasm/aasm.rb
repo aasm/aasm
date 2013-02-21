@@ -213,7 +213,7 @@ private
         end
       end
     rescue StandardError => e
-      event.fire_callbacks(:error, self, e)
+      event.fire_callbacks(:error, self, e) || raise(e)
     end
   end
 end
