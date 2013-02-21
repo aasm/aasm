@@ -1,14 +1,10 @@
 require 'spec_helper'
 
 describe 'adding an event' do
-  let(:fake_proc_callback) do
-    Proc.new {}
-  end
   let(:event) do
     AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
-      after &fake_proc_callback
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -22,9 +18,7 @@ describe 'adding an event' do
   end
 
   it 'should set the after callback' do
-    event.options[:after].should_have(2)
-    event.options[:after].first.should == :after_callback
-    event.options[:after].last.should == fake_proc_callback
+    event.options[:after].first.should == [:after_callback]
   end
 
   it 'should set the before callback' do
@@ -161,6 +155,41 @@ describe 'executing the success callback' do
     model = ThisNameBetterNotBeInUse.new
     model.should_receive(:proc_success_callback)
     model.with_proc!
+  end
+
+  it "should call the before callback if it's a proc" do
+    ThisNameBetterNotBeInUse.instance_eval do
+      aasm_event :with_proc do
+        before do
+          do_something_before
+        end
+        transitions :to => :proc, :from => [:initial]
+      end
+    end
+
+    model = ThisNameBetterNotBeInUse.new
+    model.should_receive(:do_something_before).once
+    model.with_proc!
+  end
+
+  it "should call the after callbacks if they set different ways" do
+    ThisNameBetterNotBeInUse.instance_eval do
+      aasm_event :with_afters, :after => :do_one_thing_after do
+        after do
+          do_another_thing_after_too
+        end
+        after do
+          do_third_thing_at_last
+        end
+        transitions :to => :proc, :from => [:initial]
+      end
+    end
+
+    model = ThisNameBetterNotBeInUse.new
+    model.should_receive(:do_one_thing_after).once.ordered
+    model.should_receive(:do_another_thing_after_too).once.ordered
+    model.should_receive(:do_third_thing_at_last).once.ordered
+    model.with_afters!
   end
 end
 
