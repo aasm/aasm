@@ -41,15 +41,10 @@ module AASM
       end
 
       def fire_callbacks(action, record)
-        callbacks = @options[action]
-        Array(callbacks).each do |callback|
-          case callback
-          when Symbol, String
-            record.send(callback)
-          when Proc
-            record.instance_eval(&callback)
-          end
-        end
+        action = @options[action]
+        action.is_a?(Array) ?
+                action.each {|a| _fire_callbacks(a, record)} :
+                _fire_callbacks(action, record)
       end
 
       def ==(event)
@@ -126,6 +121,15 @@ module AASM
           end
         end
         result
+      end
+
+      def _fire_callbacks(action, record)
+        case action
+          when Symbol, String
+            record.send(action)
+          when Proc
+            record.instance_eval &action
+        end
       end
 
       def transitions(trans_opts)
