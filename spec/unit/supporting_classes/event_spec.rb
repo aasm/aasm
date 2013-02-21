@@ -18,7 +18,7 @@ describe 'adding an event' do
   end
 
   it 'should set the after callback' do
-    event.options[:after].first.should == [:after_callback]
+    event.options[:after].should == [:after_callback]
   end
 
   it 'should set the before callback' do
