@@ -1,7 +1,7 @@
 module AASM
   module SupportingClasses
     class Event
-      attr_reader :name, :success, :options
+      attr_reader :name, :options
 
       def initialize(name, options = {}, &block)
         @name = name
@@ -40,11 +40,8 @@ module AASM
         @transitions
       end
 
-      def fire_callbacks(action, record)
-        action = @options[action]
-        action.is_a?(Array) ?
-                action.each {|a| _fire_callbacks(a, record)} :
-                _fire_callbacks(action, record)
+      def fire_callbacks(action, record, *args)
+        invoke_callbacks(@options[action], record, args)
       end
 
       def ==(event)
@@ -55,45 +52,13 @@ module AASM
         end
       end
 
-      def execute_success_callback(obj, success = nil)
-        callback = success || @success
-        case(callback)
-          when String, Symbol
-            obj.send(callback)
-          when Proc
-            callback.call(obj)
-          when Array
-            callback.each{|meth|self.execute_success_callback(obj, meth)}
-        end
-      end
-
-      def execute_error_callback(obj, error, error_callback=nil)
-        callback = error_callback || @error
-        raise error unless callback
-        case(callback)
-          when String, Symbol
-            raise NoMethodError unless obj.respond_to?(callback.to_sym)
-            obj.send(callback, error)
-          when Proc
-            callback.call(obj, error)
-          when Array
-            callback.each{|meth|self.execute_error_callback(obj, error, meth)}
-        end
-      end
-
     private
 
       def update(options = {}, &block)
-        if options.key?(:success) then
-          @success = options[:success]
-        end
-        if options.key?(:error) then
-          @error = options[:error]
-        end
+        @options = options
         if block then
           instance_eval(&block)
         end
-        @options = options
         self
       end
 
@@ -123,15 +88,23 @@ module AASM
         result
       end
 
-      def _fire_callbacks(action, record)
-        case action
+      def invoke_callbacks(code, record, args)
+        case code
           when Symbol, String
-            record.send(action)
+            record.send(code, *args)
+            true
           when Proc
-            record.instance_eval &action
+            record.instance_exec(*args, &code)
+            true
+          when Array
+            code.each {|a| invoke_callbacks(a, record, args)}
+            true
+          else
+            false
         end
       end
 
+      ## DSL interface
       def transitions(trans_opts)
         # Create a separate transition for each from state to the given state
         Array(trans_opts[:from]).each do |s|
@@ -141,6 +114,13 @@ module AASM
         @transitions << AASM::SupportingClasses::StateTransition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
       end
 
+      [:after, :before, :error, :success].each do |callback_name|
+        define_method callback_name do |*args, &block|
+          options[callback_name] = Array(options[callback_name])
+          options[callback_name] << block if block
+          options[callback_name] += Array(args)
+        end
+      end
     end
   end # SupportingClasses
 end # AASM

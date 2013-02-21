@@ -85,6 +85,12 @@ class Job
     end
 
     event :sleep do
+      after do
+        ...
+      end
+      error do |e|
+        ...
+      end
       transitions :from => :running, :to => :sleeping
     end
   end
@@ -128,6 +134,9 @@ Also, you can pass parameters to events:
 ```
 
 In this case the `set_process` would be called with `:defagmentation` argument.
+
+In case of an error during the event processing the error is rescued and passed to `:error`
+callback, which can handle it or re-raise it for further propagation.
 
 ### Guards
 
