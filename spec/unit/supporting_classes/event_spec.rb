@@ -14,7 +14,7 @@ describe 'adding an event' do
   end
 
   it 'should set the success callback' do
-    event.success.should == :success_callback
+    event.options[:success].should == :success_callback
   end
 
   it 'should set the after callback' do
@@ -133,7 +133,7 @@ describe 'should fire callbacks' do
 
     it "if passed an array of strings and/or symbols and/or procs" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { |obj| obj.proc_success_callback }] do
+        aasm_event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { proc_success_callback }] do
           transitions :to => :array, :from => [:initial]
         end
       }
@@ -147,7 +147,7 @@ describe 'should fire callbacks' do
 
     it "if it's a proc" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_proc, :success => lambda { |obj| obj.proc_success_callback } do
+        aasm_event :with_proc, :success => lambda { proc_success_callback } do
           transitions :to => :proc, :from => [:initial]
         end
       }

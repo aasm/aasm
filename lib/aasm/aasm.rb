@@ -184,7 +184,7 @@ private
         persist_successful = true
         if persist
           persist_successful = aasm_set_current_state_with_persistence(new_state_name)
-          event.execute_success_callback(self) if persist_successful
+          event.fire_callbacks(:success, self) if persist_successful
         else
           self.aasm_current_state = new_state_name
         end
@@ -213,7 +213,7 @@ private
         end
       end
     rescue StandardError => e
-      event.execute_error_callback(self, e)
+      event.fire_callbacks(:error, self, e)
     end
   end
 end
