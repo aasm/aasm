@@ -135,7 +135,8 @@ Also, you can pass parameters to events:
 
 In this case the `set_process` would be called with `:defagmentation` argument.
 
-In case an error occurred during event it is `rescue`d and passed to `:error` callback, which can handle it or re`raise`.
+If an error encountered during event processing it is rescued and passed to `:error`
+callback, which can handle it or should re-raise for further propogation.
 
 ### Guards
 
