@@ -109,10 +109,10 @@ module AASM
       def transitions(trans_opts)
         # Create a separate transition for each from state to the given state
         Array(trans_opts[:from]).each do |s|
-          @transitions << AASM::SupportingClasses::StateTransition.new(trans_opts.merge({:from => s.to_sym}))
+          @transitions << AASM::SupportingClasses::Transition.new(trans_opts.merge({:from => s.to_sym}))
         end
         # Create a transition if to is specified without from (transitions from ANY state)
-        @transitions << AASM::SupportingClasses::StateTransition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
+        @transitions << AASM::SupportingClasses::Transition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
       end
 
       [:after, :before, :error, :success].each do |callback_name|

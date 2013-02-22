@@ -15,7 +15,7 @@
 #     state_count = number_of_objects(AASM::SupportingClasses::State)
 #     event_count = number_of_objects(AASM::SupportingClasses::Event)
 #     puts "event_count = #{event_count}"
-#     transition_count = number_of_objects(AASM::SupportingClasses::StateTransition)
+#     transition_count = number_of_objects(AASM::SupportingClasses::Transition)
 
 #     load File.expand_path(File.dirname(__FILE__) + '/../models/not_auto_loaded/process.rb')
 #     machines.size.should == machines_count + 1                                                  # + Process
@@ -23,7 +23,7 @@
 #     number_of_objects(AASM::SupportingClasses::State).should == state_count + 3                 # + Process
 #     puts "event_count = #{number_of_objects(AASM::SupportingClasses::Event)}"
 #     number_of_objects(AASM::SupportingClasses::Event).should == event_count + 2                 # + Process
-#     number_of_objects(AASM::SupportingClasses::StateTransition).should == transition_count + 2  # + Process
+#     number_of_objects(AASM::SupportingClasses::Transition).should == transition_count + 2  # + Process
 
 #     Models.send(:remove_const, "Process") if Models.const_defined?("Process")
 #     load File.expand_path(File.dirname(__FILE__) + '/../models/not_auto_loaded/process.rb')
@@ -32,7 +32,7 @@
 #     # ObjectSpace.each_object(AASM::SupportingClasses::Event) {|o| puts o.inspect}
 #     puts "event_count = #{number_of_objects(AASM::SupportingClasses::Event)}"
 #     number_of_objects(AASM::SupportingClasses::Event).should == event_count + 2                 # + Process
-#     number_of_objects(AASM::SupportingClasses::StateTransition).should == transition_count + 2  # + Process
+#     number_of_objects(AASM::SupportingClasses::Transition).should == transition_count + 2  # + Process
 #   end
 
 # end

@@ -28,10 +28,10 @@ describe 'transitions' do
 
 end
 
-describe AASM::SupportingClasses::StateTransition do
+describe AASM::SupportingClasses::Transition do
   it 'should set from, to, and opts attr readers' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     st.from.should == opts[:from]
     st.to.should == opts[:to]
@@ -40,7 +40,7 @@ describe AASM::SupportingClasses::StateTransition do
 
   it 'should pass equality check if from and to are the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.stub!(:from).and_return(opts[:from])
@@ -51,7 +51,7 @@ describe AASM::SupportingClasses::StateTransition do
 
   it 'should fail equality check if from are not the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.stub!(:from).and_return('blah')
@@ -62,7 +62,7 @@ describe AASM::SupportingClasses::StateTransition do
 
   it 'should fail equality check if to are not the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.stub!(:from).and_return(opts[:from])
@@ -72,17 +72,17 @@ describe AASM::SupportingClasses::StateTransition do
   end
 end
 
-describe AASM::SupportingClasses::StateTransition, '- when performing guard checks' do
+describe AASM::SupportingClasses::Transition, '- when performing guard checks' do
   it 'should return true of there is no guard' do
     opts = {:from => 'foo', :to => 'bar'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     st.perform(nil).should be_true
   end
 
   it 'should call the method on the object if guard is a symbol' do
     opts = {:from => 'foo', :to => 'bar', :guard => :test}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.should_receive(:test)
@@ -92,7 +92,7 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
 
   it 'should call the method on the object if guard is a string' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'test'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.should_receive(:test)
@@ -102,7 +102,7 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
 
   it 'should call the proc passing the object if the guard is a proc' do
     opts = {:from => 'foo', :to => 'bar', :guard => Proc.new {|o| o.test}}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
 
     obj = mock('object')
     obj.should_receive(:test)
@@ -111,10 +111,10 @@ describe AASM::SupportingClasses::StateTransition, '- when performing guard chec
   end
 end
 
-describe AASM::SupportingClasses::StateTransition, '- when executing the transition with a Proc' do
+describe AASM::SupportingClasses::Transition, '- when executing the transition with a Proc' do
   it 'should call a Proc on the object with args' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|o| o.test}}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
@@ -125,7 +125,7 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
   it 'should call a Proc on the object without args' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {||}}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
@@ -135,10 +135,10 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
   end
 end
 
-describe AASM::SupportingClasses::StateTransition, '- when executing the transition with an :on_transtion method call' do
+describe AASM::SupportingClasses::Transition, '- when executing the transition with an :on_transtion method call' do
   it 'should accept a String for the method name' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
@@ -149,7 +149,7 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
   it 'should accept a Symbol for the method name' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
@@ -160,7 +160,7 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
   it 'should pass args if the target method accepts them' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
@@ -175,7 +175,7 @@ describe AASM::SupportingClasses::StateTransition, '- when executing the transit
 
   it 'should NOT pass args if the target method does NOT accept them' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
-    st = AASM::SupportingClasses::StateTransition.new(opts)
+    st = AASM::SupportingClasses::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 

@@ -1,6 +1,6 @@
 module AASM
   module SupportingClasses
-    class StateTransition
+    class Transition
       attr_reader :from, :to, :opts
       alias_method :options, :opts
 
