@@ -10,3 +10,4 @@ spec/debug.log
 spec/*.db
 TODO
 .rvmrc
+alto
