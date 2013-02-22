@@ -39,7 +39,7 @@ module AASM
 
     # filters the results of events_for_current_state so that only those that
     # are really currently possible (given transition guards) are shown.
-    # TODO: what about events.permissible ?
+    # QUESTION: what about events.permissible ?
     def permissible_events
       events.select{ |e| @instance.send(("may_" + e.to_s + "?").to_sym) }
     end
