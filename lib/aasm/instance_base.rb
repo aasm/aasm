@@ -32,8 +32,9 @@ module AASM
       AASM::Localizer.new.human_state_name(@instance.class, current_state)
     end
 
+    # QUESTION: shouldn't events and permissible_events be the same thing?
     def events(state=current_state)
-      events = @instance.class.aasm_events.values.select {|e| e.transitions_from_state?(state) }
+      events = @instance.class.aasm.events.values.select {|e| e.transitions_from_state?(state) }
       events.map {|e| e.name}
     end
 

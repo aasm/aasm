@@ -71,9 +71,18 @@ describe :aasm_events_for_current_state do
   let(:foo) {Foo.new}
 
   it 'work' do
-    foo.aasm_events_for_current_state.should include(:close)
-    foo.aasm_events_for_current_state.should include(:null)
+    foo.aasm.events.should include(:close)
+    foo.aasm.events.should include(:null)
     foo.close
-    foo.aasm_events_for_current_state.should be_empty
+    foo.aasm.events.should be_empty
+  end
+end
+
+describe 'permissible events' do
+  let(:foo) {Foo.new}
+
+  it 'work' do
+    foo.aasm.permissible_events.should include(:close)
+    foo.aasm.permissible_events.should_not include(:null)
   end
 end
