@@ -77,88 +77,62 @@ module AASM
     end
   end # ClassMethods
 
-  # this method does what? does it deliver the current state?
-  def aasm_current_state
-    @aasm_current_state ||=
-      aasm_persistable? ? aasm_read_state : aasm_enter_initial_state
+  def aasm
+    @aasm ||= AASM::InstanceBase.new(self)
   end
 
-  # private?
+  # deprecated
+  def aasm_current_state
+    # warn "#aasm_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.state instead!"
+    aasm.current_state
+  end
+
   def aasm_enter_initial_state
-    state_name = aasm_determine_state_name(self.class.aasm_initial_state)
-    state = aasm_state_object_for_state(state_name)
+    state_name = aasm.determine_state_name(self.class.aasm_initial_state)
+    state = aasm.state_object_for_name(state_name)
 
     state.fire_callbacks(:before_enter, self)
     state.fire_callbacks(:enter, self)
-    self.aasm_current_state = state_name
+    aasm.current_state = state_name
     state.fire_callbacks(:after_enter, self)
 
     state_name
   end
 
-  # private?
+  # deprecated
   def aasm_events_for_current_state
-    aasm_events_for_state(aasm_current_state)
+    # warn "#aasm_events_for_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.events instead!"
+    aasm.events(aasm.current_state)
   end
 
   # filters the results of events_for_current_state so that only those that
   # are really currently possible (given transition guards) are shown.
   def aasm_permissible_events_for_current_state
-    aasm_events_for_current_state.select{ |e| self.send(("may_" + e.to_s + "?").to_sym) }
+    aasm.events(aasm.current_state).select{ |e| self.send(("may_" + e.to_s + "?").to_sym) }
   end
 
-  def aasm_events_for_state(state)
-    events = self.class.aasm_events.values.select {|event| event.transitions_from_state?(state) }
-    events.map {|event| event.name}
+  # deprecated
+  def aasm_events_for_state(state_name)
+    # warn "#aasm_events_for_state(state_name) is deprecated and will be removed in version 3.2.0; please use #aasm.events(state_name) instead!"
+    aasm.events(state_name)
   end
 
+  # deprecated
   def aasm_human_state
-    AASM::Localizer.new.human_state_name(self.class, aasm_current_state)
+    # warn "#aasm_human_state is deprecated and will be removed in version 3.2.0; please use #aasm.human_state instead!"
+    aasm.human_state
   end
 
 private
-
-  def aasm_persistable?
-    self.respond_to?(:aasm_read_state) || self.private_methods.include?('aasm_read_state')
-  end
 
   def aasm_set_current_state_with_persistence(state)
     save_success = true
     if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
       save_success = aasm_write_state(state)
     end
-    self.aasm_current_state = state if save_success
+    aasm.current_state = state if save_success
 
     save_success
-  end
-
-  def aasm_current_state=(state)
-    if self.respond_to?(:aasm_write_state_without_persistence) || self.private_methods.include?('aasm_write_state_without_persistence')
-      aasm_write_state_without_persistence(state)
-    end
-    @aasm_current_state = state
-  end
-
-  def aasm_determine_state_name(state)
-    case state
-      when Symbol, String
-        state
-      when Proc
-        state.call(self)
-      else
-        raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
-    end
-  end
-
-  def aasm_state_object_for_state(name)
-    obj = self.class.aasm_states.find {|s| s == name}
-    raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
-    obj
-  end
-
-  def aasm_may_fire_event?(name, *args)
-    event = self.class.aasm_events[name]
-    event.may_fire?(self, *args)
   end
 
   def aasm_fire_event(name, options, *args)
@@ -166,7 +140,7 @@ private
 
     event = self.class.aasm_events[name]
     begin
-      old_state = aasm_state_object_for_state(aasm_current_state)
+      old_state = aasm.state_object_for_name(aasm.current_state)
 
 
       old_state.fire_callbacks(:exit, self)
@@ -175,7 +149,7 @@ private
       event.fire_callbacks(:before, self)
 
       if new_state_name = event.fire(self, *args)
-        new_state = aasm_state_object_for_state(new_state_name)
+        new_state = aasm.state_object_for_name(new_state_name)
 
         # new before_ callbacks
         old_state.fire_callbacks(:before_exit, self)
@@ -188,7 +162,7 @@ private
           persist_successful = aasm_set_current_state_with_persistence(new_state_name)
           event.fire_callbacks(:success, self) if persist_successful
         else
-          self.aasm_current_state = new_state_name
+          aasm.current_state = new_state_name
         end
 
         if persist_successful
@@ -196,7 +170,7 @@ private
           new_state.fire_callbacks(:after_enter, self)
           event.fire_callbacks(:after, self)
 
-          self.aasm_event_fired(name, old_state.name, self.aasm_current_state) if self.respond_to?(:aasm_event_fired)
+          self.aasm_event_fired(name, old_state.name, aasm.current_state) if self.respond_to?(:aasm_event_fired)
         else
           self.aasm_event_failed(name, old_state.name) if self.respond_to?(:aasm_event_failed)
         end
@@ -209,7 +183,7 @@ private
         end
 
         if AASM::StateMachine[self.class].config.whiny_transitions
-          raise AASM::InvalidTransition, "Event '#{event.name}' cannot transition from '#{self.aasm_current_state}'"
+          raise AASM::InvalidTransition, "Event '#{event.name}' cannot transition from '#{aasm.current_state}'"
         else
           false
         end
