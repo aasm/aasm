@@ -30,7 +30,7 @@ module AASM
     end
 
     def add_state(name, clazz, options)
-      @states << AASM::SupportingClasses::State.new(name, clazz, options) unless @states.include?(name)
+      @states << AASM::State.new(name, clazz, options) unless @states.include?(name)
     end
 
   end # StateMachine

@@ -38,7 +38,7 @@ describe 'localized state names' do
   end
 end
 
-describe AASM::SupportingClasses::Localizer, "new style" do
+describe AASM::Localizer, "new style" do
   before(:all) do
     I18n.load_path << 'spec/en.yml'
     I18n.default_locale = :en
@@ -73,7 +73,7 @@ describe AASM::SupportingClasses::Localizer, "new style" do
   end
 end
 
-describe AASM::SupportingClasses::Localizer, "deprecated style" do
+describe AASM::Localizer, "deprecated style" do
   before(:all) do
     I18n.load_path << 'spec/en_deprecated_style.yml'
     I18n.default_locale = :en

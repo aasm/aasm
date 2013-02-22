@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe AASM::SupportingClasses::State do
+describe AASM::State do
   before(:each) do
     @name    = :astate
     @options = { :crazy_custom_key => 'key' }
   end
 
   def new_state(options={})
-    AASM::SupportingClasses::State.new(@name, Conversation, @options.merge(options))
+    AASM::State.new(@name, Conversation, @options.merge(options))
   end
 
   it 'should set the name' do

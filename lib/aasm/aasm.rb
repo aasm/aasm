@@ -73,7 +73,7 @@ module AASM
 
     # aasm.event(:event_name).human?
     def aasm_human_event_name(event) # event_name?
-      AASM::SupportingClasses::Localizer.new.human_event_name(self, event)
+      AASM::Localizer.new.human_event_name(self, event)
     end
   end # ClassMethods
 
@@ -113,7 +113,7 @@ module AASM
   end
 
   def aasm_human_state
-    AASM::SupportingClasses::Localizer.new.human_state_name(self.class, aasm_current_state)
+    AASM::Localizer.new.human_state_name(self.class, aasm_current_state)
   end
 
 private

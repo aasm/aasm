@@ -39,7 +39,7 @@ module AASM
       # @clazz.aasm_event(name, options, &block)
 
       unless @state_machine.events.has_key?(name)
-        @state_machine.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
+        @state_machine.events[name] = AASM::Event.new(name, options, &block)
       end
 
       # an addition over standard aasm so that, before firing an event, you can ask

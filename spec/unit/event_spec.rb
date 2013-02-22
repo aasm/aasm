@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'adding an event' do
   let(:event) do
-    AASM::SupportingClasses::Event.new(:close_order, {:success => :success_callback}) do
+    AASM::Event.new(:close_order, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
       transitions :to => :closed, :from => [:open, :received]
@@ -36,7 +36,7 @@ end
 
 describe 'transition inspection' do
   let(:event) do
-    AASM::SupportingClasses::Event.new(:run) do
+    AASM::Event.new(:run) do
       transitions :to => :running, :from => :sleeping
     end
   end
@@ -63,12 +63,12 @@ describe 'firing an event' do
     obj = mock('object')
     obj.stub!(:aasm_current_state)
 
-    event = AASM::SupportingClasses::Event.new(:event)
+    event = AASM::Event.new(:event)
     event.fire(obj).should be_nil
   end
 
   it 'should return the state of the first matching transition it finds' do
-    event = AASM::SupportingClasses::Event.new(:event) do
+    event = AASM::Event.new(:event) do
       transitions :to => :closed, :from => [:open, :received]
     end
 
@@ -79,7 +79,7 @@ describe 'firing an event' do
   end
 
   it 'should call the guard with the params passed in' do
-    event = AASM::SupportingClasses::Event.new(:event) do
+    event = AASM::Event.new(:event) do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
     end
 
