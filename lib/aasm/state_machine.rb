@@ -29,7 +29,7 @@ module AASM
       @events = @events.dup
     end
 
-    def create_state(name, clazz, options)
+    def add_state(name, clazz, options)
       @states << AASM::SupportingClasses::State.new(name, clazz, options) unless @states.include?(name)
     end
 

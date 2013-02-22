@@ -1,6 +1,7 @@
 module AASM
   module SupportingClasses
     class Event
+
       attr_reader :name, :options
 
       def initialize(name, options = {}, &block)
@@ -40,8 +41,8 @@ module AASM
         @transitions
       end
 
-      def fire_callbacks(action, record, *args)
-        invoke_callbacks(@options[action], record, args)
+      def fire_callbacks(callback_name, record, *args)
+        invoke_callbacks(@options[callback_name], record, args)
       end
 
       def ==(event)

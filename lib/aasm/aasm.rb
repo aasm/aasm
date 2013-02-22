@@ -10,11 +10,12 @@ module AASM
   module ClassMethods
 
     # make sure inheritance (aka subclassing) works with AASM
-    def inherited(klass)
-      AASM::StateMachine[klass] = AASM::StateMachine[self].clone
+    def inherited(base)
+      AASM::StateMachine[base] = AASM::StateMachine[self].clone
       super
     end
 
+    # this is the entry point for all state and event definitions
     def aasm(options={}, &block)
       @aasm ||= AASM::Base.new(self, options)
       @aasm.instance_eval(&block) if block # new DSL
@@ -31,6 +32,7 @@ module AASM
       end
     end
 
+    # is this better?: aasm.states.name.from_states
     def aasm_from_states_for_state(state, options={})
       if options[:transition]
         aasm.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
