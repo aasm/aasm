@@ -3,7 +3,7 @@ module AASM
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
     AASM::StateMachine[base] ||= AASM::StateMachine.new('')
-    AASM::Persistence.set_persistence(base)
+    AASM::Persistence.load_persistence(base)
     super
   end
 
