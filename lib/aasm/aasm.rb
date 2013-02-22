@@ -87,16 +87,10 @@ module AASM
     aasm.current_state
   end
 
+  # deprecated
   def aasm_enter_initial_state
-    state_name = aasm.determine_state_name(self.class.aasm_initial_state)
-    state = aasm.state_object_for_name(state_name)
-
-    state.fire_callbacks(:before_enter, self)
-    state.fire_callbacks(:enter, self)
-    aasm.current_state = state_name
-    state.fire_callbacks(:after_enter, self)
-
-    state_name
+    # warn "#aasm_enter_initial_state is deprecated and will be removed in version 3.2.0; please use #aasm.enter_initial_state instead!"
+    aasm.enter_initial_state
   end
 
   # deprecated
@@ -105,10 +99,10 @@ module AASM
     aasm.events(aasm.current_state)
   end
 
-  # filters the results of events_for_current_state so that only those that
-  # are really currently possible (given transition guards) are shown.
+  # deprecated
   def aasm_permissible_events_for_current_state
-    aasm.events(aasm.current_state).select{ |e| self.send(("may_" + e.to_s + "?").to_sym) }
+    # warn "#aasm_permissible_events_for_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.permissible_events instead!"
+    aasm.permissible_events
   end
 
   # deprecated
@@ -124,16 +118,6 @@ module AASM
   end
 
 private
-
-  def aasm_set_current_state_with_persistence(state)
-    save_success = true
-    if self.respond_to?(:aasm_write_state) || self.private_methods.include?('aasm_write_state')
-      save_success = aasm_write_state(state)
-    end
-    aasm.current_state = state if save_success
-
-    save_success
-  end
 
   def aasm_fire_event(name, options, *args)
     persist = options[:persist]
@@ -159,7 +143,7 @@ private
 
         persist_successful = true
         if persist
-          persist_successful = aasm_set_current_state_with_persistence(new_state_name)
+          persist_successful = aasm.set_current_state_with_persistence(new_state_name)
           event.fire_callbacks(:success, self) if persist_successful
         else
           aasm.current_state = new_state_name

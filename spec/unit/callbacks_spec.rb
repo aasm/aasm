@@ -85,7 +85,7 @@ describe 'event callbacks' do
     end
 
     it 'should not call it for failing bang fire' do
-      @foo.stub!(:aasm_set_current_state_with_persistence).and_return(false)
+      @foo.aasm.stub!(:set_current_state_with_persistence).and_return(false)
       @foo.should_not_receive(:aasm_event_fired)
       @foo.close!
     end
@@ -108,7 +108,7 @@ describe 'event callbacks' do
     end
 
     it 'should not call it if persist fails for bang fire' do
-      @foo.stub!(:aasm_set_current_state_with_persistence).and_return(false)
+      @foo.aasm.stub!(:set_current_state_with_persistence).and_return(false)
       @foo.should_receive(:aasm_event_failed)
       @foo.close!
     end

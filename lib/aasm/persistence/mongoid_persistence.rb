@@ -106,7 +106,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          send("#{self.class.aasm_column}=", self.aasm_enter_initial_state.to_s) if send(self.class.aasm_column).blank?
+          send("#{self.class.aasm_column}=", aasm.enter_initial_state.to_s) if send(self.class.aasm_column).blank?
         end
 
       end

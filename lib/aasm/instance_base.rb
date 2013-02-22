@@ -6,7 +6,7 @@ module AASM
     end
 
     def current_state
-      @current_state ||= persistable? ? @instance.aasm_read_state : @instance.aasm_enter_initial_state
+      @current_state ||= persistable? ? @instance.aasm_read_state : enter_initial_state
     end
 
     def current_state=(state)
@@ -16,6 +16,18 @@ module AASM
       @current_state = state
     end
 
+    def enter_initial_state
+      state_name = determine_state_name(@instance.class.aasm_initial_state)
+      state_object = state_object_for_name(state_name)
+
+      state_object.fire_callbacks(:before_enter, @instance)
+      state_object.fire_callbacks(:enter, @instance)
+      self.current_state = state_name
+      state_object.fire_callbacks(:after_enter, @instance)
+
+      state_name
+    end
+
     def human_state
       AASM::Localizer.new.human_state_name(@instance.class, current_state)
     end
@@ -23,6 +35,13 @@ module AASM
     def events(state=current_state)
       events = @instance.class.aasm_events.values.select {|e| e.transitions_from_state?(state) }
       events.map {|e| e.name}
+    end
+
+    # filters the results of events_for_current_state so that only those that
+    # are really currently possible (given transition guards) are shown.
+    # TODO: what about events.permissible ?
+    def permissible_events
+      events.select{ |e| @instance.send(("may_" + e.to_s + "?").to_sym) }
     end
 
     def state_object_for_name(name)
@@ -45,6 +64,15 @@ module AASM
     def may_fire_event?(name, *args)
       event = @instance.class.aasm.events[name]
       event.may_fire?(@instance, *args)
+    end
+
+    def set_current_state_with_persistence(state)
+      save_success = true
+      if @instance.respond_to?(:aasm_write_state) || @instance.private_methods.include?('aasm_write_state')
+        save_success = @instance.aasm_write_state(state)
+      end
+      self.current_state = state if save_success
+      save_success
     end
 
   private

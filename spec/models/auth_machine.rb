@@ -46,7 +46,7 @@ class AuthMachine
   def initialize
     # the AR backend uses a before_validate_on_create :aasm_ensure_initial_state
     # lets do something similar here for testing purposes.
-    aasm_enter_initial_state
+    aasm.enter_initial_state
   end
 
   def make_activation_code

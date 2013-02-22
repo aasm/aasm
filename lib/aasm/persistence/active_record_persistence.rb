@@ -112,7 +112,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          aasm_enter_initial_state if send(self.class.aasm_column).blank?
+          aasm.enter_initial_state if send(self.class.aasm_column).blank?
         end
 
         def aasm_fire_event(name, options, *args)
