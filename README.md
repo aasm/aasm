@@ -330,6 +330,13 @@ gem 'aasm'
 
 Look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details.
 
+## Questions? ##
+
+Feel free to
+
+* [create an issue on GitHub](https://github.com/aasm/aasm/issues)
+* [ask a question on StackOverflow](http://stackoverflow.com) (tag with `aasm`)
+* send us a tweet [@aasm](http://twitter.com/aasm)
 
 ## Authors ##
 
