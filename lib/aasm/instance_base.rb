@@ -33,6 +33,7 @@ module AASM
     end
 
     # QUESTION: shouldn't events and permissible_events be the same thing?
+    # QUESTION: shouldn't events return objects instead of strings?
     def events(state=current_state)
       events = @instance.class.aasm.events.values.select {|e| e.transitions_from_state?(state) }
       events.map {|e| e.name}
