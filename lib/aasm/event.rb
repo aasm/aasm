@@ -36,8 +36,10 @@ module AASM
       @transitions.select { |t| t.to == state }
     end
 
+    # deprecated
     def all_transitions
-      @transitions
+      # warn "Event#all_transitions is deprecated and will be removed in version 3.2.0; please use Event#transitions instead!"
+      transitions
     end
 
     def fire_callbacks(callback_name, record, *args)
@@ -105,13 +107,16 @@ module AASM
     end
 
     ## DSL interface
-    def transitions(trans_opts)
-      # Create a separate transition for each from state to the given state
-      Array(trans_opts[:from]).each do |s|
-        @transitions << AASM::Transition.new(trans_opts.merge({:from => s.to_sym}))
+    def transitions(trans_opts=nil)
+      if trans_opts # define new transitions
+        # Create a separate transition for each from state to the given state
+        Array(trans_opts[:from]).each do |s|
+          @transitions << AASM::Transition.new(trans_opts.merge({:from => s.to_sym}))
+        end
+        # Create a transition if to is specified without from (transitions from ANY state)
+        @transitions << AASM::Transition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
       end
-      # Create a transition if to is specified without from (transitions from ANY state)
-      @transitions << AASM::Transition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
+      @transitions
     end
 
     [:after, :before, :error, :success].each do |callback_name|
