@@ -6,7 +6,8 @@ module AASM
     def initialize(name, options = {}, &block)
       @name = name
       @transitions = []
-      update(options, &block)
+      @options = options
+      instance_eval(&block) if block
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just
@@ -55,15 +56,6 @@ module AASM
     end
 
   private
-
-    def update(options = {}, &block)
-      @options = options
-      if block then
-        instance_eval(&block)
-      end
-      self
-    end
-
     # Execute if test? == false, otherwise return true/false depending on whether it would fire
     def _fire(obj, test, to_state=nil, *args)
       if @transitions.map(&:from).any?
