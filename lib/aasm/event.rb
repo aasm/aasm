@@ -1,13 +1,14 @@
 module AASM
   class Event
+    include DslHelper
 
     attr_reader :name, :options
 
     def initialize(name, options = {}, &block)
       @name = name
       @transitions = []
-      @options = options
-      instance_eval(&block) if block
+      @options = options # QUESTION: .dup ?
+      add_options_from_dsl(@options, [:after, :before, :error, :success], &block) if block
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just
@@ -109,14 +110,6 @@ module AASM
         @transitions << AASM::Transition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
       end
       @transitions
-    end
-
-    [:after, :before, :error, :success].each do |callback_name|
-      define_method callback_name do |*args, &block|
-        options[callback_name] = Array(options[callback_name])
-        options[callback_name] << block if block
-        options[callback_name] += Array(args)
-      end
     end
   end
 end # AASM
