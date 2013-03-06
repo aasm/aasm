@@ -38,6 +38,17 @@ describe AASM::Transition do
     st.opts.should == opts
   end
 
+  it 'should set on_transition and guard from dsl' do
+    opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
+    st = AASM::Transition.new(opts) do
+      guard :gg
+      on_transition :after_callback
+    end
+
+    st.opts[:guard] == ['g', :gg]
+    st.opts[:on_transition] == [:after_callback]
+  end
+
   it 'should pass equality check if from and to are the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Transition.new(opts)
@@ -101,7 +112,7 @@ describe AASM::Transition, '- when performing guard checks' do
   end
 
   it 'should call the proc passing the object if the guard is a proc' do
-    opts = {:from => 'foo', :to => 'bar', :guard => Proc.new {|o| o.test}}
+    opts = {:from => 'foo', :to => 'bar', :guard => Proc.new { test }}
     st = AASM::Transition.new(opts)
 
     obj = mock('object')
@@ -113,29 +124,30 @@ end
 
 describe AASM::Transition, '- when executing the transition with a Proc' do
   it 'should call a Proc on the object with args' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|o| o.test}}
+    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|a| test(a) }}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
-    opts[:on_transition].should_receive(:call).with(any_args)
+    obj.should_receive(:test).with(args)
 
     st.execute(obj, args)
   end
 
   it 'should call a Proc on the object without args' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {||}}
+    prc = Proc.new {||}
+    opts = {:from => 'foo', :to => 'bar', :on_transition => prc }
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
 
-    opts[:on_transition].should_receive(:call).with(no_args)
+    obj.should_receive(:instance_exec).with(no_args)  # FIXME bad spec
 
     st.execute(obj, args)
   end
 end
 
-describe AASM::Transition, '- when executing the transition with an :on_transtion method call' do
+describe AASM::Transition, '- when executing the transition with an :on_transition method call' do
   it 'should accept a String for the method name' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
     st = AASM::Transition.new(opts)

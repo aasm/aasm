@@ -1,29 +1,25 @@
 module AASM
   class Transition
+    include DslHelper
+
     attr_reader :from, :to, :opts
     alias_method :options, :opts
 
-    def initialize(opts)
+    def initialize(opts, &block)
       @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
       @opts = opts
+
+      # QUESTION: rename :on_transition to :after?
+      add_options_from_dsl(@opts, [:on_transition, :guard], &block) if block
     end
 
     # TODO: should be named allowed? or similar
     def perform(obj, *args)
-      case @guard
-        when Symbol, String
-          obj.send(@guard, *args)
-        when Proc
-          @guard.call(obj, *args)
-        else
-          true
-      end
+      invoke_callbacks_compatible_with_guard(@guard, obj, args)
     end
 
     def execute(obj, *args)
-      @on_transition.is_a?(Array) ?
-              @on_transition.each {|ot| _execute(obj, ot, *args)} :
-              _execute(obj, @on_transition, *args)
+      invoke_callbacks_compatible_with_guard(@on_transition, obj, args)
     end
 
     def ==(obj)
@@ -36,14 +32,21 @@ module AASM
 
     private
 
-    def _execute(obj, on_transition, *args)
-      case on_transition
-      when Proc
-        on_transition.arity == 0 ? on_transition.call : on_transition.call(obj, *args)
-      when Symbol, String
-        obj.send(:method, on_transition.to_sym).arity == 0 ? obj.send(on_transition) : obj.send(on_transition, *args)
+    def invoke_callbacks_compatible_with_guard(code, record, args)
+      case code
+        when Symbol, String
+          # QUESTION : record.send(code, *args) ?
+          arity = record.send(:method, code.to_sym).arity
+          arity == 0 ? record.send(code) : record.send(code, *args)
+        when Proc
+          # QUESTION : record.instance_exec(*args, &code) ?
+          code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        when Array
+          # code.all? {...} fails in on_transition
+          code.map {|a| invoke_callbacks_compatible_with_guard(a, record, args)}.all?
+        else
+          true
       end
     end
-
   end
 end # AASM

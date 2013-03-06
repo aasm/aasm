@@ -81,7 +81,11 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
+      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|*args| set_process(*args) } do
+        on_transition do
+          log('Transitioned')
+        end
+      end
     end
 
     event :sleep do
@@ -163,7 +167,11 @@ class Job
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed?
+      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed? do
+        guard do
+          and_cleaning_possible?
+        end
+      end
     end
   end
 

@@ -13,7 +13,7 @@ class ParametrisedEvent
 
     event :dress do
       transitions :from => :sleeping, :to => :working, :on_transition => :wear_clothes
-      transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |obj, *args| obj.wear_clothes(*args) }
+      transitions :from => :showering, :to => [:working, :dating], :on_transition => Proc.new { |*args| wear_clothes(*args) }
       transitions :from => :showering, :to => :prettying_up, :on_transition => [:condition_hair, :fix_hair]
     end
   end
