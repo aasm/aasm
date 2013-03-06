@@ -6,11 +6,11 @@ module AASM
     alias_method :options, :opts
 
     def initialize(opts, &block)
+      # QUESTION: rename :on_transition to :after?
+      add_options_from_dsl(opts, [:on_transition, :guard], &block) if block
+
       @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
       @opts = opts
-
-      # QUESTION: rename :on_transition to :after?
-      add_options_from_dsl(@opts, [:on_transition, :guard], &block) if block
     end
 
     # TODO: should be named allowed? or similar
