@@ -50,4 +50,10 @@ describe 'state machine' do
     lambda {payment.fill_out}.should raise_error(AASM::InvalidTransition)
     lambda {payment.fill_out!}.should raise_error(AASM::InvalidTransition)
   end
+
+  it 'defines constants for each state name' do
+    Payment::STATE_INITIALISED.should eq(:initialised)
+    Payment::STATE_FILLED_OUT.should eq(:filled_out)
+    Payment::STATE_AUTHORISED.should eq(:authorised)
+  end
 end

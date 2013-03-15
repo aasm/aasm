@@ -32,6 +32,10 @@ module AASM
       @clazz.send(:define_method, "#{name.to_s}?") do
         aasm_current_state == name
       end
+
+      unless @clazz.const_defined?("STATE_#{name.to_s.upcase}")
+        @clazz.const_set("STATE_#{name.to_s.upcase}", name)
+      end
     end
 
     # define an event

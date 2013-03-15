@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+ * added autocreation of constants for each state ([@jherdman](https://github.com/jherdman))
+
 ## 3.0.16
 
  * added autocreation of state scopes for Mongoid (thanks to [@jonnyshields](https://github.com/johnnyshields))
