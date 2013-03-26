@@ -151,41 +151,37 @@ running the transition. If the guard returns `false` the transition will be
 denied (raising `AASM::InvalidTransition` or returning `false` itself):
 
 ```ruby
-class Job
+class Cleaner
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
-    state :running
+    state :idle, :initial => true
     state :cleaning
 
-    event :run do
-      transitions :from => :sleeping, :to => :running
-    end
-
     event :clean do
-      transitions :from => :running, :to => :cleaning
+      transitions :from => :idle, :to => :cleaning, :guard => :cleaning_needed?
     end
 
-    event :sleep do
-      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed? do
+    event :clean_if_needed do
+      transitions :from => :idle, :to => :cleaning do
         guard do
-          and_cleaning_possible?
+          cleaning_needed?
         end
       end
+      transitions :from => :idle, :to => :idle
     end
   end
 
   def cleaning_needed?
     false
   end
-
 end
 
-job = Job.new
-job.run
-job.may_sleep?  # => false
-job.sleep       # => raises AASM::InvalidTransition
+job = Cleaner.new
+job.may_clean?            # => false
+job.sleep                 # => raises AASM::InvalidTransition
+job.may_clean_if_needed?  # => true
+job.clean_if_needed!      # idle
 ```
 
 
