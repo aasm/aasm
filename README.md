@@ -179,7 +179,7 @@ end
 
 job = Cleaner.new
 job.may_clean?            # => false
-job.sleep                 # => raises AASM::InvalidTransition
+job.clean                 # => raises AASM::InvalidTransition
 job.may_clean_if_needed?  # => true
 job.clean_if_needed!      # idle
 ```
