@@ -38,8 +38,8 @@ describe AASM::Transition do
     st.opts.should == opts
   end
 
-  it 'should set on_transition and guard from dsl with deprecation warning' do
-    opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
+  it 'should set on_transition with deprecation warning' do
+    opts = {:from => 'foo', :to => 'bar'}
     st = AASM::Transition.allocate
     st.should_receive(:warn).with('[DEPRECATION] :on_transition is deprecated, use :after instead')
 
@@ -48,7 +48,6 @@ describe AASM::Transition do
       on_transition :after_callback
     end
 
-    st.opts[:guard].should == ['g', :gg]
     st.opts[:after].should == [:after_callback]
   end
 
