@@ -232,24 +232,24 @@ describe 'parametrised events' do
     pe.aasm_current_state.should == :showering
   end
 
-  it 'should transition to default state when on_transition invoked' do
+  it 'should transition to default state when :after transition invoked' do
     pe.dress!(nil, 'purple', 'dressy')
     pe.aasm_current_state.should == :working
   end
 
-  it 'should call on_transition method with args' do
+  it 'should call :after transition method with args' do
     pe.wakeup!(:showering)
     pe.should_receive(:wear_clothes).with('blue', 'jeans')
     pe.dress!(:working, 'blue', 'jeans')
   end
 
-  it 'should call on_transition proc' do
+  it 'should call :after transition proc' do
     pe.wakeup!(:showering)
     pe.should_receive(:wear_clothes).with('purple', 'slacks')
     pe.dress!(:dating, 'purple', 'slacks')
   end
 
-  it 'should call on_transition with an array of methods' do
+  it 'should call :after transition with an array of methods' do
     pe.wakeup!(:showering)
     pe.should_receive(:condition_hair)
     pe.should_receive(:fix_hair)

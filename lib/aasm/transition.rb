@@ -6,10 +6,14 @@ module AASM
     alias_method :options, :opts
 
     def initialize(opts, &block)
-      # QUESTION: rename :on_transition to :after?
-      add_options_from_dsl(opts, [:on_transition, :guard], &block) if block
+      add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
 
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @from, @to, @guard = opts[:from], opts[:to], opts[:guard]
+      if opts[:on_transition]
+        warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
+        opts[:after] = Array(opts[:after]) + Array(opts[:on_transition])
+      end
+      @after = opts[:after]
       @opts = opts
     end
 
@@ -19,7 +23,7 @@ module AASM
     end
 
     def execute(obj, *args)
-      invoke_callbacks_compatible_with_guard(@on_transition, obj, args)
+      invoke_callbacks_compatible_with_guard(@after, obj, args)
     end
 
     def ==(obj)
@@ -42,7 +46,7 @@ module AASM
           # QUESTION : record.instance_exec(*args, &code) ?
           code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
         when Array
-          # code.all? {...} fails in on_transition
+          # code.all? {...} fails in after
           code.map {|a| invoke_callbacks_compatible_with_guard(a, record, args)}.all?
         else
           true

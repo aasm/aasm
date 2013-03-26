@@ -38,15 +38,29 @@ describe AASM::Transition do
     st.opts.should == opts
   end
 
-  it 'should set on_transition and guard from dsl' do
+  it 'should set on_transition and guard from dsl with deprecation warning' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts) do
+    st = AASM::Transition.allocate
+    st.should_receive(:warn).with('[DEPRECATION] :on_transition is deprecated, use :after instead')
+
+    st.send :initialize, opts do
       guard :gg
       on_transition :after_callback
     end
 
-    st.opts[:guard] == ['g', :gg]
-    st.opts[:on_transition] == [:after_callback]
+    st.opts[:guard].should == ['g', :gg]
+    st.opts[:after].should == [:after_callback]
+  end
+
+  it 'should set after and guard from dsl' do
+    opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
+    st = AASM::Transition.new(opts) do
+      guard :gg
+      after :after_callback
+    end
+
+    st.opts[:guard].should == ['g', :gg]
+    st.opts[:after].should == [:after_callback] # TODO fix this bad code coupling
   end
 
   it 'should pass equality check if from and to are the same' do
@@ -124,7 +138,7 @@ end
 
 describe AASM::Transition, '- when executing the transition with a Proc' do
   it 'should call a Proc on the object with args' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|a| test(a) }}
+    opts = {:from => 'foo', :to => 'bar', :after => Proc.new {|a| test(a) }}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
@@ -136,7 +150,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
 
   it 'should call a Proc on the object without args' do
     prc = Proc.new {||}
-    opts = {:from => 'foo', :to => 'bar', :on_transition => prc }
+    opts = {:from => 'foo', :to => 'bar', :after => prc }
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
@@ -147,9 +161,9 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
   end
 end
 
-describe AASM::Transition, '- when executing the transition with an :on_transition method call' do
+describe AASM::Transition, '- when executing the transition with an :after method call' do
   it 'should accept a String for the method name' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
+    opts = {:from => 'foo', :to => 'bar', :after => 'test'}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
@@ -160,7 +174,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transiti
   end
 
   it 'should accept a Symbol for the method name' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    opts = {:from => 'foo', :to => 'bar', :after => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
@@ -171,7 +185,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transiti
   end
 
   it 'should pass args if the target method accepts them' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    opts = {:from => 'foo', :to => 'bar', :after => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')
@@ -186,7 +200,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transiti
   end
 
   it 'should NOT pass args if the target method does NOT accept them' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    opts = {:from => 'foo', :to => 'bar', :after => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = mock('object')

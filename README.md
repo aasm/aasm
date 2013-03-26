@@ -81,9 +81,9 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|*args| set_process(*args) } do
-        on_transition do
-          log('Transitioned')
+      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) } do
+        before do
+          log('Preparing to run')
         end
       end
     end
@@ -125,6 +125,7 @@ Here you can see a list of all possible callbacks, together with their order of 
     previous_state:before_exit
       new_state:before_enter
         ...update state...
+        transition:after
       previous_state:after_exit
     new_state:after_enter
   event:after
