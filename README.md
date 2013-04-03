@@ -299,7 +299,7 @@ class AddJobState < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :job, :aasm_state
+    remove_column :jobs, :aasm_state
   end
 end
 ```
