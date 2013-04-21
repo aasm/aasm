@@ -1,5 +1,3 @@
-Dir[File.dirname(__FILE__) + "/../models/*.rb"].sort.each { |f| require File.expand_path(f) }
-
 class Foo
   include AASM
   aasm do
@@ -32,33 +30,5 @@ class FooTwo < Foo
   include AASM
   aasm do
     state :foo
-  end
-end
-
-class Bar
-  include AASM
-
-  aasm do
-    state :read
-    state :ended
-
-    event :foo do
-      transitions :to => :ended, :from => [:read]
-    end
-  end
-end
-
-class Baz < Bar
-end
-
-class ThisNameBetterNotBeInUse
-  include AASM
-
-  aasm do
-    state :initial
-    state :symbol
-    state :string
-    state :array
-    state :proc
   end
 end
