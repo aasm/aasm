@@ -76,24 +76,6 @@ module AASM
 
       module InstanceMethods
 
-        # Returns the current aasm_state of the object.  Respects reload and
-        # any changes made to the aasm_state field directly
-        #
-        # Internally just calls <tt>aasm_read_state</tt>
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :pending
-        #   foo.aasm_state = "opened"
-        #   foo.aasm_current_state # => :opened
-        #   foo.close # => calls aasm_write_state_without_persistence
-        #   foo.aasm_current_state # => :closed
-        #   foo.reload
-        #   foo.aasm_current_state # => :pending
-        #
-        def aasm_current_state
-          @current_state = aasm_read_state
-        end
-
         private
 
         # Ensures that if the aasm_state column is nil and the record is new
