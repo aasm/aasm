@@ -1,10 +1,11 @@
-describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
+# describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
+describe 'mongoid' do
 
   before(:all) do
     require 'mongoid'
     require 'logger'
     require 'spec_helper'
-    Dir[File.dirname(__FILE__) + "/../../models/*.rb"].sort.each { |f| require File.expand_path(f) }
+    Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each { |f| require File.expand_path(f) }
 
     # if you want to see the statements while running the spec enable the following line
     # Mongoid.logger = Logger.new(STDERR)

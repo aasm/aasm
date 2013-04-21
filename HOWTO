@@ -1,0 +1,12 @@
+How to
+
+1. Run tests for Mongoid
+
+Start MongoDB
+
+  $> mongod
+
+Run the specs
+
+  $> rspec spec/unit/persistence/mongoid_persistance_spec.rb
+
