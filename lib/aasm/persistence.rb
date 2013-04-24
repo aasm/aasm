@@ -18,7 +18,7 @@ module AASM
     private
 
       def require_files_for(persistence)
-        ['base', 'read_state', "#{persistence}_persistence"].each do |file_name|
+        ['base', "#{persistence}_persistence"].each do |file_name|
           require File.join(File.dirname(__FILE__), 'persistence', file_name)
         end
       end

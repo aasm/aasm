@@ -7,7 +7,6 @@ module AASM
       # * includes InstanceMethods
       #
       # Unless the corresponding methods are already defined, it includes
-      # * ReadState
       # * WriteState
       # * WriteStateWithoutPersistence
       #
@@ -32,10 +31,10 @@ module AASM
       #   end
       #
       def self.included(base)
+        base.send(:include, AASM::Persistence::Base)
         base.extend AASM::Persistence::Base::ClassMethods
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
-        base.send(:include, AASM::Persistence::ReadState)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
