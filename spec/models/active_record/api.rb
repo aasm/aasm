@@ -1,5 +1,5 @@
 class DefaultState
-  attr_accessor :transient_store
+  attr_accessor :transient_store, :persisted_store
   include AASM
   aasm do
     state :alpha, :initial => true
@@ -12,7 +12,7 @@ class DefaultState
 end
 
 class ProvidedState
-  attr_accessor :transient_store
+  attr_accessor :transient_store, :persisted_store
   include AASM
   aasm do
     state :alpha, :initial => true
@@ -28,12 +28,16 @@ class ProvidedState
   end
 
   def aasm_write_state(new_state)
+    @persisted_store = new_state
+  end
+
+  def aasm_write_state_without_persistence(new_state)
     @transient_store = new_state
   end
 end
 
 class PersistedState < ActiveRecord::Base
-  attr_accessor :transient_store
+  attr_accessor :transient_store, :persisted_store
   include AASM
   aasm do
     state :alpha, :initial => true
@@ -46,7 +50,7 @@ class PersistedState < ActiveRecord::Base
 end
 
 class ProvidedAndPersistedState < ActiveRecord::Base
-  attr_accessor :transient_store
+  attr_accessor :transient_store, :persisted_store
   include AASM
   aasm do
     state :alpha, :initial => true
@@ -62,6 +66,10 @@ class ProvidedAndPersistedState < ActiveRecord::Base
   end
 
   def aasm_write_state(new_state)
+    @persisted_store = new_state
+  end
+
+  def aasm_write_state_without_persistence(new_state)
     @transient_store = new_state
   end
 end

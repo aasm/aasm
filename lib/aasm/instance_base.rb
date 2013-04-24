@@ -10,9 +10,7 @@ module AASM
     end
 
     def current_state=(state)
-      if @instance.respond_to?(:aasm_write_state_without_persistence) || @instance.private_methods.include?('aasm_write_state_without_persistence')
-        @instance.aasm_write_state_without_persistence(state)
-      end
+      @instance.aasm_write_state_without_persistence(state)
       @current_state = state
     end
 

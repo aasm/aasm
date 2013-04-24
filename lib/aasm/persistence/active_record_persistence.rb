@@ -6,9 +6,6 @@ module AASM
       # * extends the model with ClassMethods
       # * includes InstanceMethods
       #
-      # Unless the corresponding methods are already defined, it includes
-      # * WriteStateWithoutPersistence
-      #
       # Adds
       #
       #   before_validation :aasm_ensure_initial_state, :on => :create
@@ -33,7 +30,6 @@ module AASM
         base.send(:include, AASM::Persistence::Base)
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
-        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
         if ActiveRecord::VERSION::MAJOR >= 3
           base.before_validation(:aasm_ensure_initial_state, :on => :create)
@@ -98,6 +94,22 @@ module AASM
           true
         end
 
+        # Writes <tt>state</tt> to the state column, but does not persist it to the database
+        #
+        #   foo = Foo.find(1)
+        #   foo.aasm_current_state # => :opened
+        #   foo.close
+        #   foo.aasm_current_state # => :closed
+        #   Foo.find(1).aasm_current_state # => :opened
+        #   foo.save
+        #   foo.aasm_current_state # => :closed
+        #   Foo.find(1).aasm_current_state # => :closed
+        #
+        # NOTE: intended to be called from an event
+        def aasm_write_state_without_persistence(state)
+          write_attribute(self.class.aasm_column, state.to_s)
+        end
+
       private
 
         # Ensures that if the aasm_state column is nil and the record is new
@@ -125,24 +137,6 @@ module AASM
           end
         end
       end # InstanceMethods
-
-      module WriteStateWithoutPersistence
-        # Writes <tt>state</tt> to the state column, but does not persist it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :opened
-        #   foo.close
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :opened
-        #   foo.save
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state)
-          write_attribute(self.class.aasm_column, state.to_s)
-        end
-      end
 
     end
   end
