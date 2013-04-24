@@ -7,10 +7,10 @@ module AASM
         hierarchy = base.ancestors.map {|klass| klass.to_s}
 
         if hierarchy.include?("ActiveRecord::Base")
-          require_files_for('active_record_persistence')
+          require_files_for(:active_record)
           base.send(:include, AASM::Persistence::ActiveRecordPersistence)
         elsif hierarchy.include?("Mongoid::Document")
-          require_files_for('mongoid_persistence')
+          require_files_for(:mongoid)
           base.send(:include, AASM::Persistence::MongoidPersistence)
         end
       end
@@ -18,9 +18,9 @@ module AASM
     private
 
       def require_files_for(persistence)
-        require File.join(File.dirname(__FILE__), 'persistence', 'base')
-        require File.join(File.dirname(__FILE__), 'persistence', 'read_state')
-        require File.join(File.dirname(__FILE__), 'persistence', persistence)
+        ['base', 'read_state', "#{persistence}_persistence"].each do |file_name|
+          require File.join(File.dirname(__FILE__), 'persistence', file_name)
+        end
       end
 
     end # class << self
