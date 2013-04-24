@@ -81,6 +81,11 @@ module AASM
     @aasm ||= AASM::InstanceBase.new(self)
   end
 
+  # may be overwritten by persistence mixins
+  def aasm_read_state
+    aasm.enter_initial_state
+  end
+
   # deprecated
   def aasm_current_state
     # warn "#aasm_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.state instead!"

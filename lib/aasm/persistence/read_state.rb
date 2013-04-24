@@ -2,16 +2,17 @@ module AASM
   module Persistence
     module ReadState
 
-      # Returns the value of the aasm_column - called from <tt>aasm_current_state</tt>
+      # Returns the value of the aasm_column - called from <tt>aasm.current_state</tt>
       #
       # If it's a new record, and the aasm state column is blank it returns the initial state
       # (example provided here for ActiveRecord, but it's true for Mongoid as well):
       #
       #   class Foo < ActiveRecord::Base
       #     include AASM
-      #     aasm_column :status
-      #     aasm_state :opened
-      #     aasm_state :closed
+      #     aasm :column => :status do
+      #       state :opened
+      #       state :closed
+      #     end
       #   end
       #
       #   foo = Foo.new

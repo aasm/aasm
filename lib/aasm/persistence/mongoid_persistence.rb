@@ -37,7 +37,7 @@ module AASM
         base.extend AASM::Persistence::Base::ClassMethods
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
-        base.send(:include, AASM::Persistence::ReadState) unless base.method_defined?(:aasm_read_state)
+        base.send(:include, AASM::Persistence::ReadState)
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 

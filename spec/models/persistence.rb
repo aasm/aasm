@@ -15,10 +15,11 @@ class Gate < ActiveRecord::Base
 end
 
 class Reader < ActiveRecord::Base
+  include AASM
+
   def aasm_read_state
     "fi"
   end
-  include AASM
 end
 
 class Writer < ActiveRecord::Base

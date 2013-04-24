@@ -1,0 +1,9 @@
+Overwrite method to read the current state
+
+  class MyClass
+    include AASM
+
+    def aasm_read_state
+      # retrieve the current state manually
+    end
+  end

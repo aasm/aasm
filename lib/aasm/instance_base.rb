@@ -6,7 +6,7 @@ module AASM
     end
 
     def current_state
-      @current_state ||= persistable? ? @instance.aasm_read_state : enter_initial_state
+      @current_state ||= @instance.aasm_read_state
     end
 
     def current_state=(state)
@@ -75,12 +75,6 @@ module AASM
       end
       self.current_state = state if save_success
       save_success
-    end
-
-  private
-
-    def persistable?
-      @instance.respond_to?(:aasm_read_state) || @instance.private_methods.include?('aasm_read_state')
     end
 
   end
