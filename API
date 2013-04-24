@@ -7,3 +7,13 @@ Overwrite method to read the current state
       # retrieve the current state manually
     end
   end
+
+Overwrite method to write the current state
+
+  class MyClass
+    include AASM
+
+    def aasm_write_state
+      # store the current state manually
+    end
+  end

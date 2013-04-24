@@ -86,6 +86,11 @@ module AASM
     aasm.enter_initial_state
   end
 
+  # may be overwritten by persistence mixins
+  def aasm_write_state(new_state)
+    true
+  end
+
   # deprecated
   def aasm_current_state
     # warn "#aasm_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.state instead!"

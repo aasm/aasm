@@ -69,10 +69,7 @@ module AASM
     end
 
     def set_current_state_with_persistence(state)
-      save_success = true
-      if @instance.respond_to?(:aasm_write_state) || @instance.private_methods.include?('aasm_write_state')
-        save_success = @instance.aasm_write_state(state)
-      end
+      save_success = @instance.aasm_write_state(state)
       self.current_state = state if save_success
       save_success
     end

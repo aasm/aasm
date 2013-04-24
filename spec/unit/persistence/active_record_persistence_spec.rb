@@ -18,7 +18,6 @@ describe "class methods for classes without own read or write state" do
   let(:klass) {Gate}
   it_should_behave_like "aasm model"
   it "should include all persistence mixins" do
-    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
     klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
@@ -27,7 +26,6 @@ describe "class methods for classes with own write state" do
   let(:klass) {Writer}
   it_should_behave_like "aasm model"
   it "should include include all persistence mixins but write state" do
-    klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
     klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end
@@ -36,7 +34,6 @@ describe "class methods for classes without persistence" do
   let(:klass) {Transient}
   it_should_behave_like "aasm model"
   it "should include all mixins but persistence" do
-    klass.included_modules.should be_include(AASM::Persistence::ActiveRecordPersistence::WriteState)
     klass.included_modules.should_not be_include(AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence)
   end
 end

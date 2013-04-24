@@ -7,7 +7,6 @@ module AASM
       # * includes InstanceMethods
       #
       # Unless the corresponding methods are already defined, it includes
-      # * WriteState
       # * WriteStateWithoutPersistence
       #
       # Adds
@@ -34,7 +33,6 @@ module AASM
         base.send(:include, AASM::Persistence::Base)
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
-        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
         if ActiveRecord::VERSION::MAJOR >= 3
@@ -74,7 +72,33 @@ module AASM
 
       module InstanceMethods
 
-        private
+        # Writes <tt>state</tt> to the state column and persists it to the database
+        #
+        #   foo = Foo.find(1)
+        #   foo.aasm_current_state # => :opened
+        #   foo.close!
+        #   foo.aasm_current_state # => :closed
+        #   Foo.find(1).aasm_current_state # => :closed
+        #
+        # NOTE: intended to be called from an event
+        def aasm_write_state(state)
+          old_value = read_attribute(self.class.aasm_column)
+          write_attribute(self.class.aasm_column, state.to_s)
+
+          success = if AASM::StateMachine[self.class].config.skip_validation_on_save
+            self.class.update_all({ self.class.aasm_column => state.to_s }, self.class.primary_key => self.id) == 1
+          else
+            self.save
+          end
+          unless success
+            write_attribute(self.class.aasm_column, old_value)
+            return false
+          end
+
+          true
+        end
+
+      private
 
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
@@ -100,8 +124,7 @@ module AASM
             super
           end
         end
-
-      end
+      end # InstanceMethods
 
       module WriteStateWithoutPersistence
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
@@ -118,34 +141,6 @@ module AASM
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state)
           write_attribute(self.class.aasm_column, state.to_s)
-        end
-      end
-
-      module WriteState
-        # Writes <tt>state</tt> to the state column and persists it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :opened
-        #   foo.close!
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state(state)
-          old_value = read_attribute(self.class.aasm_column)
-          write_attribute(self.class.aasm_column, state.to_s)
-
-          success = if AASM::StateMachine[self.class].config.skip_validation_on_save
-            self.class.update_all({ self.class.aasm_column => state.to_s }, self.class.primary_key => self.id) == 1
-          else
-            self.save
-          end
-          unless success
-            write_attribute(self.class.aasm_column, old_value)
-            return false
-          end
-
-          true
         end
       end
 

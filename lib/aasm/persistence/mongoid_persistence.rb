@@ -7,7 +7,6 @@ module AASM
       # * includes InstanceMethods
       #
       # Unless the corresponding methods are already defined, it includes
-      # * WriteState
       # * WriteStateWithoutPersistence
       #
       # Adds
@@ -36,7 +35,6 @@ module AASM
         base.send(:include, AASM::Persistence::Base)
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
-        base.send(:include, AASM::Persistence::MongoidPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
 
         # Mongoid's Validatable gem dependency goes not have a before_validation_on_xxx hook yet.
@@ -68,48 +66,6 @@ module AASM
 
       module InstanceMethods
 
-        private
-
-        # Ensures that if the aasm_state column is nil and the record is new
-        # that the initial state gets populated before validation on create
-        #
-        #   foo = Foo.new
-        #   foo.aasm_state # => nil
-        #   foo.valid?
-        #   foo.aasm_state # => "open" (where :open is the initial state)
-        #
-        #
-        #   foo = Foo.find(:first)
-        #   foo.aasm_state # => 1
-        #   foo.aasm_state = nil
-        #   foo.valid?
-        #   foo.aasm_state # => nil
-        #
-        def aasm_ensure_initial_state
-          send("#{self.class.aasm_column}=", aasm.enter_initial_state.to_s) if send(self.class.aasm_column).blank?
-        end
-
-      end
-
-      module WriteStateWithoutPersistence
-        # Writes <tt>state</tt> to the state column, but does not persist it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :opened
-        #   foo.close
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :opened
-        #   foo.save
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state)
-          write_attribute(self.class.aasm_column, state.to_s)
-        end
-      end
-
-      module WriteState
         # Writes <tt>state</tt> to the state column and persists it to the database
         # using update_attribute (which bypasses validation)
         #
@@ -130,6 +86,45 @@ module AASM
           end
 
           true
+        end
+
+      private
+
+        # Ensures that if the aasm_state column is nil and the record is new
+        # that the initial state gets populated before validation on create
+        #
+        #   foo = Foo.new
+        #   foo.aasm_state # => nil
+        #   foo.valid?
+        #   foo.aasm_state # => "open" (where :open is the initial state)
+        #
+        #
+        #   foo = Foo.find(:first)
+        #   foo.aasm_state # => 1
+        #   foo.aasm_state = nil
+        #   foo.valid?
+        #   foo.aasm_state # => nil
+        #
+        def aasm_ensure_initial_state
+          send("#{self.class.aasm_column}=", aasm.enter_initial_state.to_s) if send(self.class.aasm_column).blank?
+        end
+      end # InstanceMethods
+
+      module WriteStateWithoutPersistence
+        # Writes <tt>state</tt> to the state column, but does not persist it to the database
+        #
+        #   foo = Foo.find(1)
+        #   foo.aasm_current_state # => :opened
+        #   foo.close
+        #   foo.aasm_current_state # => :closed
+        #   Foo.find(1).aasm_current_state # => :opened
+        #   foo.save
+        #   foo.aasm_current_state # => :closed
+        #   Foo.find(1).aasm_current_state # => :closed
+        #
+        # NOTE: intended to be called from an event
+        def aasm_write_state_without_persistence(state)
+          write_attribute(self.class.aasm_column, state.to_s)
         end
       end
 
