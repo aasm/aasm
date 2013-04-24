@@ -34,7 +34,6 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
-        base.extend AASM::Persistence::Base::ClassMethods
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
         base.send(:include, AASM::Persistence::MongoidPersistence::WriteState) unless base.method_defined?(:aasm_write_state)

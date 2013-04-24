@@ -2,6 +2,10 @@ module AASM
   module Persistence
     module Base
 
+      def self.included(base) #:nodoc:
+        base.extend ClassMethods
+      end
+
       # Returns the value of the aasm_column - called from <tt>aasm.current_state</tt>
       #
       # If it's a new record, and the aasm state column is blank it returns the initial state
