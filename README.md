@@ -81,7 +81,11 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
+      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) } do
+        before do
+          log('Preparing to run')
+        end
+      end
     end
 
     event :sleep do
@@ -121,6 +125,7 @@ Here you can see a list of all possible callbacks, together with their order of 
     previous_state:before_exit
       new_state:before_enter
         ...update state...
+        transition:after
       previous_state:after_exit
     new_state:after_enter
   event:after
@@ -146,37 +151,37 @@ running the transition. If the guard returns `false` the transition will be
 denied (raising `AASM::InvalidTransition` or returning `false` itself):
 
 ```ruby
-class Job
+class Cleaner
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
-    state :running
+    state :idle, :initial => true
     state :cleaning
 
-    event :run do
-      transitions :from => :sleeping, :to => :running
-    end
-
     event :clean do
-      transitions :from => :running, :to => :cleaning
+      transitions :from => :idle, :to => :cleaning, :guard => :cleaning_needed?
     end
 
-    event :sleep do
-      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed?
+    event :clean_if_needed do
+      transitions :from => :idle, :to => :cleaning do
+        guard do
+          cleaning_needed?
+        end
+      end
+      transitions :from => :idle, :to => :idle
     end
   end
 
   def cleaning_needed?
     false
   end
-
 end
 
-job = Job.new
-job.run
-job.may_sleep?  # => false
-job.sleep       # => raises AASM::InvalidTransition
+job = Cleaner.new
+job.may_clean?            # => false
+job.clean                 # => raises AASM::InvalidTransition
+job.may_clean_if_needed?  # => true
+job.clean_if_needed!      # idle
 ```
 
 

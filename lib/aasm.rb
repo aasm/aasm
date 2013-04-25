@@ -4,6 +4,7 @@ require 'ostruct'
 require File.join(File.dirname(__FILE__), 'aasm', 'version')
 require File.join(File.dirname(__FILE__), 'aasm', 'errors')
 require File.join(File.dirname(__FILE__), 'aasm', 'base')
+require File.join(File.dirname(__FILE__), 'aasm', 'dsl_helper')
 require File.join(File.dirname(__FILE__), 'aasm', 'instance_base')
 require File.join(File.dirname(__FILE__), 'aasm', 'transition')
 require File.join(File.dirname(__FILE__), 'aasm', 'event')
