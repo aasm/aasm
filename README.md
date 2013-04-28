@@ -304,7 +304,7 @@ class AddJobState < ActiveRecord::Migration
 end
 ```
 
-## <a id="inspection">Inspection
+### <a id="inspection">Inspection
 
 AASM supports a couple of methods to find out which states or events are provided or permissible.
 
@@ -328,7 +328,7 @@ job.events
 
 
 
-## Installation ##
+## <a id="installation">Installation ##
 
 ### Manually from RubyGems.org ###
 
