@@ -83,6 +83,7 @@ module AASM
   end # Persistence
 
   class Base
+    # make sure to create a (named) scope for each state
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
       unless @clazz.respond_to?(name)
