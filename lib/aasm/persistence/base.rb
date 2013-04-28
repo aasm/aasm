@@ -33,10 +33,11 @@ module AASM
       #
       # This allows for nil aasm states - be sure to add validation to your model
       def aasm_read_state
+        state = send(self.class.aasm_column)
         if new_record?
-          send(self.class.aasm_column).blank? ? aasm.determine_state_name(self.class.aasm_initial_state) : send(self.class.aasm_column).to_sym
+          state.blank? ? aasm.determine_state_name(self.class.aasm_initial_state) : state.to_sym
         else
-          send(self.class.aasm_column).nil? ? nil : send(self.class.aasm_column).to_sym
+          state.nil? ? nil : state.to_sym
         end
       end
 
