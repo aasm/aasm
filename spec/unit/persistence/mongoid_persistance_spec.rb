@@ -1,5 +1,5 @@
-# describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
-describe 'mongoid' do
+describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
+# describe 'mongoid' do
 
   before(:all) do
     require 'mongoid'
