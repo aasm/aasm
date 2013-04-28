@@ -304,7 +304,7 @@ class AddJobState < ActiveRecord::Migration
 end
 ```
 
-## Inspection ##
+## <a id="inspection">Inspection
 
 AASM supports a couple of methods to find out which states or events are provided or permissible.
 
@@ -315,6 +315,12 @@ job = Job.new
 
 job.states
 => [:sleeping, :running, :cleaning]
+
+job.states(:permissible => true)
+=> [:running]
+job.run
+job.states(:permissible => true)
+=> [:cleaning, :sleeping]
 
 job.events
 => [:run, :clean, :sleep]

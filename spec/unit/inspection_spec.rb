@@ -28,15 +28,37 @@ describe 'inspection for common cases' do
   end
 
   context "instance level inspection" do
+    let(:foo) { Foo.new }
+    let(:two) { FooTwo.new }
+
     it "delivers all states" do
-      foo = Foo.new
       states = foo.aasm.states
       states.should include(:open)
       states.should include(:closed)
+
+      states = foo.aasm.states(:permissible => true)
+      states.should include(:closed)
+      states.should_not include(:open)
+
+      foo.close
+      foo.aasm.states(:permissible => true).should be_empty
+    end
+
+    it "delivers all states for subclasses" do
+      states = two.aasm.states
+      states.should include(:open)
+      states.should include(:closed)
+      states.should include(:foo)
+
+      states = two.aasm.states(:permissible => true)
+      states.should include(:closed)
+      states.should_not include(:open)
+
+      two.close
+      two.aasm.states(:permissible => true).should be_empty
     end
 
     it "delivers all events" do
-      foo = Foo.new
       events = foo.aasm.events
       events.should include(:close)
       events.should include(:null)

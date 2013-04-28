@@ -5,11 +5,11 @@ class Foo
     state :closed, :enter => :enter
 
     event :close, :success => :success_callback do
-      transitions :to => :closed, :from => [:open]
+      transitions :from => [:open], :to => [:closed]
     end
 
     event :null do
-      transitions :to => :closed, :from => [:open], :guard => :always_false
+      transitions :from => [:open], :to => :closed, :guard => :always_false
     end
   end
 
