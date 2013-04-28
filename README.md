@@ -304,6 +304,24 @@ class AddJobState < ActiveRecord::Migration
 end
 ```
 
+## Inspection ##
+
+AASM supports a couple of methods to find out which states or events are provided or permissible.
+
+Given the `Job` class from above:
+
+```ruby
+job = Job.new
+
+job.states
+=> [:sleeping, :running, :cleaning]
+
+job.events
+=> [:run, :clean, :sleep]
+```
+
+
+
 ## Installation ##
 
 ### Manually from RubyGems.org ###

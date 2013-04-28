@@ -30,6 +30,10 @@ module AASM
       AASM::Localizer.new.human_state_name(@instance.class, current_state)
     end
 
+    def states
+      @instance.class.aasm.states
+    end
+
     # QUESTION: shouldn't events and permissible_events be the same thing?
     # QUESTION: shouldn't events return objects instead of strings?
     def events(state=current_state)

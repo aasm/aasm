@@ -27,6 +27,24 @@ describe 'inspection for common cases' do
     Foo.aasm.events.should include(:null)
   end
 
+  context "instance level inspection" do
+    it "delivers all states" do
+      foo = Foo.new
+      states = foo.aasm.states
+      states.should include(:open)
+      states.should include(:closed)
+    end
+
+    it "delivers all events" do
+      foo = Foo.new
+      events = foo.aasm.events
+      events.should include(:close)
+      events.should include(:null)
+      foo.close
+      foo.aasm.events.should be_empty
+    end
+  end
+
   it 'should list states in the order they have been defined' do
     Conversation.aasm.states.should == [:needs_attention, :read, :closed, :awaiting_response, :junk]
   end
@@ -64,17 +82,6 @@ describe :aasm_from_states_for_state do
   it "should return from states for a state for a particular transition only" do
     froms = AuthMachine.aasm_from_states_for_state(:active, :transition => :unsuspend)
     [:suspended].each {|from| froms.should include(from)}
-  end
-end
-
-describe :aasm_events_for_current_state do
-  let(:foo) {Foo.new}
-
-  it 'work' do
-    foo.aasm.events.should include(:close)
-    foo.aasm.events.should include(:null)
-    foo.close
-    foo.aasm.events.should be_empty
   end
 end
 

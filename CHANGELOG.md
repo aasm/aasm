@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ * supporting instance level inspection for states
  * added autocreation of constants for each state ([@jherdman](https://github.com/jherdman))
 
 ## 3.0.16
