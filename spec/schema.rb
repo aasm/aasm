@@ -27,4 +27,9 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "status"
   end
 
+  create_table "fathers", :force => true do |t|
+    t.string "aasm_state"
+    t.string "type"
+  end
+
 end
