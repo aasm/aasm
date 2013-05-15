@@ -30,7 +30,7 @@ module AASM
       @state_machine.initial_state = name if options[:initial] || !@state_machine.initial_state
 
       @clazz.send(:define_method, "#{name.to_s}?") do
-        aasm_current_state == name
+        aasm.current_state == name
       end
 
       unless @clazz.const_defined?("STATE_#{name.to_s.upcase}")
