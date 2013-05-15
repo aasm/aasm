@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.0.18
+
+ * fixing issue #66
+
 ## 3.0.17
 
  * supporting instance level inspection for states (including permissible state, see issue #54)
