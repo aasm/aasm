@@ -122,6 +122,13 @@ end
 
 describe 'transitions with persistence' do
 
+  it "should work for valid models" do
+    valid_object = Validator.create(:name => 'name')
+    valid_object.should be_sleeping
+    valid_object.status = :running
+    valid_object.should be_running
+  end
+
   it 'should not store states for invalid models' do
     validator = Validator.create(:name => 'name')
     validator.should be_valid

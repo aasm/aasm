@@ -6,7 +6,7 @@ module AASM
     end
 
     def current_state
-      @current_state ||= @instance.aasm_read_state
+      @instance.aasm_read_state
     end
 
     def current_state=(state)

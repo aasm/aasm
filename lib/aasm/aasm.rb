@@ -83,7 +83,10 @@ module AASM
 
   # may be overwritten by persistence mixins
   def aasm_read_state
-    aasm.enter_initial_state
+    # all the following lines behave like @current_state ||= aasm.enter_initial_state
+    current = aasm.instance_variable_get("@current_state")
+    return current if current
+    aasm.instance_variable_set("@current_state", aasm.enter_initial_state)
   end
 
   # may be overwritten by persistence mixins
