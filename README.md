@@ -80,7 +80,7 @@ class Job
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
 
-    event :run, :after => :notify_somebody do
+    event :run, :after => Proc.new { |user| notify_somebody(user) } do
       transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
     end
 
@@ -103,7 +103,7 @@ class Job
     ...
   end
 
-  def notify_somebody
+  def notify_somebody(user)
     ...
   end
 
