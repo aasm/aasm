@@ -3,7 +3,7 @@
 ## 3.0.19
 
  * fixed deprecation warning with *Rails 4* (`Relation#update_all` with conditions is deprecated)
- * fixing [issue #69](https://github.com/aasm/aasm/issues/69) (*ActiveRecord* scopes are not chainable)
+ * fixing [issue #69](https://github.com/aasm/aasm/issues/69) ( *ActiveRecord* scopes are not chainable)
 
 ## 3.0.18
 
@@ -40,7 +40,7 @@
 
 ## 3.0.10
 
- * added support for transitions from all other states (thanks to *Stefan 'swrobel' Wrobel*)
+ * added support for transitions from all other states (thanks to [@swrobel](https://github.com/swrobel))
 
 ## 3.0.9
 
@@ -52,7 +52,7 @@
 
 ## 3.0.7
 
- * removed deprecation warning when localizing aasm state names (look at [issue 38](https://github.com/rubyist/aasm/issues/38) for details)
+ * removed deprecation warning when localizing aasm state names (look at [issue #38](https://github.com/rubyist/aasm/issues/38) for details)
 
 ## 3.0.6
 
