@@ -2,9 +2,11 @@
 
 ## Unreleased
 
+ * fixing issue #69 (ActiveRecord scopes are not chainable)
+
 ## 3.0.18
 
- * fixing issue #66
+ * fixing issue #66 (state methods not reflecting the current state)
 
 ## 3.0.17
 

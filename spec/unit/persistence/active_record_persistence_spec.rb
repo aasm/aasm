@@ -81,7 +81,7 @@ describe "named scopes with the old DSL" do
   context "Does not already respond_to? the scope name" do
     it "should add a scope" do
       Simple.should respond_to(:unknown_scope)
-      Simple.unknown_scope.class.should == ActiveRecord::Relation
+      SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation).should be_true
     end
   end
 
@@ -99,7 +99,7 @@ describe "named scopes with the new DSL" do
   context "Does not already respond_to? the scope name" do
     it "should add a scope" do
       SimpleNewDsl.should respond_to(:unknown_scope)
-      SimpleNewDsl.unknown_scope.class.should == ActiveRecord::Relation
+      SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation).should be_true
     end
   end
 

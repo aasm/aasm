@@ -89,10 +89,21 @@ module AASM
       state_without_scope(name, *args)
       unless @clazz.respond_to?(name)
         if @clazz.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
-          scope_options_hash = {:conditions => { "#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}}
-          scope_method = ActiveRecord::VERSION::MAJOR >= 3 ? :scope : :named_scope
-          scope_options = ActiveRecord::VERSION::MAJOR >= 4 ? lambda {  where(scope_options_hash[:conditions])} : scope_options_hash
-          @clazz.send(scope_method, name, scope_options)
+
+          conditions = {"#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}
+          if ActiveRecord::VERSION::MAJOR >= 4
+            @clazz.class_eval do
+              scope name, lambda { where(conditions) }
+            end
+          elsif ActiveRecord::VERSION::MAJOR >= 3
+            @clazz.class_eval do
+              scope name, where(conditions)
+            end
+          else
+            @clazz.class_eval do
+              named_scope name, :conditions => conditions
+            end
+          end
         elsif @clazz.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
           scope_options = lambda { @clazz.send(:where, {@clazz.aasm_column.to_sym => name.to_s}) }
           @clazz.send(:scope, name, scope_options)
