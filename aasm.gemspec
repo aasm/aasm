@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', '~> 2.0'
   s.add_development_dependency 'rr'
-  s.add_development_dependency 'shoulda'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'minitest'
   # s.add_development_dependency 'debugger'
