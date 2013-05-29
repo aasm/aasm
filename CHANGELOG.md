@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ * fixed deprecation warning with Rails 4 (Relation#update_all with conditions is deprecated)
  * fixing issue #69 (ActiveRecord scopes are not chainable)
 
 ## 3.0.18

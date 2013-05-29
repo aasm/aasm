@@ -82,7 +82,7 @@ module AASM
           write_attribute(self.class.aasm_column, state.to_s)
 
           success = if AASM::StateMachine[self.class].config.skip_validation_on_save
-            self.class.update_all({ self.class.aasm_column => state.to_s }, self.class.primary_key => self.id) == 1
+            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm_column => state.to_s) == 1
           else
             self.save
           end
