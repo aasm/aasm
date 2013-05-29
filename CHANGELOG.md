@@ -2,16 +2,16 @@
 
 ## 3.0.19
 
- * fixed deprecation warning with Rails 4 (Relation#update_all with conditions is deprecated)
- * fixing issue #69 (ActiveRecord scopes are not chainable)
+ * fixed deprecation warning with *Rails 4* (`Relation#update_all` with conditions is deprecated)
+ * fixing [issue #69](https://github.com/aasm/aasm/issues/69) (*ActiveRecord* scopes are not chainable)
 
 ## 3.0.18
 
- * fixing issue #66 (state methods not reflecting the current state)
+ * fixing [issue #66](https://github.com/aasm/aasm/issues/66) (state methods not reflecting the current state)
 
 ## 3.0.17
 
- * supporting instance level inspection for states (including permissible state, see issue #54)
+ * supporting instance level inspection for states (including permissible state, see [issue #54](https://github.com/aasm/aasm/issues/54))
  * added autocreation of constants for each state ([@jherdman](https://github.com/jherdman))
 
 ## 3.0.16
@@ -20,7 +20,7 @@
 
 ## 3.0.15
 
- * added support for localized state names (on a class level, like Record.aasm.states.map(&:localized_name))
+ * added support for localized state names (on a class level, like `Record.aasm.states.map(&:localized_name)`)
 
 ## 3.0.14
 
@@ -52,7 +52,7 @@
 
 ## 3.0.7
 
- * removed deprecation warning when localizing aasm state names (look at https://github.com/rubyist/aasm/issues/38 for details)
+ * removed deprecation warning when localizing aasm state names (look at [issue 38](https://github.com/rubyist/aasm/issues/38) for details)
 
 ## 3.0.6
 
