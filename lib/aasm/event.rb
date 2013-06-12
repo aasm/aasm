@@ -64,16 +64,16 @@ module AASM
       self
     end
 
-    # Execute if test? == false, otherwise return true/false depending on whether it would fire
+    # Execute if test == false, otherwise return true/false depending on whether it would fire
     def _fire(obj, test, to_state=nil, *args)
+      result = test ? false : nil
       if @transitions.map(&:from).any?
         transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
-        return nil if transitions.size == 0
+        return result if transitions.size == 0
       else
         transitions = @transitions
       end
 
-      result = test ? false : nil
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
         if transition.perform(obj, *args)
