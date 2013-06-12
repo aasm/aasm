@@ -313,16 +313,16 @@ Given the `Job` class from above:
 ```ruby
 job = Job.new
 
-job.states
+job.aasm.states
 => [:sleeping, :running, :cleaning]
 
-job.states(:permissible => true)
+job.aasm.states(:permissible => true)
 => [:running]
 job.run
-job.states(:permissible => true)
+job.aasm.states(:permissible => true)
 => [:cleaning, :sleeping]
 
-job.events
+job.aasm.events
 => [:run, :clean, :sleep]
 ```
 
