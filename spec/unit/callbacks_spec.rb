@@ -34,6 +34,38 @@ describe 'callbacks for the new DSL' do
 
     callback.close!
   end
+
+  it "should properly pass arguments" do
+    cb = CallbackNewDslArgs.new
+    cb.should_receive(:exit_open).once.ordered
+    cb.should_receive(:before).with(:arg1, :arg2).once.ordered
+    cb.should_receive(:transition_proc).with(:arg1, :arg2).once.ordered
+    cb.should_receive(:before_exit_open).once.ordered                   # these should be before the state changes
+    cb.should_receive(:before_enter_closed).once.ordered
+    cb.should_receive(:enter_closed).once.ordered
+    cb.should_receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+    cb.should_receive(:after_exit_open).once.ordered                    # these should be after the state changes
+    cb.should_receive(:after_enter_closed).once.ordered
+    cb.should_receive(:after).with(:arg1, :arg2).once.ordered
+
+    cb.close!(:arg1, :arg2)
+  end
+
+  it "should call the proper methods given a to state as the first arg" do
+    cb = CallbackWithStateArg.new
+    cb.should_receive(:before_method).with(:arg1).once.ordered
+    cb.should_receive(:transition_method).with(:arg1).once.ordered
+    cb.should_receive(:transition_method).never
+    cb.should_receive(:after_method).with(:arg1).once.ordered
+    cb.close!(:arg1)
+
+    cb = CallbackWithStateArg.new
+    cb.should_receive(:before_method).with(:arg1).once.ordered
+    cb.should_receive(:transition_method).never
+    cb.should_receive(:transition_method2).with(:arg1).once.ordered
+    cb.should_receive(:after_method).with(:arg1).once.ordered
+    cb.close!(:out_to_lunch, :arg1)
+  end
 end
 
 describe 'event callbacks' do
