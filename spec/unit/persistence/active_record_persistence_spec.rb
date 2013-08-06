@@ -110,6 +110,10 @@ describe "named scopes with the new DSL" do
     end
   end
 
+  it "does not create scopes if requested" do
+    NoScope.should_not respond_to(:ignored_scope)
+  end
+
 end
 
 describe 'initial states' do

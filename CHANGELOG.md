@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.20
+
+ * added configuration option to disable automatic scope creation
+
 ## 3.0.19
 
  * fixed deprecation warning with *Rails 4* (`Relation#update_all` with conditions is deprecated)

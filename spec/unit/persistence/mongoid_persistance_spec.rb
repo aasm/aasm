@@ -55,6 +55,10 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       end
     end
 
+    it "does not create scopes if requested" do
+      NoScopeMongoid.should_not respond_to(:ignored_scope)
+    end
+
   end
 
   describe "#find_in_state" do

@@ -12,6 +12,12 @@ module AASM
         @state_machine.config.whiny_transitions = true # this is the default, so let's cry
       end
 
+      if options.key?(:create_scopes)
+        @state_machine.config.create_scopes = options[:create_scopes]
+      elsif @state_machine.config.create_scopes.nil?
+        @state_machine.config.create_scopes = true # this is the default, so let's create scopes
+      end
+
       if options.key?(:skip_validation_on_save)
         @state_machine.config.skip_validation_on_save = options[:skip_validation_on_save]
       elsif @state_machine.config.skip_validation_on_save.nil?

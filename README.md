@@ -268,6 +268,22 @@ class JobsController < ApplicationController
 end
 ```
 
+If you don't need scopes (or simply don't want them), disable their creation when
+defining the `AASM` states, like this:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :create_scopes => false do
+    state :sleeping, :initial => true
+    state :running
+    state :cleaning
+  end
+end
+```
+
+
 ### Transaction support
 
 Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a transition

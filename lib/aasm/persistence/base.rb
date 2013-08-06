@@ -87,7 +87,7 @@ module AASM
     # make sure to create a (named) scope for each state
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
-      unless @clazz.respond_to?(name)
+      if AASM::StateMachine[@clazz].config.create_scopes && !@clazz.respond_to?(name)
         if @clazz.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
 
           conditions = {"#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}

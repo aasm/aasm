@@ -52,6 +52,13 @@ class SimpleNewDsl < ActiveRecord::Base
   end
 end
 
+class NoScope < ActiveRecord::Base
+  include AASM
+  aasm :create_scopes => false do
+    state :ignored_scope
+  end
+end
+
 class Derivate < Simple
 end
 

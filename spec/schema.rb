@@ -1,6 +1,6 @@
 ActiveRecord::Schema.define(:version => 0) do
 
-  %w{gates readers writers transients simples simple_new_dsls thieves localizer_test_models persisted_states provided_and_persisted_states}.each do |table_name|
+  %w{gates readers writers transients simples simple_new_dsls no_scopes thieves localizer_test_models persisted_states provided_and_persisted_states}.each do |table_name|
     create_table table_name, :force => true do |t|
       t.string "aasm_state"
     end
