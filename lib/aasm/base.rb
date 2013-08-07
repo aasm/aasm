@@ -48,9 +48,7 @@ module AASM
     def event(name, options={}, &block)
       # @clazz.aasm_event(name, options, &block)
 
-      unless @state_machine.events.has_key?(name)
-        @state_machine.events[name] = AASM::Event.new(name, options, &block)
-      end
+      @state_machine.events[name] = AASM::Event.new(name, options, &block)
 
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
