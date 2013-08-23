@@ -179,9 +179,10 @@ describe 'transitions with persistence' do
   end
 
   describe 'transactions' do
+    let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
+    let(:transactor) { Transactor.create!(:name => 'transactor', :worker => worker) }
+
     it 'should rollback all changes' do
-      worker = Worker.create!(:name => 'worker', :status => 'sleeping')
-      transactor = Transactor.create!(:name => 'transactor', :worker => worker)
       transactor.should be_sleeping
       worker.status.should == 'sleeping'
 
@@ -189,6 +190,17 @@ describe 'transitions with persistence' do
       transactor.should be_running
       worker.reload.status.should == 'sleeping'
     end
-  end
 
+    it "should rollback all changes in nested transaction" do
+      transactor.should be_sleeping
+      worker.status.should == 'sleeping'
+
+      Worker.transaction do
+        lambda { transactor.run! }.should raise_error(StandardError, 'failed on purpose')
+      end
+
+      transactor.should be_running
+      worker.reload.status.should == 'sleeping'
+    end
+  end
 end
