@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.0.21
+
+ * support nested ActiveRecord transactions ([@ozeias](https://github.com/ozeias))
+ * allow overwriting of events, can be very useful with inheritance ([@Intrepidd](https://github.com/Intrepidd))
+
 ## 3.0.20
 
  * added configuration option to disable automatic scope creation
