@@ -132,7 +132,7 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args)
-          transaction(:requires_new => true) do
+          self.class.transaction(:requires_new => true) do
             super
           end
         end

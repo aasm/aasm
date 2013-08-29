@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.22 (not yet released)
+
+ * fixed [issue 88](https://github.com/aasm/aasm/issues/88): wrong number of arguments for transaction method
+
 ## 3.0.21
 
  * support nested ActiveRecord transactions ([@ozeias](https://github.com/ozeias))
