@@ -239,6 +239,21 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Mongoid
+
+AASM also supports persistence to Mongodb if you're using Mongoid. Make sure
+to include Mongoid::Document before you include AASM.
+
+```ruby
+class Job
+  include Mongoid::Document
+  include AASM
+  aasm do
+    ...
+  end
+end
+```
+
 ### Automatic Scopes
 
 AASM will automatically create scope methods for each state in the model.
@@ -290,6 +305,7 @@ end
 
 Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a transition
 callback or the state update fails, all changes to any database record are rolled back.
+Mongodb does not support transactions.
 
 ### Column name & migration
 
