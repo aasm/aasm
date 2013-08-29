@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.0.22 (not yet released)
+## 3.0.22
 
  * fixed [issue 88](https://github.com/aasm/aasm/issues/88): wrong number of arguments for transaction method
 
