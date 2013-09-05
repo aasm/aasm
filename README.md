@@ -1,6 +1,6 @@
 # AASM - Ruby state machines
 
-[![Build Status](https://secure.travis-ci.org/aasm/aasm.png?branch=master)](http://travis-ci.org/aasm/aasm) [![Code Climate](https://codeclimate.com/github/aasm/aasm.png)](https://codeclimate.com/github/aasm/aasm) [![Coverage Status](https://coveralls.io/repos/aasm/aasm/badge.png?branch=master)](https://coveralls.io/r/aasm/aasm)
+[![Gem Version](https://badge.fury.io/rb/aasm.png)](http://badge.fury.io/rb/aasm) [![Build Status](https://secure.travis-ci.org/aasm/aasm.png?branch=master)](http://travis-ci.org/aasm/aasm) [![Code Climate](https://codeclimate.com/github/aasm/aasm.png)](https://codeclimate.com/github/aasm/aasm) [![Coverage Status](https://coveralls.io/repos/aasm/aasm/badge.png?branch=master)](https://coveralls.io/r/aasm/aasm)
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
