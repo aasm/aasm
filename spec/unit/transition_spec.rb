@@ -26,6 +26,29 @@ describe 'transitions' do
     silencer.should be_smiling
   end
 
+  it 'should call the block when success' do
+    silencer = Silencer.new
+    success = false
+    lambda {
+      silencer.smile_any! do
+        success = true
+      end
+    }.should change { success }.to(true)
+  end
+
+  it 'should not call the block when failure' do
+    silencer = Silencer.new
+    success = false
+    lambda {
+      silencer.smile! do
+        success = true
+      end
+    }.should_not change { success }.to(true)
+  end
+
+end
+
+describe 'blocks' do
 end
 
 describe AASM::Transition do
