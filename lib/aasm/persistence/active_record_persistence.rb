@@ -132,9 +132,16 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args)
-          self.class.transaction(:requires_new => true) do
+          success = self.class.transaction(:requires_new => true) do
             super
           end
+
+          if success
+            new_state = aasm.state_object_for_name(aasm.current_state)
+            new_state.fire_callbacks(:after_commit, self)
+          end
+
+          success
         end
       end # InstanceMethods
 
