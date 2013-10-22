@@ -202,5 +202,22 @@ describe 'transitions with persistence' do
       transactor.should be_running
       worker.reload.status.should == 'sleeping'
     end
+
+    describe "after_commit callback" do
+      it "should fire :after_commit if transaction was successful" do
+        validator = Validator.create(:name => 'name')
+        validator.should be_sleeping
+        validator.run!
+        validator.should be_running
+        validator.name.should_not == "name"
+      end
+
+      it "should not fire :after_commit if transaction failed" do
+        validator = Validator.create(:name => 'name')
+        lambda { validator.fail! }.should raise_error(StandardError, 'failed on purpose')
+        validator.name.should == "name"
+      end
+
+    end
   end
 end
