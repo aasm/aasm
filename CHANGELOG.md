@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.23
+
+ * added support for `after_commit` callback (transaction support) (thanks to [@tisba](https://github.com/tisba))
+
 ## 3.0.22
 
  * fixed [issue 88](https://github.com/aasm/aasm/issues/88): wrong number of arguments for transaction method
