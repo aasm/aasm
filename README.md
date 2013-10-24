@@ -307,6 +307,28 @@ Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a tr
 callback or the state update fails, all changes to any database record are rolled back.
 Mongodb does not support transactions.
 
+If you want to make sure a depending action happens only after the transaction is committed,
+use the `after_commit` callback, like this:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run, :after_commit => :notify_about_running_job do
+      transitions :from => :sleeping, :to => :running
+    end
+  end
+
+  def notify_about_running_job
+    ...
+  end
+end
+```
+
 ### Column name & migration
 
 As a default AASM uses the column `aasm_state` to store the states. You can override
@@ -338,7 +360,7 @@ class AddJobState < ActiveRecord::Migration
 end
 ```
 
-### <a id="inspection">Inspection
+### Inspection
 
 AASM supports a couple of methods to find out which states or events are provided or permissible.
 
