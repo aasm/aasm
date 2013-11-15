@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.licenses    = ["MIT"]
 
   s.add_development_dependency 'activerecord', '3.2.12'
-  # s.add_development_dependency 'activerecord', '4.0.0.rc1'
+  # s.add_development_dependency 'activerecord', '4.0.1'
 
   s.add_development_dependency 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
   s.add_development_dependency 'rake'
@@ -26,6 +26,8 @@ Gem::Specification.new do |s|
   # s.add_development_dependency 'debugger'
   # s.add_development_dependency 'pry'
   s.add_development_dependency 'ruby-debug-completion'
+
+  s.add_development_dependency 'mime-types', '~> 1.25' # needed by coveralls (>= 2.0 needs Ruby >=1.9.2)
   s.add_development_dependency 'coveralls'
 
   s.files         = `git ls-files`.split("\n")
