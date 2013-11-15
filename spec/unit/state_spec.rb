@@ -38,7 +38,7 @@ describe AASM::State do
   it 'should send a message to the record for an action if the action is present as a symbol' do
     state = new_state(:entering => :foo)
 
-    record = mock('record')
+    record = double('record')
     record.should_receive(:foo)
 
     state.fire_callbacks(:entering, record)
@@ -47,7 +47,7 @@ describe AASM::State do
   it 'should send a message to the record for an action if the action is present as a string' do
     state = new_state(:entering => 'foo')
 
-    record = mock('record')
+    record = double('record')
     record.should_receive(:foo)
 
     state.fire_callbacks(:entering, record)
@@ -56,7 +56,7 @@ describe AASM::State do
   it 'should send a message to the record for each action' do
     state = new_state(:entering => [:a, :b, "c", lambda {|r| r.foobar }])
 
-    record = mock('record')
+    record = double('record')
     record.should_receive(:a)
     record.should_receive(:b)
     record.should_receive(:c)
@@ -68,7 +68,7 @@ describe AASM::State do
   it "should stop calling actions if one of them raises :halt_aasm_chain" do
     state = new_state(:entering => [:a, :b, :c])
 
-    record = mock('record')
+    record = double('record')
     record.should_receive(:a)
     record.should_receive(:b).and_throw(:halt_aasm_chain)
     record.should_not_receive(:c)
@@ -79,7 +79,7 @@ describe AASM::State do
   it 'should call a proc, passing in the record for an action if the action is present' do
     state = new_state(:entering => Proc.new {|r| r.foobar})
 
-    record = mock('record')
+    record = double('record')
     record.should_receive(:foobar)
 
     state.fire_callbacks(:entering, record)

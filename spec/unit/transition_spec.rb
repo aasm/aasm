@@ -42,9 +42,9 @@ describe AASM::Transition do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
-    obj.stub!(:from).and_return(opts[:from])
-    obj.stub!(:to).and_return(opts[:to])
+    obj = double('object')
+    obj.stub(:from).and_return(opts[:from])
+    obj.stub(:to).and_return(opts[:to])
 
     st.should == obj
   end
@@ -53,9 +53,9 @@ describe AASM::Transition do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
-    obj.stub!(:from).and_return('blah')
-    obj.stub!(:to).and_return(opts[:to])
+    obj = double('object')
+    obj.stub(:from).and_return('blah')
+    obj.stub(:to).and_return(opts[:to])
 
     st.should_not == obj
   end
@@ -64,9 +64,9 @@ describe AASM::Transition do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
-    obj.stub!(:from).and_return(opts[:from])
-    obj.stub!(:to).and_return('blah')
+    obj = double('object')
+    obj.stub(:from).and_return(opts[:from])
+    obj.stub(:to).and_return('blah')
 
     st.should_not == obj
   end
@@ -84,7 +84,7 @@ describe AASM::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar', :guard => :test}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
+    obj = double('object')
     obj.should_receive(:test)
 
     st.perform(obj)
@@ -94,7 +94,7 @@ describe AASM::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'test'}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
+    obj = double('object')
     obj.should_receive(:test)
 
     st.perform(obj)
@@ -104,7 +104,7 @@ describe AASM::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar', :guard => Proc.new {|o| o.test}}
     st = AASM::Transition.new(opts)
 
-    obj = mock('object')
+    obj = double('object')
     obj.should_receive(:test)
 
     st.perform(obj)
@@ -116,7 +116,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|o| o.test}}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     opts[:on_transition].should_receive(:call).with(any_args)
 
@@ -127,7 +127,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {||}}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     opts[:on_transition].should_receive(:call).with(no_args)
 
@@ -140,7 +140,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     obj.should_receive(:test)
 
@@ -151,7 +151,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     obj.should_receive(:test)
 
@@ -162,7 +162,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     obj.class.class_eval do
       define_method(:test) {|*args| 'success'}
@@ -177,7 +177,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = mock('object')
+    obj = double('object')
 
     obj.class.class_eval do
       define_method(:test) {|*args| 'success'}

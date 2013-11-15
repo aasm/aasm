@@ -33,13 +33,13 @@ describe "instance methods" do
   end
 
   it "should return the aasm column when not new and the aasm_column is not nil" do
-    gate.stub!(:new_record?).and_return(false)
+    gate.stub(:new_record?).and_return(false)
     gate.aasm_state = "state"
     gate.aasm_current_state.should == :state
   end
 
   it "should allow a nil state" do
-    gate.stub!(:new_record?).and_return(false)
+    gate.stub(:new_record?).and_return(false)
     gate.aasm_state = nil
     gate.aasm_current_state.should be_nil
   end
@@ -50,7 +50,7 @@ describe "instance methods" do
   end
 
   it "should not call aasm_ensure_initial_state on validation before update" do
-    gate.stub!(:new_record?).and_return(false)
+    gate.stub(:new_record?).and_return(false)
     gate.should_not_receive(:aasm_ensure_initial_state)
     gate.valid?
   end

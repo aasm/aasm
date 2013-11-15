@@ -51,19 +51,19 @@ describe 'event callbacks' do
     it "should run error_callback if an exception is raised and error_callback defined" do
       def @foo.error_callback(e); end
 
-      @foo.stub!(:enter).and_raise(e=StandardError.new)
+      @foo.stub(:enter).and_raise(e=StandardError.new)
       @foo.should_receive(:error_callback).with(e)
 
       @foo.safe_close!
     end
 
     it "should raise NoMethodError if exceptionis raised and error_callback is declared but not defined" do
-      @foo.stub!(:enter).and_raise(StandardError)
+      @foo.stub(:enter).and_raise(StandardError)
       lambda{@foo.safe_close!}.should raise_error(NoMethodError)
     end
 
     it "should propagate an error if no error callback is declared" do
-        @foo.stub!(:enter).and_raise("Cannot enter safe")
+        @foo.stub(:enter).and_raise("Cannot enter safe")
         lambda{@foo.close!}.should raise_error(StandardError, "Cannot enter safe")
     end
   end
@@ -85,7 +85,7 @@ describe 'event callbacks' do
     end
 
     it 'should not call it for failing bang fire' do
-      @foo.aasm.stub!(:set_current_state_with_persistence).and_return(false)
+      @foo.aasm.stub(:set_current_state_with_persistence).and_return(false)
       @foo.should_not_receive(:aasm_event_fired)
       @foo.close!
     end
@@ -108,7 +108,7 @@ describe 'event callbacks' do
     end
 
     it 'should not call it if persist fails for bang fire' do
-      @foo.aasm.stub!(:set_current_state_with_persistence).and_return(false)
+      @foo.aasm.stub(:set_current_state_with_persistence).and_return(false)
       @foo.should_receive(:aasm_event_failed)
       @foo.close!
     end
