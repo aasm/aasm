@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.date        = Time.now
   s.licenses    = ["MIT"]
 
-  s.add_development_dependency 'activerecord', '3.2.12'
+  s.add_development_dependency 'activerecord', '3.2.15'
   # s.add_development_dependency 'activerecord', '4.0.1'
 
   s.add_development_dependency 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
