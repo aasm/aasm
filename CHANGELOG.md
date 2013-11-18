@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 4.0.0 (not yet released)
+
+ * callbacks don't require `to_state` parameter anymore, but still support it (issues #11, #58 #80 thanks to [@ejlangev](https://github.com/ejlangev))
+
+
 ## 3.0.23
 
  * added support for `after_commit` callback (transaction support) (thanks to [@tisba](https://github.com/tisba))
