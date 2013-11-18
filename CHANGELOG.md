@@ -2,7 +2,12 @@
 
 ## 4.0.0 (not yet released)
 
- * callbacks don't require `to_state` parameter anymore, but still support it (issues #11, #58 #80 thanks to [@ejlangev](https://github.com/ejlangev))
+ * callbacks don't require `to_state` parameter anymore, but still support it
+   (closing issues
+   [#11](https://github.com/aasm/aasm/issues/11),
+   [#58](https://github.com/aasm/aasm/issues/58) and
+   [#88](https://github.com/aasm/aasm/issues/80)
+   thanks to [@ejlangev](https://github.com/ejlangev))
 
 
 ## 3.0.23
