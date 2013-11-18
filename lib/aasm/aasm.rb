@@ -141,6 +141,20 @@ module AASM
 
 private
 
+  # Takes args and a from state and removes the first
+  # element from args if it is a valid to_state for
+  # the event given the from_state
+  def process_args(event, from_state, *args)
+    # If the first arg doesn't respond to to_sym then
+    # it isn't a symbol or string so it can't be a state
+    # name anyway
+    return args unless args.first.respond_to?(:to_sym)
+    if event.transitions_from_state(from_state).map(&:to).flatten.include?(args.first)
+      return args[1..-1]
+    end
+    return args
+  end
+
   def aasm_fire_event(event_name, options, *args, &block)
     event = self.class.aasm_events[event_name]
     begin
@@ -148,10 +162,14 @@ private
       old_state.fire_callbacks(:exit, self)
 
       # new event before callback
-      event.fire_callbacks(:before, self)
+      event.fire_callbacks(
+        :before,
+        self,
+        *process_args(event, aasm.current_state, *args)
+      )
 
       if new_state_name = event.fire(self, *args)
-        fired(event, old_state, new_state_name, options, &block)
+        fired(event, old_state, new_state_name, options, *args, &block)
       else
         failed(event_name, old_state)
       end
@@ -160,7 +178,7 @@ private
     end
   end
 
-  def fired(event, old_state, new_state_name, options)
+  def fired(event, old_state, new_state_name, options, *args)
     persist = options[:persist]
 
     new_state = aasm.state_object_for_name(new_state_name)
@@ -186,7 +204,11 @@ private
     if persist_successful
       old_state.fire_callbacks(:after_exit, self)
       new_state.fire_callbacks(:after_enter, self)
-      event.fire_callbacks(:after, self)
+      event.fire_callbacks(
+        :after,
+        self,
+        *process_args(event, old_state.name, *args)
+      )
 
       self.aasm_event_fired(event.name, old_state.name, aasm.current_state) if self.respond_to?(:aasm_event_fired)
     else

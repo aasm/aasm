@@ -43,6 +43,8 @@ module AASM
     end
 
     def fire_callbacks(callback_name, record, *args)
+      # strip out the first element in args if it's a valid to_state
+      # #given where we're coming from, this condition implies args not empty
       invoke_callbacks(@options[callback_name], record, args)
     end
 
@@ -68,10 +70,20 @@ module AASM
     def _fire(obj, test, to_state=nil, *args)
       result = test ? false : nil
       if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
+        transitions = transitions_from_state(obj.aasm_current_state)
         return result if transitions.size == 0
       else
         transitions = @transitions
+      end
+
+      # If to_state is not nil it either contains a potential
+      # to_state or an arg
+      unless to_state == nil
+        if to_state.respond_to?(:to_sym) && 
+          !transitions.map(&:to).flatten.include?(to_state.to_sym)
+          args.unshift(to_state)
+          to_state = nil
+        end
       end
 
       transitions.each do |transition|
