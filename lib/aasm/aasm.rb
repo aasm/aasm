@@ -141,7 +141,7 @@ module AASM
 
 private
 
-  def aasm_fire_event(event_name, options, *args)
+  def aasm_fire_event(event_name, options, *args, &block)
     event = self.class.aasm_events[event_name]
     begin
       old_state = aasm.state_object_for_name(aasm.current_state)
@@ -151,7 +151,7 @@ private
       event.fire_callbacks(:before, self)
 
       if new_state_name = event.fire(self, *args)
-        fired(event, old_state, new_state_name, options)
+        fired(event, old_state, new_state_name, options, &block)
       else
         failed(event_name, old_state)
       end
@@ -174,9 +174,13 @@ private
     persist_successful = true
     if persist
       persist_successful = aasm.set_current_state_with_persistence(new_state_name)
-      event.fire_callbacks(:success, self) if persist_successful
+      if persist_successful
+        yield if block_given?
+        event.fire_callbacks(:success, self)
+      end
     else
       aasm.current_state = new_state_name
+      yield if block_given?
     end
 
     if persist_successful

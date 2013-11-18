@@ -57,12 +57,12 @@ module AASM
         aasm.may_fire_event?(name, *args)
       end
 
-      @clazz.send(:define_method, "#{name.to_s}!") do |*args|
-        aasm_fire_event(name, {:persist => true}, *args)
+      @clazz.send(:define_method, "#{name.to_s}!") do |*args, &block|
+        aasm_fire_event(name, {:persist => true}, *args, &block)
       end
 
-      @clazz.send(:define_method, "#{name.to_s}") do |*args|
-        aasm_fire_event(name, {:persist => false}, *args)
+      @clazz.send(:define_method, "#{name.to_s}") do |*args, &block|
+        aasm_fire_event(name, {:persist => false}, *args, &block)
       end
     end
 

@@ -131,7 +131,7 @@ module AASM
           aasm.enter_initial_state if send(self.class.aasm_column).blank?
         end
 
-        def aasm_fire_event(name, options, *args)
+        def aasm_fire_event(name, options, *args, &block)
           success = self.class.transaction(:requires_new => true) do
             super
           end
