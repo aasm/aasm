@@ -69,6 +69,15 @@ job.may_run?  # => false
 job.run       # => false
 ```
 
+When firing an event, you can pass a block to the method, it will be called only if
+the transition succeeds :
+
+```ruby
+  job.run do
+    job.user.notify_job_ran # Will be called if job.may_run? is true
+  end
+```
+
 ### Callbacks
 
 You can define a number of callbacks for your transitions. These methods will be
