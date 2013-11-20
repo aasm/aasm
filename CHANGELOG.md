@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.24
+
+ * added support for event blocks (thanks to [@Intrepidd](https://github.com/Intrepidd))
+
 ## 3.0.23
 
  * added support for `after_commit` callback (transaction support) (thanks to [@tisba](https://github.com/tisba))
