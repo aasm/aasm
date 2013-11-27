@@ -5,6 +5,6 @@ gem "coveralls",                        :platforms => :ruby
 gem 'rubysl',                           :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-gem "rails", "3.2.15"
+gem "rails", "4.0.1"
 
-gemspec
+gemspec :path => "../"
