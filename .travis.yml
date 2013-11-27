@@ -5,7 +5,6 @@ rvm:
   - 1.9.3
   - 2.0.0
   # - jruby-18mode # JRuby in 1.8 mode
-  # - jruby-19mode # JRuby in 1.9 mode
-  - rbx-1.2.4
+  - jruby-19mode # JRuby in 1.9 mode
   - rbx-2.2.1
 services: mongodb
