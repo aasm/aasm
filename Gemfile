@@ -6,5 +6,6 @@ gem 'rubysl',                           :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "rails", "3.2.15"
+gem 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 
 gemspec
