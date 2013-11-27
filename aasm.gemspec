@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest'
   # s.add_development_dependency 'debugger'
   # s.add_development_dependency 'pry'
-  s.add_development_dependency 'ruby-debug-completion'
 
   s.add_development_dependency 'mime-types', '~> 1.25' # needed by coveralls (>= 2.0 needs Ruby >=1.9.2)
   s.add_development_dependency 'coveralls'
