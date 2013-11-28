@@ -187,13 +187,13 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    obj.class.class_eval do
-      define_method(:test) {|*args| 'success'}
+    def obj.test(args)
+      "arg1: #{args[:arg1]} arg2: #{args[:arg2]}"
     end
 
     return_value = st.execute(obj, args)
 
-    return_value.should == 'success'
+    return_value.should == 'arg1: 1 arg2: 2'
   end
 
   it 'should NOT pass args if the target method does NOT accept them' do
@@ -202,8 +202,8 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    obj.class.class_eval do
-      define_method(:test) {|*args| 'success'}
+    def obj.test
+      'success'
     end
 
     return_value = st.execute(obj, args)
