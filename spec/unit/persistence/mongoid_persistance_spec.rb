@@ -27,7 +27,6 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
 
       context "Does not already respond_to? the scope name" do
         it "should add a scope" do
-  puts "------------- mongoid"
           SimpleMongoid.should respond_to(:unknown_scope)
           SimpleMongoid.unknown_scope.class.should == Mongoid::Criteria
         end
