@@ -6,7 +6,7 @@
    (closing issues
    [#11](https://github.com/aasm/aasm/issues/11),
    [#58](https://github.com/aasm/aasm/issues/58) and
-   [#88](https://github.com/aasm/aasm/issues/80)
+   [#80](https://github.com/aasm/aasm/issues/80)
    thanks to [@ejlangev](https://github.com/ejlangev))
 
 ## 3.0.24
