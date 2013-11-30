@@ -133,9 +133,9 @@ module AASM
     aasm.events(state_name)
   end
 
-  # deprecated
+  # deprecated, remove this method in v4.0.0
   def aasm_human_state
-    # warn "#aasm_human_state is deprecated and will be removed in version 3.2.0; please use #aasm.human_state instead!"
+    warn "#aasm_human_state is deprecated and will be removed in version 4.0.0; please use #aasm.human_state instead!"
     aasm.human_state
   end
 

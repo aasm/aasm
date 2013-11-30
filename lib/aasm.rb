@@ -13,6 +13,3 @@ require 'ostruct'
     persistence
     aasm
   ).each { |file| require File.join(File.dirname(__FILE__), 'aasm', file) }
-
-# load the deprecated methods and modules
-Dir[File.join(File.dirname(__FILE__), 'aasm', 'deprecated', '*.rb')].sort.each { |f| require File.expand_path(f) }
