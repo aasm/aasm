@@ -60,7 +60,7 @@ end
 
 describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
-    obj = double('object', aasm: double('aasm', current_state: 'open'))
+    obj = double('object', :aasm => double('aasm', :current_state => 'open'))
 
     event = AASM::Event.new(:event)
     event.fire(obj).should be_nil
@@ -71,7 +71,7 @@ describe 'firing an event' do
       transitions :to => :closed, :from => [:open, :received]
     end
 
-    obj = double('object', aasm: double('aasm', current_state: :open))
+    obj = double('object', :aasm => double('aasm', :current_state => :open))
 
     event.fire(obj).should == :closed
   end
@@ -81,7 +81,7 @@ describe 'firing an event' do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
     end
 
-    obj = double('object', aasm: double('aasm', current_state: :open))
+    obj = double('object', :aasm => double('aasm', :current_state => :open))
     obj.should_receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
     event.fire(obj, nil, 'arg1', 'arg2').should == :closed
