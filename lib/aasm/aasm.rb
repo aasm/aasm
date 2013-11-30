@@ -115,9 +115,9 @@ module AASM
     aasm.enter_initial_state
   end
 
-  # deprecated
+  # deprecated, remove this method in v4.0.0
   def aasm_events_for_current_state
-    # warn "#aasm_events_for_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.events instead!"
+    warn "#aasm_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.events(aasm.current_state) instead!"
     aasm.events(aasm.current_state)
   end
 
