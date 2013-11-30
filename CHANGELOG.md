@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1.0 (not yet released)
+
+ * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
+
 ## 3.0.24
 
  * added support for event blocks (thanks to [@Intrepidd](https://github.com/Intrepidd))
