@@ -45,8 +45,9 @@ module AASM
       end
     end
 
-    # deprecated
+    # deprecated, remove this method in v4.0.0
     def aasm_initial_state=(state)
+      warn ".aasm_initial_state= is deprecated and will be removed in version 4.0.0"
       AASM::StateMachine[self].initial_state = state
     end
 
