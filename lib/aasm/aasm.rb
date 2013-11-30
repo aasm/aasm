@@ -45,13 +45,13 @@ module AASM
       end
     end
 
-    # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
     def aasm_initial_state=(state)
       warn ".aasm_initial_state= is deprecated and will be removed in version 4.0.0"
       AASM::StateMachine[self].initial_state = state
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def aasm_state(name, options={})
       warn ".aasm_state is deprecated and will be removed in version 4.0.0; please use .aasm.state instead!"
       aasm.state(name, options)
@@ -105,37 +105,37 @@ module AASM
     true
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_current_state
     warn "#aasm_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.current_state instead!"
     aasm.current_state
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_enter_initial_state
     warn "#aasm_enter_initial_state is deprecated and will be removed in version 4.0.0; please use #aasm.enter_initial_state instead!"
     aasm.enter_initial_state
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_events_for_current_state
     warn "#aasm_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.events(aasm.current_state) instead!"
     aasm.events(aasm.current_state)
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_permissible_events_for_current_state
     warn "#aasm_permissible_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.permissible_events instead!"
     aasm.permissible_events
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_events_for_state(state_name)
     warn "#aasm_events_for_state(state_name) is deprecated and will be removed in version 4.0.0; please use #aasm.events(state_name) instead!"
     aasm.events(state_name)
   end
 
-  # deprecated, remove this method in v4.0.0
+    # TODO remove this method in v4.0.0
   def aasm_human_state
     warn "#aasm_human_state is deprecated and will be removed in version 4.0.0; please use #aasm.human_state instead!"
     aasm.human_state
