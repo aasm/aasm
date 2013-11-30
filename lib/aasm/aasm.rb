@@ -53,6 +53,7 @@ module AASM
 
     # deprecated
     def aasm_state(name, options={})
+      warn ".aasm_state is deprecated and will be removed in version 4.0.0; please use .aasm.state instead!"
       aasm.state(name, options)
     end
 

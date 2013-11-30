@@ -1,19 +1,6 @@
 require 'spec_helper'
 
 describe 'inspection for common cases' do
-  it 'should support the old DSL' do
-    Foo.should respond_to(:aasm_states)
-    Foo.aasm_states.should include(:open)
-    Foo.aasm_states.should include(:closed)
-
-    Foo.should respond_to(:aasm_initial_state)
-    Foo.aasm_initial_state.should == :open
-
-    Foo.should respond_to(:aasm_events)
-    Foo.aasm_events.should include(:close)
-    Foo.aasm_events.should include(:null)
-  end
-
   it 'should support the new DSL' do
     Foo.aasm.should respond_to(:states)
     Foo.aasm.states.should include(:open)
@@ -74,8 +61,8 @@ end
 
 describe "special cases" do
   it "should support valid a state name" do
-    Argument.aasm_states.should include(:invalid)
-    Argument.aasm_states.should include(:valid)
+    Argument.aasm.states.should include(:invalid)
+    Argument.aasm.states.should include(:valid)
 
     argument = Argument.new
     argument.invalid?.should be_true

@@ -4,7 +4,8 @@ class SimpleMongoid
 
   field :status, type: String
 
-  aasm_column :status
-  aasm_state :unknown_scope
-  aasm_state :new
+  aasm column: :status do
+    state :unknown_scope
+    state :new
+  end
 end

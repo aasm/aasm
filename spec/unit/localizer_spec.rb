@@ -10,12 +10,12 @@ class LocalizerTestModel < ActiveRecord::Base
 
   attr_accessor :aasm_state
 
-  aasm_initial_state :opened
-  aasm_state :opened
-  aasm_state :closed
-
-  aasm_event :close
-  aasm_event :open
+  aasm do
+    state :opened, initial: true
+    state :closed
+    event :close
+    event :open
+  end
 end
 
 describe 'localized state names' do

@@ -36,13 +36,6 @@ class Transient < ActiveRecord::Base
   include AASM
 end
 
-class Simple < ActiveRecord::Base
-  include AASM
-  aasm_column :status
-  aasm_state :unknown_scope
-  aasm_state :new
-end
-
 class SimpleNewDsl < ActiveRecord::Base
   include AASM
   aasm :column => :status
@@ -59,9 +52,6 @@ class NoScope < ActiveRecord::Base
   end
 end
 
-class Derivate < Simple
-end
-
 class DerivateNewDsl < SimpleNewDsl
 end
 
@@ -73,7 +63,9 @@ class Thief < ActiveRecord::Base
   end
   include AASM
   aasm_initial_state  Proc.new { |thief| thief.skilled ? :rich : :jailed }
-  aasm_state          :rich
-  aasm_state          :jailed
+  aasm do
+    state :rich
+    state :jailed
+  end
   attr_accessor :skilled, :aasm_state
 end
