@@ -74,10 +74,10 @@ describe "special cases" do
   end
 end
 
-describe :aasm_states_for_select do
+describe 'aasm.states_for_select' do
   it "should return a select friendly array of states" do
-    Foo.should respond_to(:aasm_states_for_select)
-    Foo.aasm_states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
+    Foo.aasm.should respond_to(:states_for_select)
+    Foo.aasm.states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
   end
 end
 

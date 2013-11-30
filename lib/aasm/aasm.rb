@@ -75,8 +75,9 @@ module AASM
       aasm.events
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def aasm_states_for_select
+      warn ".aasm_states_for_select is deprecated and will be removed in version 4.0.0; please use .aasm.states_for_select instead!"
       aasm.states_for_select
     end
 
