@@ -36,13 +36,10 @@ module AASM
       end
     end
 
-    # is this better?: aasm.states.name.from_states
+    # TODO remove this method in v4.0.0
     def aasm_from_states_for_state(state, options={})
-      if options[:transition]
-        aasm.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
-      else
-        aasm.events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
-      end
+      warn ".aasm_from_states_for_state is deprecated and will be removed in version 4.0.0; please use .aasm.from_states_for_state instead!"
+      aasm.from_states_for_state(state, options)
     end
 
     # TODO remove this method in v4.0.0

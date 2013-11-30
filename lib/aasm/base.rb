@@ -76,5 +76,13 @@ module AASM
       states.map { |state| state.for_select }
     end
 
+    def from_states_for_state(state, options={})
+      if options[:transition]
+        events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
+      else
+        events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+      end
+    end
+
   end
 end

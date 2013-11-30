@@ -81,15 +81,15 @@ describe 'aasm.states_for_select' do
   end
 end
 
-describe :aasm_from_states_for_state do
+describe 'aasm.from_states_for_state' do
   it "should return all from states for a state" do
-    AuthMachine.should respond_to(:aasm_from_states_for_state)
-    froms = AuthMachine.aasm_from_states_for_state(:active)
+    AuthMachine.aasm.should respond_to(:from_states_for_state)
+    froms = AuthMachine.aasm.from_states_for_state(:active)
     [:pending, :passive, :suspended].each {|from| froms.should include(from)}
   end
 
   it "should return from states for a state for a particular transition only" do
-    froms = AuthMachine.aasm_from_states_for_state(:active, :transition => :unsuspend)
+    froms = AuthMachine.aasm.from_states_for_state(:active, :transition => :unsuspend)
     [:suspended].each {|from| froms.should include(from)}
   end
 end
