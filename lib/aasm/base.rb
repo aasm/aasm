@@ -25,13 +25,16 @@ module AASM
       end
     end
 
-    def initial_state
-      @state_machine.initial_state
+    def initial_state(new_initial_state=nil)
+      if new_initial_state
+        @state_machine.initial_state = new_initial_state
+      else
+        @state_machine.initial_state
+      end
     end
 
     # define a state
     def state(name, options={})
-      # @clazz.aasm_state(name, options)
       @state_machine.add_state(name, @clazz, options)
       @state_machine.initial_state = name if options[:initial] || !@state_machine.initial_state
 

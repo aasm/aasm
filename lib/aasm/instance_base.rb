@@ -15,7 +15,7 @@ module AASM
     end
 
     def enter_initial_state
-      state_name = determine_state_name(@instance.class.aasm_initial_state)
+      state_name = determine_state_name(@instance.class.aasm.initial_state)
       state_object = state_object_for_name(state_name)
 
       state_object.fire_callbacks(:before_enter, @instance)

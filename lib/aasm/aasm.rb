@@ -26,12 +26,13 @@ module AASM
       @aasm
     end
 
-    # TODO: maybe better: aasm.initial_state
+    # TODO remove this method in v4.0.0
     def aasm_initial_state(set_state=nil)
       if set_state
-        # deprecated way to set the value
+        warn ".aasm_initial_state(:name) is deprecated and will be removed in version 4.0.0; please use .aasm.initial_state = :name instead!"
         AASM::StateMachine[self].initial_state = set_state
       else
+        warn ".aasm_initial_state is deprecated and will be removed in version 4.0.0; please use .aasm.initial_state instead!"
         AASM::StateMachine[self].initial_state
       end
     end
