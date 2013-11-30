@@ -103,15 +103,15 @@ module AASM
     true
   end
 
-  # deprecated, remove in v4.0.0
+  # deprecated, remove this method in v4.0.0
   def aasm_current_state
     warn "#aasm_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.current_state instead!"
     aasm.current_state
   end
 
-  # deprecated
+  # deprecated, remove this method in v4.0.0
   def aasm_enter_initial_state
-    # warn "#aasm_enter_initial_state is deprecated and will be removed in version 3.2.0; please use #aasm.enter_initial_state instead!"
+    warn "#aasm_enter_initial_state is deprecated and will be removed in version 4.0.0; please use #aasm.enter_initial_state instead!"
     aasm.enter_initial_state
   end
 
