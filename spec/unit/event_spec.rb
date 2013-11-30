@@ -60,8 +60,7 @@ end
 
 describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
-    obj = double('object')
-    obj.stub(:aasm_current_state)
+    obj = double('object', aasm: double('aasm', current_state: 'open'))
 
     event = AASM::Event.new(:event)
     event.fire(obj).should be_nil
@@ -72,8 +71,7 @@ describe 'firing an event' do
       transitions :to => :closed, :from => [:open, :received]
     end
 
-    obj = double('object')
-    obj.stub(:aasm_current_state).and_return(:open)
+    obj = double('object', aasm: double('aasm', current_state: :open))
 
     event.fire(obj).should == :closed
   end
@@ -83,8 +81,7 @@ describe 'firing an event' do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
     end
 
-    obj = double('object')
-    obj.stub(:aasm_current_state).and_return(:open)
+    obj = double('object', aasm: double('aasm', current_state: :open))
     obj.should_receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
     event.fire(obj, nil, 'arg1', 'arg2').should == :closed
@@ -219,22 +216,22 @@ describe 'parametrised events' do
 
   it 'should transition to specified next state (sleeping to showering)' do
     pe.wakeup!(:showering)
-    pe.aasm_current_state.should == :showering
+    pe.aasm.current_state.should == :showering
   end
 
   it 'should transition to specified next state (sleeping to working)' do
     pe.wakeup!(:working)
-    pe.aasm_current_state.should == :working
+    pe.aasm.current_state.should == :working
   end
 
   it 'should transition to default (first or showering) state' do
     pe.wakeup!
-    pe.aasm_current_state.should == :showering
+    pe.aasm.current_state.should == :showering
   end
 
   it 'should transition to default state when on_transition invoked' do
     pe.dress!(nil, 'purple', 'dressy')
-    pe.aasm_current_state.should == :working
+    pe.aasm.current_state.should == :working
   end
 
   it 'should call on_transition method with args' do

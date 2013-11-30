@@ -20,8 +20,7 @@ describe 'state machine' do
   let(:payment) {Payment.new}
 
   it 'starts with an initial state' do
-    payment.aasm_current_state.should == :initialised
-    # payment.aasm.current_state.should == :initialised # not yet supported
+    payment.aasm.current_state.should == :initialised
     payment.should respond_to(:initialised?)
     payment.should be_initialised
   end

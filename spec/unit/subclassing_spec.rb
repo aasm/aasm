@@ -24,8 +24,8 @@ describe 'subclassing' do
 
   it 'should not break if I call Son#update_state' do
     son.update_state
-    son.aasm_current_state.should == :pending_details_confirmation
+    son.aasm.current_state.should == :pending_details_confirmation
   end
-  
+
 end
 

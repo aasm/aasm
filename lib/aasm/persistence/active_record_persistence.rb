@@ -71,10 +71,10 @@ module AASM
         # Writes <tt>state</tt> to the state column and persists it to the database
         #
         #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :opened
+        #   foo.aasm.current_state # => :opened
         #   foo.close!
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :closed
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state)
@@ -97,13 +97,13 @@ module AASM
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
         #
         #   foo = Foo.find(1)
-        #   foo.aasm_current_state # => :opened
+        #   foo.aasm.current_state # => :opened
         #   foo.close
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :opened
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :opened
         #   foo.save
-        #   foo.aasm_current_state # => :closed
-        #   Foo.find(1).aasm_current_state # => :closed
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state)

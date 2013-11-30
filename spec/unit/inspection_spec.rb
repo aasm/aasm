@@ -79,11 +79,11 @@ describe "special cases" do
 
     argument = Argument.new
     argument.invalid?.should be_true
-    argument.aasm_current_state.should == :invalid
+    argument.aasm.current_state.should == :invalid
 
     argument.valid!
     argument.valid?.should be_true
-    argument.aasm_current_state.should == :valid
+    argument.aasm.current_state.should == :valid
   end
 end
 

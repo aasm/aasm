@@ -68,7 +68,7 @@ module AASM
     def _fire(obj, test, to_state=nil, *args)
       result = test ? false : nil
       if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm_current_state }
+        transitions = @transitions.select { |t| t.from == obj.aasm.current_state }
         return result if transitions.size == 0
       else
         transitions = @transitions

@@ -103,9 +103,9 @@ module AASM
     true
   end
 
-  # deprecated
+  # deprecated, remove in v4.0.0
   def aasm_current_state
-    # warn "#aasm_current_state is deprecated and will be removed in version 3.2.0; please use #aasm.state instead!"
+    warn "#aasm_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.current_state instead!"
     aasm.current_state
   end
 
