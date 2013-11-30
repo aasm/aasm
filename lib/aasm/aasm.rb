@@ -127,9 +127,9 @@ module AASM
     aasm.permissible_events
   end
 
-  # deprecated
+  # deprecated, remove this method in v4.0.0
   def aasm_events_for_state(state_name)
-    # warn "#aasm_events_for_state(state_name) is deprecated and will be removed in version 3.2.0; please use #aasm.events(state_name) instead!"
+    warn "#aasm_events_for_state(state_name) is deprecated and will be removed in version 4.0.0; please use #aasm.events(state_name) instead!"
     aasm.events(state_name)
   end
 
