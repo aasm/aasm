@@ -57,8 +57,9 @@ module AASM
       aasm.state(name, options)
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def aasm_event(name, options = {}, &block)
+      warn ".aasm_event is deprecated and will be removed in version 4.0.0; please use .aasm.event instead!"
       aasm.event(name, options, &block)
     end
 

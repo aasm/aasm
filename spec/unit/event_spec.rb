@@ -93,8 +93,10 @@ describe 'should fire callbacks' do
   describe 'success' do
     it "if it's a symbol" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_symbol, :success => :symbol_success_callback do
-          transitions :to => :symbol, :from => [:initial]
+        aasm do
+          event :with_symbol, :success => :symbol_success_callback do
+            transitions :to => :symbol, :from => [:initial]
+          end
         end
       }
 
@@ -105,8 +107,10 @@ describe 'should fire callbacks' do
 
     it "if it's a string" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_string, :success => 'string_success_callback' do
-          transitions :to => :string, :from => [:initial]
+        aasm do
+          event :with_string, :success => 'string_success_callback' do
+            transitions :to => :string, :from => [:initial]
+          end
         end
       }
 
@@ -117,8 +121,10 @@ describe 'should fire callbacks' do
 
     it "if passed an array of strings and/or symbols" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_array, :success => [:success_callback1, 'success_callback2'] do
-          transitions :to => :array, :from => [:initial]
+        aasm do
+          event :with_array, :success => [:success_callback1, 'success_callback2'] do
+            transitions :to => :array, :from => [:initial]
+          end
         end
       }
 
@@ -130,8 +136,10 @@ describe 'should fire callbacks' do
 
     it "if passed an array of strings and/or symbols and/or procs" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { proc_success_callback }] do
-          transitions :to => :array, :from => [:initial]
+        aasm do
+          event :with_array_including_procs, :success => [:success_callback1, 'success_callback2', lambda { proc_success_callback }] do
+            transitions :to => :array, :from => [:initial]
+          end
         end
       }
 
@@ -144,8 +152,10 @@ describe 'should fire callbacks' do
 
     it "if it's a proc" do
       ThisNameBetterNotBeInUse.instance_eval {
-        aasm_event :with_proc, :success => lambda { proc_success_callback } do
-          transitions :to => :proc, :from => [:initial]
+        aasm do
+          event :with_proc, :success => lambda { proc_success_callback } do
+            transitions :to => :proc, :from => [:initial]
+          end
         end
       }
 
@@ -158,14 +168,16 @@ describe 'should fire callbacks' do
   describe 'after' do
     it "if they set different ways" do
       ThisNameBetterNotBeInUse.instance_eval do
-        aasm_event :with_afters, :after => :do_one_thing_after do
-          after do
-            do_another_thing_after_too
+        aasm do
+          event :with_afters, :after => :do_one_thing_after do
+            after do
+              do_another_thing_after_too
+            end
+            after do
+              do_third_thing_at_last
+            end
+            transitions :to => :proc, :from => [:initial]
           end
-          after do
-            do_third_thing_at_last
-          end
-          transitions :to => :proc, :from => [:initial]
         end
       end
 
@@ -180,11 +192,13 @@ describe 'should fire callbacks' do
   describe 'before' do
     it "if it's a proc" do
       ThisNameBetterNotBeInUse.instance_eval do
-        aasm_event :before_as_proc do
-          before do
-            do_something_before
+        aasm do
+          event :before_as_proc do
+            before do
+              do_something_before
+            end
+            transitions :to => :proc, :from => [:initial]
           end
-          transitions :to => :proc, :from => [:initial]
         end
       end
 
@@ -196,11 +210,13 @@ describe 'should fire callbacks' do
 
   it 'in right order' do
     ThisNameBetterNotBeInUse.instance_eval do
-      aasm_event :in_right_order, :after => :do_something_after do
-        before do
-          do_something_before
+      aasm do
+        event :in_right_order, :after => :do_something_after do
+          before do
+            do_something_before
+          end
+          transitions :to => :proc, :from => [:initial]
         end
-        transitions :to => :proc, :from => [:initial]
       end
     end
 

@@ -46,8 +46,6 @@ module AASM
 
     # define an event
     def event(name, options={}, &block)
-      # @clazz.aasm_event(name, options, &block)
-
       @state_machine.events[name] = AASM::Event.new(name, options, &block)
 
       # an addition over standard aasm so that, before firing an event, you can ask
