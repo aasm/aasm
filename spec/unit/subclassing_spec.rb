@@ -4,18 +4,18 @@ describe 'subclassing' do
   let(:son) {Son.new}
 
   it 'should have the parent states' do
-    Foo.aasm_states.each do |state|
-      FooTwo.aasm_states.should include(state)
+    Foo.aasm.states.each do |state|
+      FooTwo.aasm.states.should include(state)
     end
-    Baz.aasm_states.should == Bar.aasm_states
+    Baz.aasm.states.should == Bar.aasm.states
   end
 
   it 'should not add the child states to the parent machine' do
-    Foo.aasm_states.should_not include(:foo)
+    Foo.aasm.states.should_not include(:foo)
   end
 
   it "should have the same events as its parent" do
-    Baz.aasm_events.should == Bar.aasm_events
+    Baz.aasm.events.should == Bar.aasm.events
   end
 
   it 'should know how to respond to `may_add_details?`' do

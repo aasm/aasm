@@ -63,13 +63,15 @@ module AASM
       aasm.event(name, options, &block)
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def aasm_states
+      warn ".aasm_states is deprecated and will be removed in version 4.0.0; please use .aasm.states instead!"
       aasm.states
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def aasm_events
+      warn ".aasm_events is deprecated and will be removed in version 4.0.0; please use .aasm.events instead!"
       aasm.events
     end
 
@@ -145,7 +147,7 @@ module AASM
 private
 
   def aasm_fire_event(event_name, options, *args, &block)
-    event = self.class.aasm_events[event_name]
+    event = self.class.aasm.events[event_name]
     begin
       old_state = aasm.state_object_for_name(aasm.current_state)
       old_state.fire_callbacks(:exit, self)
