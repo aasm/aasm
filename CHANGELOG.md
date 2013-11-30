@@ -9,6 +9,9 @@
    [#88](https://github.com/aasm/aasm/issues/80)
    thanks to [@ejlangev](https://github.com/ejlangev))
 
+## 3.0.24
+
+ * added support for event blocks (thanks to [@Intrepidd](https://github.com/Intrepidd))
 
 ## 3.0.23
 
