@@ -26,7 +26,7 @@ describe 'adding an event' do
   end
 
   it 'should create transitions' do
-    transitions = event.all_transitions
+    transitions = event.transitions
     transitions[0].from.should == :open
     transitions[0].to.should == :closed
     transitions[1].from.should == :received
