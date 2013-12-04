@@ -51,7 +51,7 @@ describe "instance methods" do
 
   it "should call aasm_ensure_initial_state before create, even if skipping validations" do
     gate.should_receive(:aasm_ensure_initial_state).and_return(true)
-    gate.save(validate: false)
+    gate.save(:validate => false)
   end
 
   it "should not call aasm_ensure_initial_state on validation before update" do
