@@ -257,6 +257,7 @@ to include Mongoid::Document before you include AASM.
 class Job
   include Mongoid::Document
   include AASM
+  field :aasm_state
   aasm do
     ...
   end
