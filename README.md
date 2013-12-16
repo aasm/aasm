@@ -257,6 +257,7 @@ to include Mongoid::Document before you include AASM.
 class Job
   include Mongoid::Document
   include AASM
+  field :aasm_state
   aasm do
     ...
   end
@@ -325,9 +326,9 @@ class Job < ActiveRecord::Base
 
   aasm do
     state :sleeping, :initial => true
-    state :running
+    state :running, :after_commit => :notify_about_running_job
 
-    event :run, :after_commit => :notify_about_running_job do
+    event :run do
       transitions :from => :sleeping, :to => :running
     end
   end
@@ -417,7 +418,7 @@ gem 'aasm'
 
 ## Latest changes ##
 
-Look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details.
+Take a look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details about recent changes to the current version.
 
 ## Questions? ##
 
@@ -427,11 +428,11 @@ Feel free to
 * [ask a question on StackOverflow](http://stackoverflow.com) (tag with `aasm`)
 * send us a tweet [@aasm](http://twitter.com/aasm)
 
-## Authors ##
+## Maintainers ##
 
-* [Scott Barron](https://github.com/rubyist)
-* [Travis Tilley](https://github.com/ttilley)
-* [Thorsten Böttger](http://github.com/alto)
+* [Scott Barron](https://github.com/rubyist) (2006–2009, original author)
+* [Travis Tilley](https://github.com/ttilley) (2009–2011)
+* [Thorsten Böttger](http://github.com/alto) (since 2011)
 
 
 ## Warranty ##
@@ -443,7 +444,7 @@ purpose.
 
 ## License ##
 
-Copyright (c) 2006-2012 Scott Barron
+Copyright (c) 2006-2014 Scott Barron
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

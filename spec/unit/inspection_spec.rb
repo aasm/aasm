@@ -1,19 +1,6 @@
 require 'spec_helper'
 
 describe 'inspection for common cases' do
-  it 'should support the old DSL' do
-    Foo.should respond_to(:aasm_states)
-    Foo.aasm_states.should include(:open)
-    Foo.aasm_states.should include(:closed)
-
-    Foo.should respond_to(:aasm_initial_state)
-    Foo.aasm_initial_state.should == :open
-
-    Foo.should respond_to(:aasm_events)
-    Foo.aasm_events.should include(:close)
-    Foo.aasm_events.should include(:null)
-  end
-
   it 'should support the new DSL' do
     Foo.aasm.should respond_to(:states)
     Foo.aasm.states.should include(:open)
@@ -74,35 +61,35 @@ end
 
 describe "special cases" do
   it "should support valid a state name" do
-    Argument.aasm_states.should include(:invalid)
-    Argument.aasm_states.should include(:valid)
+    Argument.aasm.states.should include(:invalid)
+    Argument.aasm.states.should include(:valid)
 
     argument = Argument.new
     argument.invalid?.should be_true
-    argument.aasm_current_state.should == :invalid
+    argument.aasm.current_state.should == :invalid
 
     argument.valid!
     argument.valid?.should be_true
-    argument.aasm_current_state.should == :valid
+    argument.aasm.current_state.should == :valid
   end
 end
 
-describe :aasm_states_for_select do
+describe 'aasm.states_for_select' do
   it "should return a select friendly array of states" do
-    Foo.should respond_to(:aasm_states_for_select)
-    Foo.aasm_states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
+    Foo.aasm.should respond_to(:states_for_select)
+    Foo.aasm.states_for_select.should == [['Open', 'open'], ['Closed', 'closed']]
   end
 end
 
-describe :aasm_from_states_for_state do
+describe 'aasm.from_states_for_state' do
   it "should return all from states for a state" do
-    AuthMachine.should respond_to(:aasm_from_states_for_state)
-    froms = AuthMachine.aasm_from_states_for_state(:active)
+    AuthMachine.aasm.should respond_to(:from_states_for_state)
+    froms = AuthMachine.aasm.from_states_for_state(:active)
     [:pending, :passive, :suspended].each {|from| froms.should include(from)}
   end
 
   it "should return from states for a state for a particular transition only" do
-    froms = AuthMachine.aasm_from_states_for_state(:active, :transition => :unsuspend)
+    froms = AuthMachine.aasm.from_states_for_state(:active, :transition => :unsuspend)
     [:suspended].each {|from| froms.should include(from)}
   end
 end

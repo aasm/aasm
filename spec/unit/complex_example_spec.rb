@@ -4,7 +4,7 @@ describe 'on initialization' do
   let(:auth) {AuthMachine.new}
 
   it 'should be in the pending state' do
-    auth.aasm_current_state.should == :pending
+    auth.aasm.current_state.should == :pending
   end
 
   it 'should have an activation code' do
@@ -55,14 +55,14 @@ describe 'when being unsuspended' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm_current_state.should == :active
+    auth.aasm.current_state.should == :active
   end
 
   it 'should be pending if not previously activated, but an activation code is present' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm_current_state.should == :pending
+    auth.aasm.current_state.should == :pending
   end
 
   it 'should be passive if not previously activated and there is no activation code' do
@@ -70,6 +70,6 @@ describe 'when being unsuspended' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm_current_state.should == :passive
+    auth.aasm.current_state.should == :passive
   end
 end

@@ -36,9 +36,9 @@ module AASM
       @transitions.select { |t| t.to == state }
     end
 
-    # deprecated
+    # TODO remove this method in v4.0.0
     def all_transitions
-      # warn "Event#all_transitions is deprecated and will be removed in version 3.2.0; please use Event#transitions instead!"
+      warn "Event#all_transitions is deprecated and will be removed in version 4.0.0; please use Event#transitions instead!"
       transitions
     end
 
@@ -56,6 +56,19 @@ module AASM
       end
     end
 
+    ## DSL interface
+    def transitions(definitions=nil)
+      if definitions # define new transitions
+        # Create a separate transition for each from state to the given state
+        Array(definitions[:from]).each do |s|
+          @transitions << AASM::Transition.new(definitions.merge({:from => s.to_sym}))
+        end
+        # Create a transition if to is specified without from (transitions from ANY state)
+        @transitions << AASM::Transition.new(definitions) if @transitions.empty? && definitions[:to]
+      end
+      @transitions
+    end
+
   private
 
     def update(options = {}, &block)
@@ -70,7 +83,7 @@ module AASM
     def _fire(obj, test, to_state=nil, *args)
       result = test ? false : nil
       if @transitions.map(&:from).any?
-        transitions = transitions_from_state(obj.aasm_current_state)
+        transitions = @transitions.select { |t| t.from == obj.aasm.current_state }
         return result if transitions.size == 0
       else
         transitions = @transitions
@@ -116,19 +129,6 @@ module AASM
         else
           false
       end
-    end
-
-    ## DSL interface
-    def transitions(trans_opts=nil)
-      if trans_opts # define new transitions
-        # Create a separate transition for each from state to the given state
-        Array(trans_opts[:from]).each do |s|
-          @transitions << AASM::Transition.new(trans_opts.merge({:from => s.to_sym}))
-        end
-        # Create a transition if to is specified without from (transitions from ANY state)
-        @transitions << AASM::Transition.new(trans_opts) if @transitions.empty? && trans_opts[:to]
-      end
-      @transitions
     end
 
     [:after, :before, :error, :success].each do |callback_name|

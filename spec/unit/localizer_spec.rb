@@ -10,12 +10,12 @@ class LocalizerTestModel < ActiveRecord::Base
 
   attr_accessor :aasm_state
 
-  aasm_initial_state :opened
-  aasm_state :opened
-  aasm_state :closed
-
-  aasm_event :close
-  aasm_event :open
+  aasm do
+    state :opened, :initial => true
+    state :closed
+    event :close
+    event :open
+  end
 end
 
 describe 'localized state names' do
@@ -52,13 +52,13 @@ describe AASM::Localizer, "new style" do
   let (:foo_opened) { LocalizerTestModel.new }
   let (:foo_closed) { LocalizerTestModel.new.tap { |x| x.aasm_state = :closed  } }
 
-  context 'aasm_human_state' do
+  context 'aasm.human_state' do
     it 'should return translated state value' do
-      foo_opened.aasm_human_state.should == "It's open now!"
+      foo_opened.aasm.human_state.should == "It's open now!"
     end
 
     it 'should return humanized value if not localized' do
-      foo_closed.aasm_human_state.should == "Closed"
+      foo_closed.aasm.human_state.should == "Closed"
     end
   end
 
@@ -87,13 +87,13 @@ describe AASM::Localizer, "deprecated style" do
   let (:foo_opened) { LocalizerTestModel.new }
   let (:foo_closed) { LocalizerTestModel.new.tap { |x| x.aasm_state = :closed  } }
 
-  context 'aasm_human_state' do
+  context 'aasm.human_state' do
     it 'should return translated state value' do
-      foo_opened.aasm_human_state.should == "It's open now!"
+      foo_opened.aasm.human_state.should == "It's open now!"
     end
 
     it 'should return humanized value if not localized' do
-      foo_closed.aasm_human_state.should == "Closed"
+      foo_closed.aasm.human_state.should == "Closed"
     end
   end
 

@@ -24,24 +24,24 @@ describe "instance methods" do
   end
 
   it "should return the initial state when new and the aasm field is nil" do
-    gate.aasm_current_state.should == :opened
+    gate.aasm.current_state.should == :opened
   end
 
   it "should return the aasm column when new and the aasm field is not nil" do
     gate.aasm_state = "closed"
-    gate.aasm_current_state.should == :closed
+    gate.aasm.current_state.should == :closed
   end
 
   it "should return the aasm column when not new and the aasm_column is not nil" do
     gate.stub(:new_record?).and_return(false)
     gate.aasm_state = "state"
-    gate.aasm_current_state.should == :state
+    gate.aasm.current_state.should == :state
   end
 
   it "should allow a nil state" do
     gate.stub(:new_record?).and_return(false)
     gate.aasm_state = nil
-    gate.aasm_current_state.should be_nil
+    gate.aasm.current_state.should be_nil
   end
 
   it "should call aasm_ensure_initial_state on validation before create" do
@@ -59,15 +59,11 @@ end
 
 describe 'subclasses' do
   it "should have the same states as its parent class" do
-    Derivate.aasm_states.should == Simple.aasm_states
+    DerivateNewDsl.aasm.states.should == SimpleNewDsl.aasm.states
   end
 
   it "should have the same events as its parent class" do
-    Derivate.aasm_events.should == Simple.aasm_events
-  end
-
-  it "should have the same column as its parent class" do
-    Derivate.aasm_column.should == :status
+    DerivateNewDsl.aasm.events.should == SimpleNewDsl.aasm.events
   end
 
   it "should have the same column as its parent even for the new dsl" do
@@ -76,26 +72,7 @@ describe 'subclasses' do
   end
 end
 
-describe "named scopes with the old DSL" do
-
-  context "Does not already respond_to? the scope name" do
-    it "should add a scope" do
-      Simple.should respond_to(:unknown_scope)
-      SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation).should be_true
-    end
-  end
-
-  context "Already respond_to? the scope name" do
-    it "should not add a scope" do
-      Simple.should respond_to(:new)
-      Simple.new.class.should == Simple
-    end
-  end
-
-end
-
 describe "named scopes with the new DSL" do
-
   context "Does not already respond_to? the scope name" do
     it "should add a scope" do
       SimpleNewDsl.should respond_to(:unknown_scope)
@@ -119,8 +96,8 @@ end
 describe 'initial states' do
 
   it 'should support conditions' do
-    Thief.new(:skilled => true).aasm_current_state.should == :rich
-    Thief.new(:skilled => false).aasm_current_state.should == :jailed
+    Thief.new(:skilled => true).aasm.current_state.should == :rich
+    Thief.new(:skilled => false).aasm.current_state.should == :jailed
   end
 end
 

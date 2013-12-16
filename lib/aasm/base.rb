@@ -25,13 +25,16 @@ module AASM
       end
     end
 
-    def initial_state
-      @state_machine.initial_state
+    def initial_state(new_initial_state=nil)
+      if new_initial_state
+        @state_machine.initial_state = new_initial_state
+      else
+        @state_machine.initial_state
+      end
     end
 
     # define a state
     def state(name, options={})
-      # @clazz.aasm_state(name, options)
       @state_machine.add_state(name, @clazz, options)
       @state_machine.initial_state = name if options[:initial] || !@state_machine.initial_state
 
@@ -46,8 +49,6 @@ module AASM
 
     # define an event
     def event(name, options={}, &block)
-      # @clazz.aasm_event(name, options, &block)
-
       @state_machine.events[name] = AASM::Event.new(name, options, &block)
 
       # an addition over standard aasm so that, before firing an event, you can ask
@@ -76,6 +77,14 @@ module AASM
 
     def states_for_select
       states.map { |state| state.for_select }
+    end
+
+    def from_states_for_state(state, options={})
+      if options[:transition]
+        events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
+      else
+        events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+      end
     end
 
   end
