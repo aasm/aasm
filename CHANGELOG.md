@@ -6,7 +6,7 @@
 
 ## 3.0.25
 
- * initialize the state even if validation is skipped (for ActiveRecord and Mongoid persistence) (see issue #103, thanks to [@vfonic](https://github.com/vfonic) and [@aaronklaassen](https://github.com/aaronklaassen))
+ * initialize the state even if validation is skipped (for ActiveRecord and Mongoid persistence) (see [issue #103](https://github.com/aasm/aasm/issues/103), thanks to [@vfonic](https://github.com/vfonic) and [@aaronklaassen](https://github.com/aaronklaassen))
 
 ## 3.0.24
 
