@@ -4,46 +4,46 @@ describe 'transitions' do
 
   it 'should raise an exception when whiny' do
     process = ProcessWithNewDsl.new
-    lambda { process.stop! }.should raise_error(AASM::InvalidTransition)
-    process.should be_sleeping
+    expect { process.stop! }.to raise_error(AASM::InvalidTransition)
+    expect(process).to be_sleeping
   end
 
   it 'should not raise an exception when not whiny' do
     silencer = Silencer.new
-    silencer.smile!.should be_false
-    silencer.should be_silent
+    expect(silencer.smile!).to be_false
+    expect(silencer).to be_silent
   end
 
   it 'should not raise an exception when superclass not whiny' do
     sub = SubClassing.new
-    sub.smile!.should be_false
-    sub.should be_silent
+    expect(sub.smile!).to be_false
+    expect(sub).to be_silent
   end
 
   it 'should not raise an exception when from is nil even if whiny' do
     silencer = Silencer.new
-    silencer.smile_any!.should be_true
-    silencer.should be_smiling
+    expect(silencer.smile_any!).to be_true
+    expect(silencer).to be_smiling
   end
 
   it 'should call the block when success' do
     silencer = Silencer.new
     success = false
-    lambda {
+    expect {
       silencer.smile_any! do
         success = true
       end
-    }.should change { success }.to(true)
+    }.to change { success }.to(true)
   end
 
   it 'should not call the block when failure' do
     silencer = Silencer.new
     success = false
-    lambda {
+    expect {
       silencer.smile! do
         success = true
       end
-    }.should_not change { success }.to(true)
+    }.not_to change { success }.to(true)
   end
 
 end
@@ -56,9 +56,9 @@ describe AASM::Transition do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Transition.new(opts)
 
-    st.from.should == opts[:from]
-    st.to.should == opts[:to]
-    st.opts.should == opts
+    expect(st.from).to eq(opts[:from])
+    expect(st.to).to eq(opts[:to])
+    expect(st.opts).to eq(opts)
   end
 
   it 'should pass equality check if from and to are the same' do
@@ -66,10 +66,10 @@ describe AASM::Transition do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.stub(:from).and_return(opts[:from])
-    obj.stub(:to).and_return(opts[:to])
+    allow(obj).to receive(:from).and_return(opts[:from])
+    allow(obj).to receive(:to).and_return(opts[:to])
 
-    st.should == obj
+    expect(st).to eq(obj)
   end
 
   it 'should fail equality check if from are not the same' do
@@ -77,10 +77,10 @@ describe AASM::Transition do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.stub(:from).and_return('blah')
-    obj.stub(:to).and_return(opts[:to])
+    allow(obj).to receive(:from).and_return('blah')
+    allow(obj).to receive(:to).and_return(opts[:to])
 
-    st.should_not == obj
+    expect(st).not_to eq(obj)
   end
 
   it 'should fail equality check if to are not the same' do
@@ -88,10 +88,10 @@ describe AASM::Transition do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.stub(:from).and_return(opts[:from])
-    obj.stub(:to).and_return('blah')
+    allow(obj).to receive(:from).and_return(opts[:from])
+    allow(obj).to receive(:to).and_return('blah')
 
-    st.should_not == obj
+    expect(st).not_to eq(obj)
   end
 end
 
@@ -100,7 +100,7 @@ describe AASM::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar'}
     st = AASM::Transition.new(opts)
 
-    st.perform(nil).should be_true
+    expect(st.perform(nil)).to be_true
   end
 
   it 'should call the method on the object if guard is a symbol' do
@@ -108,7 +108,7 @@ describe AASM::Transition, '- when performing guard checks' do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.should_receive(:test)
+    expect(obj).to receive(:test)
 
     st.perform(obj)
   end
@@ -118,7 +118,7 @@ describe AASM::Transition, '- when performing guard checks' do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.should_receive(:test)
+    expect(obj).to receive(:test)
 
     st.perform(obj)
   end
@@ -128,7 +128,7 @@ describe AASM::Transition, '- when performing guard checks' do
     st = AASM::Transition.new(opts)
 
     obj = double('object')
-    obj.should_receive(:test)
+    expect(obj).to receive(:test)
 
     st.perform(obj)
   end
@@ -141,7 +141,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    opts[:on_transition].should_receive(:call).with(any_args)
+    expect(opts[:on_transition]).to receive(:call).with(any_args)
 
     st.execute(obj, args)
   end
@@ -152,7 +152,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    opts[:on_transition].should_receive(:call).with(no_args)
+    expect(opts[:on_transition]).to receive(:call).with(no_args)
 
     st.execute(obj, args)
   end
@@ -165,7 +165,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    obj.should_receive(:test)
+    expect(obj).to receive(:test)
 
     st.execute(obj, args)
   end
@@ -176,7 +176,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object')
 
-    obj.should_receive(:test)
+    expect(obj).to receive(:test)
 
     st.execute(obj, args)
   end
@@ -193,7 +193,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
 
     return_value = st.execute(obj, args)
 
-    return_value.should == 'arg1: 1 arg2: 2'
+    expect(return_value).to eq('arg1: 1 arg2: 2')
   end
 
   it 'should NOT pass args if the target method does NOT accept them' do
@@ -208,7 +208,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
 
     return_value = st.execute(obj, args)
 
-    return_value.should == 'success'
+    expect(return_value).to eq('success')
   end
 
 end
