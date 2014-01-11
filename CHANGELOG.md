@@ -1,8 +1,12 @@
 # CHANGELOG
 
-## 3.1.0 (not yet released)
+## 3.9.0 (not yet released)
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
+
+## 3.0.26
+
+ * support state.human_name (aliased to state.localized_name) (see [issue #105](https://github.com/aasm/aasm/issues/105)
 
 ## 3.0.25
 
