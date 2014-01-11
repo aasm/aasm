@@ -12,4 +12,5 @@ spec/*.db
 TODO
 .rvmrc
 .ruby-version
+.ruby-gemset
 alto
