@@ -203,3 +203,26 @@ describe 'transitions with persistence' do
     end
   end
 end
+
+describe "invalid states with persistence" do
+
+  it "should not store states" do
+    validator = Validator.create(:name => 'name')
+    validator.status = 'invalid_state'
+    validator.save.should be_false
+    lambda {validator.save!}.should raise_error(ActiveRecord::RecordInvalid)
+
+    validator.reload
+    validator.should be_sleeping
+  end
+
+  it "should store invalid states if configured" do
+    persistor = InvalidPersistor.create(:name => 'name')
+    persistor.status = 'invalid_state'
+    persistor.save.should be_true
+
+    persistor.reload
+    persistor.status.should == 'invalid_state'
+  end
+
+end

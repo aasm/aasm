@@ -36,8 +36,12 @@ module AASM
         else
           base.before_validation_on_create(:aasm_ensure_initial_state)
         end
+
         # ensure initial aasm state even when validations are skipped
         base.before_create(:aasm_ensure_initial_state)
+
+        # ensure state is in the list of states
+        base.validate :aasm_validate_states
       end
 
       module ClassMethods
@@ -144,6 +148,14 @@ module AASM
           end
 
           success
+        end
+
+        def aasm_validate_states
+          unless AASM::StateMachine[self.class].config.skip_validation_on_save
+            if aasm.current_state && !aasm.states.include?(aasm.current_state)
+              self.errors.add(AASM::StateMachine[self.class].config.column , "is invalid")
+            end
+          end
         end
       end # InstanceMethods
 
