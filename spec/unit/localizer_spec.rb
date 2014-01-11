@@ -30,11 +30,15 @@ describe 'localized state names' do
   end
 
   it 'should localize' do
-    LocalizerTestModel.aasm.states.detect {|s| s == :opened}.localized_name.should == "It's open now!"
+    state = LocalizerTestModel.aasm.states.detect {|s| s == :opened}
+    state.localized_name.should == "It's open now!"
+    state.human_name.should == "It's open now!"
   end
 
   it 'should use fallback' do
-    LocalizerTestModel.aasm.states.detect {|s| s == :closed}.localized_name.should == 'Closed'
+    state = LocalizerTestModel.aasm.states.detect {|s| s == :closed}
+    state.localized_name.should == 'Closed'
+    state.human_name.should == 'Closed'
   end
 end
 
