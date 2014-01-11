@@ -6,7 +6,8 @@
  * remove old aasm DSL (like `aasm_state`)
 
 
-# Planned changes for AASM >= 3.1
+# Planned changes for AASM >= 3.9
 
  * deprecate old aasm DSL (`aasm_state`, etc.)
  * deprecate old callbacks
+ * clean-up localization and human methods
