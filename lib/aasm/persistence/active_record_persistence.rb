@@ -36,6 +36,8 @@ module AASM
         else
           base.before_validation_on_create(:aasm_ensure_initial_state)
         end
+        # ensure initial aasm state even when validations are skipped
+        base.before_create(:aasm_ensure_initial_state)
       end
 
       module ClassMethods

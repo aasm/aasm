@@ -130,6 +130,22 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       end
 
     end
+
+
+    describe "instance methods" do
+      let(:simple) {SimpleNewDslMongoid.new}
+
+      it "should call aasm_ensure_initial_state on validation before create" do
+        simple.should_receive(:aasm_ensure_initial_state).and_return(true)
+        simple.valid?
+      end
+
+      it "should call aasm_ensure_initial_state before create, even if skipping validations" do
+        simple.should_receive(:aasm_ensure_initial_state).and_return(true)
+        simple.save(:validate => false)
+      end
+    end
+
   rescue LoadError
     puts "Not running Mongoid specs because mongoid gem if not installed!!!"
   end

@@ -50,6 +50,7 @@ module AASM
     def localized_name
       AASM::Localizer.new.human_state_name(@clazz, self)
     end
+    alias human_name localized_name
 
     def for_select
       [display_name, name.to_s]

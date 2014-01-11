@@ -6,8 +6,11 @@ coverage
 pkg
 rdoc
 Gemfile.lock
+gemfiles/*.lock
 spec/debug.log
 spec/*.db
 TODO
 .rvmrc
+.ruby-version
+.ruby-gemset
 alto

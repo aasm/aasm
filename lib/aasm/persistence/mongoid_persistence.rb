@@ -36,6 +36,8 @@ module AASM
         # Mongoid's Validatable gem dependency goes not have a before_validation_on_xxx hook yet.
         # base.before_validation_on_create :aasm_ensure_initial_state
         base.before_validation :aasm_ensure_initial_state
+        # ensure initial aasm state even when validations are skipped
+        base.before_create :aasm_ensure_initial_state
       end
 
       module ClassMethods
