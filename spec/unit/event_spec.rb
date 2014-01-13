@@ -10,27 +10,27 @@ describe 'adding an event' do
   end
 
   it 'should set the name' do
-    event.name.should == :close_order
+    expect(event.name).to eq(:close_order)
   end
 
   it 'should set the success callback' do
-    event.options[:success].should == :success_callback
+    expect(event.options[:success]).to eq(:success_callback)
   end
 
   it 'should set the after callback' do
-    event.options[:after].should == [:after_callback]
+    expect(event.options[:after]).to eq([:after_callback])
   end
 
   it 'should set the before callback' do
-    event.options[:before].should == [:before_callback]
+    expect(event.options[:before]).to eq([:before_callback])
   end
 
   it 'should create transitions' do
     transitions = event.transitions
-    transitions[0].from.should == :open
-    transitions[0].to.should == :closed
-    transitions[1].from.should == :received
-    transitions[1].to.should == :closed
+    expect(transitions[0].from).to eq(:open)
+    expect(transitions[0].to).to eq(:closed)
+    expect(transitions[1].from).to eq(:received)
+    expect(transitions[1].to).to eq(:closed)
   end
 end
 
@@ -42,19 +42,19 @@ describe 'transition inspection' do
   end
 
   it 'should support inspecting transitions from other states' do
-    event.transitions_from_state(:sleeping).map(&:to).should == [:running]
-    event.transitions_from_state?(:sleeping).should be_true
+    expect(event.transitions_from_state(:sleeping).map(&:to)).to eq([:running])
+    expect(event.transitions_from_state?(:sleeping)).to be_true
 
-    event.transitions_from_state(:cleaning).map(&:to).should == []
-    event.transitions_from_state?(:cleaning).should be_false
+    expect(event.transitions_from_state(:cleaning).map(&:to)).to eq([])
+    expect(event.transitions_from_state?(:cleaning)).to be_false
   end
 
   it 'should support inspecting transitions to other states' do
-    event.transitions_to_state(:running).map(&:from).should == [:sleeping]
-    event.transitions_to_state?(:running).should be_true
+    expect(event.transitions_to_state(:running).map(&:from)).to eq([:sleeping])
+    expect(event.transitions_to_state?(:running)).to be_true
 
-    event.transitions_to_state(:cleaning).map(&:to).should == []
-    event.transitions_to_state?(:cleaning).should be_false
+    expect(event.transitions_to_state(:cleaning).map(&:to)).to eq([])
+    expect(event.transitions_to_state?(:cleaning)).to be_false
   end
 end
 
@@ -63,7 +63,7 @@ describe 'firing an event' do
     obj = double('object', :aasm => double('aasm', :current_state => 'open'))
 
     event = AASM::Event.new(:event)
-    event.fire(obj).should be_nil
+    expect(event.fire(obj)).to be_nil
   end
 
   it 'should return the state of the first matching transition it finds' do
@@ -73,7 +73,7 @@ describe 'firing an event' do
 
     obj = double('object', :aasm => double('aasm', :current_state => :open))
 
-    event.fire(obj).should == :closed
+    expect(event.fire(obj)).to eq(:closed)
   end
 
   it 'should call the guard with the params passed in' do
@@ -82,9 +82,9 @@ describe 'firing an event' do
     end
 
     obj = double('object', :aasm => double('aasm', :current_state => :open))
-    obj.should_receive(:guard_fn).with('arg1', 'arg2').and_return(true)
+    expect(obj).to receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
-    event.fire(obj, nil, 'arg1', 'arg2').should == :closed
+    expect(event.fire(obj, nil, 'arg1', 'arg2')).to eq(:closed)
   end
 
 end
@@ -101,7 +101,7 @@ describe 'should fire callbacks' do
       }
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:symbol_success_callback)
+      expect(model).to receive(:symbol_success_callback)
       model.with_symbol!
     end
 
@@ -115,7 +115,7 @@ describe 'should fire callbacks' do
       }
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:string_success_callback)
+      expect(model).to receive(:string_success_callback)
       model.with_string!
     end
 
@@ -129,8 +129,8 @@ describe 'should fire callbacks' do
       }
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:success_callback1)
-      model.should_receive(:success_callback2)
+      expect(model).to receive(:success_callback1)
+      expect(model).to receive(:success_callback2)
       model.with_array!
     end
 
@@ -144,9 +144,9 @@ describe 'should fire callbacks' do
       }
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:success_callback1)
-      model.should_receive(:success_callback2)
-      model.should_receive(:proc_success_callback)
+      expect(model).to receive(:success_callback1)
+      expect(model).to receive(:success_callback2)
+      expect(model).to receive(:proc_success_callback)
       model.with_array_including_procs!
     end
 
@@ -160,7 +160,7 @@ describe 'should fire callbacks' do
       }
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:proc_success_callback)
+      expect(model).to receive(:proc_success_callback)
       model.with_proc!
     end
   end
@@ -182,9 +182,9 @@ describe 'should fire callbacks' do
       end
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:do_one_thing_after).once.ordered
-      model.should_receive(:do_another_thing_after_too).once.ordered
-      model.should_receive(:do_third_thing_at_last).once.ordered
+      expect(model).to receive(:do_one_thing_after).once.ordered
+      expect(model).to receive(:do_another_thing_after_too).once.ordered
+      expect(model).to receive(:do_third_thing_at_last).once.ordered
       model.with_afters!
     end
   end
@@ -203,7 +203,7 @@ describe 'should fire callbacks' do
       end
 
       model = ThisNameBetterNotBeInUse.new
-      model.should_receive(:do_something_before).once
+      expect(model).to receive(:do_something_before).once
       model.before_as_proc!
     end
   end
@@ -221,8 +221,8 @@ describe 'should fire callbacks' do
     end
 
     model = ThisNameBetterNotBeInUse.new
-    model.should_receive(:do_something_before).once.ordered
-    model.should_receive(:do_something_after).once.ordered
+    expect(model).to receive(:do_something_before).once.ordered
+    expect(model).to receive(:do_something_after).once.ordered
     model.in_right_order!
   end
 end
@@ -232,40 +232,40 @@ describe 'parametrised events' do
 
   it 'should transition to specified next state (sleeping to showering)' do
     pe.wakeup!(:showering)
-    pe.aasm.current_state.should == :showering
+    expect(pe.aasm.current_state).to eq(:showering)
   end
 
   it 'should transition to specified next state (sleeping to working)' do
     pe.wakeup!(:working)
-    pe.aasm.current_state.should == :working
+    expect(pe.aasm.current_state).to eq(:working)
   end
 
   it 'should transition to default (first or showering) state' do
     pe.wakeup!
-    pe.aasm.current_state.should == :showering
+    expect(pe.aasm.current_state).to eq(:showering)
   end
 
   it 'should transition to default state when on_transition invoked' do
     pe.dress!(nil, 'purple', 'dressy')
-    pe.aasm.current_state.should == :working
+    expect(pe.aasm.current_state).to eq(:working)
   end
 
   it 'should call on_transition method with args' do
     pe.wakeup!(:showering)
-    pe.should_receive(:wear_clothes).with('blue', 'jeans')
+    expect(pe).to receive(:wear_clothes).with('blue', 'jeans')
     pe.dress!(:working, 'blue', 'jeans')
   end
 
   it 'should call on_transition proc' do
     pe.wakeup!(:showering)
-    pe.should_receive(:wear_clothes).with('purple', 'slacks')
+    expect(pe).to receive(:wear_clothes).with('purple', 'slacks')
     pe.dress!(:dating, 'purple', 'slacks')
   end
 
   it 'should call on_transition with an array of methods' do
     pe.wakeup!(:showering)
-    pe.should_receive(:condition_hair)
-    pe.should_receive(:fix_hair)
+    expect(pe).to receive(:condition_hair)
+    expect(pe).to receive(:fix_hair)
     pe.dress!(:prettying_up)
   end
 end
@@ -274,9 +274,9 @@ describe 'event firing without persistence' do
   it 'should attempt to persist if aasm_write_state is defined' do
     foo = Foo.new
     def foo.aasm_write_state; end
-    foo.should be_open
+    expect(foo).to be_open
 
-    foo.should_receive(:aasm_write_state_without_persistence)
+    expect(foo).to receive(:aasm_write_state_without_persistence)
     foo.close
   end
 end
