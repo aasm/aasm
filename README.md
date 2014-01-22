@@ -339,6 +339,28 @@ class Job < ActiveRecord::Base
 end
 ```
 
+If you want to encapsulate state changes within an own transaction, the behavior
+of this nested transaction might be confusing. Take a look at
+[ActiveRecord Nested Transactions](http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html)
+if you want to know more about this. Nevertheless, AASM by default requires a new transaction
+`transaction(:requires_new => true)`. You can override this behavior by changing
+the configuration
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :requires_new_transaction => false do
+    ...
+  end
+
+  ...
+end
+```
+
+which then leads to `transaction(:requires_new => false)`, the Rails default.
+
+
 ### Column name & migration
 
 As a default AASM uses the column `aasm_state` to store the states. You can override

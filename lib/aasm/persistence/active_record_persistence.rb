@@ -138,7 +138,7 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args, &block)
-          success = self.class.transaction(:requires_new => true) do
+          success = self.class.transaction(:requires_new => requires_new?) do
             super
           end
 
@@ -148,6 +148,10 @@ module AASM
           end
 
           success
+        end
+
+        def requires_new?
+          AASM::StateMachine[self.class].config.requires_new_transaction
         end
 
         def aasm_validate_states

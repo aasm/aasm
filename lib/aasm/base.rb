@@ -23,6 +23,12 @@ module AASM
       elsif @state_machine.config.skip_validation_on_save.nil?
         @state_machine.config.skip_validation_on_save = false # this is the default, so don't store any new state if the model is invalid
       end
+
+      if options.key?(:requires_new_transaction)
+        @state_machine.config.requires_new_transaction = options[:requires_new_transaction]
+      elsif @state_machine.config.requires_new_transaction.nil?
+        @state_machine.config.requires_new_transaction = true # use requires_new for nested transactions
+      end
     end
 
     def initial_state(new_initial_state=nil)

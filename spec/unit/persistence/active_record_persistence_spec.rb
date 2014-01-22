@@ -173,16 +173,33 @@ describe 'transitions with persistence' do
       expect(worker.reload.status).to eq('sleeping')
     end
 
-    it "should rollback all changes in nested transaction" do
-      expect(transactor).to be_sleeping
-      expect(worker.status).to eq('sleeping')
+    context "nested transactions" do
+      it "should rollback all changes in nested transaction" do
+        expect(transactor).to be_sleeping
+        expect(worker.status).to eq('sleeping')
 
-      Worker.transaction do
-        expect { transactor.run! }.to raise_error(StandardError, 'failed on purpose')
+        Worker.transaction do
+          expect { transactor.run! }.to raise_error(StandardError, 'failed on purpose')
+        end
+
+        expect(transactor).to be_running
+        expect(worker.reload.status).to eq('sleeping')
       end
 
-      expect(transactor).to be_running
-      expect(worker.reload.status).to eq('sleeping')
+      it "should only rollback changes in the main transaction not the nested one" do
+        # change configuration to not require new transaction
+        AASM::StateMachine[Transactor].config.requires_new_transaction = false
+
+        expect(transactor).to be_sleeping
+        expect(worker.status).to eq('sleeping')
+
+        Worker.transaction do
+          expect { transactor.run! }.to raise_error(StandardError, 'failed on purpose')
+        end
+
+        expect(transactor).to be_running
+        expect(worker.reload.status).to eq('running')
+      end
     end
 
     describe "after_commit callback" do
