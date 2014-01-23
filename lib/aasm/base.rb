@@ -5,30 +5,19 @@ module AASM
       @clazz = clazz
       @state_machine = AASM::StateMachine[@clazz]
       @state_machine.config.column = options[:column].to_sym if options[:column]
+      @options = options
 
-      if options.key?(:whiny_transitions)
-        @state_machine.config.whiny_transitions = options[:whiny_transitions]
-      elsif @state_machine.config.whiny_transitions.nil?
-        @state_machine.config.whiny_transitions = true # this is the default, so let's cry
-      end
+      # let's cry if the transition is invalid
+      configure :whiny_transitions, true
 
-      if options.key?(:create_scopes)
-        @state_machine.config.create_scopes = options[:create_scopes]
-      elsif @state_machine.config.create_scopes.nil?
-        @state_machine.config.create_scopes = true # this is the default, so let's create scopes
-      end
+      # create named scopes for each state
+      configure :create_scopes, true
 
-      if options.key?(:skip_validation_on_save)
-        @state_machine.config.skip_validation_on_save = options[:skip_validation_on_save]
-      elsif @state_machine.config.skip_validation_on_save.nil?
-        @state_machine.config.skip_validation_on_save = false # this is the default, so don't store any new state if the model is invalid
-      end
+      # don't store any new state if the model is invalid
+      configure :skip_validation_on_save, false
 
-      if options.key?(:requires_new_transaction)
-        @state_machine.config.requires_new_transaction = options[:requires_new_transaction]
-      elsif @state_machine.config.requires_new_transaction.nil?
-        @state_machine.config.requires_new_transaction = true # use requires_new for nested transactions
-      end
+      # use requires_new for nested transactions
+      configure :requires_new_transaction, true
     end
 
     def initial_state(new_initial_state=nil)
@@ -90,6 +79,17 @@ module AASM
         events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
       else
         events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+      end
+    end
+
+    private
+
+    def configure(key, default_value)
+      @state_machine.config.send(:new_ostruct_member, key)
+      if @options.key?(key)
+        @state_machine.config.send("#{key}=", @options[key])
+      elsif @state_machine.config.send(key).nil?
+        @state_machine.config.send("#{key}=", default_value)
       end
     end
 
