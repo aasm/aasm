@@ -6,9 +6,10 @@
 
 ## 3.1.0 (not yet released)
 
- * support multiple guards per transition
- * allow configuring behavior of nested transactions (see [issue #107](https://github.com/aasm/aasm/issues/107))
  * validating the current state (see [issue #95](https://github.com/aasm/aasm/issues/95), thanks to [@ivantsepp](https://github.com/ivantsepp))
+ * allow configuring behavior of nested transactions (see [issue #107](https://github.com/aasm/aasm/issues/107))
+ * support multiple guards per transition
+ * support event guards (see [issue #85](https://github.com/aasm/aasm/issues/85))
 
 ## 3.0.26
 

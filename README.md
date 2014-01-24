@@ -196,8 +196,19 @@ job.sleep       # => raises AASM::InvalidTransition
 You can even provide a number of guards, which all have to succeed to proceed
 
 ```ruby
+    def walked_the_dog?; ...; end
+
     event :sleep do
       transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?, :walked_the_dog?]
+    end
+```
+
+If you want to provide guards for all transitions withing an event, you can use event guards
+
+```ruby
+    event :sleep, :guards => [:walked_the_dog?] do
+      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?]
+      transitions :from => :cleaning, :to => :sleeping
     end
 ```
 

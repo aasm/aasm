@@ -28,3 +28,33 @@ describe "per-transition guards" do
     expect(guardian).to be_alpha
   end
 end
+
+describe "event guards" do
+  let(:guardian) { Guardian.new }
+
+  it "allows the transition if the event guards succeed" do
+    expect { guardian.use_event_guards_that_succeed! }.to_not raise_error
+    expect(guardian).to be_beta
+  end
+
+  it "allows the transition if the event and transition guards succeed" do
+    expect { guardian.use_event_and_transition_guards_that_succeed! }.to_not raise_error
+    expect(guardian).to be_beta
+  end
+
+  it "stops the transition if the first event guard fails" do
+    expect { guardian.use_event_guards_where_the_first_fails! }.to raise_error(AASM::InvalidTransition)
+    expect(guardian).to be_alpha
+  end
+
+  it "stops the transition if the second event guard fails" do
+    expect { guardian.use_event_guards_where_the_second_fails! }.to raise_error(AASM::InvalidTransition)
+    expect(guardian).to be_alpha
+  end
+
+  it "stops the transition if the transition guard fails" do
+    expect { guardian.use_event_and_transition_guards_where_third_fails! }.to raise_error(AASM::InvalidTransition)
+    expect(guardian).to be_alpha
+  end
+
+end
