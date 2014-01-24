@@ -193,6 +193,13 @@ job.may_sleep?  # => false
 job.sleep       # => raises AASM::InvalidTransition
 ```
 
+You can even provide a number of guards, which all have to succeed to proceed
+
+```ruby
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?, :walked_the_dog?]
+    end
+```
 
 ### ActiveRecord
 

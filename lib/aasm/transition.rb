@@ -4,20 +4,24 @@ module AASM
     alias_method :options, :opts
 
     def initialize(opts)
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @from = opts[:from]
+      @to = opts[:to]
+      @guards = Array(opts[:guard] || opts[:guards])
+      @on_transition = opts[:on_transition]
       @opts = opts
     end
 
     # TODO: should be named allowed? or similar
     def perform(obj, *args)
-      case @guard
+      @guards.each do |guard|
+        case guard
         when Symbol, String
-          obj.send(@guard, *args)
+          return false unless obj.send(guard, *args)
         when Proc
-          @guard.call(obj, *args)
-        else
-          true
+          return false unless guard.call(obj, *args)
+        end
       end
+      true
     end
 
     def execute(obj, *args)
