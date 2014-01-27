@@ -139,7 +139,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {|o| o.test}}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     expect(opts[:on_transition]).to receive(:call).with(any_args)
 
@@ -150,7 +150,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     opts = {:from => 'foo', :to => 'bar', :on_transition => Proc.new {||}}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     expect(opts[:on_transition]).to receive(:call).with(no_args)
 
@@ -163,7 +163,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => 'test'}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     expect(obj).to receive(:test)
 
@@ -174,7 +174,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     expect(obj).to receive(:test)
 
@@ -185,7 +185,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     def obj.test(args)
       "arg1: #{args[:arg1]} arg2: #{args[:arg2]}"
@@ -200,7 +200,7 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object')
+    obj = double('object', :aasm => 'aasm')
 
     def obj.test
       'success'
@@ -209,6 +209,21 @@ describe AASM::Transition, '- when executing the transition with an :on_transtio
     return_value = st.execute(obj, args)
 
     expect(return_value).to eq('success')
+  end
+
+  it 'should allow accessing the from_state and the to_state' do
+    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    st = AASM::Transition.new(opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => AASM::InstanceBase.new('object'))
+
+    def obj.test(args)
+      "from: #{aasm.from_state} to: #{aasm.to_state}"
+    end
+
+    return_value = st.execute(obj, args)
+
+    expect(return_value).to eq('from: foo to: bar')
   end
 
 end

@@ -41,6 +41,9 @@ module AASM
     private
 
     def _execute(obj, on_transition, *args)
+      obj.aasm.from_state = @from if obj.aasm.respond_to?(:from_state=)
+      obj.aasm.to_state = @to if obj.aasm.respond_to?(:to_state=)
+
       case on_transition
       when Proc
         on_transition.arity == 0 ? on_transition.call : on_transition.call(obj, *args)

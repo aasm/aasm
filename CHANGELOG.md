@@ -10,6 +10,7 @@
  * allow configuring behavior of nested transactions (see [issue #107](https://github.com/aasm/aasm/issues/107))
  * support multiple guards per transition
  * support event guards (see [issue #85](https://github.com/aasm/aasm/issues/85))
+ * support reading from- and to-state during on_transition callback (see [issue #100](https://github.com/aasm/aasm/issues/100))
 
 ## 3.0.26
 

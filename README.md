@@ -152,6 +152,15 @@ In this case the `set_process` would be called with `:defagmentation` argument.
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
+During the `:on_transition` callback (and reliably only then) you can access the
+originating state (the from-state) and the target state (the to state), like this:
+
+```ruby
+  def set_process(name)
+    logger.info "from #{aasm.from_state} to #{aasm.to_state}"
+  end
+```
+
 ### Guards
 
 Let's assume you want to allow particular transitions only if a defined condition is
