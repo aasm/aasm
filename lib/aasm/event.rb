@@ -6,6 +6,7 @@ module AASM
     def initialize(name, options = {}, &block)
       @name = name
       @transitions = []
+      @guards = Array(options[:guard] || options[:guards])
       update(options, &block)
     end
 
@@ -59,17 +60,27 @@ module AASM
     ## DSL interface
     def transitions(definitions=nil)
       if definitions # define new transitions
-        # Create a separate transition for each from state to the given state
+        # Create a separate transition for each from-state to the given state
         Array(definitions[:from]).each do |s|
-          @transitions << AASM::Transition.new(definitions.merge({:from => s.to_sym}))
+          @transitions << AASM::Transition.new(attach_event_guards(definitions.merge(:from => s.to_sym)))
         end
-        # Create a transition if to is specified without from (transitions from ANY state)
-        @transitions << AASM::Transition.new(definitions) if @transitions.empty? && definitions[:to]
+        # Create a transition if :to is specified without :from (transitions from ANY state)
+        if @transitions.empty? && definitions[:to]
+          @transitions << AASM::Transition.new(attach_event_guards(definitions))
+        end
       end
       @transitions
     end
 
   private
+
+    def attach_event_guards(definitions)
+      unless @guards.empty?
+        given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards))
+        definitions[:guards] = given_guards + @guards
+      end
+      definitions
+    end
 
     def update(options = {}, &block)
       @options = options

@@ -27,15 +27,15 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
 
       context "Does not already respond_to? the scope name" do
         it "should add a scope" do
-          SimpleMongoid.should respond_to(:unknown_scope)
-          SimpleMongoid.unknown_scope.class.should == Mongoid::Criteria
+          expect(SimpleMongoid).to respond_to(:unknown_scope)
+          expect(SimpleMongoid.unknown_scope.class).to eq(Mongoid::Criteria)
         end
       end
 
       context "Already respond_to? the scope name" do
         it "should not add a scope" do
-          SimpleMongoid.should respond_to(:new)
-          SimpleMongoid.new.class.should == SimpleMongoid
+          expect(SimpleMongoid).to respond_to(:new)
+          expect(SimpleMongoid.new.class).to eq(SimpleMongoid)
         end
       end
 
@@ -45,20 +45,20 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
 
       context "Does not already respond_to? the scope name" do
         it "should add a scope" do
-          SimpleNewDslMongoid.should respond_to(:unknown_scope)
-          SimpleNewDslMongoid.unknown_scope.class.should == Mongoid::Criteria
+          expect(SimpleNewDslMongoid).to respond_to(:unknown_scope)
+          expect(SimpleNewDslMongoid.unknown_scope.class).to eq(Mongoid::Criteria)
         end
       end
 
       context "Already respond_to? the scope name" do
         it "should not add a scope" do
-          SimpleNewDslMongoid.should respond_to(:new)
-          SimpleNewDslMongoid.new.class.should == SimpleNewDslMongoid
+          expect(SimpleNewDslMongoid).to respond_to(:new)
+          expect(SimpleNewDslMongoid.new.class).to eq(SimpleNewDslMongoid)
         end
       end
 
       it "does not create scopes if requested" do
-        NoScopeMongoid.should_not respond_to(:ignored_scope)
+        expect(NoScopeMongoid).not_to respond_to(:ignored_scope)
       end
 
     end
@@ -69,12 +69,12 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       let!(:model_id) { model._id }
 
       it "should respond to method" do
-        SimpleNewDslMongoid.should respond_to(:find_in_state)
+        expect(SimpleNewDslMongoid).to respond_to(:find_in_state)
       end
 
       it "should find the model when given the correct scope and model id" do
-        SimpleNewDslMongoid.find_in_state(model_id, 'unknown_scope').class.should == SimpleNewDslMongoid
-        SimpleNewDslMongoid.find_in_state(model_id, 'unknown_scope').should == model
+        expect(SimpleNewDslMongoid.find_in_state(model_id, 'unknown_scope').class).to eq(SimpleNewDslMongoid)
+        expect(SimpleNewDslMongoid.find_in_state(model_id, 'unknown_scope')).to eq(model)
       end
 
       it "should raise DocumentNotFound error when given incorrect scope" do
@@ -94,17 +94,17 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       end
 
       it "should respond to method" do
-        SimpleNewDslMongoid.should respond_to(:count_in_state)
+        expect(SimpleNewDslMongoid).to respond_to(:count_in_state)
       end
 
       it "should return n for a scope with n records persisted" do
-        SimpleNewDslMongoid.count_in_state('unknown_scope').class.should == Fixnum
-        SimpleNewDslMongoid.count_in_state('unknown_scope').should == 3
+        expect(SimpleNewDslMongoid.count_in_state('unknown_scope').class).to eq(Fixnum)
+        expect(SimpleNewDslMongoid.count_in_state('unknown_scope')).to eq(3)
       end
 
       it "should return zero for a scope without records persisted" do
-        SimpleNewDslMongoid.count_in_state('new').class.should == Fixnum
-        SimpleNewDslMongoid.count_in_state('new').should == 0
+        expect(SimpleNewDslMongoid.count_in_state('new').class).to eq(Fixnum)
+        expect(SimpleNewDslMongoid.count_in_state('new')).to eq(0)
       end
 
     end
@@ -117,16 +117,16 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       end
 
       it "should respond to method" do
-        SimpleNewDslMongoid.should respond_to(:with_state_scope)
+        expect(SimpleNewDslMongoid).to respond_to(:with_state_scope)
       end
 
       it "should correctly process block" do
-        SimpleNewDslMongoid.with_state_scope('unknown_scope') do
+        expect(SimpleNewDslMongoid.with_state_scope('unknown_scope') do
           SimpleNewDslMongoid.count
-        end.should == 3
-        SimpleNewDslMongoid.with_state_scope('new') do
+        end).to eq(3)
+        expect(SimpleNewDslMongoid.with_state_scope('new') do
           SimpleNewDslMongoid.count
-        end.should == 2
+        end).to eq(2)
       end
 
     end
@@ -136,12 +136,12 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
       let(:simple) {SimpleNewDslMongoid.new}
 
       it "should call aasm_ensure_initial_state on validation before create" do
-        simple.should_receive(:aasm_ensure_initial_state).and_return(true)
+        expect(simple).to receive(:aasm_ensure_initial_state).and_return(true)
         simple.valid?
       end
 
       it "should call aasm_ensure_initial_state before create, even if skipping validations" do
-        simple.should_receive(:aasm_ensure_initial_state).and_return(true)
+        expect(simple).to receive(:aasm_ensure_initial_state).and_return(true)
         simple.save(:validate => false)
       end
     end

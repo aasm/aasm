@@ -4,12 +4,12 @@ describe 'on initialization' do
   let(:auth) {AuthMachine.new}
 
   it 'should be in the pending state' do
-    auth.aasm.current_state.should == :pending
+    expect(auth.aasm.current_state).to eq(:pending)
   end
 
   it 'should have an activation code' do
-    auth.has_activation_code?.should be_true
-    auth.activation_code.should_not be_nil
+    expect(auth.has_activation_code?).to be_true
+    expect(auth.activation_code).not_to be_nil
   end
 end
 
@@ -19,26 +19,26 @@ describe 'when being unsuspended' do
   it 'should be able to be unsuspended' do
     auth.activate!
     auth.suspend!
-    auth.may_unsuspend?.should be_true
+    expect(auth.may_unsuspend?).to be_true
   end
 
   it 'should not be able to be unsuspended into active' do
     auth.suspend!
-    auth.may_unsuspend?(:active).should_not be_true
+    expect(auth.may_unsuspend?(:active)).not_to be_true
   end
 
   it 'should be able to be unsuspended into active if polite' do
     auth.suspend!
-    auth.may_wait?(:waiting, :please).should be_true
+    expect(auth.may_wait?(:waiting, :please)).to be_true
     auth.wait!(nil, :please)
   end
 
   it 'should not be able to be unsuspended into active if not polite' do
     auth.suspend!
-    auth.may_wait?(:waiting).should_not be_true
-    auth.may_wait?(:waiting, :rude).should_not be_true
-    lambda {auth.wait!(nil, :rude)}.should raise_error(AASM::InvalidTransition)
-    lambda {auth.wait!}.should raise_error(AASM::InvalidTransition)
+    expect(auth.may_wait?(:waiting)).not_to be_true
+    expect(auth.may_wait?(:waiting, :rude)).not_to be_true
+    expect {auth.wait!(nil, :rude)}.to raise_error(AASM::InvalidTransition)
+    expect {auth.wait!}.to raise_error(AASM::InvalidTransition)
   end
 
   it 'should not be able to be unpassified' do
@@ -46,8 +46,8 @@ describe 'when being unsuspended' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.may_unpassify?.should_not be_true
-    lambda {auth.unpassify!}.should raise_error(AASM::InvalidTransition)
+    expect(auth.may_unpassify?).not_to be_true
+    expect {auth.unpassify!}.to raise_error(AASM::InvalidTransition)
   end
 
   it 'should be active if previously activated' do
@@ -55,14 +55,14 @@ describe 'when being unsuspended' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm.current_state.should == :active
+    expect(auth.aasm.current_state).to eq(:active)
   end
 
   it 'should be pending if not previously activated, but an activation code is present' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm.current_state.should == :pending
+    expect(auth.aasm.current_state).to eq(:pending)
   end
 
   it 'should be passive if not previously activated and there is no activation code' do
@@ -70,6 +70,6 @@ describe 'when being unsuspended' do
     auth.suspend!
     auth.unsuspend!
 
-    auth.aasm.current_state.should == :passive
+    expect(auth.aasm.current_state).to eq(:passive)
   end
 end

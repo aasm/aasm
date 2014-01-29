@@ -1,6 +1,8 @@
 module AASM
   class InstanceBase
 
+    attr_accessor :from_state, :to_state
+
     def initialize(instance)
       @instance = instance
     end

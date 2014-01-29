@@ -5,26 +5,26 @@ describe 'subclassing' do
 
   it 'should have the parent states' do
     Foo.aasm.states.each do |state|
-      FooTwo.aasm.states.should include(state)
+      expect(FooTwo.aasm.states).to include(state)
     end
-    Baz.aasm.states.should == Bar.aasm.states
+    expect(Baz.aasm.states).to eq(Bar.aasm.states)
   end
 
   it 'should not add the child states to the parent machine' do
-    Foo.aasm.states.should_not include(:foo)
+    expect(Foo.aasm.states).not_to include(:foo)
   end
 
   it "should have the same events as its parent" do
-    Baz.aasm.events.should == Bar.aasm.events
+    expect(Baz.aasm.events).to eq(Bar.aasm.events)
   end
 
   it 'should know how to respond to `may_add_details?`' do
-    son.may_add_details?.should be_true
+    expect(son.may_add_details?).to be_true
   end
 
   it 'should not break if I call Son#update_state' do
     son.update_state
-    son.aasm.current_state.should == :pending_details_confirmation
+    expect(son.aasm.current_state).to eq(:pending_details_confirmation)
   end
 
 end

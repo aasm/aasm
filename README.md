@@ -1,6 +1,9 @@
 # AASM - Ruby state machines
 
-[![Gem Version](https://badge.fury.io/rb/aasm.png)](http://badge.fury.io/rb/aasm) [![Build Status](https://secure.travis-ci.org/aasm/aasm.png?branch=master)](http://travis-ci.org/aasm/aasm) [![Code Climate](https://codeclimate.com/github/aasm/aasm.png)](https://codeclimate.com/github/aasm/aasm) [![Coverage Status](https://coveralls.io/repos/aasm/aasm/badge.png?branch=master)](https://coveralls.io/r/aasm/aasm)
+<a href="http://badge.fury.io/rb/aasm"><img src="https://badge.fury.io/rb/aasm@2x.png" alt="Gem Version" height="18"></a>
+[![Build Status](https://secure.travis-ci.org/aasm/aasm.png?branch=master)](http://travis-ci.org/aasm/aasm)
+[![Code Climate](https://codeclimate.com/github/aasm/aasm.png)](https://codeclimate.com/github/aasm/aasm)
+[![Coverage Status](https://coveralls.io/repos/aasm/aasm/badge.png?branch=master)](https://coveralls.io/r/aasm/aasm)
 
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
@@ -149,6 +152,15 @@ In this case the `set_process` would be called with `:defagmentation` argument.
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
+During the `:on_transition` callback (and reliably only then) you can access the
+originating state (the from-state) and the target state (the to state), like this:
+
+```ruby
+  def set_process(name)
+    logger.info "from #{aasm.from_state} to #{aasm.to_state}"
+  end
+```
+
 ### Guards
 
 Let's assume you want to allow particular transitions only if a defined condition is
@@ -190,6 +202,24 @@ job.may_sleep?  # => false
 job.sleep       # => raises AASM::InvalidTransition
 ```
 
+You can even provide a number of guards, which all have to succeed to proceed
+
+```ruby
+    def walked_the_dog?; ...; end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?, :walked_the_dog?]
+    end
+```
+
+If you want to provide guards for all transitions withing an event, you can use event guards
+
+```ruby
+    event :sleep, :guards => [:walked_the_dog?] do
+      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?]
+      transitions :from => :cleaning, :to => :sleeping
+    end
+```
 
 ### ActiveRecord
 
@@ -338,6 +368,28 @@ class Job < ActiveRecord::Base
   end
 end
 ```
+
+If you want to encapsulate state changes within an own transaction, the behavior
+of this nested transaction might be confusing. Take a look at
+[ActiveRecord Nested Transactions](http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html)
+if you want to know more about this. Nevertheless, AASM by default requires a new transaction
+`transaction(:requires_new => true)`. You can override this behavior by changing
+the configuration
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :requires_new_transaction => false do
+    ...
+  end
+
+  ...
+end
+```
+
+which then leads to `transaction(:requires_new => false)`, the Rails default.
+
 
 ### Column name & migration
 

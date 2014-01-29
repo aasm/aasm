@@ -12,34 +12,34 @@ describe AASM::State do
 
   it 'should set the name' do
     state = new_state
-    state.name.should == :astate
+    expect(state.name).to eq(:astate)
   end
 
   it 'should set the display_name from name' do
-    new_state.display_name.should == 'Astate'
+    expect(new_state.display_name).to eq('Astate')
   end
 
   it 'should set the display_name from options' do
-    new_state(:display => "A State").display_name.should == 'A State'
+    expect(new_state(:display => "A State").display_name).to eq('A State')
   end
 
   it 'should set the options and expose them as options' do
-    new_state.options.should == @options
+    expect(new_state.options).to eq(@options)
   end
 
   it 'should be equal to a symbol of the same name' do
-    new_state.should == :astate
+    expect(new_state).to eq(:astate)
   end
 
   it 'should be equal to a State of the same name' do
-    new_state.should == new_state
+    expect(new_state).to eq(new_state)
   end
 
   it 'should send a message to the record for an action if the action is present as a symbol' do
     state = new_state(:entering => :foo)
 
     record = double('record')
-    record.should_receive(:foo)
+    expect(record).to receive(:foo)
 
     state.fire_callbacks(:entering, record)
   end
@@ -48,7 +48,7 @@ describe AASM::State do
     state = new_state(:entering => 'foo')
 
     record = double('record')
-    record.should_receive(:foo)
+    expect(record).to receive(:foo)
 
     state.fire_callbacks(:entering, record)
   end
@@ -57,10 +57,10 @@ describe AASM::State do
     state = new_state(:entering => [:a, :b, "c", lambda {|r| r.foobar }])
 
     record = double('record')
-    record.should_receive(:a)
-    record.should_receive(:b)
-    record.should_receive(:c)
-    record.should_receive(:foobar)
+    expect(record).to receive(:a)
+    expect(record).to receive(:b)
+    expect(record).to receive(:c)
+    expect(record).to receive(:foobar)
 
     state.fire_callbacks(:entering, record)
   end
@@ -69,9 +69,9 @@ describe AASM::State do
     state = new_state(:entering => [:a, :b, :c])
 
     record = double('record')
-    record.should_receive(:a)
-    record.should_receive(:b).and_throw(:halt_aasm_chain)
-    record.should_not_receive(:c)
+    expect(record).to receive(:a)
+    expect(record).to receive(:b).and_throw(:halt_aasm_chain)
+    expect(record).not_to receive(:c)
 
     state.fire_callbacks(:entering, record)
   end
@@ -80,7 +80,7 @@ describe AASM::State do
     state = new_state(:entering => Proc.new {|r| r.foobar})
 
     record = double('record')
-    record.should_receive(:foobar)
+    expect(record).to receive(:foobar)
 
     state.fire_callbacks(:entering, record)
   end
