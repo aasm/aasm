@@ -13,7 +13,7 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
-## 3.1.0 (not yet released)
+## 3.1.0
 
  * validating the current state (see [issue #95](https://github.com/aasm/aasm/issues/95), thanks to [@ivantsepp](https://github.com/ivantsepp))
  * allow configuring behavior of nested transactions (see [issue #107](https://github.com/aasm/aasm/issues/107))
