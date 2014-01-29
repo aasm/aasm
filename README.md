@@ -94,7 +94,7 @@ class Job
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
 
-    event :run, :after => Proc.new { do_afterwards } do
+    event :run, :after => Proc.new { |user| notify_somebody(user) } do
       transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
     end
 
@@ -117,7 +117,7 @@ class Job
     ...
   end
 
-  def do_afterwards
+  def notify_somebody(user)
     ...
   end
 
@@ -125,7 +125,7 @@ end
 ```
 
 In this case `do_something` is called before actually entering the state `sleeping`,
-while `do_afterwards` is called after the transition `run` (from `sleeping` to `running`)
+while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
 is finished.
 
 Here you can see a list of all possible callbacks, together with their order of calling:
