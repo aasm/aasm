@@ -4,6 +4,10 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
+## 3.1.1
+
+ * bugfix: don't require ActiveRecord for localizing AASM event and state name (see [issue #113](https://github.com/aasm/aasm/issues/113), thanks to [@silentshade](https://github.com/silentshade))
+
 ## 3.1.0
 
  * validating the current state (see [issue #95](https://github.com/aasm/aasm/issues/95), thanks to [@ivantsepp](https://github.com/ivantsepp))
