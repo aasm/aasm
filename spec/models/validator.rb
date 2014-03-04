@@ -3,7 +3,7 @@ require 'active_record'
 class Validator < ActiveRecord::Base
   include AASM
   aasm :column => :status do
-    state :sleeping, :initial => true
+    state :sleeping, :after_commit => :yawn, :initial => true
     state :running, :after_commit => :change_name!
     state :failed, :after_enter => :fail, :after_commit => :change_name!
     event :run do
@@ -23,7 +23,27 @@ class Validator < ActiveRecord::Base
     save!
   end
 
+  def yawn
+    # well, yawn
+  end
+
   def fail
     raise StandardError.new('failed on purpose')
   end
 end
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running
+    state :failed, :after_enter => :fail
+
+    event :run, :after_commit => :change_name! do
+      transitions :to => :running, :from => :sleeping
+    end
+    event :sleep, :after_commit => :yawn do
+      transitions :to => :sleeping, :from => :running
+    end
+    event :fail do
+      transitions :to => :failed, :from => [:sleeping, :running]
+    end
+  end

@@ -138,6 +138,7 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args, &block)
+          puts "------- aasm_fire_event"
           success = self.class.transaction(:requires_new => requires_new?) do
             super
           end

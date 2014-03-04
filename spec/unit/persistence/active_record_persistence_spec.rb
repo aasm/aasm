@@ -203,6 +203,13 @@ describe 'transitions with persistence' do
     end
 
     describe "after_commit callback" do
+      it "should fire :after_commit on initial create" do
+        validator = Validator.new(:name => "name")
+        expect(validator).to receive(:yawn).once
+        validator.save!
+        expect(validator).to be_sleeping
+      end
+
       it "should fire :after_commit if transaction was successful" do
         validator = Validator.create(:name => 'name')
         expect(validator).to be_sleeping
@@ -216,7 +223,6 @@ describe 'transitions with persistence' do
         expect { validator.fail! }.to raise_error(StandardError, 'failed on purpose')
         expect(validator.name).to eq("name")
       end
-
     end
   end
 end
