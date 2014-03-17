@@ -143,8 +143,8 @@ module AASM
           end
 
           if success
-            new_state = aasm.state_object_for_name(aasm.current_state)
-            new_state.fire_callbacks(:after_commit, self)
+            event = self.class.aasm.events[name]
+            event.fire_callbacks(:after_commit, self)
           end
 
           success

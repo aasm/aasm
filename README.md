@@ -356,9 +356,9 @@ class Job < ActiveRecord::Base
 
   aasm do
     state :sleeping, :initial => true
-    state :running, :after_commit => :notify_about_running_job
+    state :running
 
-    event :run do
+    event :run, :after_commit => :notify_about_running_job do
       transitions :from => :sleeping, :to => :running
     end
   end

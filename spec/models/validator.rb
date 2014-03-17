@@ -1,12 +1,14 @@
 require 'active_record'
 
 class Validator < ActiveRecord::Base
+
   include AASM
   aasm :column => :status do
     state :sleeping, :initial => true
-    state :running, :after_commit => :change_name!
-    state :failed, :after_enter => :fail, :after_commit => :change_name!
-    event :run do
+    state :running
+    state :failed, :after_enter => :fail
+
+    event :run, :after_commit => :change_name! do
       transitions :to => :running, :from => :sleeping
     end
     event :sleep do
@@ -16,6 +18,7 @@ class Validator < ActiveRecord::Base
       transitions :to => :failed, :from => [:sleeping, :running]
     end
   end
+
   validates_presence_of :name
 
   def change_name!

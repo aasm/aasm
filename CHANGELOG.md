@@ -2,12 +2,13 @@
 
 ## 4.0.0 (not yet released)
 
- * callbacks don't require `to_state` parameter anymore, but still support it
+ * **DSL change**: callbacks don't require `to_state` parameter anymore, but still support it
    (closing issues
    [#11](https://github.com/aasm/aasm/issues/11),
    [#58](https://github.com/aasm/aasm/issues/58) and
    [#80](https://github.com/aasm/aasm/issues/80)
    thanks to [@ejlangev](https://github.com/ejlangev))
+ * **DSL change**: `after_commit` hooks are now event-based (see [issue #112](https://github.com/aasm/aasm/issues/112))
 
 ## 3.9.0 (not yet released)
 
