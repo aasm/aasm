@@ -431,13 +431,13 @@ Given the `Job` class from above:
 ```ruby
 job = Job.new
 
-job.aasm.states
+job.aasm.states.map { | state | state.name }
 => [:sleeping, :running, :cleaning]
 
-job.aasm.states(:permissible => true)
+job.aasm.states(:permissible => true).map { | state | state.name }
 => [:running]
 job.run
-job.aasm.states(:permissible => true)
+job.aasm.states(:permissible => true).map { | state | state.name }
 => [:cleaning, :sleeping]
 
 job.aasm.events
