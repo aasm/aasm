@@ -6,6 +6,6 @@ gem 'rubysl',                           :platforms => :rbx
 gem 'rubinius-developer_tools',         :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-gem "rails", "4.1.0.beta1"
+gem "rails", "4.1.0"
 
 gemspec :path => "../"
