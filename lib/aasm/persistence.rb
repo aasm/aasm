@@ -12,6 +12,9 @@ module AASM
         elsif hierarchy.include?("Mongoid::Document")
           require_files_for(:mongoid)
           base.send(:include, AASM::Persistence::MongoidPersistence)
+        elsif hierarchy.include?("Sequel::Model")
+          require_files_for(:sequel)
+          base.send(:include, AASM::Persistence::SequelPersistence)
         end
       end
 
