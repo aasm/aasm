@@ -308,7 +308,7 @@ class Job < ActiveRecord::Base
     state :cleaning
   end
 
-  def sleeping
+  def self.sleeping
     "This method name is in already use"
   end
 end
