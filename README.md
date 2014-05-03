@@ -317,10 +317,10 @@ end
 ```ruby
 class JobsController < ApplicationController
   def index
-    @running_jobs = jobs.running
-    @recent_cleaning_jobs = jobs.cleaning.where('created_at >=  ?', 3.days.ago)
+    @running_jobs = Job.running
+    @recent_cleaning_jobs = Job.cleaning.where('created_at >=  ?', 3.days.ago)
 
-    # @sleeping_jobs = jobs.sleeping   #=> "This method name is in already use"
+    # @sleeping_jobs = Job.sleeping   #=> "This method name is in already use"
   end
 end
 ```
