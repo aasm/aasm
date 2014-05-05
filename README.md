@@ -278,6 +278,23 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Sequel
+
+AASM also supports Sequel besides ActiveRecord.
+
+```ruby
+class Job < Sequel::Model
+  include AASM
+
+  aasm do # default column: aasm_state
+    ...
+  end
+end
+```
+
+However it's not yet feature completed as ActiveRecord. For example,
+no scope would be defined as in ActiveRecord. See _Automatic Scopes_.
+
 ### Mongoid
 
 AASM also supports persistence to Mongodb if you're using Mongoid. Make sure
