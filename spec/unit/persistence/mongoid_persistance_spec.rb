@@ -147,6 +147,6 @@ describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version
     end
 
   rescue LoadError
-    puts "Not running Mongoid specs because mongoid gem if not installed!!!"
+    puts "Not running Mongoid specs because mongoid gem is not installed!!!"
   end
 end
