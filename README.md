@@ -280,7 +280,7 @@ end
 
 ### Sequel
 
-AASM also supports Sequel besides ActiveRecord.
+AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_ and _Mongoid_.
 
 ```ruby
 class Job < Sequel::Model
@@ -292,8 +292,8 @@ class Job < Sequel::Model
 end
 ```
 
-However it's not yet feature completed as ActiveRecord. For example,
-no scope would be defined as in ActiveRecord. See _Automatic Scopes_.
+However it's not yet as feature complete as _ActiveRecord_. For example, there are
+scopes defined yet. See [Automatic Scopes](#automatic-scopes).
 
 ### Mongoid
 
