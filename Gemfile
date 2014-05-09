@@ -5,7 +5,7 @@ gem "coveralls",                        :platforms => :ruby
 gem 'rubysl',                           :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-gem "rails", "3.2.17"
+gem "rails", "3.2.18"
 gem 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
 
