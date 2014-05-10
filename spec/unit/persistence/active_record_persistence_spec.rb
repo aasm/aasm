@@ -23,6 +23,118 @@ describe "instance methods" do
     expect(gate).to respond_to(:aasm_write_state_without_persistence)
   end
 
+  context "when AASM is configured to use enum" do
+    let(:state_sym) { :running }
+    let(:state_code) { 2 }
+    let(:enum_name) { :states }
+    let(:enum) { Hash[state_sym, state_code] }
+
+    before :each do
+      gate
+        .stub(:aasm_enum)
+        .and_return(enum_name)
+      gate.stub(:aasm_write_attribute)
+      gate.stub(:write_attribute)
+
+      gate
+        .class
+        .stub(enum_name)
+        .and_return(enum)
+    end
+
+    describe "aasm_write_state" do
+      context "when AASM is configured to skip validations on save" do
+        before :each do
+          gate
+            .stub(:aasm_skipping_validations)
+            .and_return(true)
+        end
+
+        it "passes state code instead of state symbol to update_all" do
+          # stub_chain does not allow us to give expectations on call
+          # parameters in the middle of the chain, so we need to use
+          # intermediate object instead.
+          obj = double(Object, update_all: 1)
+          gate
+            .class
+            .stub(:where)
+            .and_return(obj)
+
+          gate.aasm_write_state state_sym
+
+          expect(obj).to have_received(:update_all)
+            .with(Hash[gate.class.aasm_column, state_code])
+        end
+      end
+
+      context "when AASM is not skipping validations" do
+        it "delegates state update to the helper method" do
+          # Let's pretend that validation is passed
+          gate.stub(:save).and_return(true)
+
+          gate.aasm_write_state state_sym
+
+          expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+          expect(gate).to_not have_received :write_attribute
+        end
+      end
+    end
+
+    describe "aasm_write_state_without_persistence" do
+      it "delegates state update to the helper method" do
+        gate.aasm_write_state_without_persistence state_sym
+
+        expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+        expect(gate).to_not have_received :write_attribute
+      end
+    end
+
+    describe "aasm_raw_attribute_value" do
+      it "converts state symbol to state code" do
+        expect(gate.send(:aasm_raw_attribute_value, state_sym))
+          .to eq state_code
+      end
+    end
+  end
+
+  context "when AASM is configured to use string field" do
+    let(:state_sym) { :running }
+
+    before :each do
+      gate
+        .stub(:aasm_enum)
+        .and_return(nil)
+    end
+
+    describe "aasm_raw_attribute_value" do
+      it "converts state symbol to string" do
+        expect(gate.send(:aasm_raw_attribute_value, state_sym))
+          .to eq state_sym.to_s
+      end
+    end
+  end
+
+  describe "aasm_write_attribute helper method" do
+    let(:sym) { :sym }
+    let(:value) { 42 }
+
+    before :each do
+      gate.stub(:write_attribute)
+      gate.stub(:aasm_raw_attribute_value)
+        .and_return(value)
+
+      gate.send(:aasm_write_attribute, sym)
+    end
+
+    it "generates attribute value using a helper method" do
+      expect(gate).to have_received(:aasm_raw_attribute_value).with(sym)
+    end
+
+    it "writes attribute to the model" do
+      expect(gate).to have_received(:write_attribute).with(:aasm_state, value)
+    end
+  end
+
   it "should return the initial state when new and the aasm field is nil" do
     expect(gate.aasm.current_state).to eq(:opened)
   end

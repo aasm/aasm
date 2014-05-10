@@ -278,6 +278,31 @@ class Job < ActiveRecord::Base
 end
 ```
 
+#### ActiveRecord enums
+
+You can use
+[enumerations](http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html)
+in Rails 4.1+ for your state column:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  enum state {
+    sleeping: 5,
+    running: 99
+  }
+
+  aasm :column => :state, :enum => :states do
+    state :sleeping, :initial => true
+    state :running
+  end
+end
+```
+
+You need to pass the name of the method which provides access to the
+enumeration mapping as a value of ```enum```.
+
 ### Sequel
 
 AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_ and _Mongoid_.
