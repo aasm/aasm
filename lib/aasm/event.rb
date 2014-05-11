@@ -103,8 +103,7 @@ module AASM
       # If to_state is not nil it either contains a potential
       # to_state or an arg
       unless to_state == nil
-        if to_state.respond_to?(:to_sym) && 
-          !transitions.map(&:to).flatten.include?(to_state.to_sym)
+        if !to_state.respond_to?(:to_sym) || !transitions.map(&:to).flatten.include?(to_state.to_sym)
           args.unshift(to_state)
           to_state = nil
         end

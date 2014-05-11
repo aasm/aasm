@@ -33,7 +33,23 @@ describe 'callbacks for the new DSL' do
     cb.close!(:arg1, :arg2)
   end
 
-  it "should call the proper methods given a to state as the first arg" do
+  it "should call the callbacks given the to-state as argument" do
+    cb = CallbackWithStateArg.new
+    cb.should_receive(:before_method).with(:arg1).once.ordered
+    cb.should_receive(:transition_method).never
+    cb.should_receive(:transition_method2).with(:arg1).once.ordered
+    cb.should_receive(:after_method).with(:arg1).once.ordered
+    cb.close!(:out_to_lunch, :arg1)
+
+    cb = CallbackWithStateArg.new
+    some_object = double('some object')
+    cb.should_receive(:before_method).with(some_object).once.ordered
+    cb.should_receive(:transition_method2).with(some_object).once.ordered
+    cb.should_receive(:after_method).with(some_object).once.ordered
+    cb.close!(:out_to_lunch, some_object)
+  end
+
+  it "should call the proper methods just with arguments" do
     cb = CallbackWithStateArg.new
     cb.should_receive(:before_method).with(:arg1).once.ordered
     cb.should_receive(:transition_method).with(:arg1).once.ordered
@@ -42,11 +58,12 @@ describe 'callbacks for the new DSL' do
     cb.close!(:arg1)
 
     cb = CallbackWithStateArg.new
-    cb.should_receive(:before_method).with(:arg1).once.ordered
+    some_object = double('some object')
+    cb.should_receive(:before_method).with(some_object).once.ordered
+    cb.should_receive(:transition_method).with(some_object).once.ordered
     cb.should_receive(:transition_method).never
-    cb.should_receive(:transition_method2).with(:arg1).once.ordered
-    cb.should_receive(:after_method).with(:arg1).once.ordered
-    cb.close!(:out_to_lunch, :arg1)
+    cb.should_receive(:after_method).with(some_object).once.ordered
+    cb.close!(some_object)
   end
 end
 
