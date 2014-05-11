@@ -1,7 +1,7 @@
 # AASM - Ruby state machines
 
 <a href="http://badge.fury.io/rb/aasm"><img src="https://badge.fury.io/rb/aasm@2x.png" alt="Gem Version" height="18"></a>
-[![Build Status](https://secure.travis-ci.org/aasm/aasm.png?branch=master)](http://travis-ci.org/aasm/aasm)
+[![Build Status](https://travis-ci.org/aasm/aasm.svg?branch=master)](https://travis-ci.org/aasm/aasm)
 [![Code Climate](https://codeclimate.com/github/aasm/aasm.png)](https://codeclimate.com/github/aasm/aasm)
 [![Coverage Status](https://coveralls.io/repos/aasm/aasm/badge.png?branch=master)](https://coveralls.io/r/aasm/aasm)
 
@@ -278,6 +278,23 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Sequel
+
+AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_ and _Mongoid_.
+
+```ruby
+class Job < Sequel::Model
+  include AASM
+
+  aasm do # default column: aasm_state
+    ...
+  end
+end
+```
+
+However it's not yet as feature complete as _ActiveRecord_. For example, there are
+scopes defined yet. See [Automatic Scopes](#automatic-scopes).
+
 ### Mongoid
 
 AASM also supports persistence to Mongodb if you're using Mongoid. Make sure
@@ -308,7 +325,7 @@ class Job < ActiveRecord::Base
     state :cleaning
   end
 
-  def sleeping
+  def self.sleeping
     "This method name is in already use"
   end
 end
@@ -317,10 +334,10 @@ end
 ```ruby
 class JobsController < ApplicationController
   def index
-    @running_jobs = jobs.running
-    @recent_cleaning_jobs = jobs.cleaning.where('created_at >=  ?', 3.days.ago)
+    @running_jobs = Job.running
+    @recent_cleaning_jobs = Job.cleaning.where('created_at >=  ?', 3.days.ago)
 
-    # @sleeping_jobs = jobs.sleeping   #=> "This method name is in already use"
+    # @sleeping_jobs = Job.sleeping   #=> "This method name is in already use"
   end
 end
 ```
@@ -431,13 +448,13 @@ Given the `Job` class from above:
 ```ruby
 job = Job.new
 
-job.aasm.states
+job.aasm.states.map(&:name)
 => [:sleeping, :running, :cleaning]
 
-job.aasm.states(:permissible => true)
+job.aasm.states(:permissible => true).map(&:name)
 => [:running]
 job.run
-job.aasm.states(:permissible => true)
+job.aasm.states(:permissible => true).map(&:name)
 => [:cleaning, :sleeping]
 
 job.aasm.events
