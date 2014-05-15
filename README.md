@@ -309,8 +309,8 @@ Furthermore, if your column has integer type (which is normally the
 case when you're working with Rails enums), you can omit ```:enum```
 setting --- AASM auto-detects this situation and enabled enum
 support. If anything goes wrong, you can disable enum functionality
-and fall back to the default behavior by setting ```:enum``` to
-```false```.
+and fall back to the default behavior by setting ```:enum```
+to ```false```.
 
 ### Sequel
 
