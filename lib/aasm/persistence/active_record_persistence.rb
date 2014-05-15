@@ -119,7 +119,20 @@ module AASM
 
       private
         def aasm_enum
-          AASM::StateMachine[self.class].config.enum
+          case AASM::StateMachine[self.class].config.enum
+            when false then nil
+            when true then aasm_guess_enum_method
+            when nil then aasm_guess_enum_method if aasm_column_looks_like_enum
+            else AASM::StateMachine[self.class].config.enum
+          end
+        end
+
+        def aasm_column_looks_like_enum
+          self.class.columns_hash[self.class.aasm_column.to_s].type == :integer
+        end
+
+        def aasm_guess_enum_method
+          self.class.aasm_column.to_s.pluralize.to_sym
         end
 
         def aasm_skipping_validations

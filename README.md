@@ -293,15 +293,23 @@ class Job < ActiveRecord::Base
     running: 99
   }
 
-  aasm :column => :state, :enum => :states do
+  aasm :column => :state, :enum => true do
     state :sleeping, :initial => true
     state :running
   end
 end
 ```
 
-You need to pass the name of the method which provides access to the
-enumeration mapping as a value of ```enum```.
+You can explicitly pass the name of the method which provides access
+to the enumeration mapping as a value of ```enum```, or you can simply
+set it to true. In the latter case AASM will try to use pluralized
+column name to access possible enum states.
+
+Furthermore, if your column has integer type (which is normally the
+case when you ), you can omit ```:enum``` setting - AASM auto-detects
+this situation and enabled enum support. If anything goes wrong, you
+can disable enum functionali and fall back to default behavior by
+setting ```:enum => false```.
 
 ### Sequel
 
