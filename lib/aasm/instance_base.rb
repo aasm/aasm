@@ -75,8 +75,11 @@ module AASM
     end
 
     def may_fire_event?(name, *args)
-      event = @instance.class.aasm.events[name]
-      event.may_fire?(@instance, *args)
+      if event = @instance.class.aasm.events[name]
+        event.may_fire?(@instance, *args)
+      else
+        false # unknown event
+      end
     end
 
     def set_current_state_with_persistence(state)

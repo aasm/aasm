@@ -14,9 +14,10 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
-## 3.2.0 (not yet released)
+## 3.2.0
 
  * support [Sequel](http://sequel.jeremyevans.net/) (see [issue #119](https://github.com/aasm/aasm/issues/119), thanks to [@godfat](https://github.com/godfat))
+ * may not fire an unknown event (see [issue #128](https://github.com/aasm/aasm/issues/128)
 
 ## 3.1.1
 
