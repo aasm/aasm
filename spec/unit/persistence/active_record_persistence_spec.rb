@@ -93,10 +93,28 @@ describe "named scopes with the new DSL" do
   end
 
   it "does not create scopes if requested" do
-    expect(NoScope).not_to respond_to(:ignored_scope)
+    expect(NoScope).not_to respond_to(:pending)
   end
 
-end
+end # scopes
+
+describe "direct assignment" do
+  it "is allowed by default" do
+    obj = NoScope.create
+    expect(obj.aasm_state.to_sym).to eql :pending
+
+    obj.aasm_state = :running
+    expect(obj.aasm_state.to_sym).to eql :running
+  end
+
+  it "is forbidden if configured" do
+    obj = NoDirectAssignment.create
+    expect(obj.aasm_state.to_sym).to eql :pending
+
+    expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
+    expect(obj.aasm_state.to_sym).to eql :pending
+  end
+end # direct assignment
 
 describe 'initial states' do
 

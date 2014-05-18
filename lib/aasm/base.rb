@@ -4,7 +4,7 @@ module AASM
     def initialize(clazz, options={}, &block)
       @clazz = clazz
       @state_machine = AASM::StateMachine[@clazz]
-      @state_machine.config.column = options[:column].to_sym if options[:column]
+      @state_machine.config.column ||= (options[:column] || :aasm_state).to_sym
       @options = options
 
       # let's cry if the transition is invalid
@@ -13,11 +13,21 @@ module AASM
       # create named scopes for each state
       configure :create_scopes, true
 
-      # don't store any new state if the model is invalid
+      # don't store any new state if the model is invalid (in ActiveRecord)
       configure :skip_validation_on_save, false
 
-      # use requires_new for nested transactions
+      # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
+
+      # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
+      configure :no_direct_assignment, false
+
+
+      if @state_machine.config.no_direct_assignment
+        @clazz.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
+          raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
+        end
+      end
     end
 
     def initial_state(new_initial_state=nil)

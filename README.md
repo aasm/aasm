@@ -278,6 +278,34 @@ class Job < ActiveRecord::Base
 end
 ```
 
+If you want to make sure that the _AASM_ column for storing the state is not directly assigned,
+configure _AASM_ to not allow direct assignment, like this:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :no_direct_assignment => true do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+  end
+
+end
+```
+
+resulting in this:
+
+```ruby
+job = Job.create
+job.aasm_state # => 'sleeping'
+job.aasm_state = :running # => raises AASM::NoDirectAssignmentError
+job.aasm_state # => 'sleeping'
+```
+
 ### Sequel
 
 AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_ and _Mongoid_.

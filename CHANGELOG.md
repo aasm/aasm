@@ -2,6 +2,7 @@
 
 ## 4.0.0 (not yet released)
 
+ * may configure to not allow direct assignment for persisted AASM models (see [issue #53](https://github.com/aasm/aasm/issues/53))
  * **DSL change**: callbacks don't require `to_state` parameter anymore, but still support it
    (closing issues
    [#11](https://github.com/aasm/aasm/issues/11),
