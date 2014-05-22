@@ -5,7 +5,7 @@ module AASM
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see class method inherited
-    AASM::StateMachine[base] ||= AASM::StateMachine.new('')
+    AASM::StateMachine[base] ||= AASM::StateMachine.new
 
     AASM::Persistence.load_persistence(base)
     super

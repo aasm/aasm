@@ -13,9 +13,7 @@ module AASM
     attr_accessor :states, :events, :initial_state, :config
     attr_reader :name
 
-    # QUESTION: what's the name for? [alto, 2012-11-28]
-    def initialize(name)
-      @name = name
+    def initialize
       @initial_state = nil
       @states = []
       @events = {}
