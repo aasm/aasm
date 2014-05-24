@@ -87,26 +87,26 @@ module AASM
     # make sure to create a (named) scope for each state
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
-      if AASM::StateMachine[@clazz].config.create_scopes && !@clazz.respond_to?(name)
-        if @clazz.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
+      if AASM::StateMachine[@klass].config.create_scopes && !@klass.respond_to?(name)
+        if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
 
-          conditions = {"#{@clazz.table_name}.#{@clazz.aasm_column}" => name.to_s}
+          conditions = {"#{@klass.table_name}.#{@klass.aasm_column}" => name.to_s}
           if ActiveRecord::VERSION::MAJOR >= 4
-            @clazz.class_eval do
+            @klass.class_eval do
               scope name, lambda { where(conditions) }
             end
           elsif ActiveRecord::VERSION::MAJOR >= 3
-            @clazz.class_eval do
+            @klass.class_eval do
               scope name, where(conditions)
             end
           else
-            @clazz.class_eval do
+            @klass.class_eval do
               named_scope name, :conditions => conditions
             end
           end
-        elsif @clazz.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
-          scope_options = lambda { @clazz.send(:where, {@clazz.aasm_column.to_sym => name.to_s}) }
-          @clazz.send(:scope, name, scope_options)
+        elsif @klass.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
+          scope_options = lambda { @klass.send(:where, {@klass.aasm_column.to_sym => name.to_s}) }
+          @klass.send(:scope, name, scope_options)
         end
       end
     end

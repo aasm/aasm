@@ -2,12 +2,12 @@ module AASM
   class StateMachine
 
     # the following two methods provide the storage of all state machines
-    def self.[](clazz)
-      (@machines ||= {})[clazz.to_s]
+    def self.[](klass)
+      (@machines ||= {})[klass.to_s]
     end
 
-    def self.[]=(clazz, machine)
-      (@machines ||= {})[clazz.to_s] = machine
+    def self.[]=(klass, machine)
+      (@machines ||= {})[klass.to_s] = machine
     end
 
     attr_accessor :states, :events, :initial_state, :config
@@ -27,8 +27,8 @@ module AASM
       @events = @events.dup
     end
 
-    def add_state(name, clazz, options)
-      @states << AASM::State.new(name, clazz, options) unless @states.include?(name)
+    def add_state(name, klass, options)
+      @states << AASM::State.new(name, klass, options) unless @states.include?(name)
     end
 
   end # StateMachine
