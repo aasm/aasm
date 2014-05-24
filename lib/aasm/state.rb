@@ -2,9 +2,9 @@ module AASM
   class State
     attr_reader :name, :options
 
-    def initialize(name, clazz, options={})
+    def initialize(name, klass, options={})
       @name = name
-      @clazz = clazz
+      @klass = klass
       update(options)
     end
 
@@ -48,7 +48,7 @@ module AASM
     end
 
     def localized_name
-      AASM::Localizer.new.human_state_name(@clazz, self)
+      AASM::Localizer.new.human_state_name(@klass, self)
     end
     alias human_name localized_name
 

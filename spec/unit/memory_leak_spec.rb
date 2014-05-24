@@ -2,8 +2,8 @@
 
 # describe "state machines" do
 
-#   def number_of_objects(clazz)
-#     ObjectSpace.each_object(clazz) {}
+#   def number_of_objects(klass)
+#     ObjectSpace.each_object(klass) {}
 #   end
 
 #   def machines
