@@ -31,7 +31,6 @@ module AASM
     # define a state
     def state(name, options={})
       @state_machine.add_state(name, @klass, options)
-      @state_machine.initial_state = name if options[:initial] || !@state_machine.initial_state
 
       @klass.send(:define_method, "#{name.to_s}?") do
         aasm.current_state == name
