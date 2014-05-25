@@ -11,7 +11,6 @@ module AASM
     end
 
     attr_accessor :states, :events, :initial_state, :config
-    attr_reader :name
 
     def initialize
       @initial_state = nil
