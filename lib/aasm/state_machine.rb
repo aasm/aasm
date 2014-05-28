@@ -28,7 +28,14 @@ module AASM
     end
 
     def add_state(name, klass, options)
+      set_initial_state(name, options)
       @states << AASM::State.new(name, klass, options) unless @states.include?(name)
+    end
+
+    private
+
+    def set_initial_state(name, options)
+      @initial_state = name if options[:initial] || !initial_state
     end
 
   end # StateMachine
