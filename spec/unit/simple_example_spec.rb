@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class Payment
-  include AASM
+  include AASM::Methods
   aasm do
     state :initialised, :initial => true
     state :filled_out

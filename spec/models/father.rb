@@ -1,7 +1,7 @@
 require 'active_record'
 
 class Father < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :missing_details, :initial => true

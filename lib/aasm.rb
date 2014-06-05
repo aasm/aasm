@@ -9,6 +9,7 @@ require 'ostruct'
     event
     state
     localizer
+    methods
     state_machine
     persistence
     aasm

@@ -1,5 +1,5 @@
 class Conversation
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :needs_attention, :initial => true

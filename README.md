@@ -20,7 +20,7 @@ Adding a state machine is as simple as including the AASM module and start defin
 
 ```ruby
 class Job
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :sleeping, :initial => true
@@ -88,7 +88,7 @@ called, when certain criteria are met, like entering a particular state:
 
 ```ruby
 class Job
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
@@ -170,7 +170,7 @@ denied (raising `AASM::InvalidTransition` or returning `false` itself):
 
 ```ruby
 class Job
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :sleeping, :initial => true
@@ -228,7 +228,7 @@ state in the database.
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm do # default column: aasm_state
     state :sleeping, :initial => true
@@ -260,7 +260,7 @@ invalid object state), simply tell AASM to skip the validations:
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm :skip_validation_on_save => true do
     state :sleeping, :initial => true
@@ -284,7 +284,7 @@ AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecor
 
 ```ruby
 class Job < Sequel::Model
-  include AASM
+  include AASM::Methods
 
   aasm do # default column: aasm_state
     ...
@@ -298,12 +298,12 @@ scopes defined yet. See [Automatic Scopes](#automatic-scopes).
 ### Mongoid
 
 AASM also supports persistence to Mongodb if you're using Mongoid. Make sure
-to include Mongoid::Document before you include AASM.
+to include Mongoid::Document before you include AASM::Methods.
 
 ```ruby
 class Job
   include Mongoid::Document
-  include AASM
+  include AASM::Methods
   field :aasm_state
   aasm do
     ...
@@ -317,7 +317,7 @@ AASM will automatically create scope methods for each state in the model.
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :sleeping, :initial => true
@@ -347,7 +347,7 @@ defining the `AASM` states, like this:
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm :create_scopes => false do
     state :sleeping, :initial => true
@@ -369,7 +369,7 @@ use the `after_commit` callback, like this:
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :sleeping, :initial => true
@@ -395,7 +395,7 @@ the configuration
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm :requires_new_transaction => false do
     ...
@@ -415,7 +415,7 @@ this by defining your favorite column name, using `:column` like this:
 
 ```ruby
 class Job < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   aasm :column => 'my_state' do
     ...

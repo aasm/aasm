@@ -1,3 +1,3 @@
 class Son < Father
-  include AASM
+  include AASM::Methods
 end

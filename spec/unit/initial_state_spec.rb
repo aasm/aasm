@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class Banker
-  include AASM
+  include AASM::Methods
   aasm do
     state :retired
     state :selling_bad_mortgages

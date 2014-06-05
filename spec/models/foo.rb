@@ -1,5 +1,5 @@
 class Foo
-  include AASM
+  include AASM::Methods
   aasm do
     state :open, :initial => true, :exit => :exit
     state :closed, :enter => :enter
@@ -27,7 +27,7 @@ class Foo
 end
 
 class FooTwo < Foo
-  include AASM
+  include AASM::Methods
   aasm do
     state :foo
   end

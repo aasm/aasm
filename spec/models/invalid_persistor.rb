@@ -1,7 +1,7 @@
 require 'active_record'
 
 class InvalidPersistor < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
   aasm :column => :status, :skip_validation_on_save => true do
     state :sleeping, :initial => true
     state :running

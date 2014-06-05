@@ -1,5 +1,5 @@
 class ParametrisedEvent
-  include AASM
+  include AASM::Methods
   aasm do
     state :sleeping, :initial => true
     state :showering
