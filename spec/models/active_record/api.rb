@@ -1,6 +1,6 @@
 class DefaultState
   attr_accessor :transient_store, :persisted_store
-  include AASM
+  include AASM::Methods
   aasm do
     state :alpha, :initial => true
     state :beta
@@ -13,7 +13,7 @@ end
 
 class ProvidedState
   attr_accessor :transient_store, :persisted_store
-  include AASM
+  include AASM::Methods
   aasm do
     state :alpha, :initial => true
     state :beta
@@ -38,7 +38,7 @@ end
 
 class PersistedState < ActiveRecord::Base
   attr_accessor :transient_store, :persisted_store
-  include AASM
+  include AASM::Methods
   aasm do
     state :alpha, :initial => true
     state :beta
@@ -51,7 +51,7 @@ end
 
 class ProvidedAndPersistedState < ActiveRecord::Base
   attr_accessor :transient_store, :persisted_store
-  include AASM
+  include AASM::Methods
   aasm do
     state :alpha, :initial => true
     state :beta

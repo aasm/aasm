@@ -22,7 +22,7 @@ module AASM
         # If it's a new record, and the aasm state column is blank it returns the initial state
         #
         #   class Foo < Sequel::Model
-        #     include AASM
+        #     include AASM::Methods
         #     aasm :column => :status do
         #       state :opened
         #       state :closed

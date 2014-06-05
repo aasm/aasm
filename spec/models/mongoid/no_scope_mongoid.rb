@@ -1,6 +1,6 @@
 class NoScopeMongoid
   include Mongoid::Document
-  include AASM
+  include AASM::Methods
 
   field :status, :type => String
 

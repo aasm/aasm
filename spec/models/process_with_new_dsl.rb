@@ -1,5 +1,5 @@
 class ProcessWithNewDsl
-  include AASM
+  include AASM::Methods
 
   def self.state(*args)
     raise "wrong state method"

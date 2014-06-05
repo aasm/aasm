@@ -1,5 +1,5 @@
 class CallbackNewDsl
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :open, :initial => true,

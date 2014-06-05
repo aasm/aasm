@@ -1,7 +1,7 @@
 require 'active_record'
 
 class Validator < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
   aasm :column => :status do
     state :sleeping, :initial => true
     state :running, :after_commit => :change_name!

@@ -1,5 +1,5 @@
 class ThisNameBetterNotBeInUse
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :initial

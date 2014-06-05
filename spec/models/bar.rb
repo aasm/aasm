@@ -1,5 +1,5 @@
 class Bar
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :read

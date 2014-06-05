@@ -1,5 +1,5 @@
 class AuthMachine
-  include AASM
+  include AASM::Methods
 
   attr_accessor :activation_code, :activated_at, :deleted_at
 

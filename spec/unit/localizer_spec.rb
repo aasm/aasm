@@ -6,7 +6,7 @@ require 'i18n'
 load_schema
 
 class LocalizerTestModel < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   attr_accessor :aasm_state
 

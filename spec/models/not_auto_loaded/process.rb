@@ -1,6 +1,6 @@
 module Models
   class Process
-    include AASM
+    include AASM::Methods
 
     aasm do
       state :sleeping

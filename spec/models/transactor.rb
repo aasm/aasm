@@ -3,7 +3,7 @@ class Transactor < ActiveRecord::Base
 
   belongs_to :worker
 
-  include AASM
+  include AASM::Methods
   aasm :column => :status do
     state :sleeping, :initial => true
     state :running, :before_enter => :start_worker, :after_enter => :fail

@@ -1,5 +1,5 @@
 class Guardian
-  include AASM
+  include AASM::Methods
 
   aasm do
     state :alpha, :initial => true

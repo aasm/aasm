@@ -1,5 +1,5 @@
 class Silencer
-  include AASM
+  include AASM::Methods
 
   aasm :whiny_transitions => false do
     state :silent, :initial => true

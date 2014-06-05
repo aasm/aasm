@@ -17,12 +17,12 @@ module AASM
       #     def aasm_write_state(state)
       #       "bar"
       #     end
-      #     include AASM
+      #     include AASM::Methods
       #   end
       #
       #   class Foo
       #     include Mongoid::Document
-      #     include AASM
+      #     include AASM::Methods
       #     def aasm_write_state(state)
       #       "bar"
       #     end

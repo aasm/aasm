@@ -1,5 +1,5 @@
 class Gate < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   # Fake this column for testing purposes
   attr_accessor :aasm_state
@@ -15,7 +15,7 @@ class Gate < ActiveRecord::Base
 end
 
 class Reader < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
 
   def aasm_read_state
     "fi"
@@ -26,18 +26,18 @@ class Writer < ActiveRecord::Base
   def aasm_write_state(state)
     "fo"
   end
-  include AASM
+  include AASM::Methods
 end
 
 class Transient < ActiveRecord::Base
   def aasm_write_state_without_persistence(state)
     "fum"
   end
-  include AASM
+  include AASM::Methods
 end
 
 class SimpleNewDsl < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
   aasm :column => :status
   aasm do
     state :unknown_scope
@@ -46,7 +46,7 @@ class SimpleNewDsl < ActiveRecord::Base
 end
 
 class NoScope < ActiveRecord::Base
-  include AASM
+  include AASM::Methods
   aasm :create_scopes => false do
     state :ignored_scope
   end
@@ -61,7 +61,7 @@ class Thief < ActiveRecord::Base
   else
     set_table_name "thieves"
   end
-  include AASM
+  include AASM::Methods
   aasm do
     state :rich
     state :jailed

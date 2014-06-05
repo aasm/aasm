@@ -1,5 +1,5 @@
 class Argument
-  include AASM
+  include AASM::Methods
   aasm do
     state :invalid, :initial => true
     state :valid

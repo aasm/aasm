@@ -12,7 +12,7 @@ module AASM
       # (example provided here for ActiveRecord, but it's true for Mongoid as well):
       #
       #   class Foo < ActiveRecord::Base
-      #     include AASM
+      #     include AASM::Methods
       #     aasm :column => :status do
       #       state :opened
       #       state :closed
@@ -51,7 +51,7 @@ module AASM
         #   end
         #
         #   class Foo < ActiveRecord::Base
-        #     include AASM
+        #     include AASM::Methods
         #   end
         #
         # OR:
@@ -62,7 +62,7 @@ module AASM
         #   end
         #
         #   class Foo < ActiveRecord::Base
-        #     include AASM
+        #     include AASM::Methods
         #     aasm_column :status
         #   end
         #

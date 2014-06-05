@@ -17,7 +17,7 @@ describe 'sequel' do
       @model = Class.new(Sequel::Model(db)) do
         set_dataset(:models)
         attr_accessor :default
-        include AASM
+        include AASM::Methods
         aasm :column => :status
         aasm do
           state :alpha, :initial => true
