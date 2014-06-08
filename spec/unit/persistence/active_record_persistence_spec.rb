@@ -217,6 +217,14 @@ describe 'transitions with persistence' do
         expect(validator.name).to eq("name")
       end
 
+      it "should not fire if not saving" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.run
+        expect(validator).to be_running
+        expect(validator.name).to eq("name")
+      end
+
     end
   end
 end
