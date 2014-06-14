@@ -4,6 +4,10 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
+## 3.2.1
+
+ * bugfix: permissible_events and events did not contain events with an empty "from" transition (see [issue #140](https://github.com/aasm/aasm/issues/140) and [issue #141](https://github.com/aasm/aasm/issues/141), thanks to [@daniel-rikowski](https://github.com/daniel-rikowski))
+
 ## 3.2.0
 
  * support [Sequel](http://sequel.jeremyevans.net/) (see [issue #119](https://github.com/aasm/aasm/issues/119), thanks to [@godfat](https://github.com/godfat))
