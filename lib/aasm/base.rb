@@ -36,8 +36,18 @@ module AASM
         aasm.current_state == name
       end
 
+      @klass.send(:define_method, "not_#{name.to_s}?") do
+        aasm.current_state != name
+      end
+
+
+
       unless @klass.const_defined?("STATE_#{name.to_s.upcase}")
         @klass.const_set("STATE_#{name.to_s.upcase}", name)
+      end
+
+      unless @klass.const_defined?("STATE_NOT#{name.to_s.upcase}")
+        @klass.const_set("STATE_NOT#{name.to_s.upcase}", name)
       end
     end
 
@@ -59,6 +69,18 @@ module AASM
       @klass.send(:define_method, "#{name.to_s}") do |*args, &block|
         aasm_fire_event(name, {:persist => false}, *args, &block)
       end
+
+      @klass.send(:define_method, "not_#{name.to_s}!") do |*args, &block|
+        aasm_fire_event(name, {:persist => true}, *args, &block)
+      end
+
+      @klass.send(:define_method, "not_#{name.to_s}") do |*args, &block|
+        aasm_fire_event(name, {:persist => false}, *args, &block)
+      end
+
+
+
+
     end
 
     def states

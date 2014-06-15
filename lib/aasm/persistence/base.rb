@@ -87,21 +87,28 @@ module AASM
     # make sure to create a (named) scope for each state
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
+      not_name  = "not_#{name}"
       if AASM::StateMachine[@klass].config.create_scopes && !@klass.respond_to?(name)
         if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
 
           conditions = {"#{@klass.table_name}.#{@klass.aasm_column}" => name.to_s}
+          neg_conditions = "#{@klass.table_name}.#{@klass.aasm_column} != '#{name.to_s}'"
+
           if ActiveRecord::VERSION::MAJOR >= 4
             @klass.class_eval do
               scope name, lambda { where(conditions) }
+              scope not_name, lambda { where(neg_conditions) }
             end
           elsif ActiveRecord::VERSION::MAJOR >= 3
             @klass.class_eval do
               scope name, where(conditions)
+              scope not_name, where(neg_conditions)
             end
           else
             @klass.class_eval do
               named_scope name, :conditions => conditions
+              named_scope not_name, :conditions => neg_conditions
+
             end
           end
         elsif @klass.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")

@@ -52,6 +52,12 @@ module AASM
           end
         end
 
+        def find_not_in_state(number, state, *args)
+          with_not_state_scope state do
+            find(number, *args)
+          end
+        end
+
         def count_in_state(state, *args)
           with_state_scope state do
             count(*args)
@@ -70,6 +76,14 @@ module AASM
             yield if block_given?
           end
         end
+
+        #finder method for records where state is NOT the given state
+        def with_not_state_scope(state)
+          with_scope :find => {:conditions => ["#{table_name}.#{aasm_column} != ?", state.to_s]} do
+            yield if block_given?
+          end
+        end
+
       end
 
       module InstanceMethods
