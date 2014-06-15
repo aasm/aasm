@@ -83,7 +83,6 @@ module AASM
             yield if block_given?
           end
         end
-
       end
 
       module InstanceMethods

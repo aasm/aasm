@@ -105,11 +105,6 @@ describe "named scopes with the new DSL" do
 
 end
 
-
-
-
-
-
 describe 'initial states' do
 
   it 'should support conditions' do

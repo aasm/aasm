@@ -36,13 +36,9 @@ module AASM
         aasm.current_state == name
       end
 
-
-
       unless @klass.const_defined?("STATE_#{name.to_s.upcase}")
         @klass.const_set("STATE_#{name.to_s.upcase}", name)
       end
-
-
     end
 
     # define an event
@@ -63,9 +59,6 @@ module AASM
       @klass.send(:define_method, "#{name.to_s}") do |*args, &block|
         aasm_fire_event(name, {:persist => false}, *args, &block)
       end
-
-
-
     end
 
     def states
