@@ -83,6 +83,13 @@ describe "named scopes with the new DSL" do
       expect(SimpleNewDsl).to respond_to(:unknown_scope)
       expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_true
     end
+
+    it "should add a not_ scope" do
+      expect(SimpleNewDsl).to respond_to(:not_unknown_scope)
+      expect(SimpleNewDsl.not_unknown_scope.is_a?(ActiveRecord::Relation)).to be_true
+    end
+
+
   end
 
   context "Already respond_to? the scope name" do
@@ -97,6 +104,11 @@ describe "named scopes with the new DSL" do
   end
 
 end
+
+
+
+
+
 
 describe 'initial states' do
 
