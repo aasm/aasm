@@ -18,6 +18,8 @@ module AASM
 
       # use requires_new for nested transactions
       configure :requires_new_transaction, true
+
+      configure :enum, nil
     end
 
     def initial_state(new_initial_state=nil)
