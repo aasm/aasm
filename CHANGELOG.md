@@ -4,6 +4,11 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
+## 3.3.0 (not yet released)
+
+ * support for Rails 4.1 enum fields (see [issue #124](https://github.com/aasm/aasm/issues/124), thanks to [@bkon](https://github.com/bkon))
+ * bugfix: allow lazy-evaluation for Rails 3 scopes (see [issue #144](https://github.com/aasm/aasm/issues/144), thanks to [@laurens](https://github.com/laurens))
+
 ## 3.2.1
 
  * bugfix: permissible_events and events did not contain events with an empty "from" transition (see [issue #140](https://github.com/aasm/aasm/issues/140) and [issue #141](https://github.com/aasm/aasm/issues/141), thanks to [@daniel-rikowski](https://github.com/daniel-rikowski))
