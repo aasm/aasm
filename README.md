@@ -288,7 +288,7 @@ in Rails 4.1+ for your state column:
 class Job < ActiveRecord::Base
   include AASM
 
-  enum state {
+  enum state: {
     sleeping: 5,
     running: 99
   }
