@@ -4,7 +4,7 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
-## 3.3.1 (not yet released)
+## 3.3.1
 
  * bugfix: permissible events will respect given `guards` (see [issue #150](https://github.com/aasm/aasm/issues/150))
 
