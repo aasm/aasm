@@ -22,10 +22,12 @@ describe 'inspection for common cases' do
       states = foo.aasm.states
       expect(states).to include(:open)
       expect(states).to include(:closed)
+      expect(states).to include(:final)
 
       states = foo.aasm.states(:permissible => true)
       expect(states).to include(:closed)
       expect(states).not_to include(:open)
+      expect(states).not_to include(:final)
 
       foo.close
       expect(foo.aasm.states(:permissible => true)).to be_empty
@@ -77,7 +79,7 @@ end
 describe 'aasm.states_for_select' do
   it "should return a select friendly array of states" do
     expect(Foo.aasm).to respond_to(:states_for_select)
-    expect(Foo.aasm.states_for_select).to eq([['Open', 'open'], ['Closed', 'closed']])
+    expect(Foo.aasm.states_for_select).to eq([['Open', 'open'], ['Closed', 'closed'], ['Final', 'final']])
   end
 end
 

@@ -35,7 +35,7 @@ module AASM
     def states(options={})
       if options[:permissible]
         # ugliness level 1000
-        transitions = @instance.class.aasm.events.values.map {|e| e.transitions_from_state(current_state) }
+        transitions = @instance.class.aasm.events.values_at(*permissible_events).compact.map {|e| e.transitions_from_state(current_state) }
         tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
         @instance.class.aasm.states.select {|s| tos.include?(s.name.to_sym)}
       else
