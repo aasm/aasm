@@ -19,7 +19,7 @@ module AASM
       @initial_state = nil
       @states = []
       @events = {}
-      @config = OpenStruct.new
+      @config = AASM::Configuration.new
     end
 
     # called internally by Ruby 1.9 after clone()

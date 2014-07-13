@@ -95,7 +95,6 @@ module AASM
     private
 
     def configure(key, default_value)
-      @state_machine.config.send(:new_ostruct_member, key)
       if @options.key?(key)
         @state_machine.config.send("#{key}=", @options[key])
       elsif @state_machine.config.send(key).nil?

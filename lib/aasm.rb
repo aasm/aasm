@@ -3,6 +3,7 @@ require 'ostruct'
 %w(
     version
     errors
+    configuration
     base
     instance_base
     transition
