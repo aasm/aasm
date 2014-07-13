@@ -58,6 +58,23 @@ describe 'transition inspection' do
   end
 end
 
+describe 'transition inspection without from' do
+  let(:event) do
+    AASM::Event.new(:run) do
+      transitions :to => :running
+    end
+  end
+
+  it 'should support inspecting transitions from other states' do
+    expect(event.transitions_from_state(:sleeping).map(&:to)).to eq([:running])
+    expect(event.transitions_from_state?(:sleeping)).to be_true
+
+    expect(event.transitions_from_state(:cleaning).map(&:to)).to eq([:running])
+    expect(event.transitions_from_state?(:cleaning)).to be_true
+  end
+
+end
+
 describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
     obj = double('object', :aasm => double('aasm', :current_state => 'open'))

@@ -26,7 +26,7 @@ module AASM
     end
 
     def transitions_from_state(state)
-      @transitions.select { |t| t.from == state }
+      @transitions.select { |t| t.from.nil? or t.from == state }
     end
 
     def transitions_to_state?(state)

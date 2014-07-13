@@ -1,10 +1,11 @@
 module AASM
   class Base
 
-    def initialize(clazz, options={}, &block)
-      @clazz = clazz
-      @state_machine = AASM::StateMachine[@clazz]
-      @state_machine.config.column ||= (options[:column] || :aasm_state).to_sym
+    def initialize(klass, options={}, &block)
+      @klass = klass
+      @state_machine = AASM::StateMachine[@klass]
+      @state_machine.config.column ||= (options[:column] || :aasm_state).to_sym # aasm4
+      # @state_machine.config.column = options[:column].to_sym if options[:column] # master
       @options = options
 
       # let's cry if the transition is invalid
@@ -22,9 +23,10 @@ module AASM
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
 
+      configure :enum, nil
 
       if @state_machine.config.no_direct_assignment
-        @clazz.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
+        @klass.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
           raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
         end
       end
@@ -40,15 +42,14 @@ module AASM
 
     # define a state
     def state(name, options={})
-      @state_machine.add_state(name, @clazz, options)
-      @state_machine.initial_state = name if options[:initial] || !@state_machine.initial_state
+      @state_machine.add_state(name, @klass, options)
 
-      @clazz.send(:define_method, "#{name.to_s}?") do
+      @klass.send(:define_method, "#{name.to_s}?") do
         aasm.current_state == name
       end
 
-      unless @clazz.const_defined?("STATE_#{name.to_s.upcase}")
-        @clazz.const_set("STATE_#{name.to_s.upcase}", name)
+      unless @klass.const_defined?("STATE_#{name.to_s.upcase}")
+        @klass.const_set("STATE_#{name.to_s.upcase}", name)
       end
     end
 
@@ -59,15 +60,15 @@ module AASM
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
-      @clazz.send(:define_method, "may_#{name.to_s}?") do |*args|
+      @klass.send(:define_method, "may_#{name.to_s}?") do |*args|
         aasm.may_fire_event?(name, *args)
       end
 
-      @clazz.send(:define_method, "#{name.to_s}!") do |*args, &block|
+      @klass.send(:define_method, "#{name.to_s}!") do |*args, &block|
         aasm_fire_event(name, {:persist => true}, *args, &block)
       end
 
-      @clazz.send(:define_method, "#{name.to_s}") do |*args, &block|
+      @klass.send(:define_method, "#{name.to_s}") do |*args, &block|
         aasm_fire_event(name, {:persist => false}, *args, &block)
       end
     end

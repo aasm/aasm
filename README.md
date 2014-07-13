@@ -278,6 +278,7 @@ class Job < ActiveRecord::Base
 end
 ```
 
+<<<<<<< HEAD
 If you want to make sure that the _AASM_ column for storing the state is not directly assigned,
 configure _AASM_ to not allow direct assignment, like this:
 
@@ -305,6 +306,42 @@ job.aasm_state # => 'sleeping'
 job.aasm_state = :running # => raises AASM::NoDirectAssignmentError
 job.aasm_state # => 'sleeping'
 ```
+
+#### ActiveRecord enums
+
+You can use
+[enumerations](http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html)
+in Rails 4.1+ for your state column:
+>>>>>>> master
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  enum state: {
+    sleeping: 5,
+    running: 99
+  }
+
+  aasm :column => :state, :enum => true do
+    state :sleeping, :initial => true
+    state :running
+  end
+end
+```
+
+You can explicitly pass the name of the method which provides access
+to the enumeration mapping as a value of ```enum```, or you can simply
+set it to ```true```. In the latter case AASM will try to use
+pluralized column name to access possible enum states.
+
+Furthermore, if your column has integer type (which is normally the
+case when you're working with Rails enums), you can omit ```:enum```
+setting --- AASM auto-detects this situation and enabled enum
+support. If anything goes wrong, you can disable enum functionality
+and fall back to the default behavior by setting ```:enum```
+to ```false```.
+>>>>>>> master
 
 ### Sequel
 
