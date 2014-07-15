@@ -85,10 +85,11 @@ module AASM
         # NOTE: intended to be called from an event
         def aasm_write_state(state)
           old_value = read_attribute(self.class.aasm_column)
-          write_attribute(self.class.aasm_column, state.to_s)
+          aasm_write_attribute state
 
-          success = if AASM::StateMachine[self.class].config.skip_validation_on_save
-            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm_column => state.to_s) == 1
+          success = if aasm_skipping_validations
+            value = aasm_raw_attribute_value state
+            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm_column => value) == 1
           else
             self.save
           end
@@ -113,10 +114,42 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state)
-          write_attribute(self.class.aasm_column, state.to_s)
+          aasm_write_attribute state
         end
 
       private
+        def aasm_enum
+          case AASM::StateMachine[self.class].config.enum
+            when false then nil
+            when true then aasm_guess_enum_method
+            when nil then aasm_guess_enum_method if aasm_column_looks_like_enum
+            else AASM::StateMachine[self.class].config.enum
+          end
+        end
+
+        def aasm_column_looks_like_enum
+          self.class.columns_hash[self.class.aasm_column.to_s].type == :integer
+        end
+
+        def aasm_guess_enum_method
+          self.class.aasm_column.to_s.pluralize.to_sym
+        end
+
+        def aasm_skipping_validations
+          AASM::StateMachine[self.class].config.skip_validation_on_save
+        end
+
+        def aasm_write_attribute(state)
+          write_attribute self.class.aasm_column, aasm_raw_attribute_value(state)
+        end
+
+        def aasm_raw_attribute_value(state)
+          if aasm_enum
+            value = self.class.send(aasm_enum)[state]
+          else
+            value = state.to_s
+          end
+        end
 
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
