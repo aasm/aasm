@@ -212,7 +212,7 @@ You can even provide a number of guards, which all have to succeed to proceed
     end
 ```
 
-If you want to provide guards for all transitions withing an event, you can use event guards
+If you want to provide guards for all transitions within an event, you can use event guards
 
 ```ruby
     event :sleep, :guards => [:walked_the_dog?] do
