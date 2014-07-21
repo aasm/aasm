@@ -147,7 +147,7 @@ Also, you can pass parameters to events:
   job.run(:running, :defragmentation)
 ```
 
-In this case the `set_process` would be called with `:defagmentation` argument.
+In this case the `set_process` would be called with `:defragmentation` argument.
 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
