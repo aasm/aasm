@@ -155,16 +155,16 @@ private
       event.fire_callbacks(:before, self)
 
       if new_state_name = event.fire(self, *args)
-        fired(event, old_state, new_state_name, options, &block)
+        aasm_fired(event, old_state, new_state_name, options, &block)
       else
-        failed(event_name, old_state)
+        aasm_failed(event_name, old_state)
       end
     rescue StandardError => e
       event.fire_callbacks(:error, self, e) || raise(e)
     end
   end
 
-  def fired(event, old_state, new_state_name, options)
+  def aasm_fired(event, old_state, new_state_name, options)
     persist = options[:persist]
 
     new_state = aasm.state_object_for_name(new_state_name)
@@ -200,7 +200,7 @@ private
     persist_successful
   end
 
-  def failed(event_name, old_state)
+  def aasm_failed(event_name, old_state)
     if self.respond_to?(:aasm_event_failed)
       self.aasm_event_failed(event_name, old_state.name)
     end
