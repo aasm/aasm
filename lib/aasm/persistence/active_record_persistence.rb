@@ -175,7 +175,7 @@ module AASM
             super
           end
 
-          if success
+          if success && options[:persist]
             new_state = aasm.state_object_for_name(aasm.current_state)
             new_state.fire_callbacks(:after_commit, self)
           end
