@@ -6,6 +6,7 @@
 
 ## 3.3.2 (not yet released)
 
+ * bugfix: avoid conflicts with `failed` and `fired` event names (see [issue #157](https://github.com/aasm/aasm/issues/157)), thanks to [@MichaelXavier](https://github.com/MichaelXavier)
  * bugfix: not using transactions unless saving to the database (see [issue #162](https://github.com/aasm/aasm/issues/162) and [issue #164](https://github.com/aasm/aasm/issues/164)), thanks to [@roberthoner](https://github.com/roberthoner)
  * bugfix: `after_commit` should only run if saving to the database (see [issue #151](https://github.com/aasm/aasm/issues/151)), thanks to [@ivantsepp](https://github.com/ivantsepp)
 
