@@ -171,9 +171,7 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args, &block)
-          success = self.class.transaction(:requires_new => requires_new?) do
-            super
-          end
+          success = options[:persist] ? self.class.transaction(:requires_new => requires_new?) { super } : super
 
           if success && options[:persist]
             new_state = aasm.state_object_for_name(aasm.current_state)
