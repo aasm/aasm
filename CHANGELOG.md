@@ -4,6 +4,10 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
+## 3.3.3 (not yet released)
+
+ * bugfix: support reloading development environment in Rails (see [issue #148](https://github.com/aasm/aasm/issues/148))
+
 ## 3.3.2
 
  * bugfix: avoid conflicts with `failed` and `fired` event names (see [issue #157](https://github.com/aasm/aasm/issues/157)), thanks to [@MichaelXavier](https://github.com/MichaelXavier)
