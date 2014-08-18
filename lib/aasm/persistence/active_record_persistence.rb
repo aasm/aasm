@@ -171,11 +171,9 @@ module AASM
         end
 
         def aasm_fire_event(name, options, *args, &block)
-          success = self.class.transaction(:requires_new => requires_new?) do
-            super
-          end
+          success = options[:persist] ? self.class.transaction(:requires_new => requires_new?) { super } : super
 
-          if success
+          if success && options[:persist]
             event = self.class.aasm.events[name]
             event.fire_callbacks(:after_commit, self)
           end

@@ -456,6 +456,31 @@ describe 'transitions with persistence' do
         expect(validator.name).to eq("name")
       end
 
+      it "should not fire if not saving" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.run
+        expect(validator).to be_running
+        expect(validator.name).to eq("name")
+      end
+
+    end
+
+    context "when not persisting" do
+      it 'should not rollback all changes' do
+        expect(transactor).to be_sleeping
+        expect(worker.status).to eq('sleeping')
+
+        # Notice here we're calling "run" and not "run!" with a bang.
+        expect {transactor.run}.to raise_error(StandardError, 'failed on purpose')
+        expect(transactor).to be_running
+        expect(worker.reload.status).to eq('running')
+      end
+
+      it 'should not create a database transaction' do
+        expect(transactor.class).not_to receive(:transaction)
+        expect {transactor.run}.to raise_error(StandardError, 'failed on purpose')
+      end
     end
   end
 end

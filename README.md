@@ -147,7 +147,9 @@ Also, you can pass parameters to events:
   job.run(:running, :defragmentation)
 ```
 
-In this case the `set_process` would be called with `:defagmentation` argument.
+In this case the `set_process` would be called with `:defragmentation` argument.
+
+Note that when passing arguments to a state transition, the first argument must be the desired end state. In the above example, we wish to transition to `:running` state and run the callback with `:defragmentation` argument. You can also pass in `nil` as the desired end state, and AASM will try to transition to the first end state defined for that event.
 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
@@ -212,7 +214,7 @@ You can even provide a number of guards, which all have to succeed to proceed
     end
 ```
 
-If you want to provide guards for all transitions withing an event, you can use event guards
+If you want to provide guards for all transitions within an event, you can use event guards
 
 ```ruby
     event :sleep, :guards => [:walked_the_dog?] do
