@@ -4,7 +4,7 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
-## 3.3.3 (not yet released)
+## 3.3.3
 
  * bugfix: support reloading development environment in Rails (see [issue #148](https://github.com/aasm/aasm/issues/148))
 
