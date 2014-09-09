@@ -163,7 +163,6 @@ private
     event = self.class.aasm.events[event_name]
     begin
       old_state = aasm.state_object_for_name(aasm.current_state)
-      old_state.fire_callbacks(:exit, self)
 
       # new event before callback
       event.fire_callbacks(
@@ -172,8 +171,15 @@ private
         *process_args(event, aasm.current_state, *args)
       )
 
-      if new_state_name = event.fire(self, *args)
-        aasm_fired(event, old_state, new_state_name, options, *args, &block)
+      if event.may_fire?(self, *args)
+        old_state.fire_callbacks(:before_exit, self)
+        old_state.fire_callbacks(:exit, self) # TODO: remove for AASM 4?
+
+        if new_state_name = event.fire(self, *args)
+          aasm_fired(event, old_state, new_state_name, options, *args, &block)
+        else
+          aasm_failed(event_name, old_state)
+        end
       else
         aasm_failed(event_name, old_state)
       end
@@ -187,11 +193,9 @@ private
 
     new_state = aasm.state_object_for_name(new_state_name)
 
-    # new before_ callbacks
-    old_state.fire_callbacks(:before_exit, self)
     new_state.fire_callbacks(:before_enter, self)
 
-    new_state.fire_callbacks(:enter, self)
+    new_state.fire_callbacks(:enter, self) # TODO: remove for AASM 4?
 
     persist_successful = true
     if persist

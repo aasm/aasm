@@ -21,7 +21,7 @@ module AASM
       state_object = state_object_for_name(state_name)
 
       state_object.fire_callbacks(:before_enter, @instance)
-      state_object.fire_callbacks(:enter, @instance)
+      # state_object.fire_callbacks(:enter, @instance)
       self.current_state = state_name
       state_object.fire_callbacks(:after_enter, @instance)
 

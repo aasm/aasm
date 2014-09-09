@@ -77,7 +77,7 @@ module AASM
     def attach_event_guards(definitions)
       unless @guards.empty?
         given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards))
-        definitions[:guards] = given_guards + @guards
+        definitions[:guards] = @guards + given_guards
       end
       definitions
     end

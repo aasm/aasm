@@ -131,13 +131,25 @@ is finished.
 Here you can see a list of all possible callbacks, together with their order of calling:
 
 ```ruby
-  event:before
-    previous_state:before_exit
-      new_state:before_enter
-        ...update state...
-      previous_state:after_exit
-    new_state:after_enter
-  event:after
+begin
+  event           before
+  event           guards              # test run
+  transition      guards              # test run
+  old_state       before_exit
+  old_state       exit
+  new_state       before_enter
+  new_state       enter
+    event         guards
+    transition    guards
+    transition    on_transition
+    ...update state...
+    event         success             # if persist successful
+  old_state       after_exit
+  new_state       after_enter
+  event           after
+rescue
+  event           error
+end
 ```
 
 Also, you can pass parameters to events:

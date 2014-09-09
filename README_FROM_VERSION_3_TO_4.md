@@ -2,6 +2,15 @@
 
 ## Must
 
+### Callback order has been changed
+
+The first callback to be run is `:before` of the event. A state's `:before_exit' callback
+is now run directly before its `:exit` callback. Event-based guards are now run before
+any of the transition guards are run. And finally, before running any state callbacks,
+all (event- and transition-based) guards are run to check whether the state callbacks
+can be run or not.
+
+
 ### `after_commit` hooks are now event-based
 
 The `after_commit` hooks have been move from the state level to the event level.
@@ -88,6 +97,15 @@ job = Job.new
 job.run("we want to run")
 
 job.run(:running, "we want to run") # still supported to select the target state (the _to_state_)
+```
+
+On the other hand, you have to accept the arguments for **all** callback methods (and procs)
+you provide and use. If you don't want to provide these, you can splat them
+
+```ruby
+def before(*args); end
+# or
+def before(*_); end # to indicate that you don't want to use the arguments
 ```
 
 ### New configuration option: `no_direct_assignment`

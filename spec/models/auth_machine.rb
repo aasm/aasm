@@ -5,10 +5,10 @@ class AuthMachine
 
   aasm do
     state :passive
-    state :pending, :initial => true, :enter => :make_activation_code
-    state :active,  :enter => :do_activate
+    state :pending, :initial => true, :before_enter => :make_activation_code
+    state :active,  :before_enter => :do_activate
     state :suspended
-    state :deleted, :enter => :do_delete, :exit => :do_undelete
+    state :deleted, :before_enter => :do_delete#, :exit => :do_undelete
     state :waiting
 
     event :register do
