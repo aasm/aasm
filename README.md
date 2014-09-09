@@ -94,8 +94,12 @@ class Job
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
 
-    event :run, :after => Proc.new { |user| notify_somebody(user) } do
-      transitions :from => :sleeping, :to => :running, :on_transition => Proc.new {|obj, *args| obj.set_process(*args) }
+    event :run, :after => :notify_somebody do
+      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) } do
+        before do
+          log('Preparing to run')
+        end
+      end
     end
 
     event :sleep do
@@ -141,8 +145,8 @@ begin
   new_state       enter
     event         guards
     transition    guards
-    transition    on_transition
     ...update state...
+    transition    after
     event         success             # if persist successful
   old_state       after_exit
   new_state       after_enter
@@ -183,37 +187,37 @@ running the transition. If the guard returns `false` the transition will be
 denied (raising `AASM::InvalidTransition` or returning `false` itself):
 
 ```ruby
-class Job
+class Cleaner
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
-    state :running
+    state :idle, :initial => true
     state :cleaning
 
-    event :run do
-      transitions :from => :sleeping, :to => :running
-    end
-
     event :clean do
-      transitions :from => :running, :to => :cleaning
+      transitions :from => :idle, :to => :cleaning, :guard => :cleaning_needed?
     end
 
-    event :sleep do
-      transitions :from => :running, :to => :sleeping, :guard => :cleaning_needed?
+    event :clean_if_needed do
+      transitions :from => :idle, :to => :cleaning do
+        guard do
+          cleaning_needed?
+        end
+      end
+      transitions :from => :idle, :to => :idle
     end
   end
 
   def cleaning_needed?
     false
   end
-
 end
 
-job = Job.new
-job.run
-job.may_sleep?  # => false
-job.sleep       # => raises AASM::InvalidTransition
+job = Cleaner.new
+job.may_clean?            # => false
+job.clean                 # => raises AASM::InvalidTransition
+job.may_clean_if_needed?  # => true
+job.clean_if_needed!      # idle
 ```
 
 You can even provide a number of guards, which all have to succeed to proceed

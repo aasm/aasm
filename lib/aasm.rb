@@ -5,6 +5,7 @@ require 'ostruct'
     errors
     configuration
     base
+    dsl_helper
     instance_base
     transition
     event
