@@ -10,6 +10,7 @@
    [#80](https://github.com/aasm/aasm/issues/80)
    thanks to [@ejlangev](https://github.com/ejlangev))
  * **DSL change**: `after_commit` hooks are now event-based (see [issue #112](https://github.com/aasm/aasm/issues/112))
+ * **DSL change**: event and state callbacks have been re-ordered; state callbacks are not run anymore if any guard fails
 
 ## 3.9.0 (not yet released)
 
