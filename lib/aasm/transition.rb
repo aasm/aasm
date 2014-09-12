@@ -1,33 +1,30 @@
 module AASM
   class Transition
+    include DslHelper
+
     attr_reader :from, :to, :opts
     alias_method :options, :opts
 
-    def initialize(opts)
-      @from = opts[:from]
-      @to = opts[:to]
-      @guards = Array(opts[:guard] || opts[:guards])
-      @on_transition = opts[:on_transition]
+    def initialize(opts, &block)
+      add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
+
+      @from, @to, @guards = opts[:from], opts[:to], Array(opts[:guard] || opts[:guards])
+      if opts[:on_transition]
+        warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
+        opts[:after] = Array(opts[:after]) + Array(opts[:on_transition])
+      end
+      @after = Array(opts[:after])
+      @after = @after[0] if @after.size == 1
       @opts = opts
     end
 
     # TODO: should be named allowed? or similar
     def perform(obj, *args)
-      @guards.each do |guard|
-        case guard
-        when Symbol, String
-          return false unless obj.send(guard, *args)
-        when Proc
-          return false unless guard.call(obj, *args)
-        end
-      end
-      true
+      invoke_callbacks_compatible_with_guard(@guards, obj, args, :guard => true)
     end
 
     def execute(obj, *args)
-      @on_transition.is_a?(Array) ?
-              @on_transition.each {|ot| _execute(obj, ot, *args)} :
-              _execute(obj, @on_transition, *args)
+      invoke_callbacks_compatible_with_guard(@after, obj, args)
     end
 
     def ==(obj)
@@ -40,15 +37,28 @@ module AASM
 
     private
 
-    def _execute(obj, on_transition, *args)
-      obj.aasm.from_state = @from if obj.aasm.respond_to?(:from_state=)
-      obj.aasm.to_state = @to if obj.aasm.respond_to?(:to_state=)
+    def invoke_callbacks_compatible_with_guard(code, record, args, options={})
+      if record.respond_to?(:aasm)
+        record.aasm.from_state = @from if record.aasm.respond_to?(:from_state=)
+        record.aasm.to_state = @to if record.aasm.respond_to?(:to_state=)
+      end
 
-      case on_transition
-      when Proc
-        on_transition.arity == 0 ? on_transition.call : on_transition.call(obj, *args)
+      case code
       when Symbol, String
-        obj.send(:method, on_transition.to_sym).arity == 0 ? obj.send(on_transition) : obj.send(on_transition, *args)
+        # QUESTION : record.send(code, *args) ?
+        arity = record.send(:method, code.to_sym).arity
+        arity == 0 ? record.send(code) : record.send(code, *args)
+      when Proc
+        # QUESTION : record.instance_exec(*args, &code) ?
+        code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+      when Array
+        if options[:guard] # guard callbacks
+          code.all? {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
+        else # after callbacks
+          code.map {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
+        end
+      else
+        true
       end
     end
 

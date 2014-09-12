@@ -12,7 +12,7 @@ class DoubleDefiner
     # simulating a reload
     state :finished, :before_enter => :do_enter
     event :finish do
-      transitions :from => :started, :to => :finished, :on_transition => :do_on_transition
+      transitions :from => :started, :to => :finished, :after => :do_on_transition
     end
   end
 

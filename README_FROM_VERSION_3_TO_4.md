@@ -11,6 +11,53 @@ all (event- and transition-based) guards are run to check whether the state call
 can be run or not.
 
 
+### Callback `:on_transition` renamed to `:after` and changed its binding
+
+The transition callback `:on_transition` has been renamed to `:after` in order
+to make clear it is being called (namely _after_ doing the transition).
+
+Furthermore, in alignment with the other callbacks, it's not receiving the object
+at hand as first parameter and binds the current object to self.
+
+In summary, change from
+
+```ruby
+  aasm do
+    ...
+      transitions :from => :from_state, :to => :to_state, :on_transition => :do_something
+    ...
+  end
+
+  ...
+  def some_other_method(arg)
+    ...
+  end
+
+  def do_something(obj, arg1, arg2)
+    obj.some_other_method(arg1)
+  end
+```
+
+to
+
+```ruby
+  aasm do
+    ...
+      transitions :from => :from_state, :to => :to_state, :after => :do_something
+    ...
+  end
+
+  ...
+  def some_other_method(arg)
+    ...
+  end
+
+  def do_something(arg1, arg2)
+    some_other_method(arg1) # run on the object as self
+  end
+```
+
+
 ### `after_commit` hooks are now event-based
 
 The `after_commit` hooks have been move from the state level to the event level.
