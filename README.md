@@ -179,6 +179,31 @@ originating state (the from-state) and the target state (the to state), like thi
   end
 ```
 
+#### The current event triggered
+
+While running the callbacks you can easily retrieve the name of the event triggered
+by using `aasm.current_event`:
+
+```ruby
+  # taken the example callback from above
+  def do_something
+    puts "triggered #{aasm.current_event}"
+  end
+```
+
+and then
+
+```ruby
+  job = Job.new
+
+  # without bang
+  job.sleep # => triggered :sleep
+
+  # with bang
+  job.sleep! # => triggered :sleep!
+```
+
+
 ### Guards
 
 Let's assume you want to allow particular transitions only if a defined condition is
@@ -296,7 +321,6 @@ class Job < ActiveRecord::Base
 end
 ```
 
-<<<<<<< HEAD
 If you want to make sure that the _AASM_ column for storing the state is not directly assigned,
 configure _AASM_ to not allow direct assignment, like this:
 
@@ -330,7 +354,6 @@ job.aasm_state # => 'sleeping'
 You can use
 [enumerations](http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html)
 in Rails 4.1+ for your state column:
->>>>>>> master
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -359,7 +382,6 @@ setting --- AASM auto-detects this situation and enabled enum
 support. If anything goes wrong, you can disable enum functionality
 and fall back to the default behavior by setting ```:enum```
 to ```false```.
->>>>>>> master
 
 ### Sequel
 

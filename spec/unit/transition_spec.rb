@@ -237,7 +237,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
   end
 
   it 'should allow accessing the from_state and the to_state' do
-    opts = {:from => 'foo', :to => 'bar', :on_transition => :test}
+    opts = {:from => 'foo', :to => 'bar', :after => :test}
     transition = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => AASM::InstanceBase.new('object'))
@@ -248,7 +248,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
 
     return_value = transition.execute(obj, args)
 
-    expect(return_value).to eq(['from: foo to: bar'])
+    expect(return_value).to eq('from: foo to: bar')
   end
 
 end

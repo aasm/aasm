@@ -24,7 +24,7 @@ class CallbackNewDsl
       :after_exit   => :after_exit_closed
 
     event :close, :before => :before, :after => :after, :guard => :event_guard do
-      transitions :to => :closed, :from => [:open], :guard => :transition_guard, :on_transition => :transitioning
+      transitions :to => :closed, :from => [:open], :guard => :transition_guard, :after => :transitioning
     end
 
     event :open, :before => :before, :after => :after do
@@ -75,7 +75,7 @@ class CallbackNewDslArgs
       :after_exit   => :after_exit_closed
 
     event :close, :before => :before, :after => :after do
-      transitions :to => :closed, :from => [:open], :on_transition => :transition_proc
+      transitions :to => :closed, :from => [:open], :after => :transition_proc
     end
 
     event :open, :before => :before, :after => :after do
@@ -112,8 +112,8 @@ class CallbackWithStateArg
     state :out_to_lunch
 
     event :close, :before => :before_method, :after => :after_method do
-      transitions :to => :closed, :from => [:open], :on_transition => :transition_method
-      transitions :to => :out_to_lunch, :from => [:open], :on_transition => :transition_method2
+      transitions :to => :closed, :from => [:open], :after => :transition_method
+      transitions :to => :out_to_lunch, :from => [:open], :after => :transition_method2
     end
   end
 

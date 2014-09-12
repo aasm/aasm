@@ -244,6 +244,24 @@ describe 'should fire callbacks' do
   end
 end
 
+describe 'current event' do
+  let(:pe) {ParametrisedEvent.new}
+
+  it 'if no event has been triggered' do
+    expect(pe.aasm.current_event).to be_nil
+  end
+
+  it 'if a event has been triggered' do
+    pe.wakeup
+    expect(pe.aasm.current_event).to eql :wakeup
+  end
+
+  it 'if no event has been triggered' do
+    pe.wakeup!
+    expect(pe.aasm.current_event).to eql :wakeup!
+  end
+end
+
 describe 'parametrised events' do
   let(:pe) {ParametrisedEvent.new}
 

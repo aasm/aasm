@@ -13,7 +13,8 @@ module AASM
         warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
         opts[:after] = Array(opts[:after]) + Array(opts[:on_transition])
       end
-      @after = opts[:after]
+      @after = Array(opts[:after])
+      @after = @after[0] if @after.size == 1
       @opts = opts
     end
 

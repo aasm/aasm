@@ -11,10 +11,17 @@
    thanks to [@ejlangev](https://github.com/ejlangev))
  * **DSL change**: `after_commit` hooks are now event-based (see [issue #112](https://github.com/aasm/aasm/issues/112))
  * **DSL change**: event and state callbacks have been re-ordered; state callbacks are not run anymore if any guard fails
+ * **DSL change**: `:on_transition` renamed to `:after`
+ * **DSL change**: `:on_transition` renamed to `:after`
+ * **DSL change**: transition `:after` binding changed (see [issue #59](https://github.com/aasm/aasm/issues/59), thanks to [@stiff](https://github.com/stiff))
 
 ## 3.9.0 (not yet released)
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
+
+## 3.4.0
+
+ * allow retrieving the current event (`aasm.current_event`) (see [issue #159](https://github.com/aasm/aasm/issues/159) and [issue #168](https://github.com/aasm/aasm/issues/168))
 
 ## 3.3.3
 
