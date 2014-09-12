@@ -16,6 +16,10 @@
 
  * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
 
+## 3.4.0
+
+ * allow retrieving the current event (`aasm.current_event`) (see [issue #159](https://github.com/aasm/aasm/issues/159) and [issue #168](https://github.com/aasm/aasm/issues/168))
+
 ## 3.3.3
 
  * bugfix: support reloading development environment in Rails (see [issue #148](https://github.com/aasm/aasm/issues/148))

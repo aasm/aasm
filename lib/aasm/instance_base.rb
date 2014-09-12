@@ -1,7 +1,7 @@
 module AASM
   class InstanceBase
 
-    attr_accessor :from_state, :to_state
+    attr_accessor :from_state, :to_state, :current_event
 
     def initialize(instance)
       @instance = instance
