@@ -130,7 +130,7 @@ module AASM
       end
     end
 
-    [:after, :before, :error, :success].each do |callback_name|
+    [:after, :before, :error, :success, :after_commit].each do |callback_name|
       define_method callback_name do |*args, &block|
         options[callback_name] = Array(options[callback_name])
         options[callback_name] << block if block

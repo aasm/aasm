@@ -33,6 +33,7 @@ module AASM
 
         if ActiveRecord::VERSION::MAJOR >= 3
           base.before_validation(:aasm_ensure_initial_state, :on => :create)
+          base.after_commit(:aasm_after_commit_hooks)
         else
           base.before_validation_on_create(:aasm_ensure_initial_state)
         end
@@ -170,15 +171,38 @@ module AASM
           aasm.enter_initial_state if send(self.class.aasm_column).blank?
         end
 
-        def aasm_fire_event(name, options, *args, &block)
-          success = options[:persist] ? self.class.transaction(:requires_new => requires_new?) { super } : super
+        if ActiveRecord::VERSION::MAJOR < 3
+          def aasm_fire_event(name, options, *args, &block)
+            success = options[:persist] ? self.class.transaction(:requires_new => requires_new?) { super } : super
 
-          if success && options[:persist]
-            new_state = aasm.state_object_for_name(aasm.current_state)
-            new_state.fire_callbacks(:after_commit, self)
+            if success && options[:persist]
+              new_state = aasm.state_object_for_name(aasm.current_state)
+              new_state.fire_callbacks(:after_commit, self)
+            end
+
+            success
           end
+        else
+          def aasm_fire_event(name, options, *args, &block)
+            if options[:persist]
+              self.class.transaction(:requires_new => requires_new?){ super }
+            else
+              super
+            end
+          end
+        end
 
-          success
+        def aasm_after_commit_hooks
+          new_state = aasm.state_object_for_name(aasm.current_state)
+          new_state.fire_callbacks(:after_commit, self)
+
+          events_fired = aasm.events_fired
+          until events_fired.empty?
+            next_event = events_fired.shift
+            self.class.aasm.events[next_event].fire_callbacks(:after_commit, self)
+          end
+        ensure
+          aasm.events_fired.clear
         end
 
         def requires_new?
