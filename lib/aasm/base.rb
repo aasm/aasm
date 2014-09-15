@@ -107,11 +107,13 @@ module AASM
 
       klass.send :define_method, "#{name}!", ->(*args, &block) do
         aasm(:"#{aasm_name}").current_event = :"#{name}!"
+        aasm(:"#{aasm_name}").events_fired |= [[:"#{name}", *args]]
         aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => true}, *args, &block)
       end
 
       klass.send :define_method, "#{name}", ->(*args, &block) do
         aasm(:"#{aasm_name}").current_event = :"#{name}"
+        aasm(:"#{aasm_name}").events_fired |= [[:"#{name}", *args]]
         aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => false}, *args, &block)
       end
     end
