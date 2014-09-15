@@ -1,11 +1,12 @@
 module AASM
   class InstanceBase
 
-    attr_accessor :from_state, :to_state, :current_event
+    attr_accessor :from_state, :to_state, :current_event, :events_fired
 
     def initialize(instance, name=:default) # instance of the class including AASM, name of the state machine
       @instance = instance
       @name = name
+      @events_fired = []
     end
 
     def current_state
