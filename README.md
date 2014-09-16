@@ -387,7 +387,7 @@ class Job < ActiveRecord::Base
   end
 
   def self.sleeping
-    "This method name is in already use"
+    "This method name is already in use"
   end
 end
 ```
@@ -398,7 +398,7 @@ class JobsController < ApplicationController
     @running_jobs = Job.running
     @recent_cleaning_jobs = Job.cleaning.where('created_at >=  ?', 3.days.ago)
 
-    # @sleeping_jobs = Job.sleeping   #=> "This method name is in already use"
+    # @sleeping_jobs = Job.sleeping   #=> "This method name is already in use"
   end
 end
 ```
