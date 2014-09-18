@@ -163,6 +163,31 @@ originating state (the from-state) and the target state (the to state), like thi
   end
 ```
 
+#### The current event triggered
+
+While running the callbacks you can easily retrieve the name of the event triggered
+by using `aasm.current_event`:
+
+```ruby
+  # taken the example callback from above
+  def do_something
+    puts "triggered #{aasm.current_event}"
+  end
+```
+
+and then
+
+```ruby
+  job = Job.new
+
+  # without bang
+  job.sleep # => triggered :sleep
+
+  # with bang
+  job.sleep! # => triggered :sleep!
+```
+
+
 ### Guards
 
 Let's assume you want to allow particular transitions only if a defined condition is
