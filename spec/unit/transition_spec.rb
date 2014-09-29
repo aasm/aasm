@@ -171,15 +171,18 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
   end
 
   it 'should call a Proc on the object without args' do
-    prc = Proc.new {||}
+    # in order to test that the Proc has been called, we make sure
+    # that after running the :after callback the prc_object is set
+    prc_object = nil
+    prc = Proc.new { prc_object = self }
+
     opts = {:from => 'foo', :to => 'bar', :after => prc }
     st = AASM::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
-    obj.should_receive(:instance_exec).with(no_args)  # FIXME bad spec
-
     st.execute(obj, args)
+    expect(prc_object).to eql obj
   end
 end
 
