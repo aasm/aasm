@@ -504,22 +504,25 @@ end
 
 AASM supports a couple of methods to find out which states or events are provided or permissible.
 
-Given the `Job` class from above:
+Given this `Job` class:
 
 ```ruby
-job = Job.new
-
-job.aasm.states.map(&:name)
+# show all states
+Job.aasm.states.map(&:name)
 => [:sleeping, :running, :cleaning]
 
+job = Job.new
+
+# show all permissible (reachable / possible) states
 job.aasm.states(:permissible => true).map(&:name)
 => [:running]
 job.run
 job.aasm.states(:permissible => true).map(&:name)
 => [:cleaning, :sleeping]
 
+# show all possible (triggerable) events (allowed by transitions)
 job.aasm.events
-=> [:run, :clean, :sleep]
+=> [:sleep]
 ```
 
 
