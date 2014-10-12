@@ -264,6 +264,38 @@ If you want to provide guards for all transitions within an event, you can use e
     end
 ```
 
+### Transitions
+
+In the event of having multiple transitions for an event, the first transition that successfully completes will stop other transitions in the same event from being processed.
+
+```ruby
+require 'aasm'
+
+class Job
+  include AASM
+
+  aasm do
+    state :stage1, :initial => true
+    state :stage2
+    state :stage3
+    state :completed
+
+    event :stage1_completed do
+      transitions from: :stage1, to: :stage3, guard: :stage2_completed?
+      transitions from: :stage1, to: :stage2
+    end
+  end
+
+  def stage2_completed?
+    true
+  end
+end
+
+job = Job.new
+job.stage1_completed
+job.aasm.current_state # stage3
+```
+
 ### ActiveRecord
 
 AASM comes with support for ActiveRecord and allows automatical persisting of the object's
@@ -431,7 +463,7 @@ class Job < ActiveRecord::Base
   end
 
   def self.sleeping
-    "This method name is in already use"
+    "This method name is already in use"
   end
 end
 ```
@@ -442,7 +474,7 @@ class JobsController < ApplicationController
     @running_jobs = Job.running
     @recent_cleaning_jobs = Job.cleaning.where('created_at >=  ?', 3.days.ago)
 
-    # @sleeping_jobs = Job.sleeping   #=> "This method name is in already use"
+    # @sleeping_jobs = Job.sleeping   #=> "This method name is already in use"
   end
 end
 ```
@@ -548,22 +580,25 @@ end
 
 AASM supports a couple of methods to find out which states or events are provided or permissible.
 
-Given the `Job` class from above:
+Given this `Job` class:
 
 ```ruby
-job = Job.new
-
-job.aasm.states.map(&:name)
+# show all states
+Job.aasm.states.map(&:name)
 => [:sleeping, :running, :cleaning]
 
+job = Job.new
+
+# show all permissible (reachable / possible) states
 job.aasm.states(:permissible => true).map(&:name)
 => [:running]
 job.run
 job.aasm.states(:permissible => true).map(&:name)
 => [:cleaning, :sleeping]
 
+# show all possible (triggerable) events (allowed by transitions)
 job.aasm.events
-=> [:run, :clean, :sleep]
+=> [:sleep]
 ```
 
 
