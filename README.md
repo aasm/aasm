@@ -597,7 +597,7 @@ job.aasm.states(:permissible => true).map(&:name)
 => [:cleaning, :sleeping]
 
 # show all possible (triggerable) events (allowed by transitions)
-job.aasm.events
+job.aasm.events.map(&:name)
 => [:sleep]
 ```
 

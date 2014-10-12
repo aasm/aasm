@@ -35,7 +35,8 @@ module AASM
     def states(options={})
       if options[:permissible]
         # ugliness level 1000
-        transitions = @instance.class.aasm.events.values_at(*permissible_events).compact.map {|e| e.transitions_from_state(current_state) }
+        permissible_event_names = permissible_events.map(&:name)
+        transitions = @instance.class.aasm.events.values_at(*permissible_event_names).compact.map {|e| e.transitions_from_state(current_state) }
         tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
         @instance.class.aasm.states.select {|s| tos.include?(s.name.to_sym)}
       else
@@ -47,14 +48,13 @@ module AASM
     # QUESTION: shouldn't events return objects instead of strings?
     def events(state=current_state)
       events = @instance.class.aasm.events.values.select {|e| e.transitions_from_state?(state) }
-      events.map {|e| e.name}
     end
 
     # filters the results of events_for_current_state so that only those that
     # are really currently possible (given transition guards) are shown.
     # QUESTION: what about events.permissible ?
     def permissible_events
-      events.select{ |e| @instance.send(("may_" + e.to_s + "?").to_sym) }
+      events.select{ |e| @instance.send("may_#{e.name}?") }
     end
 
     def state_object_for_name(name)

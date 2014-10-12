@@ -14,6 +14,7 @@
  * **DSL change**: `:on_transition` renamed to `:after`
  * **DSL change**: `:on_transition` renamed to `:after`
  * **DSL change**: transition `:after` binding changed (see [issue #59](https://github.com/aasm/aasm/issues/59), thanks to [@stiff](https://github.com/stiff))
+ * **DSL change**: instance-based events inspection now returns event instances (instead of the event names as symbol)
 
 ## 3.9.0 (not yet released)
 

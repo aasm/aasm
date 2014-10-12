@@ -104,6 +104,28 @@ class Job < ActiveRecord::Base
 end
 ```
 
+
+### Instance-level inspection
+
+Listing events for the current state now returns Event objects instead of event names (as symbols). So, change from
+
+```ruby
+job = Job.new
+
+job.aasm.events
+# => [:run]
+```
+
+to
+
+```ruby
+job = Job.new
+
+job.aasm.events.map(&:name)
+# => [:run]
+```
+
+
 ## Could
 
 ### Triggering an event without _to_state_
