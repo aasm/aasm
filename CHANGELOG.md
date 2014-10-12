@@ -16,6 +16,7 @@
  * **DSL change**: transition `:after` binding changed (see [issue #59](https://github.com/aasm/aasm/issues/59), thanks to [@stiff](https://github.com/stiff))
  * **DSL change**: instance-based events inspection now returns event instances (instead of the event names as symbol)
  * **DSL change**: instance-based permissible_events has been removed in favor or events(:permissible => true)
+ * **DSL change**: class-based events now returns a list of Event instances (instead of a hash with event names as keys)
 
 ## 3.9.0 (not yet released)
 

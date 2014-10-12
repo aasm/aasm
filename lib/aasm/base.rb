@@ -1,6 +1,8 @@
 module AASM
   class Base
 
+    attr_reader :state_machine
+
     def initialize(klass, options={}, &block)
       @klass = klass
       @state_machine = AASM::StateMachine[@klass]
@@ -80,7 +82,7 @@ module AASM
     end
 
     def events
-      @state_machine.events
+      @state_machine.events.values
     end
 
     def states_for_select
@@ -89,9 +91,9 @@ module AASM
 
     def from_states_for_state(state, options={})
       if options[:transition]
-        events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
+        @state_machine.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
       else
-        events.map {|k,v| v.transitions_to_state(state)}.flatten.map(&:from).flatten
+        events.map {|e| e.transitions_to_state(state)}.flatten.map(&:from).flatten
       end
     end
 

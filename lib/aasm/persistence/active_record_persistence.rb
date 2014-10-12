@@ -174,7 +174,7 @@ module AASM
           success = options[:persist] ? self.class.transaction(:requires_new => requires_new?) { super } : super
 
           if success && options[:persist]
-            event = self.class.aasm.events[name]
+            event = self.class.aasm.state_machine.events[name]
             event.fire_callbacks(:after_commit, self)
           end
 

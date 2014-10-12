@@ -143,6 +143,20 @@ job.aasm.events(:permissible => true)
 # => [:run]
 ```
 
+Class-based events now return a list of `Event` instances. Change from
+
+```ruby
+Job.aasm.events.values.map(&:name)
+# => [:run]
+```
+
+to
+
+```ruby
+Job.aasm.events.map(&:name)
+# => [:run]
+```
+
 
 ## Could
 

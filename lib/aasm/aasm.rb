@@ -160,7 +160,7 @@ private
   end
 
   def aasm_fire_event(event_name, options, *args, &block)
-    event = self.class.aasm.events[event_name]
+    event = self.class.aasm.state_machine.events[event_name]
     begin
       old_state = aasm.state_object_for_name(aasm.current_state)
 

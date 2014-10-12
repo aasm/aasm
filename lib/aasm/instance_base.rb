@@ -36,7 +36,7 @@ module AASM
       if options[:permissible]
         # ugliness level 1000
         permissible_event_names = events(:permissible => true).map(&:name)
-        transitions = @instance.class.aasm.events.values_at(*permissible_event_names).compact.map {|e| e.transitions_from_state(current_state) }
+        transitions = @instance.class.aasm.state_machine.events.values_at(*permissible_event_names).compact.map {|e| e.transitions_from_state(current_state) }
         tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
         @instance.class.aasm.states.select {|s| tos.include?(s.name.to_sym)}
       else
@@ -46,7 +46,7 @@ module AASM
 
     def events(options={})
       state = options[:state] || current_state
-      events = @instance.class.aasm.events.values.select {|e| e.transitions_from_state?(state) }
+      events = @instance.class.aasm.events.select {|e| e.transitions_from_state?(state) }
 
       if options[:permissible]
         # filters the results of events_for_current_state so that only those that
@@ -75,7 +75,7 @@ module AASM
     end
 
     def may_fire_event?(name, *args)
-      if event = @instance.class.aasm.events[name]
+      if event = @instance.class.aasm.state_machine.events[name]
         event.may_fire?(@instance, *args)
       else
         false # unknown event
