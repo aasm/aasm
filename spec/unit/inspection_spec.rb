@@ -100,7 +100,7 @@ describe 'permissible events' do
   let(:foo) {Foo.new}
 
   it 'work' do
-    expect(foo.aasm.permissible_events).to include(:close)
-    expect(foo.aasm.permissible_events).not_to include(:null)
+    expect(foo.aasm.events(:permissible => true)).to include(:close)
+    expect(foo.aasm.events(:permissible => true)).not_to include(:null)
   end
 end

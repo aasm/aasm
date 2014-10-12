@@ -127,8 +127,8 @@ module AASM
 
     # TODO remove this method in v4.0.0
   def aasm_permissible_events_for_current_state
-    warn "#aasm_permissible_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.permissible_events instead!"
-    aasm.permissible_events
+    warn "#aasm_permissible_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.events(:permissible => true) instead!"
+    aasm.events(:permissible => true)
   end
 
     # TODO remove this method in v4.0.0

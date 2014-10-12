@@ -125,6 +125,24 @@ job.aasm.events.map(&:name)
 # => [:run]
 ```
 
+Retrieving the list of permissible events has now been integrated into the `events` method. Change from
+
+```ruby
+job = Job.new
+
+job.aasm.permissible_events
+# => [:run]
+```
+
+to
+
+```ruby
+job = Job.new
+
+job.aasm.events(:permissible => true)
+# => [:run]
+```
+
 
 ## Could
 
