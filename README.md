@@ -248,6 +248,38 @@ If you want to provide guards for all transitions within an event, you can use e
     end
 ```
 
+### Transitions
+
+In the event of having multiple transitions for an event, the first transition that successfully completes will stop other transitions in the same event from being processed.
+
+```ruby
+require 'aasm'
+
+class Job
+  include AASM
+
+  aasm do
+    state :stage1, :initial => true
+    state :stage2
+    state :stage3
+    state :completed
+
+    event :stage1_completed do
+      transitions from: :stage1, to: :stage3, guard: :stage2_completed?
+      transitions from: :stage1, to: :stage2
+    end
+  end
+
+  def stage2_completed?
+    true
+  end
+end
+
+job = Job.new
+job.stage1_completed
+job.aasm.current_state # stage3
+```
+
 ### ActiveRecord
 
 AASM comes with support for ActiveRecord and allows automatical persisting of the object's
