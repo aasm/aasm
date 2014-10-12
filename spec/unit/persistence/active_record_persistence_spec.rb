@@ -424,7 +424,7 @@ describe 'transitions with persistence' do
     end
 
     describe "after_commit callback" do
-      it "should fire :after_commit if transaction was successful" do
+      it "should fire state's :after_commit if transaction was successful" do
         validator = Validator.create(:name => 'name')
         expect(validator).to be_sleeping
         validator.run!
@@ -432,13 +432,22 @@ describe 'transitions with persistence' do
         expect(validator.name).not_to eq("name")
       end
 
-      it "should not fire :after_commit if transaction failed" do
+      it "should not fire state's :after_commit if transaction failed" do
         validator = Validator.create(:name => 'name')
         expect { validator.fail! }.to raise_error(StandardError, 'failed on purpose')
         expect(validator.name).to eq("name")
       end
 
-      it "should not fire if not saving" do
+      it "should fire state's :after_commit if manually persisted" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.run
+        validator.save!
+        expect(validator).to be_running
+        expect(validator.name).not_to eq("name")
+      end
+
+      it "should not immediately fire state's :after_commit if not saving" do
         validator = Validator.create(:name => 'name')
         expect(validator).to be_sleeping
         validator.run
@@ -446,6 +455,36 @@ describe 'transitions with persistence' do
         expect(validator.name).to eq("name")
       end
 
+      it "should fire all events' :after_commit hooks in if saving" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.wake!
+        expect(validator).to be_awake
+        validator.sleep!
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name awoke slept")
+      end
+
+      it "should fire all events' :after_commit hooks in order if manually persisted" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.wake
+        expect(validator).to be_awake
+        validator.sleep
+        validator.save!
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name awoke slept")
+      end
+
+      it "should not immediately fire any events' :after_commit hooks if not saving" do
+        validator = Validator.create(:name => 'name')
+        expect(validator).to be_sleeping
+        validator.wake
+        expect(validator).to be_awake
+        validator.sleep
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name")
+      end
     end
 
     context "when not persisting" do

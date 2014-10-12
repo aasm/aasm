@@ -56,11 +56,13 @@ module AASM
 
       @klass.send(:define_method, "#{name.to_s}!") do |*args, &block|
         aasm.current_event = "#{name.to_s}!".to_sym
+        aasm.events_fired |= [name.to_sym]
         aasm_fire_event(name, {:persist => true}, *args, &block)
       end
 
       @klass.send(:define_method, "#{name.to_s}") do |*args, &block|
         aasm.current_event = name.to_sym
+        aasm.events_fired |= [name.to_sym]
         aasm_fire_event(name, {:persist => false}, *args, &block)
       end
     end
