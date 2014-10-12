@@ -3,6 +3,7 @@ require 'active_record'
 require 'logger'
 require 'i18n'
 
+I18n.enforce_available_locales = false
 load_schema
 
 class LocalizerTestModel < ActiveRecord::Base
