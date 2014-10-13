@@ -24,13 +24,13 @@ describe 'inspection for common cases' do
       expect(states).to include(:closed)
       expect(states).to include(:final)
 
-      states = foo.aasm.states(:permissible => true)
+      states = foo.aasm.states(:permitted => true)
       expect(states).to include(:closed)
       expect(states).not_to include(:open)
       expect(states).not_to include(:final)
 
       foo.close
-      expect(foo.aasm.states(:permissible => true)).to be_empty
+      expect(foo.aasm.states(:permitted => true)).to be_empty
     end
 
     it "delivers all states for subclasses" do
@@ -39,12 +39,12 @@ describe 'inspection for common cases' do
       expect(states).to include(:closed)
       expect(states).to include(:foo)
 
-      states = two.aasm.states(:permissible => true)
+      states = two.aasm.states(:permitted => true)
       expect(states).to include(:closed)
       expect(states).not_to include(:open)
 
       two.close
-      expect(two.aasm.states(:permissible => true)).to be_empty
+      expect(two.aasm.states(:permitted => true)).to be_empty
     end
 
     it "delivers all events" do
@@ -96,11 +96,11 @@ describe 'aasm.from_states_for_state' do
   end
 end
 
-describe 'permissible events' do
+describe 'permitted events' do
   let(:foo) {Foo.new}
 
   it 'work' do
-    expect(foo.aasm.events(:permissible => true)).to include(:close)
-    expect(foo.aasm.events(:permissible => true)).not_to include(:null)
+    expect(foo.aasm.events(:permitted => true)).to include(:close)
+    expect(foo.aasm.events(:permitted => true)).not_to include(:null)
   end
 end

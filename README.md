@@ -578,7 +578,7 @@ end
 
 ### Inspection
 
-AASM supports a couple of methods to find out which states or events are provided or permissible.
+AASM supports a couple of methods to find out which states or events are provided or permitted.
 
 Given this `Job` class:
 
@@ -589,11 +589,11 @@ Job.aasm.states.map(&:name)
 
 job = Job.new
 
-# show all permissible (reachable / possible) states
-job.aasm.states(:permissible => true).map(&:name)
+# show all permitted (reachable / possible) states
+job.aasm.states(:permitted => true).map(&:name)
 => [:running]
 job.run
-job.aasm.states(:permissible => true).map(&:name)
+job.aasm.states(:permitted => true).map(&:name)
 => [:cleaning, :sleeping]
 
 # show all possible (triggerable) events (allowed by transitions)

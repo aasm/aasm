@@ -33,10 +33,10 @@ module AASM
     end
 
     def states(options={})
-      if options[:permissible]
+      if options[:permitted]
         # ugliness level 1000
-        permissible_event_names = events(:permissible => true).map(&:name)
-        transitions = @instance.class.aasm.state_machine.events.values_at(*permissible_event_names).compact.map {|e| e.transitions_from_state(current_state) }
+        permitted_event_names = events(:permitted => true).map(&:name)
+        transitions = @instance.class.aasm.state_machine.events.values_at(*permitted_event_names).compact.map {|e| e.transitions_from_state(current_state) }
         tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
         @instance.class.aasm.states.select {|s| tos.include?(s.name.to_sym)}
       else
@@ -48,7 +48,7 @@ module AASM
       state = options[:state] || current_state
       events = @instance.class.aasm.events.select {|e| e.transitions_from_state?(state) }
 
-      if options[:permissible]
+      if options[:permitted]
         # filters the results of events_for_current_state so that only those that
         # are really currently possible (given transition guards) are shown.
         events.select! { |e| @instance.send("may_#{e.name}?") }
