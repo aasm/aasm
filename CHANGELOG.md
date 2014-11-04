@@ -19,10 +19,6 @@
  * **DSL change**: class-based events now returns a list of Event instances (instead of a hash with event names as keys)
  * **DSL change**: renamed permissible states and events to permitted states events
 
-## 3.9.0 (not yet released)
-
- * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
-
 ## 3.4.0
 
  * allow retrieving the current event (`aasm.current_event`) (see [issue #159](https://github.com/aasm/aasm/issues/159) and [issue #168](https://github.com/aasm/aasm/issues/168))
