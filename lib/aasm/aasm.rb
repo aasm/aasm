@@ -26,59 +26,6 @@ module AASM
       @aasm
     end
 
-    # TODO remove this method in v4.0.0
-    def aasm_initial_state(set_state=nil)
-      if set_state
-        warn ".aasm_initial_state(:name) is deprecated and will be removed in version 4.0.0; please use .aasm.initial_state = :name instead!"
-        AASM::StateMachine[self].initial_state = set_state
-      else
-        warn ".aasm_initial_state is deprecated and will be removed in version 4.0.0; please use .aasm.initial_state instead!"
-        AASM::StateMachine[self].initial_state
-      end
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_from_states_for_state(state, options={})
-      warn ".aasm_from_states_for_state is deprecated and will be removed in version 4.0.0; please use .aasm.from_states_for_state instead!"
-      aasm.from_states_for_state(state, options)
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_initial_state=(state)
-      warn ".aasm_initial_state= is deprecated and will be removed in version 4.0.0"
-      AASM::StateMachine[self].initial_state = state
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_state(name, options={})
-      warn ".aasm_state is deprecated and will be removed in version 4.0.0; please use .aasm.state instead!"
-      aasm.state(name, options)
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_event(name, options = {}, &block)
-      warn ".aasm_event is deprecated and will be removed in version 4.0.0; please use .aasm.event instead!"
-      aasm.event(name, options, &block)
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_states
-      warn ".aasm_states is deprecated and will be removed in version 4.0.0; please use .aasm.states instead!"
-      aasm.states
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_events
-      warn ".aasm_events is deprecated and will be removed in version 4.0.0; please use .aasm.events instead!"
-      aasm.events
-    end
-
-    # TODO remove this method in v4.0.0
-    def aasm_states_for_select
-      warn ".aasm_states_for_select is deprecated and will be removed in version 4.0.0; please use .aasm.states_for_select instead!"
-      aasm.states_for_select
-    end
-
     # aasm.event(:event_name).human?
     def aasm_human_event_name(event) # event_name?
       AASM::Localizer.new.human_event_name(self, event)
@@ -105,42 +52,6 @@ module AASM
   # may be overwritten by persistence mixins
   def aasm_write_state_without_persistence(new_state)
     true
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_current_state
-    warn "#aasm_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.current_state instead!"
-    aasm.current_state
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_enter_initial_state
-    warn "#aasm_enter_initial_state is deprecated and will be removed in version 4.0.0; please use #aasm.enter_initial_state instead!"
-    aasm.enter_initial_state
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_events_for_current_state
-    warn "#aasm_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.events(aasm.current_state) instead!"
-    aasm.events(aasm.current_state)
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_permissible_events_for_current_state
-    warn "#aasm_permissible_events_for_current_state is deprecated and will be removed in version 4.0.0; please use #aasm.events(:permitted => true) instead!"
-    aasm.events(:permitted => true)
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_events_for_state(state_name)
-    warn "#aasm_events_for_state(state_name) is deprecated and will be removed in version 4.0.0; please use #aasm.events(state_name) instead!"
-    aasm.events(state_name)
-  end
-
-    # TODO remove this method in v4.0.0
-  def aasm_human_state
-    warn "#aasm_human_state is deprecated and will be removed in version 4.0.0; please use #aasm.human_state instead!"
-    aasm.human_state
   end
 
 private

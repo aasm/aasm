@@ -39,12 +39,6 @@ module AASM
       @transitions.select { |t| t.to == state }
     end
 
-    # TODO remove this method in v4.0.0
-    def all_transitions
-      warn "Event#all_transitions is deprecated and will be removed in version 4.0.0; please use Event#transitions instead!"
-      transitions
-    end
-
     def fire_callbacks(callback_name, record, *args)
       # strip out the first element in args if it's a valid to_state
       # #given where we're coming from, this condition implies args not empty

@@ -18,6 +18,7 @@
  * **DSL change**: instance-based permissible_events has been removed in favor or events(:permissible => true)
  * **DSL change**: class-based events now returns a list of Event instances (instead of a hash with event names as keys)
  * **DSL change**: renamed permissible states and events to permitted states events
+ * removed deprecated methods (mostly the ones prefixed with `aasm_`)
 
 ## 3.4.0
 
