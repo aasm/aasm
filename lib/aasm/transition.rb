@@ -6,19 +6,29 @@ module AASM
     def initialize(opts)
       @from = opts[:from]
       @to = opts[:to]
-      @guards = Array(opts[:guard] || opts[:guards])
+      @guards = Array(opts[:guard] || opts[:guards] || opts[:if])
+      @unless = Array(opts[:unless]) #TODO: This could use a better name
       @on_transition = opts[:on_transition]
       @opts = opts
     end
 
     # TODO: should be named allowed? or similar
-    def perform(obj, *args)
+    def allowed?(obj, *args)
       @guards.each do |guard|
         case guard
         when Symbol, String
           return false unless obj.send(guard, *args)
         when Proc
           return false unless guard.call(obj, *args)
+        end
+      end
+
+      @unless.each do |guard|
+        case guard
+        when Symbol, String
+          return false if obj.send(guard, *args)
+        when Proc
+          return false if guard.call(obj, *args)
         end
       end
       true
