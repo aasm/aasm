@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 3.9.0 (not yet released)
+## 3.5.0 (not yet released)
 
- * deprecated old aasm_* class methods (old-style DSL), in preparation for AASM v4.0.0
+ * support `if` and `unless` guard syntax: (see [issue #179](https://github.com/aasm/aasm/issues/179) and [issue #181](https://github.com/aasm/aasm/issues/181)), thanks to [@bigtunacan](https://github.com/bigtunacan)
 
 ## 3.4.0
 
