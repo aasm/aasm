@@ -100,7 +100,7 @@ describe AASM::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar'}
     st = AASM::Transition.new(opts)
 
-    expect(st.perform(nil)).to be_true
+    expect(st.allowed?(nil)).to be_true
   end
 
   it 'should call the method on the object if guard is a symbol' do
@@ -110,7 +110,17 @@ describe AASM::Transition, '- when performing guard checks' do
     obj = double('object')
     expect(obj).to receive(:test)
 
-    st.perform(obj)
+    expect(st.allowed?(obj)).to be false
+  end
+
+  it 'should call the method on the object if unless is a symbol' do
+    opts = {:from => 'foo', :to => 'bar', :unless => :test}
+    st = AASM::Transition.new(opts)
+
+    obj = double('object')
+    expect(obj).to receive(:test)
+
+    expect(st.allowed?(obj)).to be true
   end
 
   it 'should call the method on the object if guard is a string' do
@@ -120,7 +130,17 @@ describe AASM::Transition, '- when performing guard checks' do
     obj = double('object')
     expect(obj).to receive(:test)
 
-    st.perform(obj)
+    expect(st.allowed?(obj)).to be false
+  end
+
+  it 'should call the method on the object if unless is a string' do
+    opts = {:from => 'foo', :to => 'bar', :unless => 'test'}
+    st = AASM::Transition.new(opts)
+
+    obj = double('object')
+    expect(obj).to receive(:test)
+
+    expect(st.allowed?(obj)).to be true
   end
 
   it 'should call the proc passing the object if the guard is a proc' do
@@ -130,7 +150,7 @@ describe AASM::Transition, '- when performing guard checks' do
     obj = double('object')
     expect(obj).to receive(:test)
 
-    st.perform(obj)
+    expect(st.allowed?(obj)).to be false
   end
 end
 
