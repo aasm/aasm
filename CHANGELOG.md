@@ -20,6 +20,10 @@
  * **DSL change**: renamed permissible states and events to permitted states events
  * removed deprecated methods (mostly the ones prefixed with `aasm_`)
 
+## 3.5.0 (not yet released)
+
+ * support `if` and `unless` guard syntax: (see [issue #179](https://github.com/aasm/aasm/issues/179) and [issue #181](https://github.com/aasm/aasm/issues/181)), thanks to [@bigtunacan](https://github.com/bigtunacan)
+
 ## 3.4.0
 
  * allow retrieving the current event (`aasm.current_event`) (see [issue #159](https://github.com/aasm/aasm/issues/159) and [issue #168](https://github.com/aasm/aasm/issues/168))

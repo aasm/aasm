@@ -264,6 +264,20 @@ If you want to provide guards for all transitions within an event, you can use e
     end
 ```
 
+If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as well:
+
+```ruby
+    event :clean do
+      transitions :from => :running, :to => :cleaning, :unless => :cleaning_needed?
+    end
+
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :if => :cleaning_needed?
+    end
+  end
+```
+
+
 ### Transitions
 
 In the event of having multiple transitions for an event, the first transition that successfully completes will stop other transitions in the same event from being processed.

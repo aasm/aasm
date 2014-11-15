@@ -4,6 +4,7 @@ class CallbackNewDsl
   def initialize(options={})
     @fail_event_guard = options[:fail_event_guard]
     @fail_transition_guard = options[:fail_transition_guard]
+    @log = options[:log]
   end
 
   aasm do
@@ -33,7 +34,7 @@ class CallbackNewDsl
   end
 
   def log(text)
-    # puts text
+    puts text if @log
   end
 
   def before_enter_open; log('before_enter_open'); end

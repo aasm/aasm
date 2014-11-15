@@ -7,7 +7,10 @@ module AASM
     def initialize(name, options = {}, &block)
       @name = name
       @transitions = []
-      @guards = Array(options[:guard] || options[:guards])
+      @guards = Array(options[:guard] || options[:guards] || options[:if])
+      @unless = Array(options[:unless]) #TODO: This could use a better name
+
+      # from aasm4
       @options = options # QUESTION: .dup ?
       add_options_from_dsl(@options, [:after, :before, :error, :success], &block) if block
     end
@@ -72,8 +75,12 @@ module AASM
 
     def attach_event_guards(definitions)
       unless @guards.empty?
-        given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards))
-        definitions[:guards] = @guards + given_guards
+        given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards) || definitions.delete(:if))
+        definitions[:guards] = @guards + given_guards # from aasm4
+      end
+      unless @unless.empty?
+        given_unless = Array(definitions.delete(:unless))
+        definitions[:unless] = given_unless + @unless
       end
       definitions
     end
@@ -99,7 +106,7 @@ module AASM
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if transition.perform(obj, *args)
+        if transition.allowed?(obj, *args)
           if test
             result = true
           else

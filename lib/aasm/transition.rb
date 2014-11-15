@@ -8,19 +8,24 @@ module AASM
     def initialize(opts, &block)
       add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
 
-      @from, @to, @guards = opts[:from], opts[:to], Array(opts[:guard] || opts[:guards])
+      @from = opts[:from]
+      @to = opts[:to]
+      @guards = Array(opts[:guard] || opts[:guards] || opts[:if])
+      @unless = Array(opts[:unless]) #TODO: This could use a better name
+
       if opts[:on_transition]
         warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
         opts[:after] = Array(opts[:after]) + Array(opts[:on_transition])
       end
       @after = Array(opts[:after])
       @after = @after[0] if @after.size == 1
+
       @opts = opts
     end
 
-    # TODO: should be named allowed? or similar
-    def perform(obj, *args)
-      invoke_callbacks_compatible_with_guard(@guards, obj, args, :guard => true)
+    def allowed?(obj, *args)
+      invoke_callbacks_compatible_with_guard(@guards, obj, args, :guard => true) &&
+      invoke_callbacks_compatible_with_guard(@unless, obj, args, :unless => true)
     end
 
     def execute(obj, *args)
@@ -52,9 +57,14 @@ module AASM
         # QUESTION : record.instance_exec(*args, &code) ?
         code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
       when Array
-        if options[:guard] # guard callbacks
+        if options[:guard]
+          # invoke guard callbacks
           code.all? {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
-        else # after callbacks
+        elsif options[:unless]
+          # invoke unless callbacks
+          code.all? {|a| !invoke_callbacks_compatible_with_guard(a, record, args)}
+        else
+          # invoke after callbacks
           code.map {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
         end
       else

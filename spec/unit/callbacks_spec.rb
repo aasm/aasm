@@ -26,7 +26,7 @@ describe 'callbacks for the new DSL' do
   end
 
   it "does not run any state callback if the event guard fails" do
-    callback = CallbackNewDsl.new
+    callback = CallbackNewDsl.new(:log => false)
     callback.aasm.current_state
 
     expect(callback).to receive(:before).once.ordered
