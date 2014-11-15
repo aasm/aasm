@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 4.0.0 (not yet released)
+## 4.0.0
 
+ * support `if` and `unless` guard syntax: (see [issue #179](https://github.com/aasm/aasm/issues/179) and [issue #181](https://github.com/aasm/aasm/issues/181)), thanks to [@bigtunacan](https://github.com/bigtunacan)
  * may configure to not allow direct assignment for persisted AASM models (see [issue #53](https://github.com/aasm/aasm/issues/53))
  * **DSL change**: callbacks don't require `to_state` parameter anymore, but still support it
    (closing issues
@@ -19,10 +20,6 @@
  * **DSL change**: class-based events now returns a list of Event instances (instead of a hash with event names as keys)
  * **DSL change**: renamed permissible states and events to permitted states events
  * removed deprecated methods (mostly the ones prefixed with `aasm_`)
-
-## 3.5.0 (not yet released)
-
- * support `if` and `unless` guard syntax: (see [issue #179](https://github.com/aasm/aasm/issues/179) and [issue #181](https://github.com/aasm/aasm/issues/181)), thanks to [@bigtunacan](https://github.com/bigtunacan)
 
 ## 3.4.0
 
