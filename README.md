@@ -13,6 +13,10 @@ that no longer targets only ActiveRecord models. It currently provides adapters 
 [Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter what
 parent class it has (if any).
 
+## Upgrade from version 3 to 4
+
+Take a look at the [README_FROM_VERSION_3_TO_4](https://github.com/aasm/aasm/blob/master/README_FROM_VERSION_3_TO_4.md) for details how to switch from version 3.x to 4.0 of _AASM_.
+
 ## Usage
 
 Adding a state machine is as simple as including the AASM module and start defining
