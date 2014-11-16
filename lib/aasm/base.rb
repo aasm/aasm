@@ -85,6 +85,11 @@ module AASM
       @state_machine.events.values
     end
 
+    # aasm.event(:event_name).human?
+    def human_event_name(event) # event_name?
+      AASM::Localizer.new.human_event_name(@klass, event)
+    end
+
     def states_for_select
       states.map { |state| state.for_select }
     end

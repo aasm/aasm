@@ -67,13 +67,13 @@ describe AASM::Localizer, "new style" do
     end
   end
 
-  context 'aasm_human_event_name' do
+  context 'aasm.human_event_name' do
     it 'should return translated event name' do
-      expect(LocalizerTestModel.aasm_human_event_name(:close)).to eq("Let's close it!")
+      expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
     end
 
     it 'should return humanized event name' do
-      expect(LocalizerTestModel.aasm_human_event_name(:open)).to eq("Open")
+      expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
     end
   end
 end
@@ -102,13 +102,13 @@ describe AASM::Localizer, "deprecated style" do
     end
   end
 
-  context 'aasm_human_event_name' do
+  context 'aasm.human_event_name' do
     it 'should return translated event name' do
-      expect(LocalizerTestModel.aasm_human_event_name(:close)).to eq("Let's close it!")
+      expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
     end
 
     it 'should return humanized event name' do
-      expect(LocalizerTestModel.aasm_human_event_name(:open)).to eq("Open")
+      expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
     end
   end
 end

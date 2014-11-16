@@ -1,5 +1,8 @@
 module AASM
 
+  # provide a state machine for the including class
+  # make sure to load class methods as well
+  # initialize persistence for the state machine
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
 
@@ -26,9 +29,10 @@ module AASM
       @aasm
     end
 
-    # aasm.event(:event_name).human?
+    # deprecated, remove in version 4.1
     def aasm_human_event_name(event) # event_name?
-      AASM::Localizer.new.human_event_name(self, event)
+      warn '[DEPRECATION] AASM: aasm_human_event_name is deprecated, use aasm.human_event_name instead'
+      aasm.human_event_name(event)
     end
   end # ClassMethods
 
