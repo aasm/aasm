@@ -4,7 +4,7 @@
 
 ### Callback order has been changed
 
-The first callback to be run is `:before` of the event. A state's `:before_exit' callback
+The first callback to be run is `:before` of the event. A state's `:before_exit` callback
 is now run directly before its `:exit` callback. Event-based guards are now run before
 any of the transition guards are run. And finally, before running any state callbacks,
 all (event- and transition-based) guards are run to check whether the state callbacks
