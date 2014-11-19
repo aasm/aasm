@@ -141,14 +141,12 @@ Here you can see a list of all possible callbacks, together with their order of 
 ```ruby
 begin
   event           before
-  event           guards              # test run
-  transition      guards              # test run
+  event           guards
+  transition      guards
   old_state       before_exit
   old_state       exit
   new_state       before_enter
   new_state       enter
-    event         guards
-    transition    guards
     ...update state...
     transition    after
     event         success             # if persist successful

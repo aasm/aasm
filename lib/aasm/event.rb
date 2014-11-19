@@ -19,11 +19,11 @@ module AASM
     # executes the transition guards to determine if a transition is even
     # an option given current conditions.
     def may_fire?(obj, to_state=nil, *args)
-      _fire(obj, true, to_state, *args) # true indicates test firing
+      _fire(obj, {:test_only => true}, to_state, *args) # true indicates test firing
     end
 
-    def fire(obj, to_state=nil, *args)
-      _fire(obj, false, to_state, *args) # false indicates this is not a test (fire!)
+    def fire(obj, options={}, to_state=nil, *args)
+      _fire(obj, options, to_state, *args) # false indicates this is not a test (fire!)
     end
 
     def transitions_from_state?(state)
@@ -86,8 +86,8 @@ module AASM
     end
 
     # Execute if test == false, otherwise return true/false depending on whether it would fire
-    def _fire(obj, test, to_state=nil, *args)
-      result = test ? false : nil
+    def _fire(obj, options={}, to_state=nil, *args)
+      result = options[:test_only] ? false : nil
       if @transitions.map(&:from).any?
         transitions = @transitions.select { |t| t.from == obj.aasm.current_state }
         return result if transitions.size == 0
@@ -106,11 +106,11 @@ module AASM
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if transition.allowed?(obj, *args)
-          if test
-            result = true
+        if Array(transition.to).include?(options[:may_fire]) || transition.allowed?(obj, *args)
+          result = to_state || Array(transition.to).first
+          if options[:test_only]
+            # result = true
           else
-            result = to_state || Array(transition.to).first
             transition.execute(obj, *args)
           end
 

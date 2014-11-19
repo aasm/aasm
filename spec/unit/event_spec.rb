@@ -101,7 +101,7 @@ describe 'firing an event' do
     obj = double('object', :aasm => double('aasm', :current_state => :open))
     expect(obj).to receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
-    expect(event.fire(obj, nil, 'arg1', 'arg2')).to eq(:closed)
+    expect(event.fire(obj, {}, nil, 'arg1', 'arg2')).to eq(:closed)
   end
 
 end

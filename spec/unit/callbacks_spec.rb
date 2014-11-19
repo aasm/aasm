@@ -11,8 +11,8 @@ describe 'callbacks for the new DSL' do
     expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
     expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
     expect(callback).to receive(:exit_open).once.ordered
-    expect(callback).to receive(:event_guard).once.ordered.and_return(true)
-    expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+    # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+    # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
     expect(callback).to receive(:transitioning).once.ordered
     expect(callback).to receive(:before_enter_closed).once.ordered
     expect(callback).to receive(:enter_closed).once.ordered

@@ -4,6 +4,10 @@
 
  * `aasm_human_event_name` is deprecated, use `aasm.human_event_name` instead
 
+## 4.0.1
+
+ * fire guards only once per transition (see [issue #184](https://github.com/aasm/aasm/issues/184) for details)
+
 ## 4.0.0
 
  * support `if` and `unless` guard syntax: (see [issue #179](https://github.com/aasm/aasm/issues/179) and [issue #181](https://github.com/aasm/aasm/issues/181)), thanks to [@bigtunacan](https://github.com/bigtunacan)

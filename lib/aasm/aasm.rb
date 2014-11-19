@@ -86,11 +86,11 @@ private
         *process_args(event, aasm.current_state, *args)
       )
 
-      if event.may_fire?(self, *args)
+      if may_fire_to = event.may_fire?(self, *args)
         old_state.fire_callbacks(:before_exit, self)
         old_state.fire_callbacks(:exit, self) # TODO: remove for AASM 4?
 
-        if new_state_name = event.fire(self, *args)
+        if new_state_name = event.fire(self, {:may_fire => may_fire_to}, *args)
           aasm_fired(event, old_state, new_state_name, options, *args, &block)
         else
           aasm_failed(event_name, old_state)
