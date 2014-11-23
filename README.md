@@ -270,11 +270,11 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
 
 ```ruby
     event :clean do
-      transitions :from => :running, :to => :cleaning, :unless => :cleaning_needed?
+      transitions :from => :running, :to => :cleaning, :if => :cleaning_needed?
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :if => :cleaning_needed?
+      transitions :from => :running, :to => :sleeping, :unless => :cleaning_needed?
     end
   end
 ```
