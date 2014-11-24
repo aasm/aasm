@@ -10,7 +10,7 @@ module AASM
 
       @from = opts[:from]
       @to = opts[:to]
-      @guards = Array(opts[:guard] || opts[:guards] || opts[:if])
+      @guards = Array(opts[:guards]) + Array(opts[:guard]) + Array(opts[:if])
       @unless = Array(opts[:unless]) #TODO: This could use a better name
 
       if opts[:on_transition]

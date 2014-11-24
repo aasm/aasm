@@ -57,15 +57,15 @@ module AASM
     end
 
     ## DSL interface
-    def transitions(definitions=nil)
+    def transitions(definitions=nil, &block)
       if definitions # define new transitions
         # Create a separate transition for each from-state to the given state
         Array(definitions[:from]).each do |s|
-          @transitions << AASM::Transition.new(attach_event_guards(definitions.merge(:from => s.to_sym)))
+          @transitions << AASM::Transition.new(attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
         if @transitions.empty? && definitions[:to]
-          @transitions << AASM::Transition.new(attach_event_guards(definitions))
+          @transitions << AASM::Transition.new(attach_event_guards(definitions), &block)
         end
       end
       @transitions

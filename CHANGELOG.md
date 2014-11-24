@@ -4,6 +4,10 @@
 
  * `aasm_human_event_name` is deprecated, use `aasm.human_event_name` instead
 
+## 4.0.2
+
+ * bugfix: really support block-guards (defined within a transition block) (see [issue #186](https://github.com/aasm/aasm/issues/186) for details)
+
 ## 4.0.1
 
  * fire guards only once per transition (see [issue #184](https://github.com/aasm/aasm/issues/184) for details)
