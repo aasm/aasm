@@ -84,17 +84,17 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state)
-          old_value = read_attribute(self.class.aasm_column)
+          old_value = read_attribute(self.class.aasm.attribute_name)
           aasm_write_attribute state
 
           success = if aasm_skipping_validations
             value = aasm_raw_attribute_value state
-            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm_column => value) == 1
+            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm.attribute_name => value) == 1
           else
             self.save
           end
           unless success
-            write_attribute(self.class.aasm_column, old_value)
+            write_attribute(self.class.aasm.attribute_name, old_value)
             return false
           end
 
@@ -128,11 +128,11 @@ module AASM
         end
 
         def aasm_column_looks_like_enum
-          self.class.columns_hash[self.class.aasm_column.to_s].type == :integer
+          self.class.columns_hash[self.class.aasm.attribute_name.to_s].type == :integer
         end
 
         def aasm_guess_enum_method
-          self.class.aasm_column.to_s.pluralize.to_sym
+          self.class.aasm.attribute_name.to_s.pluralize.to_sym
         end
 
         def aasm_skipping_validations
@@ -140,7 +140,7 @@ module AASM
         end
 
         def aasm_write_attribute(state)
-          write_attribute self.class.aasm_column, aasm_raw_attribute_value(state)
+          write_attribute self.class.aasm.attribute_name, aasm_raw_attribute_value(state)
         end
 
         def aasm_raw_attribute_value(state)
@@ -167,7 +167,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          aasm.enter_initial_state if send(self.class.aasm_column).blank?
+          aasm.enter_initial_state if send(self.class.aasm.attribute_name).blank?
         end
 
         def aasm_fire_event(name, options, *args, &block)

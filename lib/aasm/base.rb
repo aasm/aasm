@@ -34,6 +34,16 @@ module AASM
       end
     end
 
+    # This method is both a getter and a setter
+    def attribute_name(column_name=nil)
+      if column_name
+        @state_machine.config.column = column_name.to_sym
+      else
+        @state_machine.config.column ||= :aasm_state
+      end
+      @state_machine.config.column
+    end
+
     def initial_state(new_initial_state=nil)
       if new_initial_state
         @state_machine.initial_state = new_initial_state

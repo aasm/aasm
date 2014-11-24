@@ -55,7 +55,7 @@ module AASM
         end
 
         def with_state_scope(state)
-          with_scope where(aasm_column.to_sym => state.to_s) do
+          with_scope where(aasm.attribute_name.to_sym => state.to_s) do
             yield if block_given?
           end
         end
@@ -75,11 +75,11 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state)
-          old_value = read_attribute(self.class.aasm_column)
-          write_attribute(self.class.aasm_column, state.to_s)
+          old_value = read_attribute(self.class.aasm.attribute_name)
+          write_attribute(self.class.aasm.attribute_name, state.to_s)
 
           unless self.save(:validate => false)
-            write_attribute(self.class.aasm_column, old_value)
+            write_attribute(self.class.aasm.attribute_name, old_value)
             return false
           end
 
@@ -99,7 +99,7 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state)
-          write_attribute(self.class.aasm_column, state.to_s)
+          write_attribute(self.class.aasm.attribute_name, state.to_s)
         end
 
       private
@@ -120,14 +120,14 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          send("#{self.class.aasm_column}=", aasm.enter_initial_state.to_s) if send(self.class.aasm_column).blank?
+          send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
         end
       end # InstanceMethods
 
       module NamedScopeMethods
         def aasm_state_with_named_scope name, options = {}
           aasm_state_without_named_scope name, options
-          self.named_scope name, :conditions => { "#{table_name}.#{self.aasm_column}" => name.to_s} unless self.respond_to?(name)
+          self.named_scope name, :conditions => { "#{table_name}.#{self.aasm.attribute_name}" => name.to_s} unless self.respond_to?(name)
         end
       end
     end

@@ -30,7 +30,7 @@ describe "instance methods" do
     let(:columns_hash) { Hash[column_name, column] }
 
     before :each do
-      gate.class.stub(:aasm_column).and_return(column_name.to_sym)
+      gate.class.aasm.stub(:attribute_name).and_return(column_name.to_sym)
       gate.class.stub(:columns_hash).and_return(columns_hash)
     end
 
@@ -55,7 +55,7 @@ describe "instance methods" do
     subject { lambda{ gate.send(:aasm_guess_enum_method) } }
 
     before :each do
-      gate.class.stub(:aasm_column).and_return(:value)
+      gate.class.aasm.stub(:attribute_name).and_return(:value)
     end
 
     it "pluralizes AASM column name" do
@@ -81,7 +81,7 @@ describe "instance methods" do
     context "when AASM enum setting is simply set to true" do
       before :each do
         AASM::StateMachine[Gate].config.stub(:enum).and_return(true)
-        Gate.stub(:aasm_column).and_return(:value)
+        Gate.aasm.stub(:attribute_name).and_return(:value)
         gate.stub(:aasm_guess_enum_method).and_return(:values)
       end
 
@@ -104,7 +104,7 @@ describe "instance methods" do
     context "when AASM enum setting is not enabled" do
       before :each do
         AASM::StateMachine[Gate].config.stub(:enum).and_return(nil)
-        Gate.stub(:aasm_column).and_return(:value)
+        Gate.aasm.stub(:attribute_name).and_return(:value)
       end
 
       context "when AASM column looks like enum" do
@@ -172,7 +172,7 @@ describe "instance methods" do
           gate.aasm_write_state state_sym
 
           expect(obj).to have_received(:update_all)
-            .with(Hash[gate.class.aasm_column, state_code])
+            .with(Hash[gate.class.aasm.attribute_name, state_code])
         end
       end
 
@@ -253,7 +253,7 @@ describe "instance methods" do
     expect(gate.aasm.current_state).to eq(:closed)
   end
 
-  it "should return the aasm column when not new and the aasm_column is not nil" do
+  it "should return the aasm column when not new and the aasm.attribute_name is not nil" do
     allow(gate).to receive(:new_record?).and_return(false)
     gate.aasm_state = "state"
     expect(gate.aasm.current_state).to eq(:state)
@@ -293,8 +293,8 @@ describe 'subclasses' do
   end
 
   it "should have the same column as its parent even for the new dsl" do
-    expect(SimpleNewDsl.aasm_column).to eq(:status)
-    expect(DerivateNewDsl.aasm_column).to eq(:status)
+    expect(SimpleNewDsl.aasm.attribute_name).to eq(:status)
+    expect(DerivateNewDsl.aasm.attribute_name).to eq(:status)
   end
 end
 

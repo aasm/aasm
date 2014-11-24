@@ -81,8 +81,8 @@ describe 'sequel' do
       end
 
       it "should have the same column as its parent even for the new dsl" do
-        expect(@model.aasm_column).to eq(:status)
-        expect(Class.new(@model).aasm_column).to eq(:status)
+        expect(@model.aasm.attribute_name).to eq(:status)
+        expect(Class.new(@model).aasm.attribute_name).to eq(:status)
       end
     end
 

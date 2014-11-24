@@ -17,7 +17,7 @@ module AASM
           super
         end
 
-        # Returns the value of the aasm_column - called from <tt>aasm.current_state</tt>
+        # Returns the value of the aasm.attribute_name - called from <tt>aasm.current_state</tt>
         #
         # If it's a new record, and the aasm state column is blank it returns the initial state
         #
@@ -43,7 +43,7 @@ module AASM
         #
         # This allows for nil aasm states - be sure to add validation to your model
         def aasm_read_state
-          state = send(self.class.aasm_column)
+          state = send(self.class.aasm.attribute_name)
           if new? && state.to_s.strip.empty?
             aasm.determine_state_name(self.class.aasm.initial_state)
           elsif state.nil?
@@ -70,7 +70,7 @@ module AASM
         #
         def aasm_ensure_initial_state
           aasm.enter_initial_state if
-            send(self.class.aasm_column).to_s.strip.empty?
+            send(self.class.aasm.attribute_name).to_s.strip.empty?
         end
 
         # Writes <tt>state</tt> to the state column and persists it to the database
@@ -83,7 +83,7 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state state
-          aasm_column = self.class.aasm_column
+          aasm_column = self.class.aasm.attribute_name
           update_only({aasm_column => state.to_s}, aasm_column)
         end
 
@@ -100,7 +100,7 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence state
-          send("#{self.class.aasm_column}=", state.to_s)
+          send("#{self.class.aasm.attribute_name}=", state.to_s)
         end
       end
     end

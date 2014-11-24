@@ -21,7 +21,7 @@ module AASM
 
     def item_for(klass, state, ancestor, options={})
       separator = options[:old_style] ? '.' : '/'
-      :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm_column}#{separator}#{state}"
+      :"#{i18n_scope(klass)}.attributes.#{i18n_klass(ancestor)}.#{klass.aasm.attribute_name}#{separator}#{state}"
     end
 
     def translate_queue(checklist)
