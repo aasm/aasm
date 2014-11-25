@@ -1,9 +1,10 @@
 require 'spec_helper'
+Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| require File.expand_path(f) }
 
 describe 'callbacks for the new DSL' do
 
   it "be called in order" do
-    callback = CallbackNewDsl.new
+    callback = Callbacks::Basic.new
     callback.aasm.current_state
 
     expect(callback).to receive(:before).once.ordered
@@ -26,7 +27,7 @@ describe 'callbacks for the new DSL' do
   end
 
   it "does not run any state callback if the event guard fails" do
-    callback = CallbackNewDsl.new(:log => false)
+    callback = Callbacks::Basic.new(:log => false)
     callback.aasm.current_state
 
     expect(callback).to receive(:before).once.ordered
@@ -50,7 +51,7 @@ describe 'callbacks for the new DSL' do
   context "if the transition guard fails" do
     it "does not run any state callback if guard is defined inline" do
       show_debug_log = false
-      callback = CallbackNewDsl.new(:log => show_debug_log, :fail_transition_guard => true)
+      callback = Callbacks::Basic.new(:log => show_debug_log, :fail_transition_guard => true)
       callback.aasm.current_state
 
       unless show_debug_log
@@ -74,8 +75,6 @@ describe 'callbacks for the new DSL' do
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
-      require 'models/callbacks/multiple_transitions_transition_guard'
-
       show_debug_log = false
       callback = Callbacks::MultipleTransitionsTransitionGuard.new(:log => show_debug_log, :fail_transition_guard => true)
       callback.aasm.current_state
@@ -102,7 +101,7 @@ describe 'callbacks for the new DSL' do
     end
 
     it "does not run any state callback if guard is defined with block" do
-      callback = GuardWithinBlock.new #(:log => true, :fail_transition_guard => true)
+      callback = Callbacks::GuardWithinBlock.new #(:log => true, :fail_transition_guard => true)
       callback.aasm.current_state
 
       expect(callback).to receive(:before).once.ordered
@@ -125,7 +124,7 @@ describe 'callbacks for the new DSL' do
   end
 
   it "should properly pass arguments" do
-    cb = CallbackNewDslArgs.new
+    cb = Callbacks::WithArgs.new
 
     # TODO: use expect syntax here
     cb.should_receive(:before).with(:arg1, :arg2).once.ordered
@@ -141,14 +140,14 @@ describe 'callbacks for the new DSL' do
   end
 
   it "should call the callbacks given the to-state as argument" do
-    cb = CallbackWithStateArg.new
+    cb = Callbacks::WithStateArg.new
     cb.should_receive(:before_method).with(:arg1).once.ordered
     cb.should_receive(:transition_method).never
     cb.should_receive(:transition_method2).with(:arg1).once.ordered
     cb.should_receive(:after_method).with(:arg1).once.ordered
     cb.close!(:out_to_lunch, :arg1)
 
-    cb = CallbackWithStateArg.new
+    cb = Callbacks::WithStateArg.new
     some_object = double('some object')
     cb.should_receive(:before_method).with(some_object).once.ordered
     cb.should_receive(:transition_method2).with(some_object).once.ordered
@@ -157,14 +156,14 @@ describe 'callbacks for the new DSL' do
   end
 
   it "should call the proper methods just with arguments" do
-    cb = CallbackWithStateArg.new
+    cb = Callbacks::WithStateArg.new
     cb.should_receive(:before_method).with(:arg1).once.ordered
     cb.should_receive(:transition_method).with(:arg1).once.ordered
     cb.should_receive(:transition_method).never
     cb.should_receive(:after_method).with(:arg1).once.ordered
     cb.close!(:arg1)
 
-    cb = CallbackWithStateArg.new
+    cb = Callbacks::WithStateArg.new
     some_object = double('some object')
     cb.should_receive(:before_method).with(some_object).once.ordered
     cb.should_receive(:transition_method).with(some_object).once.ordered
@@ -191,7 +190,7 @@ describe 'event callbacks' do
     it "should run error_callback if an exception is raised and error_callback defined" do
       def @foo.error_callback(e); end
 
-      allow(@foo).to receive(:before_enter).and_raise(e=StandardError.new)
+      allow(@foo).to receive(:before_enter).and_raise(e = StandardError.new)
       expect(@foo).to receive(:error_callback).with(e)
 
       @foo.safe_close!
