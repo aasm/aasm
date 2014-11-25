@@ -5,8 +5,9 @@
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
-## 4.0.x (not yet released)
+## 4.0.3
 
+ * bugfix: fire guards only once per transition, part 2 (see [issue #187](https://github.com/aasm/aasm/issues/187) for details)
  * `aasm_column` is deprecated. Use `aasm.attribute_name` instead
 
 ## 4.0.2

@@ -106,7 +106,8 @@ module AASM
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if Array(transition.to).include?(options[:may_fire]) || transition.allowed?(obj, *args)
+        if (options.key?(:may_fire) && Array(transition.to).include?(options[:may_fire])) ||
+           (!options.key?(:may_fire) && transition.allowed?(obj, *args))
           result = to_state || Array(transition.to).first
           if options[:test_only]
             # result = true

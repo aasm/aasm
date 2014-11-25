@@ -49,25 +49,56 @@ describe 'callbacks for the new DSL' do
 
   context "if the transition guard fails" do
     it "does not run any state callback if guard is defined inline" do
-      callback = CallbackNewDsl.new
+      show_debug_log = false
+      callback = CallbackNewDsl.new(:log => show_debug_log, :fail_transition_guard => true)
       callback.aasm.current_state
 
-      expect(callback).to receive(:before).once.ordered
-      expect(callback).to receive(:event_guard).once.ordered.and_return(true)
-      expect(callback).to receive(:transition_guard).once.ordered.and_return(false)
-      expect(callback).to_not receive(:before_exit_open)
-      expect(callback).to_not receive(:exit_open)
-      expect(callback).to_not receive(:transitioning)
-      expect(callback).to_not receive(:before_enter_closed)
-      expect(callback).to_not receive(:enter_closed)
-      expect(callback).to_not receive(:aasm_write_state)
-      expect(callback).to_not receive(:after_exit_open)
-      expect(callback).to_not receive(:after_enter_closed)
-      expect(callback).to_not receive(:after)
+      unless show_debug_log
+        expect(callback).to receive(:before).once.ordered
+        expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+        expect(callback).to receive(:transition_guard).once.ordered.and_return(false)
+        expect(callback).to_not receive(:before_exit_open)
+        expect(callback).to_not receive(:exit_open)
+        expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:before_enter_closed)
+        expect(callback).to_not receive(:enter_closed)
+        expect(callback).to_not receive(:aasm_write_state)
+        expect(callback).to_not receive(:after_exit_open)
+        expect(callback).to_not receive(:after_enter_closed)
+        expect(callback).to_not receive(:after)
+      end
 
       expect {
         callback.close!
       }.to raise_error(AASM::InvalidTransition)
+    end
+
+    it "does not run transition_guard twice for multiple permitted transitions" do
+      require 'models/callbacks/multiple_transitions_transition_guard'
+
+      show_debug_log = false
+      callback = Callbacks::MultipleTransitionsTransitionGuard.new(:log => show_debug_log, :fail_transition_guard => true)
+      callback.aasm.current_state
+
+      unless show_debug_log
+        expect(callback).to receive(:before).once.ordered
+        expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+        expect(callback).to receive(:transition_guard).once.ordered.and_return(false)
+        expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+        expect(callback).to receive(:before_exit_open).once.ordered
+        expect(callback).to receive(:exit_open).once.ordered
+        expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+        expect(callback).to receive(:after_exit_open).once.ordered
+        expect(callback).to receive(:after).once.ordered
+
+        expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:before_enter_closed)
+        expect(callback).to_not receive(:enter_closed)
+        expect(callback).to_not receive(:after_enter_closed)
+      end
+
+      callback.close!
+      expect(callback.aasm.current_state).to eql :failed
     end
 
     it "does not run any state callback if guard is defined with block" do
