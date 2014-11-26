@@ -1,3 +1,5 @@
+require_relative 'base'
+
 module AASM
   module Persistence
     module SequelPersistence
