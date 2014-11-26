@@ -15,6 +15,9 @@ module AASM
         elsif hierarchy.include?("Sequel::Model")
           require_files_for(:sequel)
           base.send(:include, AASM::Persistence::SequelPersistence)
+        else
+          require File.join(File.dirname(__FILE__), 'persistence', 'plain_persistence')
+          base.send(:include, AASM::Persistence::PlainPersistence)
         end
       end
 
