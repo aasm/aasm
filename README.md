@@ -172,7 +172,7 @@ Note that when passing arguments to a state transition, the first argument must 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
-During the `:on_transition` callback (and reliably only then) you can access the
+During a transition's `:after` callback (and reliably only then) you can access the
 originating state (the from-state) and the target state (the to state), like this:
 
 ```ruby
