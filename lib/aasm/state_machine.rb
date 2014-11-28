@@ -32,7 +32,7 @@ module AASM
       # allow reloading, extending or redefining a state
       @states.delete(name) if @states.include?(name)
 
-      @states << AASM::State.new(name, klass, options)
+      @states << AASM::Core::State.new(name, klass, options)
     end
 
     private

@@ -51,10 +51,10 @@ end
 describe 'blocks' do
 end
 
-describe AASM::Transition do
+describe AASM::Core::Transition do
   it 'should set from, to, and opts attr readers' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     expect(st.from).to eq(opts[:from])
     expect(st.to).to eq(opts[:to])
@@ -63,7 +63,7 @@ describe AASM::Transition do
 
   it 'should set on_transition with deprecation warning' do
     opts = {:from => 'foo', :to => 'bar'}
-    st = AASM::Transition.allocate
+    st = AASM::Core::Transition.allocate
     st.should_receive(:warn).with('[DEPRECATION] :on_transition is deprecated, use :after instead')
 
     st.send :initialize, opts do
@@ -76,7 +76,7 @@ describe AASM::Transition do
 
   it 'should set after and guard from dsl' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts) do
+    st = AASM::Core::Transition.new(opts) do
       guard :gg
       after :after_callback
     end
@@ -87,7 +87,7 @@ describe AASM::Transition do
 
   it 'should pass equality check if from and to are the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     allow(obj).to receive(:from).and_return(opts[:from])
@@ -98,7 +98,7 @@ describe AASM::Transition do
 
   it 'should fail equality check if from are not the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     allow(obj).to receive(:from).and_return('blah')
@@ -109,7 +109,7 @@ describe AASM::Transition do
 
   it 'should fail equality check if to are not the same' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     allow(obj).to receive(:from).and_return(opts[:from])
@@ -119,17 +119,17 @@ describe AASM::Transition do
   end
 end
 
-describe AASM::Transition, '- when performing guard checks' do
+describe AASM::Core::Transition, '- when performing guard checks' do
   it 'should return true of there is no guard' do
     opts = {:from => 'foo', :to => 'bar'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     expect(st.allowed?(nil)).to be_true
   end
 
   it 'should call the method on the object if guard is a symbol' do
     opts = {:from => 'foo', :to => 'bar', :guard => :test}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     expect(obj).to receive(:test)
@@ -139,7 +139,7 @@ describe AASM::Transition, '- when performing guard checks' do
 
   it 'should call the method on the object if unless is a symbol' do
     opts = {:from => 'foo', :to => 'bar', :unless => :test}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     expect(obj).to receive(:test)
@@ -149,7 +149,7 @@ describe AASM::Transition, '- when performing guard checks' do
 
   it 'should call the method on the object if guard is a string' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'test'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     expect(obj).to receive(:test)
@@ -159,7 +159,7 @@ describe AASM::Transition, '- when performing guard checks' do
 
   it 'should call the method on the object if unless is a string' do
     opts = {:from => 'foo', :to => 'bar', :unless => 'test'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     expect(obj).to receive(:test)
@@ -169,7 +169,7 @@ describe AASM::Transition, '- when performing guard checks' do
 
   it 'should call the proc passing the object if the guard is a proc' do
     opts = {:from => 'foo', :to => 'bar', :guard => Proc.new { test }}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
 
     obj = double('object')
     expect(obj).to receive(:test)
@@ -178,10 +178,10 @@ describe AASM::Transition, '- when performing guard checks' do
   end
 end
 
-describe AASM::Transition, '- when executing the transition with a Proc' do
+describe AASM::Core::Transition, '- when executing the transition with a Proc' do
   it 'should call a Proc on the object with args' do
     opts = {:from => 'foo', :to => 'bar', :after => Proc.new {|a| test(a) }}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -197,7 +197,7 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
     prc = Proc.new { prc_object = self }
 
     opts = {:from => 'foo', :to => 'bar', :after => prc }
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -206,10 +206,10 @@ describe AASM::Transition, '- when executing the transition with a Proc' do
   end
 end
 
-describe AASM::Transition, '- when executing the transition with an :after method call' do
+describe AASM::Core::Transition, '- when executing the transition with an :after method call' do
   it 'should accept a String for the method name' do
     opts = {:from => 'foo', :to => 'bar', :after => 'test'}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -220,7 +220,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
 
   it 'should accept a Symbol for the method name' do
     opts = {:from => 'foo', :to => 'bar', :after => :test}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -231,7 +231,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
 
   it 'should pass args if the target method accepts them' do
     opts = {:from => 'foo', :to => 'bar', :after => :test}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -246,7 +246,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
 
   it 'should NOT pass args if the target method does NOT accept them' do
     opts = {:from => 'foo', :to => 'bar', :after => :test}
-    st = AASM::Transition.new(opts)
+    st = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
@@ -261,7 +261,7 @@ describe AASM::Transition, '- when executing the transition with an :after metho
 
   it 'should allow accessing the from_state and the to_state' do
     opts = {:from => 'foo', :to => 'bar', :after => :test}
-    transition = AASM::Transition.new(opts)
+    transition = AASM::Core::Transition.new(opts)
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => AASM::InstanceBase.new('object'))
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'adding an event' do
   let(:event) do
-    AASM::Event.new(:close_order, {:success => :success_callback}) do
+    AASM::Core::Event.new(:close_order, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
       transitions :to => :closed, :from => [:open, :received]
@@ -36,7 +36,7 @@ end
 
 describe 'transition inspection' do
   let(:event) do
-    AASM::Event.new(:run) do
+    AASM::Core::Event.new(:run) do
       transitions :to => :running, :from => :sleeping
     end
   end
@@ -60,7 +60,7 @@ end
 
 describe 'transition inspection without from' do
   let(:event) do
-    AASM::Event.new(:run) do
+    AASM::Core::Event.new(:run) do
       transitions :to => :running
     end
   end
@@ -79,12 +79,12 @@ describe 'firing an event' do
   it 'should return nil if the transitions are empty' do
     obj = double('object', :aasm => double('aasm', :current_state => 'open'))
 
-    event = AASM::Event.new(:event)
+    event = AASM::Core::Event.new(:event)
     expect(event.fire(obj)).to be_nil
   end
 
   it 'should return the state of the first matching transition it finds' do
-    event = AASM::Event.new(:event) do
+    event = AASM::Core::Event.new(:event) do
       transitions :to => :closed, :from => [:open, :received]
     end
 
@@ -94,7 +94,7 @@ describe 'firing an event' do
   end
 
   it 'should call the guard with the params passed in' do
-    event = AASM::Event.new(:event) do
+    event = AASM::Core::Event.new(:event) do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
     end
 

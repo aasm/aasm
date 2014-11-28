@@ -1,17 +1,15 @@
 require 'ostruct'
 
-%w(
-    version
-    errors
-    configuration
-    base
-    dsl_helper
-    instance_base
-    transition
-    event
-    state
-    localizer
-    state_machine
-    persistence
-    aasm
-  ).each { |file| require File.join(File.dirname(__FILE__), 'aasm', file) }
+require 'aasm/version'
+require 'aasm/errors'
+require 'aasm/configuration'
+require 'aasm/base'
+require 'aasm/dsl_helper'
+require 'aasm/instance_base'
+require 'aasm/core/transition'
+require 'aasm/core/event'
+require 'aasm/core/state'
+require 'aasm/localizer'
+require 'aasm/state_machine'
+require 'aasm/persistence'
+require 'aasm/aasm'

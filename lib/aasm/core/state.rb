@@ -1,4 +1,4 @@
-module AASM
+module AASM::Core
   class State
     attr_reader :name, :options
 
