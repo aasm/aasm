@@ -13,20 +13,16 @@ Gem::Specification.new do |s|
   s.date        = Time.now
   s.licenses    = ["MIT"]
 
-  # s.add_development_dependency 'activerecord', '3.2.15'
-  # s.add_development_dependency 'activerecord', '4.0.1'
-
-  # s.add_development_dependency 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', '>= 2.14', '< 2.99'
-  s.add_development_dependency 'rr'
-  # s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'minitest'
+
+  # debugging
   # s.add_development_dependency 'debugger'
   # s.add_development_dependency 'pry'
 
-  s.add_development_dependency 'mime-types', '~> 1.25' # needed by coveralls (>= 2.0 needs Ruby >=1.9.2)
+  # test coverage
+  # s.add_development_dependency 'mime-types', '~> 1.25' # needed by coveralls (>= 2.0 needs Ruby >=1.9.2)
   # s.add_development_dependency 'coveralls'
 
   s.files         = `git ls-files`.split("\n")
