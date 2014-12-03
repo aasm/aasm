@@ -12,5 +12,6 @@ gem "rails", "4.1.8"
 # gem 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 
 gem 'sequel'
+gem "redis-objects"
 
 gemspec :path => "../"

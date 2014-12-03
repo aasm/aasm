@@ -12,6 +12,8 @@ module AASM
           include_persistence base, :mongoid
         elsif hierarchy.include?("Sequel::Model")
           include_persistence base, :sequel
+        elsif hierarchy.include?("Redis::Objects")
+          include_persistence base, :redis
         else
           include_persistence base, :plain
         end
