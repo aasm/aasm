@@ -464,6 +464,20 @@ class Job
 end
 ```
 
+### Redis
+AASM also supports persistence in Redis.
+Make sure to include Redis::Objects before you include AASM.
+
+```ruby
+class User
+  include Redis::Objects
+  include AAASM
+
+  aasm do
+  end
+end
+```
+
 ### Automatic Scopes
 
 AASM will automatically create scope methods for each state in the model.
