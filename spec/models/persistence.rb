@@ -14,6 +14,54 @@ class Gate < ActiveRecord::Base
   end
 end
 
+class WithEnum < ActiveRecord::Base
+  include AASM
+
+  # Fake this column for testing purposes
+  attr_accessor :aasm_state
+
+  aasm :enum => :test do
+    state :opened
+    state :closed
+
+    event :view do
+      transitions :to => :read, :from => [:needs_attention]
+    end
+  end
+end
+
+class WithTrueEnum < ActiveRecord::Base
+  include AASM
+
+  # Fake this column for testing purposes
+  attr_accessor :aasm_state
+
+  aasm :enum => true do
+    state :opened
+    state :closed
+
+    event :view do
+      transitions :to => :read, :from => [:needs_attention]
+    end
+  end
+end
+
+class WithFalseEnum < ActiveRecord::Base
+  include AASM
+
+  # Fake this column for testing purposes
+  attr_accessor :aasm_state
+
+  aasm :enum => false do
+    state :opened
+    state :closed
+
+    event :view do
+      transitions :to => :read, :from => [:needs_attention]
+    end
+  end
+end
+
 class Reader < ActiveRecord::Base
   include AASM
 

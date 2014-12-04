@@ -64,46 +64,37 @@ describe "instance methods" do
   end
 
   describe "aasm_enum" do
-    subject { lambda{ gate.send(:aasm_enum) } }
-
     context "when AASM enum setting contains an explicit enum method name" do
-      let(:enum) { :test }
-
-      before :each do
-        AASM::StateMachine[Gate].config.stub(:enum).and_return(enum)
-      end
+      let(:with_enum) { WithEnum.new }
 
       it "returns whatever value was set in AASM config" do
-        expect(subject.call).to eq enum
+        expect(with_enum.send(:aasm_enum)).to eq :test
       end
     end
 
     context "when AASM enum setting is simply set to true" do
+      let(:with_true_enum) { WithTrueEnum.new }
       before :each do
-        AASM::StateMachine[Gate].config.stub(:enum).and_return(true)
-        Gate.aasm.stub(:attribute_name).and_return(:value)
-        gate.stub(:aasm_guess_enum_method).and_return(:values)
+        WithTrueEnum.aasm.stub(:attribute_name).and_return(:value)
+        with_true_enum.stub(:aasm_guess_enum_method).and_return(:values)
       end
 
       it "infers enum method name from pluralized column name" do
-        expect(subject.call).to eq :values
-        expect(gate).to have_received :aasm_guess_enum_method
+        expect(with_true_enum.send(:aasm_enum)).to eq :values
+        expect(with_true_enum).to have_received :aasm_guess_enum_method
       end
     end
 
     context "when AASM enum setting is explicitly disabled" do
-      before :each do
-        AASM::StateMachine[Gate].config.stub(:enum).and_return(false)
-      end
+      let(:with_false_enum) { WithFalseEnum.new }
 
       it "returns nil" do
-        expect(subject.call).to be_nil
+        expect(with_false_enum.send(:aasm_enum)).to be_nil
       end
     end
 
     context "when AASM enum setting is not enabled" do
       before :each do
-        AASM::StateMachine[Gate].config.stub(:enum).and_return(nil)
         Gate.aasm.stub(:attribute_name).and_return(:value)
       end
 
@@ -114,7 +105,7 @@ describe "instance methods" do
         end
 
         it "infers enum method name from pluralized column name" do
-          expect(subject.call).to eq :values
+          expect(gate.send(:aasm_enum)).to eq :values
           expect(gate).to have_received :aasm_guess_enum_method
         end
       end
@@ -126,7 +117,7 @@ describe "instance methods" do
         end
 
         it "returns nil, as we're not using enum" do
-          expect(subject.call).to be_nil
+          expect(gate.send(:aasm_enum)).to be_nil
         end
       end
     end
