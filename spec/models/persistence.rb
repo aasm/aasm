@@ -2,7 +2,11 @@ class Gate < ActiveRecord::Base
   include AASM
 
   # Fake this column for testing purposes
-  attr_accessor :aasm_state
+  # attr_accessor :aasm_state
+
+  def value
+    'value'
+  end
 
   aasm do
     state :opened
@@ -20,6 +24,10 @@ class WithEnum < ActiveRecord::Base
   # Fake this column for testing purposes
   attr_accessor :aasm_state
 
+  def self.test
+    {}
+  end
+
   aasm :enum => :test do
     state :opened
     state :closed
@@ -35,6 +43,10 @@ class WithTrueEnum < ActiveRecord::Base
 
   # Fake this column for testing purposes
   attr_accessor :aasm_state
+
+  def value
+    'value'
+  end
 
   aasm :enum => true do
     state :opened

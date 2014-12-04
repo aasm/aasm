@@ -1,8 +1,12 @@
 ActiveRecord::Migration.suppress_messages do
-  %w{gates readers writers transients simples simple_new_dsls no_scopes no_direct_assignments thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_true_enums with_false_enums}.each do |table_name|
+  %w{gates readers writers transients simples  no_scopes no_direct_assignments thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_true_enums with_false_enums}.each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "aasm_state"
     end
+  end
+
+  ActiveRecord::Migration.create_table "simple_new_dsls", :force => true do |t|
+    t.string "status"
   end
 
   ActiveRecord::Migration.create_table "validators", :force => true do |t|

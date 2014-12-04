@@ -133,5 +133,5 @@ module AASM
         end
       end
     end
-  end
-end
+  end # Persistence
+end # AASM

@@ -76,12 +76,10 @@ describe "instance methods" do
       let(:with_true_enum) { WithTrueEnum.new }
       before :each do
         WithTrueEnum.aasm.stub(:attribute_name).and_return(:value)
-        with_true_enum.stub(:aasm_guess_enum_method).and_return(:values)
       end
 
       it "infers enum method name from pluralized column name" do
         expect(with_true_enum.send(:aasm_enum)).to eq :values
-        expect(with_true_enum).to have_received :aasm_guess_enum_method
       end
     end
 
@@ -101,12 +99,10 @@ describe "instance methods" do
       context "when AASM column looks like enum" do
         before :each do
           gate.stub(:aasm_column_looks_like_enum).and_return(true)
-          gate.stub(:aasm_guess_enum_method).and_return(:values)
         end
 
         it "infers enum method name from pluralized column name" do
           expect(gate.send(:aasm_enum)).to eq :values
-          expect(gate).to have_received :aasm_guess_enum_method
         end
       end
 
@@ -256,20 +252,9 @@ describe "instance methods" do
     expect(gate.aasm.current_state).to be_nil
   end
 
-  it "should call aasm_ensure_initial_state on validation before create" do
-    expect(gate).to receive(:aasm_ensure_initial_state).and_return(true)
-    gate.valid?
-  end
-
-  it "should call aasm_ensure_initial_state before create, even if skipping validations" do
-    expect(gate).to receive(:aasm_ensure_initial_state).and_return(true)
-    gate.save(:validate => false)
-  end
-
-  it "should not call aasm_ensure_initial_state on validation before update" do
-    allow(gate).to receive(:new_record?).and_return(false)
-    expect(gate).not_to receive(:aasm_ensure_initial_state)
-    gate.valid?
+  it "should initialize the aasm state on instantiation" do
+    expect(Gate.new.aasm_state).to eql 'opened'
+    expect(Gate.new.aasm.current_state).to eql :opened
   end
 
 end

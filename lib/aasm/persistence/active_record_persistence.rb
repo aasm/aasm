@@ -33,14 +33,9 @@ module AASM
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
 
-        if ActiveRecord::VERSION::MAJOR >= 3
-          base.before_validation(:aasm_ensure_initial_state, :on => :create)
-        else
-          base.before_validation_on_create(:aasm_ensure_initial_state)
+        base.after_initialize do
+          aasm_ensure_initial_state
         end
-
-        # ensure initial aasm state even when validations are skipped
-        base.before_create(:aasm_ensure_initial_state)
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
@@ -197,5 +192,5 @@ module AASM
       end # InstanceMethods
 
     end
-  end
-end
+  end # Persistence
+end # AASM

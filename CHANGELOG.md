@@ -7,7 +7,8 @@
 
 ## 4.0.4 (not yet released)
 
- * bugfix: avoid Rails autoloading conflicts (see [issue #137](https://github.com/aasm/aasm/issues/137) and see [issue #139](https://github.com/aasm/aasm/issues/139) for details)
+ * bugfix: initialize the aasm state column after initialization of the _ActiveRecord_ instance (see [issue #191](https://github.com/aasm/aasm/issues/191) for details)
+ * bugfix: avoid Rails autoloading conflicts (see [issue #137](https://github.com/aasm/aasm/issues/137) and [issue #139](https://github.com/aasm/aasm/issues/139) for details)
 
 ## 4.0.3
 
