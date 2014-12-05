@@ -5,7 +5,7 @@
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
-## 4.0.4 (not yet released)
+## 4.0.4
 
  * corrected callback order in README
  * bugfix: initialize the aasm state column after initialization of the _ActiveRecord_ instance (see [issue #191](https://github.com/aasm/aasm/issues/191) for details)
