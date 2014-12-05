@@ -145,11 +145,11 @@ begin
   transition      guards
   old_state       before_exit
   old_state       exit
+  transition      after
   new_state       before_enter
   new_state       enter
-    ...update state...
-    transition    after
-    event         success             # if persist successful
+  ...update state...
+  event         success             # if persist successful
   old_state       after_exit
   new_state       after_enter
   event           after

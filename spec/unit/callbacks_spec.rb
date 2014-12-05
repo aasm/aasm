@@ -4,23 +4,27 @@ Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| requir
 describe 'callbacks for the new DSL' do
 
   it "be called in order" do
-    callback = Callbacks::Basic.new
+    show_debug_log = false
+
+    callback = Callbacks::Basic.new(:log => show_debug_log)
     callback.aasm.current_state
 
-    expect(callback).to receive(:before).once.ordered
-    expect(callback).to receive(:event_guard).once.ordered.and_return(true)
-    expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
-    expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
-    expect(callback).to receive(:exit_open).once.ordered
-    # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
-    # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
-    expect(callback).to receive(:transitioning).once.ordered
-    expect(callback).to receive(:before_enter_closed).once.ordered
-    expect(callback).to receive(:enter_closed).once.ordered
-    expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
-    expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
-    expect(callback).to receive(:after_enter_closed).once.ordered
-    expect(callback).to receive(:after).once.ordered
+    unless show_debug_log
+      expect(callback).to receive(:before_event).once.ordered
+      expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
+      expect(callback).to receive(:exit_open).once.ordered
+      # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+      # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:after_transition).once.ordered
+      expect(callback).to receive(:before_enter_closed).once.ordered
+      expect(callback).to receive(:enter_closed).once.ordered
+      expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+      expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
+      expect(callback).to receive(:after_enter_closed).once.ordered
+      expect(callback).to receive(:after_event).once.ordered
+    end
 
     # puts "------- close!"
     callback.close!
@@ -30,18 +34,18 @@ describe 'callbacks for the new DSL' do
     callback = Callbacks::Basic.new(:log => false)
     callback.aasm.current_state
 
-    expect(callback).to receive(:before).once.ordered
+    expect(callback).to receive(:before_event).once.ordered
     expect(callback).to receive(:event_guard).once.ordered.and_return(false)
     expect(callback).to_not receive(:transition_guard)
     expect(callback).to_not receive(:before_exit_open)
     expect(callback).to_not receive(:exit_open)
-    expect(callback).to_not receive(:transitioning)
+    expect(callback).to_not receive(:after_transition)
     expect(callback).to_not receive(:before_enter_closed)
     expect(callback).to_not receive(:enter_closed)
     expect(callback).to_not receive(:aasm_write_state)
     expect(callback).to_not receive(:after_exit_open)
     expect(callback).to_not receive(:after_enter_closed)
-    expect(callback).to_not receive(:after)
+    expect(callback).to_not receive(:after_event)
 
     expect {
       callback.close!
@@ -55,18 +59,18 @@ describe 'callbacks for the new DSL' do
       callback.aasm.current_state
 
       unless show_debug_log
-        expect(callback).to receive(:before).once.ordered
+        expect(callback).to receive(:before_event).once.ordered
         expect(callback).to receive(:event_guard).once.ordered.and_return(true)
         expect(callback).to receive(:transition_guard).once.ordered.and_return(false)
         expect(callback).to_not receive(:before_exit_open)
         expect(callback).to_not receive(:exit_open)
-        expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:after_transition)
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
         expect(callback).to_not receive(:aasm_write_state)
         expect(callback).to_not receive(:after_exit_open)
         expect(callback).to_not receive(:after_enter_closed)
-        expect(callback).to_not receive(:after)
+        expect(callback).to_not receive(:after_event)
       end
 
       expect {

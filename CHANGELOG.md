@@ -7,6 +7,7 @@
 
 ## 4.0.4 (not yet released)
 
+ * corrected callback order in README
  * bugfix: initialize the aasm state column after initialization of the _ActiveRecord_ instance (see [issue #191](https://github.com/aasm/aasm/issues/191) for details)
  * bugfix: avoid Rails autoloading conflicts (see [issue #137](https://github.com/aasm/aasm/issues/137) and [issue #139](https://github.com/aasm/aasm/issues/139) for details)
 
