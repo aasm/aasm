@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   # debugging
   # s.add_development_dependency 'debugger'
-  # s.add_development_dependency 'pry'
+  s.add_development_dependency 'pry'
 
   # test coverage
   # s.add_development_dependency 'mime-types', '~> 1.25' # needed by coveralls (>= 2.0 needs Ruby >=1.9.2)

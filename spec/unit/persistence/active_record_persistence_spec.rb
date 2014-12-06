@@ -252,9 +252,20 @@ describe "instance methods" do
     expect(gate.aasm.current_state).to be_nil
   end
 
-  it "should initialize the aasm state on instantiation" do
-    expect(Gate.new.aasm_state).to eql 'opened'
-    expect(Gate.new.aasm.current_state).to eql :opened
+  context 'on initialization' do
+    it "should initialize the aasm state" do
+      expect(Gate.new.aasm_state).to eql 'opened'
+      expect(Gate.new.aasm.current_state).to eql :opened
+    end
+
+    it "should not initialize the aasm state if it has not been loaded" do
+      # we have to create a gate in the database, for which we only want to
+      # load the id, and not the state
+      gate = Gate.create!
+
+      # then we just load the gate ids
+      Gate.select(:id).where(id: gate.id).first
+    end
   end
 
 end
