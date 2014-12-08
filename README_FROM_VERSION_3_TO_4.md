@@ -139,7 +139,7 @@ to
 ```ruby
 job = Job.new
 
-job.aasm.events(:permitted => true)
+job.aasm.events(:permitted => true).map(&:name)
 # => [:run]
 ```
 
