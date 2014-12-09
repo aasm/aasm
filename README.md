@@ -471,7 +471,7 @@ Make sure to include Redis::Objects before you include AASM.
 ```ruby
 class User
   include Redis::Objects
-  include AAASM
+  include AASM
 
   aasm do
   end
