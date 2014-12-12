@@ -5,6 +5,10 @@
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
+## 4.0.5 (not yet released)
+
+ * an event's `:error` callback now retrieves all arguments passed to the event (see [issue #196](https://github.com/aasm/aasm/issues/196) for details)
+
 ## 4.0.5
 
  * bugfix: initialize the aasm state column after initialization of the _ActiveRecord_ instance only if the attribute has been loaded (see [issue #193](https://github.com/aasm/aasm/issues/193) for details)

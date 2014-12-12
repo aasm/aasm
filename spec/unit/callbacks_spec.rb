@@ -128,19 +128,12 @@ describe 'callbacks for the new DSL' do
   end
 
   it "should properly pass arguments" do
-    cb = Callbacks::WithArgs.new
+    cb = Callbacks::WithArgs.new(:log => false)
+    cb.aasm.current_state
 
-    # TODO: use expect syntax here
-    cb.should_receive(:before).with(:arg1, :arg2).once.ordered
-    cb.should_receive(:before_exit_open).once.ordered                   # these should be before the state changes
-    cb.should_receive(:transition_proc).with(:arg1, :arg2).once.ordered
-    cb.should_receive(:before_enter_closed).once.ordered
-    cb.should_receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
-    cb.should_receive(:after_exit_open).once.ordered                    # these should be after the state changes
-    cb.should_receive(:after_enter_closed).once.ordered
-    cb.should_receive(:after).with(:arg1, :arg2).once.ordered
-
+    cb.reset_data
     cb.close!(:arg1, :arg2)
+    expect(cb.data).to eql 'before(:arg1,:arg2) before_exit_open transition_proc(:arg1,:arg2) before_enter_closed aasm_write_state after_exit_open after_enter_closed after(:arg1,:arg2)'
   end
 
   it "should call the callbacks given the to-state as argument" do
@@ -181,6 +174,10 @@ describe 'event callbacks' do
   describe "with an error callback defined" do
     before do
       class Foo
+        # this hack is needed to allow testing of parameters, since RSpec
+        # destroys a method's arity when mocked
+        attr_accessor :data
+
         aasm do
           event :safe_close, :success => :success_callback, :error => :error_callback do
             transitions :to => :closed, :from => [:open]
@@ -191,16 +188,42 @@ describe 'event callbacks' do
       @foo = Foo.new
     end
 
-    it "should run error_callback if an exception is raised and error_callback defined" do
-      def @foo.error_callback(e); end
+    context "error_callback defined" do
+      it "should run error_callback if an exception is raised" do
+        def @foo.error_callback(e)
+          @data = [e]
+        end
 
-      allow(@foo).to receive(:before_enter).and_raise(e = StandardError.new)
-      expect(@foo).to receive(:error_callback).with(e)
+        allow(@foo).to receive(:before_enter).and_raise(e = StandardError.new)
 
-      @foo.safe_close!
+        @foo.safe_close!
+        expect(@foo.data).to eql [e]
+      end
+
+      it "should run error_callback without parameters if callback does not support any" do
+        def @foo.error_callback(e)
+          @data = []
+        end
+
+        allow(@foo).to receive(:before_enter).and_raise(e = StandardError.new)
+
+        @foo.safe_close!('arg1', 'arg2')
+        expect(@foo.data).to eql []
+      end
+
+      it "should run error_callback with parameters if callback supports them" do
+        def @foo.error_callback(e, arg1, arg2)
+          @data = [arg1, arg2]
+        end
+
+        allow(@foo).to receive(:before_enter).and_raise(e = StandardError.new)
+
+        @foo.safe_close!('arg1', 'arg2')
+        expect(@foo.data).to eql ['arg1', 'arg2']
+      end
     end
 
-    it "should raise NoMethodError if exceptionis raised and error_callback is declared but not defined" do
+    it "should raise NoMethodError if exception is raised and error_callback is declared but not defined" do
       allow(@foo).to receive(:before_enter).and_raise(StandardError)
       expect{@foo.safe_close!}.to raise_error(NoMethodError)
     end

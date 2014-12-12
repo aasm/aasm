@@ -2,6 +2,19 @@ module Callbacks
   class WithArgs
     include AASM
 
+    def initialize(options={})
+      @log = options[:log]
+      reset_data
+    end
+
+    def reset_data
+      @data = []
+    end
+
+    def data
+      @data.join(' ')
+    end
+
     aasm do
       state :open, :initial => true,
         :before_enter => :before_enter_open,
@@ -25,8 +38,11 @@ module Callbacks
     end
 
     def log(text)
-      # puts text
+      @data << text
+      puts text if @log
     end
+
+    def aasm_write_state(*args); log('aasm_write_state'); true; end
 
     def before_enter_open; log('before_enter_open'); end
     def before_exit_open; log('before_exit_open'); end
@@ -38,8 +54,8 @@ module Callbacks
     def after_enter_closed; log('after_enter_closed'); end
     def after_exit_closed; log('after_exit_closed'); end
 
-    def before(*args); log('before'); end
-    def transition_proc(arg1, arg2); log('transition_proc'); end
-    def after(*args); log('after'); end
+    def before(arg1, *args); log("before(#{arg1.inspect},#{args.map(&:inspect).join(',')})"); end
+    def transition_proc(arg1, arg2); log("transition_proc(#{arg1.inspect},#{arg2.inspect})"); end
+    def after(*args); log("after(#{args.map(&:inspect).join(',')})"); end
   end
 end

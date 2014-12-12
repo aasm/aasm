@@ -6,6 +6,15 @@ module Callbacks
       @fail_event_guard = options[:fail_event_guard]
       @fail_transition_guard = options[:fail_transition_guard]
       @log = options[:log]
+      reset_data
+    end
+
+    def reset_data
+      @data = []
+    end
+
+    def data
+      @data.join(' ')
     end
 
     aasm do
@@ -35,28 +44,32 @@ module Callbacks
     end
 
     def log(text)
+      @data << text
       puts text if @log
     end
 
-    def before_enter_open; log('before_enter_open'); end
-    def enter_open; log('enter_open'); end
-    def before_exit_open; log('before_exit_open'); end
-    def after_enter_open; log('after_enter_open'); end
-    def exit_open; log('exit_open'); end
-    def after_exit_open; log('after_exit_open'); end
+    def aasm_write_state(*args); log('aasm_write_state'); true; end
 
-    def before_enter_closed; log('before_enter_closed'); end
-    def enter_closed; log('enter_closed'); end
-    def before_exit_closed; log('before_exit_closed'); end
-    def exit_closed; log('exit_closed'); end
-    def after_enter_closed; log('after_enter_closed'); end
-    def after_exit_closed; log('after_exit_closed'); end
+    def before_enter_open;    log('before_enter_open');   end
+    def enter_open;           log('enter_open');          end
+    def before_exit_open;     log('before_exit_open');    end
+    def after_enter_open;     log('after_enter_open');    end
+    def exit_open;            log('exit_open');           end
+    def after_exit_open;      log('after_exit_open');     end
 
-    def event_guard; log('event_guard'); !@fail_event_guard; end
-    def transition_guard; log('transition_guard'); !@fail_transition_guard; end
-    def after_transition; log('after_transition'); end
+    def before_enter_closed;  log('before_enter_closed'); end
+    def enter_closed;         log('enter_closed');        end
+    def before_exit_closed;   log('before_exit_closed');  end
+    def exit_closed;          log('exit_closed');         end
+    def after_enter_closed;   log('after_enter_closed');  end
+    def after_exit_closed;    log('after_exit_closed');   end
 
-    def before_event; log('before_event'); end
-    def after_event; log('after_event'); end
+    def event_guard;          log('event_guard');         !@fail_event_guard;      end
+    def transition_guard;     log('transition_guard');    !@fail_transition_guard; end
+
+    def after_transition;     log('after_transition');    end
+
+    def before_event;         log('before_event');        end
+    def after_event;          log('after_event');         end
   end
 end
