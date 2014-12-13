@@ -7,7 +7,8 @@
 
 ## 4.0.5 (not yet released)
 
- * an event's `:error` callback now retrieves all arguments passed to the event (see [issue #196](https://github.com/aasm/aasm/issues/196) for details)
+ * bugfix: `false` is treated as uninitialised state (same as `nil`) (see [issue #195](https://github.com/aasm/aasm/issues/195) for details)
+ * bugfix: an event's `:error` callback now retrieves all arguments passed to the event (see [issue #196](https://github.com/aasm/aasm/issues/196) for details)
 
 ## 4.0.5
 

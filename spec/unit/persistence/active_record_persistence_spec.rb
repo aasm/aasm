@@ -270,6 +270,16 @@ describe "instance methods" do
 
 end
 
+describe "direct state column access" do
+  it "accepts false states" do
+    f = FalseState.create!
+    expect(f.aasm_state).to eql false
+    expect {
+      f.aasm.events.map(&:name)
+    }.to_not raise_error
+  end
+end
+
 describe 'subclasses' do
   it "should have the same states as its parent class" do
     expect(DerivateNewDsl.aasm.states).to eq(SimpleNewDsl.aasm.states)

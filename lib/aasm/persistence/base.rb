@@ -37,7 +37,7 @@ module AASM
         if new_record?
           state.blank? ? aasm.determine_state_name(self.class.aasm.initial_state) : state.to_sym
         else
-          state.nil? ? nil : state.to_sym
+          state.blank? ? nil : state.to_sym
         end
       end
 
