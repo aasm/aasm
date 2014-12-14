@@ -19,7 +19,7 @@ describe 'subclassing' do
   end
 
   it 'should know how to respond to `may_add_details?`' do
-    expect(son.may_add_details?).to be_true
+    expect(son.may_add_details?).to be_truthy
   end
 
   it 'should not break if I call Son#update_state' do

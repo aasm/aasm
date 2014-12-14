@@ -38,7 +38,7 @@ describe "instance methods" do
       let(:column) { double(Object, type: :integer) }
 
       it "returns true" do
-        expect(subject.call).to be_true
+        expect(subject.call).to be_truthy
       end
     end
 
@@ -46,7 +46,7 @@ describe "instance methods" do
       let(:column) { double(Object, type: :string) }
 
       it "returns false" do
-        expect(subject.call).to be_false
+        expect(subject.call).to be_falsey
       end
     end
   end
@@ -299,7 +299,7 @@ describe "named scopes with the new DSL" do
   context "Does not already respond_to? the scope name" do
     it "should add a scope" do
       expect(SimpleNewDsl).to respond_to(:unknown_scope)
-      expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_true
+      expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
     end
   end
 
@@ -358,7 +358,7 @@ describe 'transitions with persistence' do
 
     validator.name = nil
     expect(validator).not_to be_valid
-    expect(validator.run!).to be_false
+    expect(validator.run!).to be_falsey
     expect(validator).to be_sleeping
 
     validator.reload
@@ -367,7 +367,7 @@ describe 'transitions with persistence' do
 
     validator.name = 'another name'
     expect(validator).to be_valid
-    expect(validator.run!).to be_true
+    expect(validator.run!).to be_truthy
     expect(validator).to be_running
 
     validator.reload
@@ -382,7 +382,7 @@ describe 'transitions with persistence' do
 
     persistor.name = nil
     expect(persistor).not_to be_valid
-    expect(persistor.run!).to be_true
+    expect(persistor.run!).to be_truthy
     expect(persistor).to be_running
 
     persistor = InvalidPersistor.find(persistor.id)
@@ -487,7 +487,7 @@ describe "invalid states with persistence" do
   it "should not store states" do
     validator = Validator.create(:name => 'name')
     validator.status = 'invalid_state'
-    expect(validator.save).to be_false
+    expect(validator.save).to be_falsey
     expect {validator.save!}.to raise_error(ActiveRecord::RecordInvalid)
 
     validator.reload
@@ -497,7 +497,7 @@ describe "invalid states with persistence" do
   it "should store invalid states if configured" do
     persistor = InvalidPersistor.create(:name => 'name')
     persistor.status = 'invalid_state'
-    expect(persistor.save).to be_true
+    expect(persistor.save).to be_truthy
 
     persistor.reload
     expect(persistor.status).to eq('invalid_state')

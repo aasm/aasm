@@ -10,19 +10,19 @@ describe 'transitions' do
 
   it 'should not raise an exception when not whiny' do
     silencer = Silencer.new
-    expect(silencer.smile!).to be_false
+    expect(silencer.smile!).to be_falsey
     expect(silencer).to be_silent
   end
 
   it 'should not raise an exception when superclass not whiny' do
     sub = SubClassing.new
-    expect(sub.smile!).to be_false
+    expect(sub.smile!).to be_falsey
     expect(sub).to be_silent
   end
 
   it 'should not raise an exception when from is nil even if whiny' do
     silencer = Silencer.new
-    expect(silencer.smile_any!).to be_true
+    expect(silencer.smile_any!).to be_truthy
     expect(silencer).to be_smiling
   end
 
@@ -43,7 +43,7 @@ describe 'transitions' do
       silencer.smile! do
         success = true
       end
-    }.not_to change { success }.to(true)
+    }.not_to change { success }
   end
 
 end
@@ -124,7 +124,7 @@ describe AASM::Core::Transition, '- when performing guard checks' do
     opts = {:from => 'foo', :to => 'bar'}
     st = AASM::Core::Transition.new(opts)
 
-    expect(st.allowed?(nil)).to be_true
+    expect(st.allowed?(nil)).to be_truthy
   end
 
   it 'should call the method on the object if guard is a symbol' do

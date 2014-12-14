@@ -67,11 +67,11 @@ describe "special cases" do
     expect(Argument.aasm.states).to include(:valid)
 
     argument = Argument.new
-    expect(argument.invalid?).to be_true
+    expect(argument.invalid?).to be_truthy
     expect(argument.aasm.current_state).to eq(:invalid)
 
     argument.valid!
-    expect(argument.valid?).to be_true
+    expect(argument.valid?).to be_truthy
     expect(argument.aasm.current_state).to eq(:valid)
   end
 end
