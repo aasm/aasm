@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
-  s.add_development_dependency 'rspec', '2.99'
+  s.add_development_dependency 'rspec'
 
   # debugging
   # s.add_development_dependency 'debugger'

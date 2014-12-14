@@ -138,34 +138,34 @@ describe 'callbacks for the new DSL' do
 
   it "should call the callbacks given the to-state as argument" do
     cb = Callbacks::WithStateArg.new
-    cb.should_receive(:before_method).with(:arg1).once.ordered
-    cb.should_receive(:transition_method).never
-    cb.should_receive(:transition_method2).with(:arg1).once.ordered
-    cb.should_receive(:after_method).with(:arg1).once.ordered
+    expect(cb).to receive(:before_method).with(:arg1).once.ordered
+    expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:transition_method2).with(:arg1).once.ordered
+    expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:out_to_lunch, :arg1)
 
     cb = Callbacks::WithStateArg.new
     some_object = double('some object')
-    cb.should_receive(:before_method).with(some_object).once.ordered
-    cb.should_receive(:transition_method2).with(some_object).once.ordered
-    cb.should_receive(:after_method).with(some_object).once.ordered
+    expect(cb).to receive(:before_method).with(some_object).once.ordered
+    expect(cb).to receive(:transition_method2).with(some_object).once.ordered
+    expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(:out_to_lunch, some_object)
   end
 
   it "should call the proper methods just with arguments" do
     cb = Callbacks::WithStateArg.new
-    cb.should_receive(:before_method).with(:arg1).once.ordered
-    cb.should_receive(:transition_method).with(:arg1).once.ordered
-    cb.should_receive(:transition_method).never
-    cb.should_receive(:after_method).with(:arg1).once.ordered
+    expect(cb).to receive(:before_method).with(:arg1).once.ordered
+    expect(cb).to receive(:transition_method).with(:arg1).once.ordered
+    expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:arg1)
 
     cb = Callbacks::WithStateArg.new
     some_object = double('some object')
-    cb.should_receive(:before_method).with(some_object).once.ordered
-    cb.should_receive(:transition_method).with(some_object).once.ordered
-    cb.should_receive(:transition_method).never
-    cb.should_receive(:after_method).with(some_object).once.ordered
+    expect(cb).to receive(:before_method).with(some_object).once.ordered
+    expect(cb).to receive(:transition_method).with(some_object).once.ordered
+    expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(some_object)
   end
 end

@@ -30,8 +30,8 @@ describe "instance methods" do
     let(:columns_hash) { Hash[column_name, column] }
 
     before :each do
-      gate.class.aasm.stub(:attribute_name).and_return(column_name.to_sym)
-      gate.class.stub(:columns_hash).and_return(columns_hash)
+      allow(gate.class.aasm).to receive(:attribute_name).and_return(column_name.to_sym)
+      allow(gate.class).to receive(:columns_hash).and_return(columns_hash)
     end
 
     context "when AASM column has integer type" do
@@ -55,7 +55,7 @@ describe "instance methods" do
     subject { lambda{ gate.send(:aasm_guess_enum_method) } }
 
     before :each do
-      gate.class.aasm.stub(:attribute_name).and_return(:value)
+      allow(gate.class.aasm).to receive(:attribute_name).and_return(:value)
     end
 
     it "pluralizes AASM column name" do
@@ -75,7 +75,7 @@ describe "instance methods" do
     context "when AASM enum setting is simply set to true" do
       let(:with_true_enum) { WithTrueEnum.new }
       before :each do
-        WithTrueEnum.aasm.stub(:attribute_name).and_return(:value)
+        allow(WithTrueEnum.aasm).to receive(:attribute_name).and_return(:value)
       end
 
       it "infers enum method name from pluralized column name" do
@@ -93,12 +93,12 @@ describe "instance methods" do
 
     context "when AASM enum setting is not enabled" do
       before :each do
-        Gate.aasm.stub(:attribute_name).and_return(:value)
+        allow(Gate.aasm).to receive(:attribute_name).and_return(:value)
       end
 
       context "when AASM column looks like enum" do
         before :each do
-          gate.stub(:aasm_column_looks_like_enum).and_return(true)
+          allow(gate).to receive(:aasm_column_looks_like_enum).and_return(true)
         end
 
         it "infers enum method name from pluralized column name" do
@@ -108,7 +108,7 @@ describe "instance methods" do
 
       context "when AASM column doesn't look like enum'" do
         before :each do
-          gate.stub(:aasm_column_looks_like_enum)
+          allow(gate).to receive(:aasm_column_looks_like_enum)
             .and_return(false)
         end
 
@@ -126,24 +126,17 @@ describe "instance methods" do
     let(:enum) { Hash[state_sym, state_code] }
 
     before :each do
-      gate
-        .stub(:aasm_enum)
-        .and_return(enum_name)
-      gate.stub(:aasm_write_attribute)
-      gate.stub(:write_attribute)
+      allow(gate).to receive(:aasm_enum).and_return(enum_name)
+      allow(gate).to receive(:aasm_write_attribute)
+      allow(gate).to receive(:write_attribute)
 
-      gate
-        .class
-        .stub(enum_name)
-        .and_return(enum)
+      allow(Gate).to receive(enum_name).and_return(enum)
     end
 
     describe "aasm_write_state" do
       context "when AASM is configured to skip validations on save" do
         before :each do
-          gate
-            .stub(:aasm_skipping_validations)
-            .and_return(true)
+          allow(gate).to receive(:aasm_skipping_validations).and_return(true)
         end
 
         it "passes state code instead of state symbol to update_all" do
@@ -151,10 +144,7 @@ describe "instance methods" do
           # parameters in the middle of the chain, so we need to use
           # intermediate object instead.
           obj = double(Object, update_all: 1)
-          gate
-            .class
-            .stub(:where)
-            .and_return(obj)
+          allow(Gate).to receive(:where).and_return(obj)
 
           gate.aasm_write_state state_sym
 
@@ -166,7 +156,7 @@ describe "instance methods" do
       context "when AASM is not skipping validations" do
         it "delegates state update to the helper method" do
           # Let's pretend that validation is passed
-          gate.stub(:save).and_return(true)
+          allow(gate).to receive(:save).and_return(true)
 
           gate.aasm_write_state state_sym
 
@@ -197,9 +187,7 @@ describe "instance methods" do
     let(:state_sym) { :running }
 
     before :each do
-      gate
-        .stub(:aasm_enum)
-        .and_return(nil)
+      allow(gate).to receive(:aasm_enum).and_return(nil)
     end
 
     describe "aasm_raw_attribute_value" do
@@ -215,9 +203,8 @@ describe "instance methods" do
     let(:value) { 42 }
 
     before :each do
-      gate.stub(:write_attribute)
-      gate.stub(:aasm_raw_attribute_value)
-        .and_return(value)
+      allow(gate).to receive(:write_attribute)
+      allow(gate).to receive(:aasm_raw_attribute_value).and_return(value)
 
       gate.send(:aasm_write_attribute, sym)
     end

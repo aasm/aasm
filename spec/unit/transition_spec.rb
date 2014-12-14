@@ -64,14 +64,14 @@ describe AASM::Core::Transition do
   it 'should set on_transition with deprecation warning' do
     opts = {:from => 'foo', :to => 'bar'}
     st = AASM::Core::Transition.allocate
-    st.should_receive(:warn).with('[DEPRECATION] :on_transition is deprecated, use :after instead')
+    expect(st).to receive(:warn).with('[DEPRECATION] :on_transition is deprecated, use :after instead')
 
     st.send :initialize, opts do
       guard :gg
       on_transition :after_callback
     end
 
-    st.opts[:after].should == [:after_callback]
+    expect(st.opts[:after]).to eql [:after_callback]
   end
 
   it 'should set after and guard from dsl' do
@@ -81,8 +81,8 @@ describe AASM::Core::Transition do
       after :after_callback
     end
 
-    st.opts[:guard].should == ['g', :gg]
-    st.opts[:after].should == [:after_callback] # TODO fix this bad code coupling
+    expect(st.opts[:guard]).to eql ['g', :gg]
+    expect(st.opts[:after]).to eql [:after_callback] # TODO fix this bad code coupling
   end
 
   it 'should pass equality check if from and to are the same' do
@@ -185,7 +185,7 @@ describe AASM::Core::Transition, '- when executing the transition with a Proc' d
     args = {:arg1 => '1', :arg2 => '2'}
     obj = double('object', :aasm => 'aasm')
 
-    obj.should_receive(:test).with(args)
+    expect(obj).to receive(:test).with(args)
 
     st.execute(obj, args)
   end
