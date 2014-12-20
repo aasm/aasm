@@ -257,7 +257,7 @@ describe "instance methods" do
 
 end
 
-unless ActiveRecord.version.to_s >= '4.2' # won't work with Rails >= 4.2
+if ActiveRecord::VERSION::MAJOR < 4 && ActiveRecord::VERSION::MINOR < 2 # won't work with Rails >= 4.2
 describe "direct state column access" do
   it "accepts false states" do
     f = FalseState.create!
