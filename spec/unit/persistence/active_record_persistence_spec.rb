@@ -257,6 +257,7 @@ describe "instance methods" do
 
 end
 
+unless ActiveRecord.version.to_s >= '4.2' # won't work with Rails >= 4.2
 describe "direct state column access" do
   it "accepts false states" do
     f = FalseState.create!
@@ -265,6 +266,7 @@ describe "direct state column access" do
       f.aasm.events.map(&:name)
     }.to_not raise_error
   end
+end
 end
 
 describe 'subclasses' do
