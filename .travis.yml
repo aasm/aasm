@@ -23,7 +23,6 @@ gemfile:
 
 matrix:
   allow_failures:
-    - rvm: 2.2
     - rvm: rbx-2.2.1
     - rvm: jruby-19mode
   exclude:
