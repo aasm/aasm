@@ -52,6 +52,18 @@ describe 'callbacks for the new DSL' do
     }.to raise_error(AASM::InvalidTransition)
   end
 
+  it "it handles private callback methods as well" do
+    show_debug_log = false
+
+    callback = Callbacks::PrivateMethod.new(:log => show_debug_log)
+    callback.aasm.current_state
+
+    # puts "------- close!"
+    expect {
+      callback.close!
+    }.to_not raise_error
+  end
+
   context "if the transition guard fails" do
     it "does not run any state callback if guard is defined inline" do
       show_debug_log = false
@@ -279,4 +291,5 @@ describe 'event callbacks' do
       @foo.close!
     end
   end
+
 end

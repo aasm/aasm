@@ -124,8 +124,8 @@ module AASM::Core
     def invoke_callbacks(code, record, args)
       case code
         when Symbol, String
-          unless record.respond_to?(code)
-            raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{self.inspect}:#{self.class}")
+          unless record.respond_to?(code, true)
+            raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{record.inspect}:#{record.class}")
           end
           arity = record.send(:method, code.to_sym).arity
           record.send(code, *(arity < 0 ? args : args[0...arity]))
