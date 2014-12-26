@@ -142,9 +142,9 @@ module AASM
 
         def aasm_raw_attribute_value(state)
           if aasm_enum
-            value = self.class.send(aasm_enum)[state]
+            self.class.send(aasm_enum)[state]
           else
-            value = state.to_s
+            state.to_s
           end
         end
 
