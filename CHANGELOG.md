@@ -5,6 +5,10 @@
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
+## 4.0.8
+
+ * bugfix: may_<event>? should return true or false only (see [issue #200](https://github.com/aasm/aasm/issues/200) for details)
+
 ## 4.0.7
 
  * bugfix: take private methods into account when checking for callbacks (see [issue #197](https://github.com/aasm/aasm/issues/197) for details)
