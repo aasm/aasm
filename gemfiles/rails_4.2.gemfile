@@ -10,6 +10,8 @@ gem "rails", "4.2.0"
 
 # mongoid is not yet compatible with Rails >= 4
 # gem 'mongoid' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
+gem 'mongo_mapper'
+gem 'bson_ext',                          :platforms => :ruby
 
 gem 'sequel'
 
