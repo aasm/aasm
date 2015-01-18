@@ -6,7 +6,8 @@ describe 'sequel' do
     require 'spec_helper'
 
     before(:all) do
-      db = Sequel.sqlite
+      db = Sequel.connect(SEQUEL_DB)
+
       # if you want to see the statements while running the spec enable the following line
       # db.loggers << Logger.new($stderr)
       db.create_table(:models) do
