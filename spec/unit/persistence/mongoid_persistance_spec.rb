@@ -1,6 +1,4 @@
-describe 'mongoid', :if => Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3') do
-# describe 'mongoid' do
-
+describe 'mongoid' do
   begin
     require 'mongoid'
     require 'logger'
