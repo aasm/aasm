@@ -6,9 +6,9 @@ gem 'rubysl',                           :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "rails", "~>4.1"
-gem 'mongo_mapper'
-gem 'bson_ext',                          :platforms => :ruby
 gem 'mongoid'
 gem 'sequel'
+gem 'mongo_mapper', '~> 0.13'
+gem 'bson_ext',                          :platforms => :ruby
 
 gemspec
