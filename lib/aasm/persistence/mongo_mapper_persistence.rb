@@ -1,0 +1,174 @@
+require_relative 'base'
+
+module AASM
+  module Persistence
+    module MongoMapperPersistence
+      # This method:
+      #
+      # * extends the model with ClassMethods
+      # * includes InstanceMethods
+      #
+      # Adds
+      #
+      #   before_validation :aasm_ensure_initial_state, :on => :create
+      #
+      # As a result, it doesn't matter when you define your methods - the following 2 are equivalent
+      #
+      #   class Foo
+      #     include MongoMapper::Document
+      #     def aasm_write_state(state)
+      #       "bar"
+      #     end
+      #     include AASM
+      #   end
+      #
+      #   class Foo < ActiveRecord::Base
+      #     include MongoMapper::Document
+      #     include AASM
+      #     def aasm_write_state(state)
+      #       "bar"
+      #     end
+      #   end
+      #
+      def self.included(base)
+        base.send(:include, AASM::Persistence::Base)
+        base.extend AASM::Persistence::MongoMapperPersistence::ClassMethods
+        base.send(:include, AASM::Persistence::MongoMapperPersistence::InstanceMethods)
+
+        base.before_create :aasm_ensure_initial_state
+
+        # ensure state is in the list of states
+        base.validate :aasm_validate_states
+      end
+
+      module ClassMethods
+
+        def find_in_state(number, state, *args)
+          with_state_scope(state).find!(number, *args)
+        end
+
+        def count_in_state(state, *args)
+          with_state_scope(state).count(*args)
+        end
+
+        def calculate_in_state(state, *args)
+          with_state_scope(state).calculate(*args)
+        end
+
+        protected
+        def with_state_scope(state)
+          where(aasm.attribute_name.to_sym => state.to_s)
+        end
+      end
+
+      module InstanceMethods
+
+        # Writes <tt>state</tt> to the state column and persists it to the database
+        #
+        #   foo = Foo.find(1)
+        #   foo.aasm.current_state # => :opened
+        #   foo.close!
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :closed
+        #
+        # NOTE: intended to be called from an event
+        def aasm_write_state(state)
+          old_value = read_attribute(self.class.aasm.attribute_name)
+          aasm_write_attribute state
+
+          success = if aasm_skipping_validations
+            value = aasm_raw_attribute_value state
+            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm.attribute_name => value) == 1
+          else
+            self.save
+          end
+          unless success
+            write_attribute(self.class.aasm.attribute_name, old_value)
+            return false
+          end
+
+          true
+        end
+
+        # Writes <tt>state</tt> to the state column, but does not persist it to the database
+        #
+        #   foo = Foo.find(1)
+        #   foo.aasm.current_state # => :opened
+        #   foo.close
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :opened
+        #   foo.save
+        #   foo.aasm.current_state # => :closed
+        #   Foo.find(1).aasm.current_state # => :closed
+        #
+        # NOTE: intended to be called from an event
+        def aasm_write_state_without_persistence(state)
+          aasm_write_attribute state
+        end
+
+        private
+        def aasm_enum
+          case AASM::StateMachine[self.class].config.enum
+          when false then nil
+          when true then aasm_guess_enum_method
+          when nil then aasm_guess_enum_method if aasm_column_looks_like_enum
+          else AASM::StateMachine[self.class].config.enum
+          end
+        end
+
+        def aasm_column_looks_like_enum
+          self.class.keys[self.class.aasm.attribute_name.to_s].type == Integer
+        end
+
+        def aasm_guess_enum_method
+          self.class.aasm.attribute_name.to_s.pluralize.to_sym
+        end
+
+        def aasm_skipping_validations
+          AASM::StateMachine[self.class].config.skip_validation_on_save
+        end
+
+        def aasm_write_attribute(state)
+          write_attribute self.class.aasm.attribute_name, aasm_raw_attribute_value(state)
+        end
+
+        def aasm_raw_attribute_value(state)
+          if aasm_enum
+            self.class.send(aasm_enum)[state]
+          else
+            state.to_s
+          end
+        end
+
+        # Ensures that if the aasm_state column is nil and the record is new
+        # that the initial state gets populated before validation on create
+        #
+        #   foo = Foo.new
+        #   foo.aasm_state # => nil
+        #   foo.valid?
+        #   foo.aasm_state # => "open" (where :open is the initial state)
+        #
+        #
+        #   foo = Foo.find(:first)
+        #   foo.aasm_state # => 1
+        #   foo.aasm_state = nil
+        #   foo.valid?
+        #   foo.aasm_state # => nil
+        #
+        def aasm_ensure_initial_state
+          return send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
+        end
+
+        def aasm_validate_states
+          send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
+          unless AASM::StateMachine[self.class].config.skip_validation_on_save
+            if aasm.current_state && !aasm.states.include?(aasm.current_state)
+              self.errors.add(AASM::StateMachine[self.class].config.column , "is invalid")
+            end
+          end
+        end
+      end # InstanceMethods
+
+    end
+  end # Persistence
+end # AASM

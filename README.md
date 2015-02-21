@@ -9,8 +9,8 @@ This package contains AASM, a library for adding finite state machines to Ruby c
 
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for
-[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html) and
-[Mongoid](http://mongoid.org/), but it can be used for any Ruby class, no matter what
+[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html),
+[Mongoid](http://mongoid.org/), and [Mongomapper](http://mongomapper.com/) but it can be used for any Ruby class, no matter what
 parent class it has (if any).
 
 ## Upgrade from version 3 to 4
@@ -435,7 +435,7 @@ to ```false```.
 
 ### Sequel
 
-AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_ and _Mongoid_.
+AASM also supports [Sequel](http://sequel.jeremyevans.net/) besides _ActiveRecord_, _Mongoid_, and _MongoMapper_.
 
 ```ruby
 class Job < Sequel::Model
@@ -460,6 +460,23 @@ class Job
   include Mongoid::Document
   include AASM
   field :aasm_state
+  aasm do
+    ...
+  end
+end
+```
+
+### MongoMapper
+
+AASM also supports persistence to Mongodb if you're using MongoMapper. Make sure
+to include MongoMapper::Document before you include AASM.
+
+```ruby
+class Job
+  include MongoMapper::Document
+  include AASM
+
+  key :aasm_state,                   Symbol
   aasm do
     ...
   end
