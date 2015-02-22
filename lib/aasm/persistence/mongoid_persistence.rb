@@ -35,9 +35,7 @@ module AASM
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
 
-        base.after_initialize do
-          aasm_ensure_initial_state
-        end
+        base.after_initialize :aasm_ensure_initial_state
       end
 
       module ClassMethods
