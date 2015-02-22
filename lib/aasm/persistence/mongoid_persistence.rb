@@ -35,11 +35,9 @@ module AASM
         base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
 
-        # Mongoid's Validatable gem dependency goes not have a before_validation_on_xxx hook yet.
-        # base.before_validation_on_create :aasm_ensure_initial_state
-        base.before_validation :aasm_ensure_initial_state
-        # ensure initial aasm state even when validations are skipped
-        base.before_create :aasm_ensure_initial_state
+        base.after_initialize do
+          aasm_ensure_initial_state
+        end
       end
 
       module ClassMethods
