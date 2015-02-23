@@ -2,13 +2,14 @@
 
 ## 4.1.0 (not yet released)
 
+ * bugfix: initialize the aasm state column after initialization of the _Mongoid_ instance (see [issue #206](https://github.com/aasm/aasm/issues/206), thanks to [@Shwetakale ](https://github.com/Shwetakale ))
  * added support for mongomapper ORM (see [issue #203](https://github.com/aasm/aasm/issues/203), thanks to [@reidmorrison ](https://github.com/reidmorrison ))
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
 ## 4.0.8
 
- * bugfix: may_<event>? should return true or false only (see [issue #200](https://github.com/aasm/aasm/issues/200) for details)
+ * bugfix: may_event_name? should return true or false only (see [issue #200](https://github.com/aasm/aasm/issues/200) for details)
 
 ## 4.0.7
 
