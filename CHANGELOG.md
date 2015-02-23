@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## 4.1.0 (not yet released)
+## 4.2.0 (not yet released)
+
+## 4.1.0
 
  * bugfix: initialize the aasm state column after initialization of the _Mongoid_ instance (see [issue #206](https://github.com/aasm/aasm/issues/206), thanks to [@Shwetakale ](https://github.com/Shwetakale ))
  * added support for mongomapper ORM (see [issue #203](https://github.com/aasm/aasm/issues/203), thanks to [@reidmorrison ](https://github.com/reidmorrison ))
