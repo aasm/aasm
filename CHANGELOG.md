@@ -2,6 +2,7 @@
 
 ## 4.1.0 (not yet released)
 
+ * added support for mongomapper ORM (see [issue #203](https://github.com/aasm/aasm/issues/203), thanks to [@reidmorrison ](https://github.com/reidmorrison ))
  * `aasm_column` has been removed. Use `aasm.attribute_name` instead
  * `aasm_human_event_name` has been removed. Use `aasm.human_event_name` instead
 
