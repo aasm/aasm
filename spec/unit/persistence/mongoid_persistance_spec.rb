@@ -133,15 +133,11 @@ describe 'mongoid' do
     describe "instance methods" do
       let(:simple) {SimpleNewDslMongoid.new}
 
-      it "should call aasm_ensure_initial_state on validation before create" do
-        expect(simple).to receive(:aasm_ensure_initial_state).and_return(true)
-        simple.valid?
+      it "should initialize the aasm state on instantiation" do
+        expect(SimpleNewDslMongoid.new.status).to eql 'unknown_scope'
+        expect(SimpleNewDslMongoid.new.aasm.current_state).to eql :unknown_scope
       end
 
-      it "should call aasm_ensure_initial_state before create, even if skipping validations" do
-        expect(simple).to receive(:aasm_ensure_initial_state).and_return(true)
-        simple.save(:validate => false)
-      end
     end
 
   rescue LoadError
