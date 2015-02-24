@@ -10,7 +10,7 @@ module AASM
       #
       # Adds
       #
-      #   before_validation :aasm_ensure_initial_state, :on => :create
+      #   after_initialize :aasm_ensure_initial_state
       #
       # As a result, it doesn't matter when you define your methods - the following 2 are equivalent
       #
