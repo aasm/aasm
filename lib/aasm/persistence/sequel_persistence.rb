@@ -72,6 +72,7 @@ module AASM
         #
         def aasm_ensure_initial_state
           aasm.enter_initial_state if
+            (new? || values.key?(self.class.aasm.attribute_name)) &&
             send(self.class.aasm.attribute_name).to_s.strip.empty?
         end
 
