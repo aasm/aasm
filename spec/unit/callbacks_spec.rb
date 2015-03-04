@@ -145,7 +145,7 @@ describe 'callbacks for the new DSL' do
 
     cb.reset_data
     cb.close!(:arg1, :arg2)
-    expect(cb.data).to eql 'before(:arg1,:arg2) before_exit_open transition_proc(:arg1,:arg2) before_enter_closed aasm_write_state after_exit_open after_enter_closed after(:arg1,:arg2)'
+    expect(cb.data).to eql 'before(:arg1,:arg2) before_exit_open(:arg1,:arg2) transition_proc(:arg1,:arg2) before_enter_closed(:arg1,:arg2) aasm_write_state after_exit_open(:arg1,:arg2) after_enter_closed(:arg1,:arg2) after(:arg1,:arg2)'
   end
 
   it "should call the callbacks given the to-state as argument" do

@@ -44,15 +44,15 @@ module Callbacks
 
     def aasm_write_state(*args); log('aasm_write_state'); true; end
 
-    def before_enter_open; log('before_enter_open'); end
-    def before_exit_open; log('before_exit_open'); end
-    def after_enter_open; log('after_enter_open'); end
-    def after_exit_open; log('after_exit_open'); end
+    def before_enter_open(*args); log("before_enter_open(#{args.map(&:inspect).join(',')})"); end
+    def before_exit_open(*args); log("before_exit_open(#{args.map(&:inspect).join(',')})"); end
+    def after_enter_open(*args); log("after_enter_open(#{args.map(&:inspect).join(',')})"); end
+    def after_exit_open(*args); log("after_exit_open(#{args.map(&:inspect).join(',')})"); end
 
-    def before_enter_closed; log('before_enter_closed'); end
-    def before_exit_closed; log('before_enter_closed'); end
-    def after_enter_closed; log('after_enter_closed'); end
-    def after_exit_closed; log('after_exit_closed'); end
+    def before_enter_closed(*args); log("before_enter_closed(#{args.map(&:inspect).join(',')})"); end
+    def before_exit_closed(*args); log("before_enter_closed(#{args.map(&:inspect).join(',')})"); end
+    def after_enter_closed(*args); log("after_enter_closed(#{args.map(&:inspect).join(',')})"); end
+    def after_exit_closed(*args); log("after_exit_closed(#{args.map(&:inspect).join(',')})"); end
 
     def before(arg1, *args); log("before(#{arg1.inspect},#{args.map(&:inspect).join(',')})"); end
     def transition_proc(arg1, arg2); log("transition_proc(#{arg1.inspect},#{arg2.inspect})"); end

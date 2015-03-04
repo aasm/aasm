@@ -28,12 +28,12 @@ module AASM::Core
       name.to_s
     end
 
-    def fire_callbacks(action, record)
+    def fire_callbacks(action, record, *args)
       action = @options[action]
       catch :halt_aasm_chain do
         action.is_a?(Array) ?
-                action.each {|a| _fire_callbacks(a, record)} :
-                _fire_callbacks(action, record)
+                action.each {|a| _fire_callbacks(a, record, args)} :
+                _fire_callbacks(action, record, args)
       end
     end
 
@@ -66,12 +66,14 @@ module AASM::Core
       self
     end
 
-    def _fire_callbacks(action, record)
+    def _fire_callbacks(action, record, args)
       case action
         when Symbol, String
-          record.send(action)
+          arity = record.send(:method, action.to_sym).arity
+          record.send(action, *(arity < 0 ? args : args[0...arity]))
         when Proc
-          action.call(record)
+          arity = action.arity
+          action.call(record, *(arity < 0 ? args : args[0...arity]))
       end
     end
 
