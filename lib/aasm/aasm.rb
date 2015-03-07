@@ -129,7 +129,7 @@ private
     end
 
     if AASM::StateMachine[self.class].config.whiny_transitions
-      raise AASM::InvalidTransition, "Event '#{event_name}' cannot transition from '#{aasm.current_state}'"
+      raise AASM::InvalidTransition.new(self, event_name) 
     else
       false
     end

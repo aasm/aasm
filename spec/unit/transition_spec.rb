@@ -4,7 +4,12 @@ describe 'transitions' do
 
   it 'should raise an exception when whiny' do
     process = ProcessWithNewDsl.new
-    expect { process.stop! }.to raise_error(AASM::InvalidTransition)
+    expect { process.stop! }.to raise_error do |err|
+      expect(err.class).to eql(AASM::InvalidTransition)
+      expect(err.message).to eql("Event 'stop' cannot transition from 'sleeping'")
+      expect(err.object).to eql(process)
+      expect(err.event_name).to eql(:stop)
+    end
     expect(process).to be_sleeping
   end
 
