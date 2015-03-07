@@ -2,6 +2,10 @@
 
 ## 4.2.0 (not yet released)
 
+## 4.1.1 (not yet released)
+
+ * bugfix: do not update unloaded state for [Sequel](http://sequel.jeremyevans.net/) (see [issue #218](https://github.com/aasm/aasm/issues/218), thanks to [@godfat](https://github.com/godfat))
+
 ## 4.1.0
 
  * bugfix: initialize the aasm state column after initialization of the _Mongoid_ instance (see [issue #206](https://github.com/aasm/aasm/issues/206), thanks to [@Shwetakale ](https://github.com/Shwetakale ))
