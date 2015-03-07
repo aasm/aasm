@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'generator_spec'
 require 'generators/active_record/aasm_generator'
 
-describe ActiveRecord::Generators::AasmGenerator, type: :generator do
+describe ActiveRecord::Generators::AASMGenerator, type: :generator do
   destination File.expand_path("../../../tmp", __FILE__)
 
   before(:all) do
@@ -11,7 +11,7 @@ describe ActiveRecord::Generators::AasmGenerator, type: :generator do
 
   it "creates model with aasm block for default column_name" do
     run_generator %w(user)
-    assert_file "app/models/user.rb", /class User < ActiveRecord::Base\n  include AASM\n\n  aasm do\n  end\nend\n/
+    assert_file "app/models/user.rb", /include AASM\n\n  aasm do\n  end\n/
   end
 
   it "creates model with aasm block for custom column_name" do

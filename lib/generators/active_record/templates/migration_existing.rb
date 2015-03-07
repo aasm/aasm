@@ -1,4 +1,4 @@
-class AddAasmTo<%= table_name.camelize %> < ActiveRecord::Migration
+class AddAASMTo<%= table_name.camelize %> < ActiveRecord::Migration
   def self.up
     add_column :<%= table_name %>, :<%= column_name %>, :string
   end

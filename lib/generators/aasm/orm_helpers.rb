@@ -1,4 +1,4 @@
-module Aasm
+module AASM
   module Generators
     module OrmHelpers
       
