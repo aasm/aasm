@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "sqlite3",                          :platforms => :ruby
-gem "coveralls"
 gem 'rubysl',                           :platforms => :rbx
 gem 'rubinius-developer_tools',         :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby

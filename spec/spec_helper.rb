@@ -4,9 +4,6 @@ require 'aasm'
 
 require 'rspec'
 
-require 'coveralls'
-Coveralls.wear!
-
 # require 'ruby-debug'; Debugger.settings[:autoeval] = true; debugger; rubys_debugger = 'annoying'
 # require 'ruby-debug/completion'
 # require 'pry'
