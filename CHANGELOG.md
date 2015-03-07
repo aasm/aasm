@@ -4,6 +4,7 @@
 
 ## 4.1.1 (not yet released)
 
+ * `AASM::InvalidTransition` now references the current object (with the state machine) and the _AASM_ event name (see [issue #217](https://github.com/aasm/aasm/issues/217), thanks to [@awsmsrc](https://github.com/awsmsrc))
  * bugfix: do not update unloaded state for [Sequel](http://sequel.jeremyevans.net/) (see [issue #218](https://github.com/aasm/aasm/issues/218), thanks to [@godfat](https://github.com/godfat))
 
 ## 4.1.0
