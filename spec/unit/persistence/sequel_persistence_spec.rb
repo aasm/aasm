@@ -44,6 +44,11 @@ describe 'sequel' do
         expect(model.aasm.current_state).to eq(:alpha)
       end
 
+      it "should save the initial state" do
+        model.save
+        expect(model.status).to eq("alpha")
+      end
+
       it "should return the aasm column when new and the aasm field is not nil" do
         model.status = "beta"
         expect(model.aasm.current_state).to eq(:beta)
@@ -59,6 +64,14 @@ describe 'sequel' do
         allow(model).to receive(:new?).and_return(false)
         model.status = nil
         expect(model.aasm.current_state).to be_nil
+      end
+
+      it "should not change the state if state is not loaded" do
+        model.release
+        model.save
+        model.class.select(:id).first.save
+        model.reload
+        expect(model.aasm.current_state).to eq(:beta)
       end
 
       it "should call aasm_ensure_initial_state on validation before create" do
