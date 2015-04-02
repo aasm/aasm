@@ -187,7 +187,7 @@ module AASM
         end
 
         def aasm_validate_states
-          unless AASM::StateMachine[self.class].config.skip_validation_on_save
+          unless aasm_skipping_validations
             if aasm.current_state && !aasm.states.include?(aasm.current_state)
               self.errors.add(AASM::StateMachine[self.class].config.column , "is invalid")
             end
