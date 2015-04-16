@@ -164,9 +164,8 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          # checking via respond_to? does not work in Rails <= 3
-          # if respond_to?(self.class.aasm.attribute_name) && send(self.class.aasm.attribute_name).blank? # Rails 4
-          if attribute_names.include?(self.class.aasm.attribute_name.to_s) && send(self.class.aasm.attribute_name).blank?
+          has_attribute = Rails::VERSION::MAJOR > 3 ? respond_to?(self.class.aasm.attribute_name) : attribute_names.include?(self.class.aasm.attribute_name.to_s)
+          if has_attribute && send(self.class.aasm.attribute_name).blank?
             aasm.enter_initial_state
           end
         end
