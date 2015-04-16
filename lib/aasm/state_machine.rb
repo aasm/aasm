@@ -29,10 +29,12 @@ module AASM
     def add_state(name, klass, options)
       set_initial_state(name, options)
 
-      # allow reloading, extending or redefining a state
-      @states.delete(name) if @states.include?(name)
-
-      @states << AASM::Core::State.new(name, klass, options)
+      if @states.include?(name)
+        # Merge the new options to the existing state
+        @states[@states.find_index(name)].merge options
+      else
+        @states << AASM::Core::State.new(name, klass, options)
+      end
     end
 
     private

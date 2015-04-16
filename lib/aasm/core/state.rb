@@ -28,6 +28,24 @@ module AASM::Core
       name.to_s
     end
 
+    # This merge will append new callbacks from the options to the state
+    # if the state already have a after_enter and the options contains a after_enter callback
+    # the state will have the list of callbacks to execute
+    def merge(options={})
+      @display_name = options.delete(:display_name) if options.key? :display_name
+
+      options.each do |action, callback|
+        if @options.has_key?(action)
+          existing_callbacks = @options[action]
+          existing_callbacks = [existing_callbacks] unless existing_callbacks.is_a?(Array)
+          @options[action] = (existing_callbacks << callback).flatten
+        else
+          @options[action] = callback
+        end
+      end
+      self
+    end
+
     def fire_callbacks(action, record, *args)
       action = @options[action]
       catch :halt_aasm_chain do
