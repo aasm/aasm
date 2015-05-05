@@ -107,21 +107,21 @@ module AASM
         end
 
         private
-        def aasm_enum
-          case AASM::StateMachine[self.class].config.enum
+        def aasm_enum(name=:default)
+          case AASM::StateMachine[self.class][name].config.enum
           when false then nil
-          when true then aasm_guess_enum_method
-          when nil then aasm_guess_enum_method if aasm_column_looks_like_enum
-          else AASM::StateMachine[self.class].config.enum
+          when true then aasm_guess_enum_method(name)
+          when nil then aasm_guess_enum_method(name) if aasm_column_looks_like_enum(name)
+          else AASM::StateMachine[self.class][name].config.enum
           end
         end
 
-        def aasm_column_looks_like_enum
-          self.class.keys[self.class.aasm.attribute_name.to_s].type == Integer
+        def aasm_column_looks_like_enum(name)
+          self.class.keys[self.class.aasm(name).attribute_name.to_s].type == Integer
         end
 
-        def aasm_guess_enum_method
-          self.class.aasm.attribute_name.to_s.pluralize.to_sym
+        def aasm_guess_enum_method(name)
+          self.class.aasm(name).attribute_name.to_s.pluralize.to_sym
         end
 
         def aasm_skipping_validations(state_machine_name)
