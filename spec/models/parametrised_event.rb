@@ -18,7 +18,7 @@ class ParametrisedEvent
     end
   end
 
-  def wear_clothes(shirt_color, trouser_type)
+  def wear_clothes(shirt_color, trouser_type=nil)
   end
 
   def condition_hair

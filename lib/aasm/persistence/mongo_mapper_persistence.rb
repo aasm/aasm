@@ -102,7 +102,7 @@ module AASM
         #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state)
+        def aasm_write_state_without_persistence(state, name=:default)
           aasm_write_attribute state
         end
 
@@ -124,17 +124,17 @@ module AASM
           self.class.aasm.attribute_name.to_s.pluralize.to_sym
         end
 
-        def aasm_skipping_validations
-          AASM::StateMachine[self.class].config.skip_validation_on_save
+        def aasm_skipping_validations(state_machine_name)
+          AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
         end
 
-        def aasm_write_attribute(state)
-          write_attribute self.class.aasm.attribute_name, aasm_raw_attribute_value(state)
+        def aasm_write_attribute(state, name=:default)
+          write_attribute self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name)
         end
 
-        def aasm_raw_attribute_value(state)
-          if aasm_enum
-            self.class.send(aasm_enum)[state]
+        def aasm_raw_attribute_value(state, name=:default)
+          if aasm_enum(name)
+            self.class.send(aasm_enum(name))[state]
           else
             state.to_s
           end
@@ -156,14 +156,18 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          return send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
+          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+          end
         end
 
         def aasm_validate_states
-          send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
-          unless AASM::StateMachine[self.class].config.skip_validation_on_save
-            if aasm.current_state && !aasm.states.include?(aasm.current_state)
-              self.errors.add(AASM::StateMachine[self.class].config.column , "is invalid")
+          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+            unless AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
+              if aasm(state_machine_name).current_state && !aasm(state_machine_name).states.include?(aasm(state_machine_name).current_state)
+                self.errors.add(AASM::StateMachine[self.class][state_machine_name].config.column , "is invalid")
+              end
             end
           end
         end

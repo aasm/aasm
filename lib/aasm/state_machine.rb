@@ -10,7 +10,7 @@ module AASM
       (@machines ||= {})[klass.to_s] = machine
     end
 
-    attr_accessor :states, :events, :initial_state, :config
+    attr_accessor :states, :events, :initial_state, :config, :name
 
     def initialize
       @initial_state = nil

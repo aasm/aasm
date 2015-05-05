@@ -160,7 +160,7 @@ describe "instance methods" do
 
           gate.aasm_write_state state_sym
 
-          expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+          expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
           expect(gate).to_not have_received :write_attribute
         end
       end
@@ -170,7 +170,7 @@ describe "instance methods" do
       it "delegates state update to the helper method" do
         gate.aasm_write_state_without_persistence state_sym
 
-        expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+        expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
         expect(gate).to_not have_received :write_attribute
       end
     end
@@ -210,7 +210,7 @@ describe "instance methods" do
     end
 
     it "generates attribute value using a helper method" do
-      expect(gate).to have_received(:aasm_raw_attribute_value).with(sym)
+      expect(gate).to have_received(:aasm_raw_attribute_value).with(sym, :default)
     end
 
     it "writes attribute to the model" do
@@ -413,7 +413,7 @@ describe 'transitions with persistence' do
 
       it "should only rollback changes in the main transaction not the nested one" do
         # change configuration to not require new transaction
-        AASM::StateMachine[Transactor].config.requires_new_transaction = false
+        AASM::StateMachine[Transactor][:default].config.requires_new_transaction = false
 
         expect(transactor).to be_sleeping
         expect(worker.status).to eq('sleeping')
