@@ -431,9 +431,14 @@ describe 'transitions with persistence' do
       it "should fire :after_commit if transaction was successful" do
         validator = Validator.create(:name => 'name')
         expect(validator).to be_sleeping
+
         validator.run!
         expect(validator).to be_running
-        expect(validator.name).not_to eq("name")
+        expect(validator.name).to eq("name changed")
+
+        validator.sleep!
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("sleeper")
       end
 
       it "should not fire :after_commit if transaction failed" do
