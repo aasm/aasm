@@ -30,7 +30,7 @@ module AASM
     end
 
     def human_state
-      AASM::Localizer.new.human_state_name(@instance.class, current_state)
+      AASM::Localizer.new.human_state_name(@instance.class, state_object_for_name(current_state))
     end
 
     def states(options={})

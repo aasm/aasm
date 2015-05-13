@@ -28,20 +28,20 @@ module AASM
     def aasm(*args, &block)
       if args[0].is_a?(Symbol) || args[0].is_a?(String)
         # using custom name
-        name = args[0].to_sym
+        state_machine_name = args[0].to_sym
         options = args[1] || {}
       else
-        # using the default name
-        name = :default
+        # using the default state_machine_name
+        state_machine_name = :default
         options = args[0] || {}
       end
 
-      AASM::StateMachine[self][name] ||= AASM::StateMachine.new
+      AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
       @aasm ||= {}
-      @aasm[name] ||= AASM::Base.new(self, name, AASM::StateMachine[self][name], options)
-      @aasm[name].instance_eval(&block) if block # new DSL
-      @aasm[name]
+      @aasm[state_machine_name] ||= AASM::Base.new(self, state_machine_name, AASM::StateMachine[self][state_machine_name], options)
+      @aasm[state_machine_name].instance_eval(&block) if block # new DSL
+      @aasm[state_machine_name]
     end
   end # ClassMethods
 
@@ -76,7 +76,7 @@ private
       event.fire_callbacks(
         :before,
         self,
-        *process_args(event, aasm.current_state, *args)
+        *process_args(event, aasm(state_machine_name).current_state, *args)
       )
 
       if may_fire_to = event.may_fire?(self, *args)
@@ -146,7 +146,7 @@ private
     end
 
     if AASM::StateMachine[self.class][state_machine_name].config.whiny_transitions
-      raise AASM::InvalidTransition.new(self, event_name)
+      raise AASM::InvalidTransition.new(self, event_name, state_machine_name)
     else
       false
     end

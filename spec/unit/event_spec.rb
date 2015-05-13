@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe 'adding an event' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
   let(:event) do
-    AASM::Core::Event.new(:close_order, {:success => :success_callback}) do
+    AASM::Core::Event.new(:close_order, state_machine, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
       transitions :to => :closed, :from => [:open, :received]
@@ -35,8 +36,9 @@ describe 'adding an event' do
 end
 
 describe 'transition inspection' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
   let(:event) do
-    AASM::Core::Event.new(:run) do
+    AASM::Core::Event.new(:run, state_machine) do
       transitions :to => :running, :from => :sleeping
     end
   end
@@ -59,8 +61,9 @@ describe 'transition inspection' do
 end
 
 describe 'transition inspection without from' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
   let(:event) do
-    AASM::Core::Event.new(:run) do
+    AASM::Core::Event.new(:run, state_machine) do
       transitions :to => :running
     end
   end
@@ -76,15 +79,17 @@ describe 'transition inspection without from' do
 end
 
 describe 'firing an event' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
+
   it 'should return nil if the transitions are empty' do
     obj = double('object', :aasm => double('aasm', :current_state => 'open'))
 
-    event = AASM::Core::Event.new(:event)
+    event = AASM::Core::Event.new(:event, state_machine)
     expect(event.fire(obj)).to be_nil
   end
 
   it 'should return the state of the first matching transition it finds' do
-    event = AASM::Core::Event.new(:event) do
+    event = AASM::Core::Event.new(:event, state_machine) do
       transitions :to => :closed, :from => [:open, :received]
     end
 
@@ -94,7 +99,7 @@ describe 'firing an event' do
   end
 
   it 'should call the guard with the params passed in' do
-    event = AASM::Core::Event.new(:event) do
+    event = AASM::Core::Event.new(:event, state_machine) do
       transitions :to => :closed, :from => [:open, :received], :guard => :guard_fn
     end
 

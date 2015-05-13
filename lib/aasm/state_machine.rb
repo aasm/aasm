@@ -12,11 +12,12 @@ module AASM
 
     attr_accessor :states, :events, :initial_state, :config, :name
 
-    def initialize
+    def initialize(name)
       @initial_state = nil
       @states = []
       @events = {}
       @config = AASM::Configuration.new
+      @name = name
     end
 
     # called internally by Ruby 1.9 after clone()
@@ -26,13 +27,17 @@ module AASM
       @events = @events.dup
     end
 
-    def add_state(name, klass, options)
-      set_initial_state(name, options)
+    def add_state(state_name, klass, options)
+      set_initial_state(state_name, options)
 
       # allow reloading, extending or redefining a state
-      @states.delete(name) if @states.include?(name)
+      @states.delete(state_name) if @states.include?(state_name)
 
-      @states << AASM::Core::State.new(name, klass, options)
+      @states << AASM::Core::State.new(state_name, klass, self, options)
+    end
+
+    def add_event(name, options, &block)
+      @events[name] = AASM::Core::Event.new(name, self, options, &block)
     end
 
     private

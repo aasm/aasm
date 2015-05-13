@@ -1,10 +1,11 @@
 module AASM::Core
   class State
-    attr_reader :name, :options
+    attr_reader :name, :state_machine, :options
 
-    def initialize(name, klass, options={})
+    def initialize(name, klass, state_machine, options={})
       @name = name
       @klass = klass
+      @state_machine = state_machine
       update(options)
     end
 

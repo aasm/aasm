@@ -1,13 +1,15 @@
 require 'spec_helper'
 
 describe AASM::Core::State do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
+
   before(:each) do
     @name    = :astate
     @options = { :crazy_custom_key => 'key' }
   end
 
   def new_state(options={})
-    AASM::Core::State.new(@name, Conversation, @options.merge(options))
+    AASM::Core::State.new(@name, Conversation, state_machine, @options.merge(options))
   end
 
   it 'should set the name' do

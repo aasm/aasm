@@ -75,7 +75,7 @@ module AASM
 
     # define an event
     def event(name, options={}, &block)
-      @state_machine.events[name] = AASM::Core::Event.new(name, options, &block)
+      @state_machine.add_event(name, options, &block)
 
       if @klass.instance_methods.include?("may_#{name}?")
         warn "The event name #{name} is already used!"
