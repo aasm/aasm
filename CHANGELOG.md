@@ -2,7 +2,7 @@
 
 ## 4.2.0 (not yet released)
 
-## 4.1.1 (not yet released)
+## 4.1.1
 
  * support block notation for `:after_commit` event callbacks (see [issue #224](https://github.com/aasm/aasm/issues/224) for details)
  * event arguments are now passed to state callbacks as well (not only to event callbacks) (see [issue #219](https://github.com/aasm/aasm/issues/219), thanks to [@tobithiel](https://github.com/tobithiel))
