@@ -1,5 +1,10 @@
 require 'spec_helper'
-require 'models/active_record/api.rb'
+require 'models/active_record/default_state.rb'
+require 'models/active_record/provided_state.rb'
+require 'models/active_record/persisted_state.rb'
+require 'models/active_record/provided_and_persisted_state.rb'
+
+load_schema
 
 describe "reading the current state" do
   it "uses the AASM default" do
