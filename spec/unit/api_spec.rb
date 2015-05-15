@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'models/active_record/default_state.rb'
-require 'models/active_record/provided_state.rb'
+require 'models/default_state.rb'
+require 'models/provided_state.rb'
 require 'models/active_record/persisted_state.rb'
 require 'models/active_record/provided_and_persisted_state.rb'
 
