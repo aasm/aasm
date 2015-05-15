@@ -1,4 +1,4 @@
-class Bar
+class SuperClass
   include AASM
 
   aasm do
@@ -9,7 +9,10 @@ class Bar
       transitions :to => :ended, :from => [:read]
     end
   end
-end
 
-class Baz < Bar
+  def update_state
+    if may_foo?
+      foo!
+    end
+  end
 end
