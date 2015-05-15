@@ -62,11 +62,11 @@ describe 'inspection for common cases' do
 end
 
 describe "special cases" do
-  it "should support valid a state name" do
-    expect(Argument.aasm.states).to include(:invalid)
-    expect(Argument.aasm.states).to include(:valid)
+  it "should support valid as state name" do
+    expect(ValidStateName.aasm.states).to include(:invalid)
+    expect(ValidStateName.aasm.states).to include(:valid)
 
-    argument = Argument.new
+    argument = ValidStateName.new
     expect(argument.invalid?).to be_truthy
     expect(argument.aasm.current_state).to eq(:invalid)
 
@@ -85,13 +85,13 @@ end
 
 describe 'aasm.from_states_for_state' do
   it "should return all from states for a state" do
-    expect(AuthMachine.aasm).to respond_to(:from_states_for_state)
-    froms = AuthMachine.aasm.from_states_for_state(:active)
+    expect(ComplexExample.aasm).to respond_to(:from_states_for_state)
+    froms = ComplexExample.aasm.from_states_for_state(:active)
     [:pending, :passive, :suspended].each {|from| expect(froms).to include(from)}
   end
 
   it "should return from states for a state for a particular transition only" do
-    froms = AuthMachine.aasm.from_states_for_state(:active, :transition => :unsuspend)
+    froms = ComplexExample.aasm.from_states_for_state(:active, :transition => :unsuspend)
     [:suspended].each {|from| expect(froms).to include(from)}
   end
 end

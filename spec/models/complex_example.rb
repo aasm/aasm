@@ -1,4 +1,4 @@
-class AuthMachine
+class ComplexExample
   include AASM
 
   attr_accessor :activation_code, :activated_at, :deleted_at

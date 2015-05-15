@@ -1,4 +1,4 @@
-class Argument
+class ValidStateName
   include AASM
   aasm do
     state :invalid, :initial => true

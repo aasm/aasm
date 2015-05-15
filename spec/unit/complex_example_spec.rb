@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'on initialization' do
-  let(:auth) {AuthMachine.new}
+  let(:auth) {ComplexExample.new}
 
   it 'should be in the pending state' do
     expect(auth.aasm.current_state).to eq(:pending)
@@ -14,7 +14,7 @@ describe 'on initialization' do
 end
 
 describe 'when being unsuspended' do
-  let(:auth) {AuthMachine.new}
+  let(:auth) {ComplexExample.new}
 
   it 'should be able to be unsuspended' do
     auth.activate!
