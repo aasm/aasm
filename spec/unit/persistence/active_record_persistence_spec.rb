@@ -1,6 +1,6 @@
 require 'active_record'
 require 'spec_helper'
-
+Dir[File.dirname(__FILE__) + "/../../models/active_record/*.rb"].sort.each { |f| require File.expand_path(f) }
 load_schema
 
 # if you want to see the statements while running the spec enable the following line
