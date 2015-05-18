@@ -1,4 +1,4 @@
-class Payment
+class SimpleExample
   include AASM
   aasm do
     state :initialised, :initial => true

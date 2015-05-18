@@ -1,4 +1,4 @@
-class SimpleStateMachine
+class StateMachineWithFailedEvent
   include AASM
 
   aasm do
