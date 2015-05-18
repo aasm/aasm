@@ -77,7 +77,7 @@ module AASM
     def event(name, options={}, &block)
       @state_machine.add_event(name, options, &block)
 
-      if @klass.instance_methods.include?("may_#{name}?")
+      if @klass.instance_methods.include?("may_#{name}?".to_sym)
         warn "The event name #{name} is already used!"
       end
 
