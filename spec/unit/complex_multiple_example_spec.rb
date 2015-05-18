@@ -8,8 +8,8 @@ describe 'on initialization' do
   end
 
   it 'should have an activation code' do
-    expect(auth.has_left_activation_code?).to be_truthy
-    expect(auth.left_activation_code).not_to be_nil
+    expect(auth.has_activation_code?).to be_truthy
+    expect(auth.activation_code).not_to be_nil
   end
 end
 
@@ -66,7 +66,7 @@ describe 'when being unsuspended' do
   end
 
   it 'should be passive if not previously activated and there is no activation code' do
-    auth.left_activation_code = nil
+    auth.activation_code = nil
     auth.left_suspend!
     auth.left_unsuspend!
 
