@@ -52,7 +52,7 @@ describe 'callbacks for the new DSL' do
     }.to raise_error(AASM::InvalidTransition)
   end
 
-  it "it handles private callback methods as well" do
+  it "handles private callback methods as well" do
     show_debug_log = false
 
     callback = Callbacks::PrivateMethod.new(:log => show_debug_log)
