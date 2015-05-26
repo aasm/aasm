@@ -1,7 +1,5 @@
-# Planned changes for AASM 4.1
+# Planned changes for AASM 4.2
 
- * remove support for `:on_transition` callback
-
-# Planned changes for AASM 4.0
-
- * nothing left
+ * add support for multiple state machines per class
+   * events are chained
+   * :default state machine not provided (if state machine name is used)
