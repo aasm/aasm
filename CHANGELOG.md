@@ -2,6 +2,8 @@
 
 ## 4.2.0 (not yet released)
 
+ * support turning off and on the configuration option for `no_direct_assignment` (see [issue #223](https://github.com/aasm/aasm/issues/223) for details)
+
 ## 4.1.1
 
  * support block notation for `:after_commit` event callbacks (see [issue #224](https://github.com/aasm/aasm/issues/224) for details)
