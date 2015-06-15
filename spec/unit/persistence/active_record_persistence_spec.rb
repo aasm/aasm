@@ -454,7 +454,7 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name changed")
 
-        validator.sleep!
+        validator.sleep!("sleeper")
         expect(validator).to be_sleeping
         expect(validator.name).to eq("sleeper")
       end
