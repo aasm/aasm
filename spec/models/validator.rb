@@ -12,8 +12,8 @@ class Validator < ActiveRecord::Base
       transitions :to => :running, :from => :sleeping
     end
     event :sleep do
-      after_commit do
-        change_name_on_sleep
+      after_commit do |name|
+        change_name_on_sleep name
       end
       transitions :to => :sleeping, :from => :running
     end
@@ -29,8 +29,8 @@ class Validator < ActiveRecord::Base
     save!
   end
 
-  def change_name_on_sleep
-    self.name = "sleeper"
+  def change_name_on_sleep name
+    self.name = name
     save!
   end
 
