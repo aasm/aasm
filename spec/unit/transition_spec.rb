@@ -336,19 +336,4 @@ describe AASM::Core::Transition, '- when invoking the transition :success method
     expect(return_value).to eq('success')
   end
 
-  it 'should allow accessing the from_state and the to_state' do
-    opts = {:from => 'foo', :to => 'bar', :success => :test}
-    transition = AASM::Core::Transition.new(opts)
-    args = {:arg1 => '1', :arg2 => '2'}
-    obj = double('object', :aasm => AASM::InstanceBase.new('object'))
-
-    def obj.test(args)
-      "from: #{aasm.from_state} to: #{aasm.to_state}"
-    end
-
-    return_value = transition.invoke_success_callbacks(obj, args)
-
-    expect(return_value).to eq('from: foo to: bar')
-  end
-
 end

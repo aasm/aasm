@@ -9,8 +9,8 @@ module Callbacks
       state :out_to_lunch
 
       event :close, :before => :before_method, :after => :after_method do
-        transitions :to => :closed, :from => [:open], :after => :transition_method
-        transitions :to => :out_to_lunch, :from => [:open], :after => :transition_method2
+        transitions :to => :closed, :from => [:open], :after => :transition_method, :success => :success_method
+        transitions :to => :out_to_lunch, :from => [:open], :after => :transition_method2, :success => :success_method2
       end
     end
 
@@ -21,6 +21,10 @@ module Callbacks
     def transition_method(arg); end
 
     def transition_method2(arg); end
+
+    def success_method(arg); end
+
+    def success_method2(arg); end
 
   end
 end

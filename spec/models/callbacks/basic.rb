@@ -35,7 +35,7 @@ module Callbacks
         :after_exit   => :after_exit_closed
 
       event :close, :before => :before_event, :after => :after_event, :guard => :event_guard do
-        transitions :to => :closed, :from => [:open], :guard => :transition_guard, :after => :after_transition
+        transitions :to => :closed, :from => [:open], :guard => :transition_guard, :after => :after_transition, :success => :success_transition
       end
 
       event :open, :before => :before_event, :after => :after_event do
@@ -68,6 +68,7 @@ module Callbacks
     def transition_guard;     log('transition_guard');    !@fail_transition_guard; end
 
     def after_transition;     log('after_transition');    end
+    def success_transition;   log('transition_success');  end
 
     def before_event;         log('before_event');        end
     def after_event;          log('after_event');         end
