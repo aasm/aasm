@@ -6,7 +6,7 @@ module AASM::Core
     alias_method :options, :opts
 
     def initialize(opts, &block)
-      add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
+      add_options_from_dsl(opts, [:on_transition, :guard, :after, :success], &block) if block
 
       @from = opts[:from]
       @to = opts[:to]
@@ -19,6 +19,9 @@ module AASM::Core
       end
       @after = Array(opts[:after])
       @after = @after[0] if @after.size == 1
+
+      @success = Array(opts[:success])
+      @success = @success[0] if @success.size == 1
 
       @opts = opts
     end
