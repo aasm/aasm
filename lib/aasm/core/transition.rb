@@ -43,6 +43,10 @@ module AASM::Core
       @from == value
     end
 
+    def invoke_success_callbacks(obj, *args)
+      _fire_callbacks(@success, obj, args)
+    end
+
     private
 
     def invoke_callbacks_compatible_with_guard(code, record, args, options={})
@@ -70,6 +74,20 @@ module AASM::Core
         end
       else
         true
+      end
+    end
+
+    def _fire_callbacks(code, record, args)
+      case code
+        when Symbol, String
+          arity = record.send(:method, code.to_sym).arity
+          record.send(code, *(arity < 0 ? args : args[0...arity]))
+        when Proc
+          code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        when Array
+          @success.map {|a| _fire_callbacks(a, obj, args)}
+        else
+          true
       end
     end
 
