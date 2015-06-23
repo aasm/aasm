@@ -117,7 +117,7 @@ describe "instance methods" do
         end
       end
     end
-  end
+  end # aasm_enum
 
   context "when AASM is configured to use enum" do
     let(:state_sym) { :running }
@@ -163,6 +163,13 @@ describe "instance methods" do
           expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
           expect(gate).to_not have_received :write_attribute
         end
+      end
+    end
+
+    describe "enum real life error" do
+      it "should reproduce the problem" do
+        card = Card.new
+        require 'pry'; binding.pry
       end
     end
 

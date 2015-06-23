@@ -5,6 +5,10 @@ ActiveRecord::Migration.suppress_messages do
     end
   end
 
+  ActiveRecord::Migration.create_table "cards", :force => true do |t|
+    t.string "status"
+  end
+
   ActiveRecord::Migration.create_table "simple_new_dsls", :force => true do |t|
     t.string "status"
   end
