@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## 4.2.0 (not yet released)
+## 4.3.0 (not yet released)
+
+## 4.2.0
+
+ * support turning off and on the configuration option for `no_direct_assignment` (see [issue #223](https://github.com/aasm/aasm/issues/223) for details)
+ * event arguments are now passed to `:after_commit` callbacks as well (see [issue #238](https://github.com/aasm/aasm/pull/238), thanks to [@kuinak](https://github.com/kuinak))
 
 ## 4.1.1
 

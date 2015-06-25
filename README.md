@@ -679,6 +679,15 @@ Feel free to
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
 
 
+## Contributing ##
+
+1. Read the [Contributor Code of Conduct](https://github.com/aasm/aasm/blob/master/CODE_OF_CONDUCT.md)
+2. Fork it
+3. Create your feature branch (git checkout -b my-new-feature)
+4. Commit your changes (git commit -am 'Added some feature')
+5. Push to the branch (git push origin my-new-feature)
+6. Create new Pull Request
+
 ## Warranty ##
 
 This software is provided "as is" and without any express or

@@ -321,6 +321,24 @@ describe "direct assignment" do
     expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
     expect(obj.aasm_state.to_sym).to eql :pending
   end
+
+  it 'can be turned off and on again' do
+    obj = NoDirectAssignment.create
+    expect(obj.aasm_state.to_sym).to eql :pending
+
+    expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
+    expect(obj.aasm_state.to_sym).to eql :pending
+
+    # allow it temporarily
+    NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = false
+    obj.aasm_state = :pending
+    expect(obj.aasm_state.to_sym).to eql :pending
+
+    # and forbid it again
+    NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = true
+    expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
+    expect(obj.aasm_state.to_sym).to eql :pending
+  end
 end # direct assignment
 
 describe 'initial states' do
@@ -436,7 +454,7 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name changed")
 
-        validator.sleep!
+        validator.sleep!("sleeper")
         expect(validator).to be_sleeping
         expect(validator.name).to eq("sleeper")
       end

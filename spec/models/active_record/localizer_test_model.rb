@@ -1,8 +1,6 @@
 class LocalizerTestModel < ActiveRecord::Base
   include AASM
 
-  attr_accessor :aasm_state
-
   aasm do
     state :opened, :initial => true
     state :closed

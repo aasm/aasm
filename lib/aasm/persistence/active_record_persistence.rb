@@ -178,7 +178,7 @@ module AASM
 
           if success && options[:persist]
             event = self.class.aasm(state_machine_name).state_machine.events[name]
-            event.fire_callbacks(:after_commit, self)
+            event.fire_callbacks(:after_commit, self, *args)
           end
 
           success

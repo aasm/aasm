@@ -29,11 +29,19 @@ module AASM
 
       configure :enum, nil
 
-      if @state_machine.config.no_direct_assignment
-        @klass.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
-          raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
+      # make sure to raise an error if no_direct_assignment is enabled
+      # and attribute is directly assigned though
+      @klass.class_eval %Q(
+        def #{@state_machine.config.column}=(state_name)
+          if self.class.aasm.state_machine.config.no_direct_assignment
+            raise AASM::NoDirectAssignmentError.new(
+              'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
+            )
+          else
+            super
+          end
         end
-      end
+      )
     end
 
     # This method is both a getter and a setter
