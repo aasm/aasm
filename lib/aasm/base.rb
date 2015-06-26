@@ -67,7 +67,7 @@ module AASM
       @state_machine.add_state(name, @klass, options)
 
       if @klass.instance_methods.include?("#{name}?")
-        warn "The state name #{name} is already used!"
+        warn "#{@klass.name}: The state name #{name} is already used!"
       end
 
       @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
@@ -86,7 +86,7 @@ module AASM
       @state_machine.add_event(name, options, &block)
 
       if @klass.instance_methods.include?("may_#{name}?".to_sym)
-        warn "The event name #{name} is already used!"
+        warn "#{@klass.name}: The event name #{name} is already used!"
       end
 
       # an addition over standard aasm so that, before firing an event, you can ask

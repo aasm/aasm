@@ -185,7 +185,7 @@ end # callbacks for the new DSL
 describe 'event callbacks' do
   describe "with an error callback defined" do
     before do
-      class FooMultiple
+      class FooCallbackMultiple
         # this hack is needed to allow testing of parameters, since RSpec
         # destroys a method's arity when mocked
         attr_accessor :data
@@ -197,7 +197,7 @@ describe 'event callbacks' do
         end
       end
 
-      @foo = FooMultiple.new
+      @foo = FooCallbackMultiple.new
     end
 
     context "error_callback defined" do

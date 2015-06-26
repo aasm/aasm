@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'on initialization' do
-  let(:auth) {ComplexMultipleExample.new}
+  let(:auth) {ComplexExampleMultiple.new}
 
   it 'should be in the pending state' do
     expect(auth.aasm(:left).current_state).to eq(:pending)
@@ -15,7 +15,7 @@ describe 'on initialization' do
 end
 
 describe 'when being unsuspended' do
-  let(:auth) {ComplexMultipleExample.new}
+  let(:auth) {ComplexExampleMultiple.new}
 
   it 'should be able to unsuspend' do
     auth.left_activate!

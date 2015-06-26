@@ -3,7 +3,23 @@
 ## version 4.3
 
  * add support for multiple state machines per class
+   * check all tests
+   * what happen's if someone accesses `aasm`, but has defined a
+     state machine for `aasm(:my_name)`?
+   * persistence
+     * _ActiveRecord_
+     * _Mongoid_
+     * _MongoMapper_
+     * _Sequel_
    * documentation
-   * events are chained
-   * :default state machine won't be provided, if state machine name is used
-     * if used raise an error
+   * silence warnings?
+
+# Changes so far
+
+## version 4.3
+
+ * add support for multiple state machines per class
+   * class- and instance-level `aasm` methods accept a state machine selector
+     (aka the state machine _name_)
+     * if no selector/name is provided, `:default` will be used
+   * duplicate definitions of states and events will issue warnings
