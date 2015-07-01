@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'callbacks for the new DSL' do
+describe 'when redefining states' do
   let(:definer) { DoubleDefiner.new }
 
   it "allows extending states" do
