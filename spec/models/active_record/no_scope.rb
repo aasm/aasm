@@ -8,3 +8,14 @@ class NoScope < ActiveRecord::Base
     end
   end
 end
+
+class MultipleNoScope < ActiveRecord::Base
+  include AASM
+  aasm :left, :create_scopes => false do
+    state :pending, :initial => true
+    state :running
+    event :run do
+      transitions :from => :pending, :to => :running
+    end
+  end
+end

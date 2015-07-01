@@ -12,3 +12,18 @@ class Thief < ActiveRecord::Base
   end
   attr_accessor :skilled, :aasm_state
 end
+
+class MultipleThief < ActiveRecord::Base
+  if ActiveRecord::VERSION::MAJOR >= 3
+    self.table_name = 'multiple_thieves'
+  else
+    set_table_name "multiple_thieves"
+  end
+  include AASM
+  aasm :left do
+    state :rich
+    state :jailed
+    initial_state Proc.new {|thief| thief.skilled ? :rich : :jailed }
+  end
+  attr_accessor :skilled, :aasm_state
+end

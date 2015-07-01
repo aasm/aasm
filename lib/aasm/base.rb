@@ -33,7 +33,7 @@ module AASM
       # and attribute is directly assigned though
       @klass.class_eval %Q(
         def #{@state_machine.config.column}=(state_name)
-          if self.class.aasm.state_machine.config.no_direct_assignment
+          if self.class.aasm(:#{@name}).state_machine.config.no_direct_assignment
             raise AASM::NoDirectAssignmentError.new(
               'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
             )
