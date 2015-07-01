@@ -53,9 +53,6 @@ describe 'transitions' do
 
 end
 
-describe 'blocks' do
-end
-
 describe AASM::Core::Transition do
   let(:state_machine) { AASM::StateMachine.new(:name) }
   let(:event) { AASM::Core::Event.new(:event, state_machine) }
