@@ -32,32 +32,9 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
-        base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
 
         base.after_initialize :aasm_ensure_initial_state
-      end
-
-      module ClassMethods
-
-        def find_in_state(number, state, *args)
-          with_state_scope state do
-            find(number, *args)
-          end
-        end
-
-        def count_in_state(state, *args)
-          with_state_scope state do
-            count(*args)
-          end
-        end
-
-        def with_state_scope(state)
-          with_scope where(aasm.attribute_name.to_sym => state.to_s) do
-            yield if block_given?
-          end
-        end
-
       end
 
       module InstanceMethods
