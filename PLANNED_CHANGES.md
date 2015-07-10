@@ -23,3 +23,4 @@
    * check all tests
      * _ActiveRecord_
      * _Mongoid_
+ * drop support for find_in_state, count_in_state, calculate_in_state, with_state_scope

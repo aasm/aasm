@@ -64,52 +64,6 @@ describe 'mongo_mapper' do
 
     end
 
-    describe "#find_in_state" do
-
-      let!(:model)    { SimpleNewDslMongoMapper.create!(:status => :unknown_scope) }
-      let!(:model_id) { model._id }
-
-      it "should respond to method" do
-        expect(SimpleNewDslMongoMapper).to respond_to(:find_in_state)
-      end
-
-      it "should find the model when given the correct scope and model id" do
-        expect(SimpleNewDslMongoMapper.find_in_state(model_id, 'unknown_scope').class).to eq(SimpleNewDslMongoMapper)
-        expect(SimpleNewDslMongoMapper.find_in_state(model_id, 'unknown_scope')).to eq(model)
-      end
-
-      it "should raise DocumentNotFound error when given incorrect scope" do
-        expect {SimpleNewDslMongoMapper.find_in_state(model_id, 'next')}.to raise_error MongoMapper::DocumentNotFound
-      end
-
-      it "should raise DocumentNotFound error when given incorrect model id" do
-        expect {SimpleNewDslMongoMapper.find_in_state('bad_id', 'unknown_scope')}.to raise_error MongoMapper::DocumentNotFound
-      end
-
-    end
-
-    describe "#count_in_state" do
-
-      before do
-        3.times { SimpleNewDslMongoMapper.create!(:status => :unknown_scope) }
-      end
-
-      it "should respond to method" do
-        expect(SimpleNewDslMongoMapper).to respond_to(:count_in_state)
-      end
-
-      it "should return n for a scope with n records persisted" do
-        expect(SimpleNewDslMongoMapper.count_in_state('unknown_scope').class).to eq(Fixnum)
-        expect(SimpleNewDslMongoMapper.count_in_state('unknown_scope')).to eq(3)
-      end
-
-      it "should return zero for a scope without records persisted" do
-        expect(SimpleNewDslMongoMapper.count_in_state('next').class).to eq(Fixnum)
-        expect(SimpleNewDslMongoMapper.count_in_state('next')).to eq(0)
-      end
-
-    end
-
     describe "instance methods" do
 
       let(:simple) {SimpleNewDslMongoMapper.new}

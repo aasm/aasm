@@ -32,33 +32,12 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
-        base.extend AASM::Persistence::MongoMapperPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoMapperPersistence::InstanceMethods)
 
         base.before_create :aasm_ensure_initial_state
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
-      end
-
-      module ClassMethods
-
-        def find_in_state(number, state, *args)
-          with_state_scope(state).find!(number, *args)
-        end
-
-        def count_in_state(state, *args)
-          with_state_scope(state).count(*args)
-        end
-
-        def calculate_in_state(state, *args)
-          with_state_scope(state).calculate(*args)
-        end
-
-        protected
-        def with_state_scope(state)
-          where(aasm.attribute_name.to_sym => state.to_s)
-        end
       end
 
       module InstanceMethods
