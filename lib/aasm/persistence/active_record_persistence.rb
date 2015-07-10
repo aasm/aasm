@@ -30,7 +30,6 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
-        base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
 
         base.after_initialize do
@@ -39,34 +38,6 @@ module AASM
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
-      end
-
-      module ClassMethods
-
-        def find_in_state(number, state, *args)
-          with_state_scope state do
-            find(number, *args)
-          end
-        end
-
-        def count_in_state(state, *args)
-          with_state_scope state do
-            count(*args)
-          end
-        end
-
-        def calculate_in_state(state, *args)
-          with_state_scope state do
-            calculate(*args)
-          end
-        end
-
-        protected
-        def with_state_scope(state)
-          with_scope :find => {:conditions => ["#{table_name}.#{aasm_column} = ?", state.to_s]} do
-            yield if block_given?
-          end
-        end
       end
 
       module InstanceMethods
