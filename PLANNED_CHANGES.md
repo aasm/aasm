@@ -3,8 +3,6 @@
 ## version 4.3
 
  * add support for multiple state machines per class
-   * check all tests
-     * _ActiveRecord_ when :right state machine is defined as well
    * what happen's if someone accesses `aasm`, but has defined a
      state machine for `aasm(:my_name)`?
    * persistence

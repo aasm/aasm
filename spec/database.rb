@@ -12,6 +12,11 @@ ActiveRecord::Migration.suppress_messages do
     t.string "status"
   end
 
+  ActiveRecord::Migration.create_table "complex_active_record_examples", :force => true do |t|
+    t.string "left"
+    t.string "right"
+  end
+
   ActiveRecord::Migration.create_table "validators", :force => true do |t|
     t.string "name"
     t.string "status"

@@ -489,7 +489,6 @@ describe 'transitions with persistence' do
 end
 
 describe "invalid states with persistence" do
-
   it "should not store states" do
     validator = MultipleValidator.create(:name => 'name')
     validator.status = 'invalid_state'
@@ -508,5 +507,54 @@ describe "invalid states with persistence" do
     persistor.reload
     expect(persistor.status).to eq('invalid_state')
   end
+end
 
+describe "complex example" do
+  it "works" do
+    record = ComplexActiveRecordExample.new
+    expect_aasm_states record, :one, :alpha
+
+    record.save!
+    expect_aasm_states record, :one, :alpha
+    record.reload
+    expect_aasm_states record, :one, :alpha
+
+    record.increment!
+    expect_aasm_states record, :two, :alpha
+    record.reload
+    expect_aasm_states record, :two, :alpha
+
+    record.level_up!
+    expect_aasm_states record, :two, :beta
+    record.reload
+    expect_aasm_states record, :two, :beta
+
+    record.increment!
+    expect { record.increment! }.to raise_error(AASM::InvalidTransition)
+    expect_aasm_states record, :three, :beta
+    record.reload
+    expect_aasm_states record, :three, :beta
+
+    record.level_up!
+    expect_aasm_states record, :three, :gamma
+    record.reload
+    expect_aasm_states record, :three, :gamma
+
+    record.level_down # without saving
+    expect_aasm_states record, :three, :beta
+    record.reload
+    expect_aasm_states record, :three, :gamma
+
+    record.level_down # without saving
+    expect_aasm_states record, :three, :beta
+    record.reset!
+    expect_aasm_states record, :one, :beta
+  end
+
+  def expect_aasm_states(record, left_state, right_state)
+    expect(record.aasm(:left).current_state).to eql left_state.to_sym
+    expect(record.left).to eql left_state.to_s
+    expect(record.aasm(:right).current_state).to eql right_state.to_sym
+    expect(record.right).to eql right_state.to_s
+  end
 end

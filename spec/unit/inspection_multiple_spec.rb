@@ -13,7 +13,6 @@ describe 'inspection for common cases' do
     expect(FooMultiple.aasm(:left).initial_state).to eq(:open)
 
     expect(FooMultiple.aasm(:left)).to respond_to(:events)
-    puts FooMultiple.aasm(:left).events.map(&:name).inspect
     expect(FooMultiple.aasm(:left).events.size).to eql 2
     expect(FooMultiple.aasm(:left).events).to include(:close)
     expect(FooMultiple.aasm(:left).events).to include(:null)
