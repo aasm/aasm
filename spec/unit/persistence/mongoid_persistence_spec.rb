@@ -72,6 +72,8 @@ describe 'mongoid' do
     end
 
   rescue LoadError
+    puts "--------------------------------------------------------------------------"
     puts "Not running Mongoid specs because mongoid gem is not installed!!!"
+    puts "--------------------------------------------------------------------------"
   end
 end
