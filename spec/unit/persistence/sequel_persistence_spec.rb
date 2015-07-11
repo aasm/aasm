@@ -4,30 +4,12 @@ describe 'sequel' do
     require 'logger'
     require 'spec_helper'
 
+    Dir[File.dirname(__FILE__) + "/../../models/sequel/*.rb"].sort.each do |f|
+      require File.expand_path(f)
+    end
+
     before(:all) do
-      db = Sequel.connect(SEQUEL_DB)
-
-      # if you want to see the statements while running the spec enable the following line
-      # db.loggers << Logger.new($stderr)
-      db.create_table(:models) do
-        primary_key :id
-        String :status
-      end
-
-      @model = Class.new(Sequel::Model(db)) do
-        set_dataset(:models)
-        attr_accessor :default
-        include AASM
-        aasm :column => :status
-        aasm do
-          state :alpha, :initial => true
-          state :beta
-          state :gamma
-          event :release do
-            transitions :from => [:alpha, :beta, :gamma], :to => :beta
-          end
-        end
-      end
+      @model = SequelSimple
     end
 
     describe "instance methods" do
