@@ -4,12 +4,12 @@
 
  * add support for multiple state machines per class
    * persistence
-     * _MongoMapper_
      * _Sequel_
    * what happen's if someone accesses `aasm`, but has defined a
      state machine for `aasm(:my_name)`?
    * documentation
    * silence warnings?
+   * drop support for aasm_column ?
 
 # Changes so far
 
@@ -23,4 +23,5 @@
    * check all tests
      * _ActiveRecord_
      * _Mongoid_
+     * _MongoMapper_
  * drop support for find_in_state, count_in_state, calculate_in_state, with_state_scope
