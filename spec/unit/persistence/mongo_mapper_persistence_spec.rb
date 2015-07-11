@@ -84,6 +84,8 @@ describe 'mongo_mapper' do
     end
 
   rescue LoadError
-    puts "Not running MongoMapper specs because mongo_mapper gem is not installed!!!"
+    puts "--------------------------------------------------------------------------"
+    puts "Not running MongoMapper multiple-specs because mongo_mapper gem is not installed!!!"
+    puts "--------------------------------------------------------------------------"
   end
 end

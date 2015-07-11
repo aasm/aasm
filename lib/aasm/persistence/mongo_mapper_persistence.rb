@@ -51,18 +51,18 @@ module AASM
         #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state(state)
-          old_value = read_attribute(self.class.aasm.attribute_name)
-          aasm_write_attribute state
+        def aasm_write_state(state, name=:default)
+          old_value = read_attribute(self.class.aasm(name).attribute_name)
+          write_attribute(self.class.aasm(name).attribute_name, state)
 
-          success = if aasm_skipping_validations
-            value = aasm_raw_attribute_value state
-            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm.attribute_name => value) == 1
+          success = if aasm_skipping_validations(name)
+            value = aasm_raw_attribute_value(state, name)
+            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
           else
             self.save
           end
           unless success
-            write_attribute(self.class.aasm.attribute_name, old_value)
+            write_attribute(self.class.aasm(name).attribute_name, old_value)
             return false
           end
 
@@ -82,7 +82,7 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state, name=:default)
-          aasm_write_attribute state
+          aasm_write_attribute(state, name)
         end
 
         private
