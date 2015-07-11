@@ -4,11 +4,11 @@ describe 'mongoid' do
     require 'logger'
     require 'spec_helper'
 
-    before(:all) do
-      Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each do |f|
-        require File.expand_path(f)
-      end
+    Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each do |f|
+      require File.expand_path(f)
+    end
 
+    before(:all) do
       # if you want to see the statements while running the spec enable the following line
       # Mongoid.logger = Logger.new(STDERR)
 

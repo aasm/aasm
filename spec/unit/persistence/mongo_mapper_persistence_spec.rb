@@ -4,9 +4,11 @@ describe 'mongo_mapper' do
     require 'logger'
     require 'spec_helper'
 
-    before(:all) do
-      Dir[File.dirname(__FILE__) + "/../../models/mongo_mapper/*.rb"].sort.each { |f| require File.expand_path(f) }
+    Dir[File.dirname(__FILE__) + "/../../models/mongo_mapper/*.rb"].sort.each do |f|
+      require File.expand_path(f)
+    end
 
+    before(:all) do
       config = {
         'test' => {
           'database' => "mongo_mapper_#{Process.pid}"
