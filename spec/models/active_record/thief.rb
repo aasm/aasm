@@ -20,7 +20,7 @@ class MultipleThief < ActiveRecord::Base
     set_table_name "multiple_thieves"
   end
   include AASM
-  aasm :left do
+  aasm :left, :column => :aasm_state do
     state :rich
     state :jailed
     initial_state Proc.new {|thief| thief.skilled ? :rich : :jailed }

@@ -11,7 +11,7 @@ end
 
 class MultipleNoDirectAssignment < ActiveRecord::Base
   include AASM
-  aasm :left, :no_direct_assignment => true do
+  aasm :left, :column => :aasm_state, :no_direct_assignment => true do
     state :pending, :initial => true
     state :running
     event :run do

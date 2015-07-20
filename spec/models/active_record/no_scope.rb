@@ -11,7 +11,7 @@ end
 
 class MultipleNoScope < ActiveRecord::Base
   include AASM
-  aasm :left, :create_scopes => false do
+  aasm :left, :column => :aasm_state, :create_scopes => false do
     state :pending, :initial => true
     state :running
     event :run do

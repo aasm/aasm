@@ -1,7 +1,7 @@
 class BasicActiveRecordTwoStateMachinesExample < ActiveRecord::Base
   include AASM
 
-  aasm :search, :column => :search do
+  aasm :search do
     state :initialised, :initial => true
     state :queried
     state :requested
@@ -14,7 +14,7 @@ class BasicActiveRecordTwoStateMachinesExample < ActiveRecord::Base
     end
   end
 
-  aasm :sync, :column => :sync do
+  aasm :sync do
     state :unsynced, :initial => true
     state :synced
 

@@ -28,7 +28,7 @@ class MultipleGate < ActiveRecord::Base
     'value'
   end
 
-  aasm :left do
+  aasm :left, :column => :aasm_state do
     state :opened
     state :closed
 

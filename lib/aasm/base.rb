@@ -8,7 +8,7 @@ module AASM
       @name = name
       # @state_machine = @klass.aasm(@name).state_machine
       @state_machine = state_machine
-      @state_machine.config.column ||= (options[:column] || :aasm_state).to_sym # aasm4
+      @state_machine.config.column ||= (options[:column] || default_column).to_sym
       # @state_machine.config.column = options[:column].to_sym if options[:column] # master
       @options = options
 
@@ -135,6 +135,10 @@ module AASM
     end
 
     private
+
+    def default_column
+      @name.to_sym == :default ? :aasm_state : @name.to_sym
+    end
 
     def configure(key, default_value)
       if @options.key?(key)
