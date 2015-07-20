@@ -55,4 +55,9 @@ ActiveRecord::Migration.suppress_messages do
     t.string "aasm_state"
     t.string "type"
   end
+
+  ActiveRecord::Migration.create_table "basic_active_record_two_state_machines_examples", :force => true do |t|
+    t.string "search"
+    t.string "sync"
+  end
 end

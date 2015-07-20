@@ -512,3 +512,12 @@ describe "invalid states with persistence" do
   end
 
 end
+
+describe 'basic example with two state machines' do
+  let(:example) { BasicActiveRecordTwoStateMachinesExample.new }
+
+  it 'should initialise properly' do
+    expect(example.aasm(:search).current_state).to eql :initialised
+    expect(example.aasm(:sync).current_state).to eql :unsynced
+  end
+end

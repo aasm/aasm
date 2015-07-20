@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'on initialization' do
   let(:auth) {ComplexExampleMultiple.new}
 
-  it 'should be in the pending state' do
+  it 'should be in the initial state' do
     expect(auth.aasm(:left).current_state).to eq(:pending)
     expect(auth.aasm(:right).current_state).to eq(:pending)
   end
