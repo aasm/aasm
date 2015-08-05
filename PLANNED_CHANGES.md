@@ -3,13 +3,17 @@
 ## version 4.3
 
  * add support for multiple state machines per class
-   * persistence
-     * _Sequel_
-   * what happen's if someone accesses `aasm`, but has defined a
-     state machine for `aasm(:my_name)`?
    * documentation
    * silence warnings?
    * drop support for aasm_column ?
+
+
+# Currently working on
+
+ * add support for multiple state machines per class
+   * what happen's if someone accesses `aasm`, but has defined a
+     state machine for `aasm(:my_name)`?
+
 
 # Changes so far
 
@@ -24,4 +28,5 @@
      * _ActiveRecord_
      * _Mongoid_
      * _MongoMapper_
+     * _Sequel_
  * drop support for find_in_state, count_in_state, calculate_in_state, with_state_scope
