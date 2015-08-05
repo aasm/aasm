@@ -47,6 +47,9 @@ module AASM
 
   # this is the entry point for all instance-level access to AASM
   def aasm(name=:default)
+    unless AASM::StateMachine[self.class][name.to_sym]
+      raise AASM::UnknownStateMachineError.new("There is no state machine with the name '#{name}' defined in #{self.class.name}!")
+    end
     @aasm ||= {}
     @aasm[name.to_sym] ||= AASM::InstanceBase.new(self, name.to_sym)
   end

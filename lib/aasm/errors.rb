@@ -1,5 +1,7 @@
 module AASM
 
+  class UnknownStateMachineError < RuntimeError; end
+
   class InvalidTransition < RuntimeError
     attr_reader :object, :event_name, :state_machine_name
 
