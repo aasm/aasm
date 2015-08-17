@@ -314,7 +314,7 @@ job.aasm.current_state # stage3
 
 ### ActiveRecord
 
-AASM comes with support for ActiveRecord and allows automatical persisting of the object's
+AASM comes with support for ActiveRecord and allows automagical persisting of the object's
 state in the database.
 
 ```ruby
