@@ -35,7 +35,7 @@ module AASM
       def aasm_read_state(name=:default)
         state = send(self.class.aasm(name).attribute_name)
         if new_record?
-          state.blank? ? aasm.determine_state_name(self.class.aasm(name).initial_state) : state.to_sym
+          state.blank? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : state.to_sym
         else
           state.blank? ? nil : state.to_sym
         end
