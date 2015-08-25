@@ -99,11 +99,11 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) } do
-        before do
-          log('Preparing to run')
-        end
+      before do
+        log('Preparing to run')
       end
+
+      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) }
     end
 
     event :sleep do
