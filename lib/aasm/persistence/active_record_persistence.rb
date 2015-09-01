@@ -52,17 +52,18 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state, name=:default)
-          old_value = read_attribute(self.class.aasm(name).attribute_name)
-          aasm_write_attribute state, name
+          state_attribute_name = self.class.aasm(name).attribute_name
+          old_state = read_attribute(state_attribute_name)
+          aasm_write_state_without_persistence state, name
 
           success = if aasm_skipping_validations(name)
             value = aasm_raw_attribute_value(state, name)
-            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
+            self.class.where(self.class.primary_key => self.id).update_all(state_attribute_name => value) == 1
           else
             self.save
           end
           unless success
-            write_attribute(self.class.aasm(name).attribute_name, old_value)
+            aasm_write_state_without_persistence(old_state, name)
             return false
           end
 
@@ -108,7 +109,13 @@ module AASM
         end
 
         def aasm_write_attribute(state, name=:default)
-          write_attribute(self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name))
+          aasm_config = AASM::StateMachine[self.class][name].config
+          no_direct_assignment_config = aasm_config.no_direct_assignment
+          aasm_config.no_direct_assignment = false
+
+          assign_attributes(self.class.aasm(name).attribute_name => aasm_raw_attribute_value(state, name))
+
+          aasm_config.no_direct_assignment = no_direct_assignment_config
         end
 
         def aasm_raw_attribute_value(state, name=:default)

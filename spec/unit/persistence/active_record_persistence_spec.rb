@@ -124,7 +124,7 @@ describe "instance methods" do
     before :each do
       allow(gate).to receive(:aasm_enum).and_return(enum_name)
       allow(gate).to receive(:aasm_write_attribute)
-      allow(gate).to receive(:write_attribute)
+      allow(gate).to receive(:assign_attributes)
 
       allow(Gate).to receive(enum_name).and_return(enum)
     end
@@ -157,7 +157,7 @@ describe "instance methods" do
           gate.aasm_write_state state_sym
 
           expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
-          expect(gate).to_not have_received :write_attribute
+          expect(gate).to_not have_received :assign_attributes
         end
       end
     end
@@ -167,7 +167,7 @@ describe "instance methods" do
         gate.aasm_write_state_without_persistence state_sym
 
         expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
-        expect(gate).to_not have_received :write_attribute
+        expect(gate).to_not have_received :assign_attributes
       end
     end
 
@@ -199,7 +199,7 @@ describe "instance methods" do
     let(:value) { 42 }
 
     before :each do
-      allow(gate).to receive(:write_attribute)
+      allow(gate).to receive(:assign_attributes)
       allow(gate).to receive(:aasm_raw_attribute_value).and_return(value)
 
       gate.send(:aasm_write_attribute, sym)
@@ -210,7 +210,7 @@ describe "instance methods" do
     end
 
     it "writes attribute to the model" do
-      expect(gate).to have_received(:write_attribute).with(:aasm_state, value)
+      expect(gate).to have_received(:assign_attributes).with(:aasm_state => value)
     end
   end
 
