@@ -58,7 +58,7 @@ module AASM
     end
 
     def state_object_for_name(name)
-      obj = @instance.class.aasm.states.find {|s| s == name}
+      obj = @instance.class.aasm.states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
       obj
     end
