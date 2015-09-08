@@ -4,12 +4,7 @@
 
    * drop support for aasm_column ?
 
-## version 4.3
-
 # Currently working on
-
- * add support for multiple state machines per class
-   * silence warnings?
 
 
 # Changes so far
