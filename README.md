@@ -99,11 +99,11 @@ class Job
     state :running
 
     event :run, :after => :notify_somebody do
-      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) } do
-        before do
-          log('Preparing to run')
-        end
+      before do
+        log('Preparing to run')
       end
+
+      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) }
     end
 
     event :sleep do
@@ -384,7 +384,7 @@ SimpleMultipleExample.aasm(:work).states
 
 ### ActiveRecord
 
-AASM comes with support for ActiveRecord and allows automatical persisting of the object's
+AASM comes with support for ActiveRecord and allows automatic persisting of the object's
 state in the database.
 
 ```ruby
