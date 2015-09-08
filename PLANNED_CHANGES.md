@@ -3,7 +3,6 @@
 ## version 4.3
 
  * add support for multiple state machines per class
-   * documentation
    * silence warnings?
    * drop support for aasm_column ?
 
@@ -29,4 +28,5 @@
      * _Sequel_
    * what happen's if someone accesses `aasm`, but has defined a
      state machine for `aasm(:my_name)`?
+   * documentation
  * drop support for find_in_state, count_in_state, calculate_in_state, with_state_scope
