@@ -2,6 +2,9 @@
 
 ## 4.3.0 (not yet released)
 
+ * add support for multiple state machines per class (see [issue #158](https://github.com/aasm/aasm/issues/158) and [issue #240](https://github.com/aasm/aasm/issues/240) for details)
+    * special thanks to [@evadne](https://github.com/evadne) for testing this feature, and providing comments and patches (see [issue #245](https://github.com/aasm/aasm/issues/245) for details)
+
 ## 4.2.0
 
  * support turning off and on the configuration option for `no_direct_assignment` (see [issue #223](https://github.com/aasm/aasm/issues/223) for details)
