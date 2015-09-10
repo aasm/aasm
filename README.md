@@ -313,7 +313,7 @@ job.aasm.current_state # stage3
 ```
 
 
-### Multiple state machine per class
+### Multiple state machines per class
 
 Multiple state machines per class are supported. Be aware though, that _AASM_ has been
 built with one state machine per class in mind. Nonetheless, here's how to do it:
