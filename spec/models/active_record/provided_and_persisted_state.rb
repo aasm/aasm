@@ -10,15 +10,15 @@ class ProvidedAndPersistedState < ActiveRecord::Base
     end
   end
 
-  def aasm_read_state
+  def aasm_read_state(*args)
     :gamma
   end
 
-  def aasm_write_state(new_state)
+  def aasm_write_state(new_state, *args)
     @persisted_store = new_state
   end
 
-  def aasm_write_state_without_persistence(new_state)
+  def aasm_write_state_without_persistence(new_state, *args)
     @transient_store = new_state
   end
 end

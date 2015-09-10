@@ -32,32 +32,9 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
-        base.extend AASM::Persistence::MongoidPersistence::ClassMethods
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
 
         base.after_initialize :aasm_ensure_initial_state
-      end
-
-      module ClassMethods
-
-        def find_in_state(number, state, *args)
-          with_state_scope state do
-            find(number, *args)
-          end
-        end
-
-        def count_in_state(state, *args)
-          with_state_scope state do
-            count(*args)
-          end
-        end
-
-        def with_state_scope(state)
-          with_scope where(aasm.attribute_name.to_sym => state.to_s) do
-            yield if block_given?
-          end
-        end
-
       end
 
       module InstanceMethods
@@ -72,12 +49,12 @@ module AASM
         #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state(state)
-          old_value = read_attribute(self.class.aasm.attribute_name)
-          write_attribute(self.class.aasm.attribute_name, state.to_s)
+        def aasm_write_state(state, name=:default)
+          old_value = read_attribute(self.class.aasm(name).attribute_name)
+          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
 
           unless self.save(:validate => false)
-            write_attribute(self.class.aasm.attribute_name, old_value)
+            write_attribute(self.class.aasm(name).attribute_name, old_value)
             return false
           end
 
@@ -96,8 +73,8 @@ module AASM
         #   Foo.find(1).aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state)
-          write_attribute(self.class.aasm.attribute_name, state.to_s)
+        def aasm_write_state_without_persistence(state, name=:default)
+          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
         end
 
       private
@@ -118,16 +95,18 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          send("#{self.class.aasm.attribute_name}=", aasm.enter_initial_state.to_s) if send(self.class.aasm.attribute_name).blank?
+          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+          end
         end
       end # InstanceMethods
 
-      module NamedScopeMethods
-        def aasm_state_with_named_scope name, options = {}
-          aasm_state_without_named_scope name, options
-          self.named_scope name, :conditions => { "#{table_name}.#{self.aasm.attribute_name}" => name.to_s} unless self.respond_to?(name)
-        end
-      end
+      # module NamedScopeMethods
+      #   def aasm_state_with_named_scope name, options = {}
+      #     aasm_state_without_named_scope name, options
+      #     self.named_scope name, :conditions => { "#{table_name}.#{self.aasm.attribute_name}" => name.to_s} unless self.respond_to?(name)
+      #   end
+      # end
     end
   end # Persistence
 end # AASM

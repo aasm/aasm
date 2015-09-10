@@ -312,6 +312,76 @@ job.stage1_completed
 job.aasm.current_state # stage3
 ```
 
+
+### Multiple state machine per class
+
+Multiple state machines per class are supported. Be aware though, that _AASM_ has been
+built with one state machine per class in mind. Nonetheless, here's how to do it:
+
+```ruby
+class SimpleMultipleExample
+  include AASM
+  aasm(:move) do
+    state :standing, :initial => true
+    state :walking
+    state :running
+
+    event :walk do
+      transitions :from => :standing, :to => :walking
+    end
+    event :run do
+      transitions :from => [:standing, :walking], :to => :running
+    end
+    event :hold do
+      transitions :from => [:walking, :running], :to => :standing
+    end
+  end
+
+  aasm(:work) do
+    state :sleeping, :initial => true
+    state :processing
+
+    event :start do
+      transitions :from => :sleeping, :to => :processing
+    end
+    event :stop do
+      transitions :from => :processing, :to => :sleeping
+    end
+  end
+end
+
+simple = SimpleMultipleExample.new
+
+simple.aasm(:move).current_state
+# => :standing
+simple.aasm(:work).current
+# => :sleeping
+
+simple.start
+simple.aasm(:move).current_state
+# => :standing
+simple.aasm(:work).current
+# => :processing
+
+```
+
+_AASM_ doesn't prohibit to define the same event in both state machines. The
+latest definition "wins" and overrides previous definitions. A warning is issued:
+`SimpleMultipleExample: The event name run is already used!`.
+
+All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
+So, for example, to use inspection on a class level, you have to use
+
+```ruby
+SimpleMultipleExample.aasm(:work).states
+# => [:standing, :walking, :running]
+```
+
+*Final note*: Support for multiple state machines per class is a pretty new feature
+(since version `4.3`), so please bear with us in case it doesn't as expected.
+
+
+
 ### ActiveRecord
 
 AASM comes with support for ActiveRecord and allows automatic persisting of the object's

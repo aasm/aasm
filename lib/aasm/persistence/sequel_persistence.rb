@@ -44,10 +44,10 @@ module AASM
         # NOTE: intended to be called from an event
         #
         # This allows for nil aasm states - be sure to add validation to your model
-        def aasm_read_state
-          state = send(self.class.aasm.attribute_name)
+        def aasm_read_state(name=:default)
+          state = send(self.class.aasm(name).attribute_name)
           if new? && state.to_s.strip.empty?
-            aasm.determine_state_name(self.class.aasm.initial_state)
+            aasm(name).determine_state_name(self.class.aasm(name).initial_state)
           elsif state.nil?
             nil
           else
@@ -71,9 +71,11 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          aasm.enter_initial_state if
-            (new? || values.key?(self.class.aasm.attribute_name)) &&
-            send(self.class.aasm.attribute_name).to_s.strip.empty?
+          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+            aasm(state_machine_name).enter_initial_state if
+              (new? || values.key?(self.class.aasm(state_machine_name).attribute_name)) &&
+              send(self.class.aasm(state_machine_name).attribute_name).to_s.strip.empty?
+          end
         end
 
         # Writes <tt>state</tt> to the state column and persists it to the database
@@ -85,8 +87,8 @@ module AASM
         #   Foo[1].aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state state
-          aasm_column = self.class.aasm.attribute_name
+        def aasm_write_state state, name=:default
+          aasm_column = self.class.aasm(name).attribute_name
           update_only({aasm_column => state.to_s}, aasm_column)
         end
 
@@ -102,8 +104,8 @@ module AASM
         #   Foo[1].aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence state
-          send("#{self.class.aasm.attribute_name}=", state.to_s)
+        def aasm_write_state_without_persistence state, name=:default
+          send("#{self.class.aasm(name).attribute_name}=", state.to_s)
         end
       end
     end
