@@ -315,7 +315,7 @@ job.aasm.current_state # stage3
 
 ### Multiple state machines per class
 
-Multiple state machines per class are supported. Be aware though, that _AASM_ has been
+Multiple state machines per class are supported. Be aware though that _AASM_ has been
 built with one state machine per class in mind. Nonetheless, here's how to do it:
 
 ```ruby
@@ -417,7 +417,7 @@ job.run!  # saved
 
 Saving includes running all validations on the `Job` class. If you want make sure
 the state gets saved without running validations (and thereby maybe persisting an
-invalid object state), simply tell AASM to skip the validations. Be aware, that
+invalid object state), simply tell AASM to skip the validations. Be aware that
 when skipping validations, only the state column will be updated in the database
 (just like ActiveRecord `change_column` is working).
 
