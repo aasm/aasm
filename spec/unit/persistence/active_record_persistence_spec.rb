@@ -1,18 +1,14 @@
 require 'active_record'
 require 'spec_helper'
-Dir[File.dirname(__FILE__) + "/../../models/active_record/*.rb"].sort.each { |f| require File.expand_path(f) }
+Dir[File.dirname(__FILE__) + "/../../models/active_record/*.rb"].sort.each do |f|
+  require File.expand_path(f)
+end
+
 load_schema
 
 # if you want to see the statements while running the spec enable the following line
 # require 'logger'
 # ActiveRecord::Base.logger = Logger.new(STDERR)
-
-shared_examples_for "aasm model" do
-  it "should include persistence mixins" do
-    expect(klass.included_modules).to be_include(AASM::Persistence::ActiveRecordPersistence)
-    expect(klass.included_modules).to be_include(AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
-  end
-end
 
 describe "instance methods" do
   let(:gate) {Gate.new}
@@ -160,7 +156,7 @@ describe "instance methods" do
 
           gate.aasm_write_state state_sym
 
-          expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+          expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
           expect(gate).to_not have_received :write_attribute
         end
       end
@@ -170,7 +166,7 @@ describe "instance methods" do
       it "delegates state update to the helper method" do
         gate.aasm_write_state_without_persistence state_sym
 
-        expect(gate).to have_received(:aasm_write_attribute).with(state_sym)
+        expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
         expect(gate).to_not have_received :write_attribute
       end
     end
@@ -210,7 +206,7 @@ describe "instance methods" do
     end
 
     it "generates attribute value using a helper method" do
-      expect(gate).to have_received(:aasm_raw_attribute_value).with(sym)
+      expect(gate).to have_received(:aasm_raw_attribute_value).with(sym, :default)
     end
 
     it "writes attribute to the model" do
@@ -431,7 +427,7 @@ describe 'transitions with persistence' do
 
       it "should only rollback changes in the main transaction not the nested one" do
         # change configuration to not require new transaction
-        AASM::StateMachine[Transactor].config.requires_new_transaction = false
+        AASM::StateMachine[Transactor][:default].config.requires_new_transaction = false
 
         expect(transactor).to be_sleeping
         expect(worker.status).to eq('sleeping')
@@ -515,4 +511,13 @@ describe "invalid states with persistence" do
     expect(persistor.status).to eq('invalid_state')
   end
 
+end
+
+describe 'basic example with two state machines' do
+  let(:example) { BasicActiveRecordTwoStateMachinesExample.new }
+
+  it 'should initialise properly' do
+    expect(example.aasm(:search).current_state).to eql :initialised
+    expect(example.aasm(:sync).current_state).to eql :unsynced
+  end
 end

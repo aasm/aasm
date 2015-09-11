@@ -2,10 +2,11 @@ module AASM::Core
   class Event
     include DslHelper
 
-    attr_reader :name, :options
+    attr_reader :name, :state_machine, :options
 
-    def initialize(name, options = {}, &block)
+    def initialize(name, state_machine, options = {}, &block)
       @name = name
+      @state_machine = state_machine
       @transitions = []
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
@@ -61,11 +62,11 @@ module AASM::Core
       if definitions # define new transitions
         # Create a separate transition for each from-state to the given state
         Array(definitions[:from]).each do |s|
-          @transitions << AASM::Core::Transition.new(attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
+          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
         if @transitions.empty? && definitions[:to]
-          @transitions << AASM::Core::Transition.new(attach_event_guards(definitions), &block)
+          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions), &block)
         end
       end
       @transitions
@@ -89,7 +90,7 @@ module AASM::Core
     def _fire(obj, options={}, to_state=nil, *args)
       result = options[:test_only] ? false : nil
       if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm.current_state }
+        transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state }
         return result if transitions.size == 0
       else
         transitions = @transitions

@@ -2,12 +2,13 @@ module AASM::Core
   class Transition
     include DslHelper
 
-    attr_reader :from, :to, :opts
+    attr_reader :from, :to, :event, :opts
     alias_method :options, :opts
 
-    def initialize(opts, &block)
+    def initialize(event, opts, &block)
       add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
 
+      @event = event
       @from = opts[:from]
       @to = opts[:to]
       @guards = Array(opts[:guards]) + Array(opts[:guard]) + Array(opts[:if])
@@ -44,8 +45,8 @@ module AASM::Core
 
     def invoke_callbacks_compatible_with_guard(code, record, args, options={})
       if record.respond_to?(:aasm)
-        record.aasm.from_state = @from if record.aasm.respond_to?(:from_state=)
-        record.aasm.to_state = @to if record.aasm.respond_to?(:to_state=)
+        record.aasm(event.state_machine.name).from_state = @from if record.aasm(event.state_machine.name).respond_to?(:from_state=)
+        record.aasm(event.state_machine.name).to_state = @to if record.aasm(event.state_machine.name).respond_to?(:to_state=)
       end
 
       case code

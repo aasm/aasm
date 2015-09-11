@@ -9,7 +9,7 @@ gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.
 gem 'sequel'
 # Since mongoid V4 requires incompatible bson V2, cannot have mongoid (V4 or greater)
 # and mongo_mapper ( or mongo ) in the same application
-#gem 'mongo_mapper', '~> 0.13'
-#gem 'bson_ext',                          :platforms => :ruby
+# gem 'mongo_mapper', '~> 0.13'
+# gem 'bson_ext',                          :platforms => :ruby
 
 gemspec
