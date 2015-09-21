@@ -521,3 +521,20 @@ describe 'basic example with two state machines' do
     expect(example.aasm(:sync).current_state).to eql :unsynced
   end
 end
+
+describe 'testing the README examples' do
+  it 'Usage' do
+    job = ReadmeJob.new
+
+    expect(job.sleeping?).to eql true
+    expect(job.may_run?).to eql true
+
+    job.run
+
+    expect(job.running?).to eql true
+    expect(job.sleeping?).to eql false
+    expect(job.may_run?).to eql false
+
+    expect { job.run }.to raise_error(AASM::InvalidTransition)
+  end
+end

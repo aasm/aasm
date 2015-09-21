@@ -23,7 +23,6 @@ describe 'testing the README examples' do
           transitions :from => [:running, :cleaning], :to => :sleeping
         end
       end
-
     end
 
     job = Job.new
