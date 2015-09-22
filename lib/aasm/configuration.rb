@@ -19,5 +19,8 @@ module AASM
     attr_accessor :no_direct_assignment
 
     attr_accessor :enum
+
+    # namespace reader methods and constants
+    attr_accessor :namespace
   end
 end

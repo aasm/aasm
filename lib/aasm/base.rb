@@ -29,6 +29,9 @@ module AASM
 
       configure :enum, nil
 
+      # Set to true to namespace reader methods and constants
+      configure :namespace, false
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       @klass.class_eval %Q(
@@ -66,18 +69,30 @@ module AASM
     def state(name, options={})
       @state_machine.add_state(name, @klass, options)
 
-      if @klass.instance_methods.include?("#{name}?")
+      if namespace?
+        method_name = "#{namespace}_#{name}"
+      else
+        method_name = name
+      end
+
+      if @klass.instance_methods.include?("#{method_name}?")
         warn "#{@klass.name}: The state name #{name} is already used!"
       end
 
       @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
-        def #{name}?
+        def #{method_name}?
           aasm(:#{@name}).current_state == :#{name}
         end
       EORUBY
 
-      unless @klass.const_defined?("STATE_#{name.upcase}")
-        @klass.const_set("STATE_#{name.upcase}", name)
+      if namespace?
+        const_name = "STATE_#{namespace.upcase}_#{name.upcase}"
+      else
+        const_name = "STATE_#{name.upcase}"
+      end
+
+      unless @klass.const_defined?(const_name)
+        @klass.const_set(const_name, name)
       end
     end
 
@@ -148,5 +163,16 @@ module AASM
       end
     end
 
+    def namespace?
+      !!@state_machine.config.namespace
+    end
+
+    def namespace
+      if @state_machine.config.namespace == true
+        @name
+      else
+        @state_machine.config.namespace
+      end
+    end
   end
 end
