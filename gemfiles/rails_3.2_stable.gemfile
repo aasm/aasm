@@ -10,5 +10,6 @@ gem 'mongoid', '~>3.1' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.
 gem 'sequel'
 gem 'mongo_mapper', '~>0.13'
 gem 'bson_ext',                          :platforms => :ruby
+gem 'test-unit', '~> 3.0'
 
 gemspec :path => "../"
