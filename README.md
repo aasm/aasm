@@ -730,6 +730,17 @@ gem 'aasm'
 % sudo gem install pkg/aasm-x.y.z.gem
 ```
 
+### Generators
+
+After installing Aasm you can run generator:
+
+```sh
+% rails generate aasm NAME [COLUMN_NAME]
+```
+Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state'). 
+This will create a model (if one does not exist) and configure it with aasm block.
+For Active record orm a migration file is added to add aasm state column to table.
+
 ## Latest changes ##
 
 Take a look at the [CHANGELOG](https://github.com/aasm/aasm/blob/master/CHANGELOG.md) for details about recent changes to the current version.
