@@ -16,7 +16,7 @@ rvm:
 services: mongodb
 
 gemfile:
-  - gemfiles/rails_3.2.gemfile
+  - gemfiles/rails_3.2_stable.gemfile
   - gemfiles/rails_4.0.gemfile
   - gemfiles/rails_4.0_bson1.gemfile
   - gemfiles/rails_4.1.gemfile
