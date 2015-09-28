@@ -365,9 +365,9 @@ simple.aasm(:work).current
 
 ```
 
-_AASM_ doesn't prohibit to define the same event in both state machines. The
-latest definition "wins" and overrides previous definitions. A warning is issued:
-`SimpleMultipleExample: The event name run is already used!`.
+_AASM_ doesn't prohibit to define the same event in more than one state machine. The
+latest definition "wins" and overrides previous definitions. Nonetheless, a warning is issued:
+`SimpleMultipleExample: The aasm event name run is already used!`.
 
 All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
 So, for example, to use inspection on a class level, you have to use
@@ -378,7 +378,7 @@ SimpleMultipleExample.aasm(:work).states
 ```
 
 *Final note*: Support for multiple state machines per class is a pretty new feature
-(since version `4.3`), so please bear with us in case it doesn't as expected.
+(since version `4.3`), so please bear with us in case it doesn't work as expected.
 
 
 
