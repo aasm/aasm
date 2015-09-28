@@ -4,7 +4,10 @@
 
    * drop support for aasm_column ?
 
+
 # Currently working on
+
+   * support for global callbacks (see #221 and #253)
 
 
 # Changes so far
