@@ -18,6 +18,8 @@ module Callbacks
     end
 
     aasm do
+      after_all_transitions :after_all_transitions
+
       state :open, :initial => true,
         :before_enter => :before_enter_open,
         :enter        => :enter_open,
@@ -68,6 +70,7 @@ module Callbacks
     def transition_guard;     log('transition_guard');    !@fail_transition_guard; end
 
     def after_transition;     log('after_transition');    end
+    def after_all_transitions;log('after_all_transitions');end
 
     def before_event;         log('before_event');        end
     def after_event;          log('after_event');         end
