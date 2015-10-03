@@ -96,7 +96,10 @@ module AASM
         end
 
         def aasm_column_looks_like_enum(name=:default)
-          self.class.columns_hash[self.class.aasm(name).attribute_name.to_s].type == :integer
+          column_name = self.class.aasm(name).attribute_name.to_s
+          column = self.class.columns_hash[column_name]
+          raise NoMethodError.new("undefined method '#{column_name}' for #{self.class}") if column.nil?
+          column.type == :integer
         end
 
         def aasm_guess_enum_method(name=:default)

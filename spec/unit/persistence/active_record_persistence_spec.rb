@@ -113,6 +113,17 @@ describe "instance methods" do
         end
       end
     end
+
+    context "when AASM enum setting is not enabled and aasm column not present" do
+      before :each do
+        @with_enum_with_column = WithEnumWithoutColumn.new
+      end
+      
+      it "should raise NoMethodError for transitions" do
+        expect{@with_enum_with_column.send(:view)}.to raise_error(NoMethodError, "undefined method 'status' for WithEnumWithoutColumn")  
+      end
+    end
+
   end
 
   context "when AASM is configured to use enum" do
