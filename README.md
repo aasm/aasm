@@ -704,6 +704,10 @@ job.aasm.states(:permitted => true).map(&:name)
 # show all possible (triggerable) events (allowed by transitions)
 job.aasm.events.map(&:name)
 => [:sleep]
+
+# list states for select
+Job.aasm.states_for_select
+=> [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
 ```
 
 
