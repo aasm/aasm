@@ -4,7 +4,7 @@ module Callbacks
     include AASM
 
     aasm do
-      state :open, :inital => true
+      state :open, :initial => true
       state :closed
       state :out_to_lunch
 
