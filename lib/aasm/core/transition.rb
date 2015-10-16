@@ -24,6 +24,16 @@ module AASM::Core
       @opts = opts
     end
 
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @guards = @guards.dup
+      @unless = @unless.dup
+      @after  = @after.dup
+      @opts   = {}
+      orig.opts.each_pair { |name, setting| @opts[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
+    end
+
     def allowed?(obj, *args)
       invoke_callbacks_compatible_with_guard(@guards, obj, args, :guard => true) &&
       invoke_callbacks_compatible_with_guard(@unless, obj, args, :unless => true)
