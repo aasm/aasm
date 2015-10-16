@@ -16,8 +16,9 @@ module AASM
     # called internally by Ruby 1.9 after clone()
     def initialize_copy(orig)
       super
-      @states = @states.dup
-      @events = @events.dup
+      @states = orig.states.collect { |state| state.clone }
+      @events = {}
+      orig.events.each_pair { |name, event| @events[name] = event.clone }
     end
 
     def add_state(state_name, klass, options)

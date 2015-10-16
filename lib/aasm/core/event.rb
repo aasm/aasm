@@ -27,6 +27,16 @@ module AASM::Core
       ], &block) if block
     end
 
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @transitions = @transitions.collect { |transition| transition.clone }
+      @guards      = @guards.dup
+      @unless      = @unless.dup
+      @options     = {}
+      orig.options.each_pair { |name, setting| @options[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
+    end
+
     # a neutered version of fire - it doesn't actually fire the event, it just
     # executes the transition guards to determine if a transition is even
     # an option given current conditions.
