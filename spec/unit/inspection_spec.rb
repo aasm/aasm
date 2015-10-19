@@ -103,4 +103,9 @@ describe 'permitted events' do
     expect(foo.aasm.events(:permitted => true)).to include(:close)
     expect(foo.aasm.events(:permitted => true)).not_to include(:null)
   end
+
+  it 'should not include events in the reject option' do
+    expect(foo.aasm.events(:permitted => true, reject: :close)).not_to include(:close)
+    expect(foo.aasm.events(:permitted => true, reject: [:close])).not_to include(:close)
+  end
 end
