@@ -49,8 +49,7 @@ module AASM
       state = options[:state] || current_state
       events = @instance.class.aasm(@name).events.select {|e| e.transitions_from_state?(state) }
 
-      options[:reject] = Array(options[:reject])
-      events.reject!{|e| (options[:reject] || []).include?(e.name)}
+      events.reject!{|e| Array(options[:reject]).include?(e.name)}
 
       if options[:permitted]
         # filters the results of events_for_current_state so that only those that
