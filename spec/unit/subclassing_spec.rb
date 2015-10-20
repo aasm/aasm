@@ -13,7 +13,7 @@ describe 'subclassing' do
     expect(SuperClass.aasm.states).not_to include(:foo)
   end
 
-  it "should have the same events as its parent" do
+  it 'should have the same events as its parent' do
     expect(SubClass.aasm.events).to eq(SuperClass.aasm.events)
   end
 
@@ -25,6 +25,13 @@ describe 'subclassing' do
     son = SubClass.new
     son.update_state
     expect(son.aasm.current_state).to eq(:ended)
+  end
+
+  it 'should allow the child to modify its state machine' do
+    son = SubClass.new
+    expect(son.called_after).to eq(nil)
+    son.foo
+    expect(son.called_after).to eq(true)
   end
 
 end
