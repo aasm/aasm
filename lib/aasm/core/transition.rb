@@ -29,7 +29,6 @@ module AASM::Core
       super
       @guards = @guards.dup
       @unless = @unless.dup
-      @after  = @after.dup
       @opts   = {}
       orig.opts.each_pair { |name, setting| @opts[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
     end
