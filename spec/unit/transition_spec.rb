@@ -145,6 +145,17 @@ describe AASM::Core::Transition, '- when performing guard checks' do
     expect(st.allowed?(obj)).to be false
   end
 
+  it 'should add the name of the failed method calls to the failures instance var' do
+    opts = {:from => 'foo', :to => 'bar', :guard => :test}
+    st = AASM::Core::Transition.new(event, opts)
+
+    obj = double('object')
+    expect(obj).to receive(:test)
+
+    st.allowed?(obj)
+    expect(st.failures).to eq [:test]
+  end
+
   it 'should call the method on the object if unless is a symbol' do
     opts = {:from => 'foo', :to => 'bar', :unless => :test}
     st = AASM::Core::Transition.new(event, opts)

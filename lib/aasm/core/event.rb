@@ -73,7 +73,7 @@ module AASM::Core
     end
 
     def failed_callbacks
-      @transitions.flat_map(&:failures)
+      transitions.flat_map(&:failures)
     end
 
   private

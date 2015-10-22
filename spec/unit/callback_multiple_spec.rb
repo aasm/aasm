@@ -1,6 +1,16 @@
 require 'spec_helper'
 Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| require File.expand_path(f) }
 
+def safe_error(callback = nil)
+  error = nil
+  begin
+    yield
+  rescue Exception => e
+    error = e
+    return error
+  end
+end
+
 describe 'callbacks for the new DSL' do
 
   it "be called in order" do
@@ -47,9 +57,13 @@ describe 'callbacks for the new DSL' do
     expect(callback).to_not receive(:after_enter_closed)
     expect(callback).to_not receive(:after_event)
 
-    expect {
-      callback.left_close!
-    }.to raise_error(AASM::InvalidTransition)
+    error = safe_error { callback.left_close! }
+
+    expect(error.class).to eq AASM::InvalidTransition
+    expect(error.message).to eq(
+      "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard]."
+    )
+
   end
 
   it "handles private callback methods as well" do
@@ -85,9 +99,12 @@ describe 'callbacks for the new DSL' do
         expect(callback).to_not receive(:after_event)
       end
 
-      expect {
-        callback.left_close!
-      }.to raise_error(AASM::InvalidTransition)
+      error = safe_error { callback.left_close! }
+
+      expect(error.class).to eq AASM::InvalidTransition
+      expect(error.message).to eq(
+        "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard, :transition_guard]."
+      )
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
@@ -133,9 +150,10 @@ describe 'callbacks for the new DSL' do
       expect(callback).to_not receive(:after_enter_closed)
       expect(callback).to_not receive(:after)
 
-      expect {
-        callback.close!
-      }.to raise_error(AASM::InvalidTransition)
+      error = safe_error(callback) { callback.close! }
+
+      expect(error.class).to eq AASM::InvalidTransition
+      expect(error.message).to eq "Event 'close' cannot transition from 'open'. Failed callback(s): [\"/Users/woodrich/Dropbox/personal/aasm/spec/models/callbacks/guard_within_block_multiple.rb#30\"]."
     end
   end
 
@@ -277,12 +295,25 @@ describe 'event callbacks' do
 
     it 'should call it when transition failed for bang fire' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
-      expect {@foo.null!}.to raise_error(AASM::InvalidTransition)
+      #expect {@foo.null!}.to raise_error(AASM::InvalidTransition)
+
+      error = safe_error { @foo.null! }
+
+      expect(error.class).to eq AASM::InvalidTransition
+      expect(error.message).to eq(
+        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false]."
+      )
+
     end
 
     it 'should call it when transition failed for non-bang fire' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
-      expect {@foo.null}.to raise_error(AASM::InvalidTransition)
+      error = safe_error { @foo.null }
+
+      expect(error.class).to eq AASM::InvalidTransition
+      expect(error.message).to eq(
+        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false]."
+      )
     end
 
     it 'should not call it if persist fails for bang fire' do

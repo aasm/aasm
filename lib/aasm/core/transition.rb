@@ -57,7 +57,9 @@ module AASM::Core
         failures << code unless result
         result
       when Proc
-        code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        result = (code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+        failures << code.source_location.join('#') unless result
+        result
       when Array
         if options[:guard]
           # invoke guard callbacks
