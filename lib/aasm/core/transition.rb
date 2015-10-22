@@ -2,12 +2,13 @@ module AASM::Core
   class Transition
     include DslHelper
 
-    attr_reader :from, :to, :event, :opts
+    attr_reader :from, :to, :event, :opts, :failures
     alias_method :options, :opts
 
     def initialize(event, opts, &block)
       add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
 
+      @failures = []
       @event = event
       @from = opts[:from]
       @to = opts[:to]
@@ -52,7 +53,9 @@ module AASM::Core
       case code
       when Symbol, String
         arity = record.send(:method, code.to_sym).arity
-        arity == 0 ? record.send(code) : record.send(code, *args)
+        result = (arity == 0 ? record.send(code) : result = record.send(code, *args))
+        failures << code unless result
+        result
       when Proc
         code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
       when Array

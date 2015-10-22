@@ -72,6 +72,10 @@ module AASM::Core
       @transitions
     end
 
+    def failed_callbacks
+      @transitions.flat_map(&:failures)
+    end
+
   private
 
     def attach_event_guards(definitions)
