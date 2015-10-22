@@ -153,7 +153,7 @@ describe 'callbacks for the new DSL' do
       error = safe_error(callback) { callback.close! }
 
       expect(error.class).to eq AASM::InvalidTransition
-      expect(error.message).to eq "Event 'close' cannot transition from 'open'. Failed callback(s): [\"/Users/woodrich/Dropbox/personal/aasm/spec/models/callbacks/guard_within_block_multiple.rb#30\"]."
+      expect(error.message[0..63]).to eq "Event 'close' cannot transition from 'open'. Failed callback(s):"
     end
   end
 
