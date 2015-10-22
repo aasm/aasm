@@ -312,7 +312,7 @@ describe 'event callbacks' do
 
       expect(error.class).to eq AASM::InvalidTransition
       expect(error.message).to eq(
-        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false]."
+        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false, :always_false]."
       )
     end
 
