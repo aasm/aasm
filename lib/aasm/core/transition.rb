@@ -8,12 +8,12 @@ module AASM::Core
     def initialize(event, opts, &block)
       add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
 
-      @failures = []
       @event = event
       @from = opts[:from]
       @to = opts[:to]
       @guards = Array(opts[:guards]) + Array(opts[:guard]) + Array(opts[:if])
       @unless = Array(opts[:unless]) #TODO: This could use a better name
+      @failures = []
 
       if opts[:on_transition]
         warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
