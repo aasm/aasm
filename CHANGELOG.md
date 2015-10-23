@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.4.0 (not yet released)
+
+ * add support global transation callbacks (see [issue #221](https://github.com/aasm/aasm/issues/221) and [issue #253](https://github.com/aasm/aasm/issues/253) for details)
+
 ## 4.3.0
 
  * add support for multiple state machines per class (see [issue #158](https://github.com/aasm/aasm/issues/158) and [issue #240](https://github.com/aasm/aasm/issues/240) for details)

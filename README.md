@@ -98,6 +98,8 @@ class Job
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
 
+    after_all_transitions :log_status_change
+
     event :run, :after => :notify_somebody do
       before do
         log('Preparing to run')
@@ -115,6 +117,10 @@ class Job
       end
       transitions :from => :running, :to => :sleeping
     end
+  end
+
+  def log_status_change
+    puts "changing from #{aasm.from_state} to #{aasm.to_state} (event: #{aasm.current_event})"
   end
 
   def set_process(name)
@@ -145,6 +151,7 @@ begin
   transition      guards
   old_state       before_exit
   old_state       exit
+                  after_all_transitions
   transition      after
   new_state       before_enter
   new_state       enter
@@ -172,8 +179,9 @@ Note that when passing arguments to a state transition, the first argument must 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
-During the transition's `:after` callback (and reliably only then) you can access the
-originating state (the from-state) and the target state (the to state), like this:
+During the transition's `:after` callback (and reliably only then, or in the global
+`after_all_transitions` callback) you can access the originating state (the from-state)
+and the target state (the to state), like this:
 
 ```ruby
   def set_process(name)

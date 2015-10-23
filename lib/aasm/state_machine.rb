@@ -10,12 +10,13 @@ module AASM
       (@machines ||= {})[klass.to_s] = machine
     end
 
-    attr_accessor :states, :events, :initial_state, :config, :name
+    attr_accessor :states, :events, :initial_state, :config, :name, :global_callbacks
 
     def initialize(name)
       @initial_state = nil
       @states = []
       @events = {}
+      @global_callbacks = {}
       @config = AASM::Configuration.new
       @name = name
     end
@@ -38,6 +39,14 @@ module AASM
 
     def add_event(name, options, &block)
       @events[name] = AASM::Core::Event.new(name, self, options, &block)
+    end
+
+    def add_global_callbacks(name, *callbacks, &block)
+      @global_callbacks[name] ||= []
+      callbacks.each do |callback|
+        @global_callbacks[name] << callback
+      end
+      @global_callbacks[name] << block if block
     end
 
     private

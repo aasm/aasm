@@ -109,6 +109,10 @@ module AASM
       EORUBY
     end
 
+    def after_all_transitions(*callbacks, &block)
+      @state_machine.add_global_callbacks(:after_all_transitions, *callbacks, &block)
+    end
+
     def states
       @state_machine.states
     end
