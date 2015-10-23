@@ -285,8 +285,6 @@ describe 'event callbacks' do
 
     it 'should call it when transition failed for bang fire' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
-      #expect {@foo.null!}.to raise_error(AASM::InvalidTransition)
-
       error = safe_error { @foo.null! }
 
       expect(error.class).to eq AASM::InvalidTransition
