@@ -1,16 +1,6 @@
 require 'spec_helper'
 Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| require File.expand_path(f) }
 
-def safe_error(callback = nil)
-  error = nil
-  begin
-    yield
-  rescue Exception => e
-    error = e
-    return error
-  end
-end
-
 describe 'callbacks for the new DSL' do
 
   it "be called in order" do
