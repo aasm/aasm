@@ -298,6 +298,19 @@ describe "named scopes with the new DSL" do
   it "does not create scopes if requested" do
     expect(MultipleNoScope).not_to respond_to(:pending)
   end
+
+  context "result of scope" do
+    let!(:dsl1) { MultipleSimpleNewDsl.create!(status: :new) }
+    let!(:dsl2) { MultipleSimpleNewDsl.create!(status: :unknown_scope) }
+
+    after do
+      MultipleSimpleNewDsl.destroy_all
+    end
+
+    it "created scope works as where(name: :scope_name)" do
+      expect(MultipleSimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
+    end
+  end
 end # scopes
 
 describe "direct assignment" do
