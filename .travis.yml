@@ -18,11 +18,11 @@ services: mongodb
 gemfile:
   - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.0.gemfile
-  - gemfiles/rails_4.0_bson1.gemfile
+  - gemfiles/rails_4.0_mongo_mapper.gemfile
   - gemfiles/rails_4.1.gemfile
-  - gemfiles/rails_4.1_bson1.gemfile
+  - gemfiles/rails_4.1_mongo_mapper.gemfile
   - gemfiles/rails_4.2.gemfile
-  - gemfiles/rails_4.2_bson1.gemfile
+  - gemfiles/rails_4.2_mongo_mapper.gemfile
 
 matrix:
   allow_failures:
