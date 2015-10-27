@@ -22,6 +22,7 @@ gemfile:
   - gemfiles/rails_4.1.gemfile
   - gemfiles/rails_4.1_mongo_mapper.gemfile
   - gemfiles/rails_4.2.gemfile
+  - gemfiles/rails_4.2_mongoid_5.gemfile
   - gemfiles/rails_4.2_mongo_mapper.gemfile
 
 matrix:
