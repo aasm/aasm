@@ -56,8 +56,8 @@ module AASM
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
       if @state_machine.config.create_scopes && !@klass.respond_to?(name)
-        if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
 
+        if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
           conditions = {"#{@klass.table_name}.#{@klass.aasm(@name).attribute_name}" => name.to_s}
           if ActiveRecord::VERSION::MAJOR >= 3
             @klass.class_eval do
@@ -69,12 +69,17 @@ module AASM
             end
           end
         elsif @klass.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
-          scope_options = lambda { @klass.send(:where, {@klass.aasm(@name).attribute_name.to_sym => name.to_s}) }
+          klass = @klass
+          state_machine_name = @name
+          scope_options = lambda {
+            klass.send(:where, {klass.aasm(state_machine_name).attribute_name.to_sym => name.to_s})
+          }
           @klass.send(:scope, name, scope_options)
         elsif @klass.ancestors.map {|klass| klass.to_s}.include?("MongoMapper::Document")
           conditions = { @klass.aasm(@name).attribute_name.to_sym => name.to_s }
           @klass.scope(name, lambda { @klass.where(conditions) })
         end
+
       end
     end
     alias_method :state_without_scope, :state
