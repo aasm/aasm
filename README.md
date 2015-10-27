@@ -721,6 +721,30 @@ Job.aasm.states_for_select
 ```
 
 
+### Testing
+
+AASM provides matchers for [RSpec](http://rspec.info).
+
+  job = Job.new
+  job.should have_state :sleeping
+  job.should allow_transition_to :running
+  job.should allow_event :run
+  job.should allow_event :run!
+  job.should_not allow_event :clean
+  job.should_not allow_event :clean!
+
+  simple = SimpleMultipleExample.new
+  simple.should have_state :standing, :on => :move
+  simple.should allow_transition_to :walking, :on => :move
+  simple.should allow_event :run
+  simple.should allow_event :run!
+  simple.should have_state :sleeping, :on => :work
+  simple.should allow_transition_to :processing, :on => :work
+  simple.should allow_event :start
+  simple.should allow_event :start!
+  simple.should_not allow_event :stop
+  simple.should_not allow_event :stop!
+
 
 ## <a id="installation">Installation ##
 
