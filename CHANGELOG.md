@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.4.1
+
+ * add support for rejecting certain events on inspection (see [issue #272](https://github.com/aasm/aasm/issues/272)  for details, thanks to [@dubroe](https://github.com/dubroe))
+
 ## 4.4.0
 
  * add support global transation callbacks (see [issue #221](https://github.com/aasm/aasm/issues/221) and [issue #253](https://github.com/aasm/aasm/issues/253) for details)
