@@ -36,6 +36,8 @@ module AASM
         options = args[0] || {}
       end
 
+      self.has_many :aasm_state_change_logs, as: :model, class_name: 'AASM::StateChangeLog' if options[:log_state_changes]
+
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
       @aasm ||= {}

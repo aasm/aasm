@@ -1,9 +1,11 @@
 module AASM
   class StateChangeLog < ActiveRecord::Base
+
+    belongs_to :model, polymorphic: true
+
     def self.log_state_change(model, options = {})
       create!(
-        model_id: model.id,
-        model_type: model.class.name,
+        model: model,
         from_state: options[:from_state],
         to_state: options[:to_state],
         transition_event: options[:transition_event],
