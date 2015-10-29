@@ -18,6 +18,9 @@ module AASM
     # forbid direct assignment in aasm_state column (in ActiveRecord)
     attr_accessor :no_direct_assignment
 
+    # log all state changes in the database
+    attr_accessor :log_state_changes
+
     attr_accessor :enum
   end
 end
