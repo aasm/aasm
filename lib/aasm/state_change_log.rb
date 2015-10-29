@@ -1,6 +1,7 @@
 module AASM
   class StateChangeLog < ActiveRecord::Base
 
+    self.table_name = 'aasm_state_change_logs'
     belongs_to :model, polymorphic: true
 
     def self.log_state_change(model, options = {})

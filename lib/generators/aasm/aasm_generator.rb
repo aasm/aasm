@@ -17,8 +17,8 @@ class AasmGenerator < Rails::Generators::Base
   end
 
   def create_migration_file
-    unless self.class.migration_exists?("db/migrate", "create_state_change_logs").present?
-      migration_template "create_state_change_logs.rb", "db/migrate/create_state_change_logs.rb"
+    unless self.class.migration_exists?("db/migrate", "create_aasm_state_change_logs").present?
+      migration_template "create_aasm_state_change_logs.rb", "db/migrate/create_aasm_state_change_logs.rb"
     end
   end
 end

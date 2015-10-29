@@ -1,6 +1,6 @@
-class CreateStateChangeLogs < ActiveRecord::Migration
+class CreateAasmStateChangeLogs < ActiveRecord::Migration
   def change
-    create_table :state_change_logs do |t|
+    create_table :aasm_state_change_logs do |t|
       t.integer :model_id
       t.string :model_type
       t.string :from_state
@@ -13,6 +13,6 @@ class CreateStateChangeLogs < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_index :state_change_logs, [:model_id, :model_type]
+    add_index :aasm_state_change_logs, [:model_id, :model_type]
   end
 end
