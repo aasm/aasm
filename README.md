@@ -720,7 +720,43 @@ Job.aasm.states_for_select
 => [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
 ```
 
+### Testing AASM
 
+AASM does not at present have custom matchers or assertions. We recommend the following implementation patterns however to get you started.
+
+#### RSpec
+
+This example demonstrates the pattern using [FactoryGirl](https://github.com/thoughtbot/factory_girl) but can be replaced with a different fabricator or class of your choosing.
+
+```ruby
+subject(:cleaner) { FactoryGirl.create(:cleaner) }
+
+describe 'aasm' do
+  it 'has an initial state of idle' do
+    expect(cleaner.aasm.current_state).to eql(:idle)
+  end
+
+  describe 'events' do
+    describe '#clean' do
+      subject(:clean) { cleaner.clean }
+
+      it 'can transition from idle state to cleaning state' do
+        expect { clean }.to(
+          change { cleaner.aasm.current_state }.from(:idle).to(:cleaning)
+        )
+      end
+
+      context 'cleaning state' do
+        subject(:cleaner) { FactoryGirl.create(:cleaner, :cleaning) }
+
+        it 'cannot transition from cleaning state' do
+          expect { clean }.to raise_error(AASM::InvalidTransition)
+        end
+      end
+    end
+  end
+end
+```
 
 ## <a id="installation">Installation ##
 
