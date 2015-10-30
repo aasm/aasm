@@ -723,7 +723,7 @@ Job.aasm.states_for_select
 
 ### Testing
 
-AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
 
 ```ruby
 # classes with only the default state machine
@@ -734,6 +734,8 @@ expect(job).to have_state(:sleeping)
 expect(job).not_to have_state(:running)
 expect(job).to allow_event :run
 expect(job).to_not allow_event :clean
+expect(job).to allow_transition_to(:running)
+expect(job).to_not allow_transition_to(:cleaning)
 
 # classes with multiple state machine
 multiple = SimpleMultipleExample.new
@@ -743,12 +745,16 @@ expect(multiple).to have_state(:standing).on(:move)
 expect(multiple).not_to have_state(:walking).on(:move)
 expect(multiple).to allow_event(:walk).on(:move)
 expect(multiple).to_not allow_event(:hold).on(:move)
+expect(multiple).to allow_transition_to(:walking).on(:move)
+expect(multiple).to_not allow_transition_to(:running).on(:move)
 expect(multiple).to transition_from(:sleeping).to(:processing).on_event(:start).on(:work)
 expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
 expect(multiple).to have_state(:sleeping).on(:work)
 expect(multiple).not_to have_state(:processing).on(:work)
 expect(multiple).to allow_event(:start).on(:move)
 expect(multiple).to_not allow_event(:stop).on(:move)
+expect(multiple).to allow_transition_to(:processing).on(:move)
+expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
 ```
 
 ## <a id="installation">Installation ##

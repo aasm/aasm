@@ -19,6 +19,21 @@ describe 'state machine' do
     end
   end
 
+  describe 'allow_transition_to' do
+    it "works for simple state machines" do
+      expect(simple).to allow_transition_to(:filled_out)
+      expect(simple).to_not allow_transition_to(:authorised)
+    end
+
+    it "works for multiple state machines" do
+      expect(multiple).to allow_transition_to(:walking).on(:move)
+      expect(multiple).to_not allow_transition_to(:standing).on(:move)
+
+      expect(multiple).to allow_transition_to(:processing).on(:work)
+      expect(multiple).to_not allow_transition_to(:sleeping).on(:work)
+    end
+  end
+
   describe "have_state" do
     it "works for simple state machines" do
       expect(simple).to have_state :initialised

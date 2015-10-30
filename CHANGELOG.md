@@ -2,7 +2,7 @@
 
 ## unreleased
 
- * add RSpec matchers `have_state`, `allow_event` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)
+ * add RSpec matchers `have_state`, `allow_event` and `allow_transition_to` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)
  * add RSpec matcher `transition_from` (see [issue #178](https://github.com/aasm/aasm/issues/178) for details, thanks to [@thomasstephane](https://github.com/thomasstephane))
 
 ## 4.4.1
