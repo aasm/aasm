@@ -723,20 +723,26 @@ Job.aasm.states_for_select
 
 ### Testing
 
-AASM provides some matchers for [RSpec](http://rspec.info). Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
 
 ```ruby
 # classes with only the default state machine
 job = Job.new
 expect(job).to transition_from(:sleeping).to(:running).on_event(:run)
 expect(job).not_to transition_from(:sleeping).to(:cleaning).on_event(:run)
+expect(job).to have_state(:sleeping)
+expect(job).not_to have_state(:running)
 
 # classes with multiple state machine
 multiple = SimpleMultipleExample.new
 expect(multiple).to transition_from(:standing).to(:walking).on_event(:walk).on(:move)
 expect(multiple).to_not transition_from(:standing).to(:running).on_event(:walk).on(:move)
+expect(multiple).to have_state(:standing).on(:move)
+expect(multiple).not_to have_state(:walking).on(:move)
 expect(multiple).to transition_from(:sleeping).to(:processing).on_event(:start).on(:work)
 expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
+expect(multiple).to have_state(:sleeping).on(:work)
+expect(multiple).not_to have_state(:processing).on(:work)
 ```
 
 ## <a id="installation">Installation ##

@@ -18,4 +18,26 @@ describe 'state machine' do
       expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
     end
   end
+
+  describe "have_state" do
+    it "works for simple state machines" do
+      expect(simple).to have_state :initialised
+      expect(simple).to_not have_state :filled_out
+      simple.fill_out
+      expect(simple).to have_state :filled_out
+    end
+
+    it "works for multiple state machines" do
+      expect(multiple).to have_state(:standing).on(:move)
+      expect(multiple).to_not have_state(:walking).on(:move)
+      multiple.walk
+      expect(multiple).to have_state(:walking).on(:move)
+
+      expect(multiple).to have_state(:sleeping).on(:work)
+      expect(multiple).to_not have_state(:processing).on(:work)
+      multiple.start
+      expect(multiple).to have_state(:processing).on(:work)
+    end
+  end
+
 end

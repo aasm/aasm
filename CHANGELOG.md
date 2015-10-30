@@ -2,7 +2,8 @@
 
 ## unreleased
 
- * add RSpec matcher `transition_from` (see [issue #178](https://github.com/aasm/aasm/issues/178)  for details, thanks to [@thomasstephane](https://github.com/thomasstephane))
+ * add RSpec matcher `have_state` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)
+ * add RSpec matcher `transition_from` (see [issue #178](https://github.com/aasm/aasm/issues/178) for details, thanks to [@thomasstephane](https://github.com/thomasstephane))
 
 ## 4.4.1
 
