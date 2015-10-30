@@ -723,28 +723,21 @@ Job.aasm.states_for_select
 
 ### Testing
 
-AASM provides matchers for [RSpec](http://rspec.info).
+AASM provides some matchers for [RSpec](http://rspec.info). Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
 
-  job = Job.new
-  job.should have_state :sleeping
-  job.should allow_transition_to :running
-  job.should allow_event :run
-  job.should allow_event :run!
-  job.should_not allow_event :clean
-  job.should_not allow_event :clean!
+```ruby
+# classes with only the default state machine
+job = Job.new
+expect(job).to transition_from(:sleeping).to(:running).on_event(:run)
+expect(job).not_to transition_from(:sleeping).to(:cleaning).on_event(:run)
 
-  simple = SimpleMultipleExample.new
-  simple.should have_state :standing, :on => :move
-  simple.should allow_transition_to :walking, :on => :move
-  simple.should allow_event :run
-  simple.should allow_event :run!
-  simple.should have_state :sleeping, :on => :work
-  simple.should allow_transition_to :processing, :on => :work
-  simple.should allow_event :start
-  simple.should allow_event :start!
-  simple.should_not allow_event :stop
-  simple.should_not allow_event :stop!
-
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+expect(multiple).to transition_from(:standing).to(:walking).on_event(:walk).on(:move)
+expect(multiple).to_not transition_from(:standing).to(:running).on_event(:walk).on(:move)
+expect(multiple).to transition_from(:sleeping).to(:processing).on_event(:start).on(:work)
+expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
+```
 
 ## <a id="installation">Installation ##
 
