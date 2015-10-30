@@ -40,4 +40,25 @@ describe 'state machine' do
     end
   end
 
+  describe "allow_event" do
+    it "works for simple state machines" do
+      expect(simple).to allow_event :fill_out
+      expect(simple).to_not allow_event :authorise
+      simple.fill_out
+      expect(simple).to allow_event :authorise
+    end
+
+    it "works for multiple state machines" do
+      expect(multiple).to allow_event(:walk).on(:move)
+      expect(multiple).to_not allow_event(:hold).on(:move)
+      multiple.walk
+      expect(multiple).to allow_event(:hold).on(:move)
+
+      expect(multiple).to allow_event(:start).on(:work)
+      expect(multiple).to_not allow_event(:stop).on(:work)
+      multiple.start
+      expect(multiple).to allow_event(:stop).on(:work)
+    end
+  end
+
 end
