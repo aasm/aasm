@@ -36,6 +36,8 @@ module AASM
         options = args[0] || {}
       end
 
+      self.has_many :aasm_state_change_logs, as: :model, class_name: 'AASM::StateChangeLog' if options[:log_state_changes]
+
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
       @aasm ||= {}
@@ -136,6 +138,18 @@ private
       )
 
       self.aasm_event_fired(event.name, old_state.name, aasm(state_machine_name).current_state) if self.respond_to?(:aasm_event_fired)
+      if AASM::StateMachine[self.class][state_machine_name].config.log_state_changes
+        local_aasm = aasm(state_machine_name)
+        AASM::StateChangeLog.create!(
+          model: self,
+          transition_event: event.name,
+          from_state: old_state.name,
+          to_state: local_aasm.current_state,
+          reason_id: local_aasm.state_change_reason_id,
+          comment: local_aasm.state_change_comment,
+          user_id: local_aasm.state_change_user_id
+        )
+      end
     else
       self.aasm_event_failed(event.name, old_state.name) if self.respond_to?(:aasm_event_failed)
     end
