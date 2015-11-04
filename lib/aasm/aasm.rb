@@ -75,6 +75,12 @@ private
     begin
       old_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
 
+      event.fire_global_callbacks(
+        :before_all_events,
+        self,
+        *process_args(event, aasm(state_machine_name).current_state, *args)
+      )
+
       # new event before callback
       event.fire_callbacks(
         :before,
@@ -97,7 +103,12 @@ private
         aasm_failed(state_machine_name, event_name, old_state)
       end
     rescue StandardError => e
-      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) || raise(e)
+      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) || 
+      event.fire_global_callbacks(:error_on_all_events, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
+      raise(e)
+    ensure
+      event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
+      event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args)) 
     end
   end
 
@@ -131,6 +142,11 @@ private
         *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_callbacks(
         :after,
+        self,
+        *process_args(event, old_state.name, *args)
+      )
+      event.fire_global_callbacks(
+        :after_all_events,
         self,
         *process_args(event, old_state.name, *args)
       )

@@ -146,6 +146,7 @@ Here you can see a list of all possible callbacks, together with their order of 
 
 ```ruby
 begin
+  event           before_all_events
   event           before
   event           guards
   transition      guards
@@ -160,8 +161,13 @@ begin
   old_state       after_exit
   new_state       after_enter
   event           after
+  event           after_all_events
 rescue
   event           error
+  event           error_on_all_events
+ensure
+  event           ensure
+  event           ensure_on_all_events
 end
 ```
 

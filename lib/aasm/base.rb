@@ -113,6 +113,22 @@ module AASM
       @state_machine.add_global_callbacks(:after_all_transitions, *callbacks, &block)
     end
 
+    def before_all_events(*callbacks, &block)
+      @state_machine.add_global_callbacks(:before_all_events, *callbacks, &block)
+    end
+
+    def after_all_events(*callbacks, &block)
+      @state_machine.add_global_callbacks(:after_all_events, *callbacks, &block)
+    end
+
+    def error_on_all_events(*callbacks, &block)
+      @state_machine.add_global_callbacks(:error_on_all_events, *callbacks, &block)
+    end
+
+    def ensure_on_all_events(*callbacks, &block)
+      @state_machine.add_global_callbacks(:ensure_on_all_events, *callbacks, &block)
+    end
+
     def states
       @state_machine.states
     end
