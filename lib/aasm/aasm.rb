@@ -140,15 +140,16 @@ private
       self.aasm_event_fired(event.name, old_state.name, aasm(state_machine_name).current_state) if self.respond_to?(:aasm_event_fired)
       if AASM::StateMachine[self.class][state_machine_name].config.log_state_changes
         local_aasm = aasm(state_machine_name)
-        AASM::StateChangeLog.create!(
+        params = {
           model: self,
           transition_event: event.name,
           from_state: old_state.name,
-          to_state: local_aasm.current_state,
-          reason_id: local_aasm.state_change_reason_id,
-          comment: local_aasm.state_change_comment,
-          user_id: local_aasm.state_change_user_id
-        )
+          to_state: local_aasm.current_state
+        }
+        if local_aasm.custom_column_values.present?
+          params.merge!(local_aasm.custom_column_values){|key, old, new| old}
+        end
+        AASM::StateChangeLog.create!(params)
       end
     else
       self.aasm_event_failed(event.name, old_state.name) if self.respond_to?(:aasm_event_failed)
