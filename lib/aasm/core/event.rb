@@ -13,7 +13,16 @@ module AASM::Core
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [:after, :before, :error, :success, :after_commit, :ensure], &block) if block
+      add_options_from_dsl(@options, [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :success,
+      ], &block) if block
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just

@@ -468,7 +468,39 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name")
       end
+    end
 
+    describe 'before and after transaction callbacks' do
+      [:after, :before].each do |event_type|
+        describe "before_transaction callback" do
+          it "should fire :#{event_type}_transaction if transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            expect { validator.run! }.to change { validator.send("#{event_type}_transaction_performed_on_run") }.from(nil).to(true)
+            expect(validator).to be_running
+          end
+
+          it "should fire :before_transaction if transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect do
+              begin
+                validator.fail!
+              rescue => ignored
+              end
+            end.to change { validator.send("#{event_type}_transaction_performed_on_fail") }.from(nil).to(true)
+            expect(validator).to_not be_running
+          end
+
+          it "should not fire if not saving" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+            expect { validator.run }.to_not change { validator.send("#{event_type}_transaction_performed_on_run") }
+            expect(validator).to be_running
+            expect(validator.name).to eq("name")
+          end
+        end
+      end
     end
 
     context "when not persisting" do

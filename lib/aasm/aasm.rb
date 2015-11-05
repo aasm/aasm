@@ -103,12 +103,12 @@ private
         aasm_failed(state_machine_name, event_name, old_state)
       end
     rescue StandardError => e
-      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) || 
+      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
       event.fire_global_callbacks(:error_on_all_events, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
       raise(e)
     ensure
       event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
-      event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args)) 
+      event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
   end
 
