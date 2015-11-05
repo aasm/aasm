@@ -98,7 +98,7 @@ describe 'callbacks for the new DSL' do
     callback = Callbacks::Basic.new(:log => false)
     callback.aasm.current_state
 
-    expect(callback).to receive(:before_all_events).once.ordered    
+    expect(callback).to receive(:before_all_events).once.ordered
     expect(callback).to receive(:before_event).once.ordered
     expect(callback).to receive(:event_guard).once.ordered.and_return(false)
     expect(callback).to_not receive(:transition_guard)
@@ -371,7 +371,7 @@ end
 describe 'global error_on_all_events_callback callbacks' do
   describe "with an error_on_all_events" do
     before do
-      class Foo
+      class FooGlobal
         # this hack is needed to allow testing of parameters, since RSpec
         # destroys a method's arity when mocked
         attr_accessor :data
@@ -385,12 +385,12 @@ describe 'global error_on_all_events_callback callbacks' do
         end
       end
 
-      @foo = Foo.new
+      @foo = FooGlobal.new
     end
 
     it_behaves_like 'an implemented callback that accepts error' do
       let(:aasm_model) { @foo }
-      let(:callback_name) { :error_on_all_events_callback } 
+      let(:callback_name) { :error_on_all_events_callback }
     end
 
     it "should raise NoMethodError if exception is raised and error_callback is declared but not defined" do
@@ -408,7 +408,7 @@ end
 describe 'global ensure_on_all_events_callback callbacks' do
   describe "with an ensure_on_all_events" do
     before do
-      class Foo
+      class FooGlobal
         # this hack is needed to allow testing of parameters, since RSpec
         # destroys a method's arity when mocked
         attr_accessor :data
@@ -422,7 +422,7 @@ describe 'global ensure_on_all_events_callback callbacks' do
         end
       end
 
-      @foo = Foo.new
+      @foo = FooGlobal.new
     end
 
     it_behaves_like 'an implemented callback' do
