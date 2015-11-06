@@ -165,7 +165,15 @@ module AASM
           end
 
           begin
-            success = options[:persist] ? self.class.transaction(:requires_new => requires_new?(state_machine_name)) { super } : super
+            success = if options[:persist]
+              self.class.transaction(:requires_new => requires_new?(state_machine_name)) do
+                lock!(requires_lock?(state_machine_name)) if requires_lock?(state_machine_name)
+                super
+              end
+            else
+              super
+            end
+
             if options[:persist] && success
               event.fire_callbacks(:after_commit, self, *args)
               event.fire_global_callbacks(:after_all_commits, self, *args)
@@ -182,6 +190,10 @@ module AASM
 
         def requires_new?(state_machine_name)
           AASM::StateMachine[self.class][state_machine_name].config.requires_new_transaction
+        end
+
+        def requires_lock?(state_machine_name)
+          AASM::StateMachine[self.class][state_machine_name].config.requires_lock
         end
 
         def aasm_validate_states

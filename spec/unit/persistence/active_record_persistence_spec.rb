@@ -425,6 +425,39 @@ describe 'transitions with persistence' do
     expect(persistor).not_to be_sleeping
   end
 
+  describe 'pessimistic locking' do
+    let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
+
+    subject { transactor.run! }
+
+    context 'no lock' do
+      let(:transactor) { NoLockTransactor.create!(:name => 'no_lock_transactor', :worker => worker) }
+
+      it 'should not invoke lock!' do
+        expect(transactor).to_not receive(:lock!)
+        subject
+      end
+    end
+
+    context 'a default lock' do
+      let(:transactor) { LockTransactor.create!(:name => 'lock_transactor', :worker => worker) }
+
+      it 'should invoke lock! with true' do
+        expect(transactor).to receive(:lock!).with(true).and_call_original
+        subject
+      end
+    end
+
+    context 'a FOR UPDATE NOWAIT lock' do
+      let(:transactor) { LockNoWaitTransactor.create!(:name => 'lock_no_wait_transactor', :worker => worker) }
+
+      it 'should invoke lock! with FOR UPDATE NOWAIT' do
+        expect(transactor).to receive(:lock!).with('FOR UPDATE NOWAIT').and_call_original
+        subject
+      end
+    end
+  end
+
   describe 'transactions' do
     let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
     let(:transactor) { Transactor.create!(:name => 'transactor', :worker => worker) }

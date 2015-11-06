@@ -17,24 +17,19 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
-  ActiveRecord::Migration.create_table "validators", :force => true do |t|
-    t.string "name"
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "multiple_validators", :force => true do |t|
-    t.string "name"
-    t.string "status"
+  %w(validators multiple_validators).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "name"
+      t.string "status"
+    end
   end
 
-  ActiveRecord::Migration.create_table "transactors", :force => true do |t|
-    t.string "name"
-    t.string "status"
-    t.integer "worker_id"
-  end
-  ActiveRecord::Migration.create_table "multiple_transactors", :force => true do |t|
-    t.string "name"
-    t.string "status"
-    t.integer "worker_id"
+  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors multiple_transactors).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "name"
+      t.string "status"
+      t.integer "worker_id"
+    end
   end
 
   ActiveRecord::Migration.create_table "workers", :force => true do |t|

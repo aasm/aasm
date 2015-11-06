@@ -24,6 +24,11 @@ module AASM
       # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
 
+      # use pessimistic locking (in ActiveRecord)
+      # true for FOR UPDATE lock
+      # string for a specific lock type i.e. FOR UPDATE NOWAIT
+      configure :requires_lock, false
+
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
 
