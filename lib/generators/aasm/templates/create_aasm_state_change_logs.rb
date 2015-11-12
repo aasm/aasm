@@ -12,5 +12,8 @@ class CreateAasmStateChangeLogs < ActiveRecord::Migration
     end
     
     add_index :aasm_state_change_logs, [:model_id, :model_type]
+    # Here are some other suggested indeces
+    # add_index :aasm_state_change_logs, [:created_at, :to_state]
+    # add_index :aasm_state_change_logs, [:to_state, :from_state]
   end
 end
