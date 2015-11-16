@@ -47,12 +47,9 @@ describe 'callbacks for the new DSL' do
     expect(callback).to_not receive(:after_enter_closed)
     expect(callback).to_not receive(:after_event)
 
-    error = safe_error { callback.left_close! }
-
-    expect(error.class).to eq AASM::InvalidTransition
-    expect(error.message).to eq(
-      "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard]."
-    )
+    expect {
+      callback.left_close!
+    }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard].")
 
   end
 
@@ -89,12 +86,9 @@ describe 'callbacks for the new DSL' do
         expect(callback).to_not receive(:after_event)
       end
 
-      error = safe_error { callback.left_close! }
-
-      expect(error.class).to eq AASM::InvalidTransition
-      expect(error.message).to eq(
-        "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard, :transition_guard]."
-      )
+      expect {
+        callback.left_close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard, :transition_guard].")
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
@@ -139,11 +133,10 @@ describe 'callbacks for the new DSL' do
       expect(callback).to_not receive(:after_exit_open)
       expect(callback).to_not receive(:after_enter_closed)
       expect(callback).to_not receive(:after)
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition)
 
-      error = safe_error(callback) { callback.close! }
-
-      expect(error.class).to eq AASM::InvalidTransition
-      expect(error.message[0..63]).to eq "Event 'close' cannot transition from 'open'. Failed callback(s):"
     end
   end
 
@@ -285,23 +278,16 @@ describe 'event callbacks' do
 
     it 'should call it when transition failed for bang fire' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
-      error = safe_error { @foo.null! }
-
-      expect(error.class).to eq AASM::InvalidTransition
-      expect(error.message).to eq(
-        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false]."
-      )
-
+      expect{
+        @foo.null!
+      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false].")
     end
 
     it 'should call it when transition failed for non-bang fire' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
-      error = safe_error { @foo.null }
-
-      expect(error.class).to eq AASM::InvalidTransition
-      expect(error.message).to eq(
-        "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false, :always_false]."
-      )
+      expect{
+        @foo.null
+      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false, :always_false].")
     end
 
     it 'should not call it if persist fails for bang fire' do

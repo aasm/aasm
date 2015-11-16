@@ -22,13 +22,3 @@ Dir[File.dirname(__FILE__) + "/spec_helpers/**/*.rb"].sort.each { |f| require Fi
 
 # example model classes
 Dir[File.dirname(__FILE__) + "/models/*.rb"].sort.each { |f| require File.expand_path(f) }
-
-def safe_error(callback = nil) # Need callack to maintain scope for Proc testing
-  error = nil
-  begin
-    yield
-  rescue Exception => e
-    error = e
-    return error
-  end
-end
