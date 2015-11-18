@@ -615,7 +615,7 @@ callback or the state update fails, all changes to any database record are rolle
 Mongodb does not support transactions.
 
 If you want to make sure a depending action happens only after the transaction is committed,
-use the `after_commit` callback, like this:
+use the `after_commit` callback along with the auto-save (bang) methods, like this:
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -634,6 +634,18 @@ class Job < ActiveRecord::Base
     ...
   end
 end
+
+job = Job.where(state: 'sleeping').first!
+job.run! # Saves the model and triggers the after_commit callback
+```
+
+Note that the following will not run the `after_commit` callbacks because
+the auto-save method is not used:
+
+```ruby
+job = Job.where(state: 'sleeping').first!
+job.run
+job.save! #notify_about_running_job is not run
 ```
 
 If you want to encapsulate state changes within an own transaction, the behavior
