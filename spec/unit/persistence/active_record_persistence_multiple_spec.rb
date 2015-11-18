@@ -298,6 +298,10 @@ describe "named scopes with the new DSL" do
   it "does not create scopes if requested" do
     expect(MultipleNoScope).not_to respond_to(:pending)
   end
+
+  it "does not create scopes for individual states if requested" do
+    expect(NoLockedScope).not_to respond_to(:locked)
+  end
 end # scopes
 
 describe "direct assignment" do

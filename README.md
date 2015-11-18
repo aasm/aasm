@@ -607,6 +607,22 @@ class Job < ActiveRecord::Base
 end
 ```
 
+If you want to skip creation of individual scopes, disable their creation when
+declaring the scope:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :locked, :create_scope => false
+    state :running
+    state :cleaning
+  end
+end
+```
+
 
 ### Transaction support
 

@@ -19,3 +19,15 @@ class MultipleNoScope < ActiveRecord::Base
     end
   end
 end
+
+class NoLockedScope < ActiveRecord::Base
+  include AASM
+  aasm do
+    state :pending, :initial => true
+    state :locked, :create_scope => false
+    state :running
+    event :run do
+      transitions :from => :pending, :to => :running
+    end
+  end
+end

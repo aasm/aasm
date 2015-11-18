@@ -55,8 +55,8 @@ module AASM
     # make sure to create a (named) scope for each state
     def state_with_scope(name, *args)
       state_without_scope(name, *args)
-      if @state_machine.config.create_scopes && !@klass.respond_to?(name)
 
+      if should_create_scope?(name, *args)
         if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
           conditions = {"#{@klass.table_name}.#{@klass.aasm(@name).attribute_name}" => name.to_s}
           if ActiveRecord::VERSION::MAJOR >= 3
@@ -84,6 +84,11 @@ module AASM
     end
     alias_method :state_without_scope, :state
     alias_method :state, :state_with_scope
+
+  private
+    def should_create_scope?(name, *args)
+      return @state_machine.config.create_scopes && !@klass.respond_to?(name) && (args.first.blank? || args.first[:create_scope] != false)
+    end
   end # Base
 
 end # AASM
