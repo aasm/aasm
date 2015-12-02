@@ -28,8 +28,7 @@ class Job
 
   aasm do
     state :sleeping, :initial => true
-    state :running
-    state :cleaning
+    state :running, :cleaning
 
     event :run do
       transitions :from => :sleeping, :to => :running

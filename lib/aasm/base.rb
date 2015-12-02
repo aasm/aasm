@@ -63,21 +63,39 @@ module AASM
     end
 
     # define a state
-    def state(name, options={})
-      @state_machine.add_state(name, @klass, options)
-
-      if @klass.instance_methods.include?("#{name}?")
-        warn "#{@klass.name}: The aasm state name #{name} is already used!"
+    # args
+    # [0] state
+    # [1] options (or nil)
+    # or
+    # [0] state
+    # [1..] state
+    def state(*args)
+      if args.last.is_a?(Hash) && args.size == 2
+        names = [args.first]
+        options = args.last
+      elsif
+        names = args
+        options = {}
+      else
+        raise "count not parse states: #{args}"
       end
 
-      @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
+      names.each do |name|
+        @state_machine.add_state(name, @klass, options)
+
+        if @klass.instance_methods.include?("#{name}?")
+          warn "#{@klass.name}: The aasm state name #{name} is already used!"
+        end
+
+        @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
         def #{name}?
           aasm(:#{@name}).current_state == :#{name}
         end
       EORUBY
 
-      unless @klass.const_defined?("STATE_#{name.upcase}")
-        @klass.const_set("STATE_#{name.upcase}", name)
+        unless @klass.const_defined?("STATE_#{name.upcase}")
+          @klass.const_set("STATE_#{name.upcase}", name)
+        end
       end
     end
 
