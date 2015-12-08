@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * make sure to use override configuration options if state machine is defined more than once (see [issue #287](https://github.com/aasm/aasm/issues/287) for details)
+
 ## 4.5.0
 
  * add RSpec matchers `have_state`, `allow_event` and `allow_transition_to` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)

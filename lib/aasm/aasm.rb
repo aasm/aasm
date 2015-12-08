@@ -39,7 +39,20 @@ module AASM
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
       @aasm ||= {}
-      @aasm[state_machine_name] ||= AASM::Base.new(self, state_machine_name, AASM::StateMachine[self][state_machine_name], options)
+      if @aasm[state_machine_name]
+        # make sure to use provided options
+        options.each do |key, value|
+          @aasm[state_machine_name].state_machine.config.send("#{key}=", value)
+        end
+      else
+        # create a new base
+        @aasm[state_machine_name] = AASM::Base.new(
+          self,
+          state_machine_name,
+          AASM::StateMachine[self][state_machine_name],
+          options
+        )
+      end
       @aasm[state_machine_name].instance_eval(&block) if block # new DSL
       @aasm[state_machine_name]
     end
