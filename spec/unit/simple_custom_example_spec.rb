@@ -24,7 +24,7 @@ describe 'Custom AASM::Base' do
 
   context 'when aasm_with invoked with non AASM::Base' do
     subject do
-      class SomeModel
+      Class.new do
         include AASM
 
         aasm_with String do
