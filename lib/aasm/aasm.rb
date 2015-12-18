@@ -24,8 +24,19 @@ module AASM
       super
     end
 
+    # allows you to build an AASM model with application specific AASM::Base class.
+    def aasm_with(application_klass, *args, &block)
+      build_aasm(application_klass, *args, &block)
+    end
+
     # this is the entry point for all state and event definitions
     def aasm(*args, &block)
+      build_aasm(AASM::Base, *args, &block)
+    end
+
+    private
+
+    def build_aasm(aasm_klass, *args, &block)
       if args[0].is_a?(Symbol) || args[0].is_a?(String)
         # using custom name
         state_machine_name = args[0].to_sym
@@ -38,6 +49,8 @@ module AASM
 
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
+      raise ArgumentError, "The class #{aasm_klass} must inherit from AASM::Base!" unless aasm_klass.ancestors.include?(AASM::Base)
+
       @aasm ||= {}
       if @aasm[state_machine_name]
         # make sure to use provided options
@@ -46,7 +59,7 @@ module AASM
         end
       else
         # create a new base
-        @aasm[state_machine_name] = AASM::Base.new(
+        @aasm[state_machine_name] = aasm_klass.new(
           self,
           state_machine_name,
           AASM::StateMachine[self][state_machine_name],

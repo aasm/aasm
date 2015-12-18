@@ -1,12 +1,13 @@
 module AASM
   class Base
 
-    attr_reader :state_machine
+    attr_reader :klass,
+      :state_machine
 
     def initialize(klass, name, state_machine, options={}, &block)
       @klass = klass
       @name = name
-      # @state_machine = @klass.aasm(@name).state_machine
+      # @state_machine = klass.aasm(@name).state_machine
       @state_machine = state_machine
       @state_machine.config.column ||= (options[:column] || default_column).to_sym
       # @state_machine.config.column = options[:column].to_sym if options[:column] # master
@@ -32,7 +33,7 @@ module AASM
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
-      @klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
+      klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
         if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
           raise AASM::NoDirectAssignmentError.new(
             'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
@@ -63,19 +64,19 @@ module AASM
 
     # define a state
     def state(name, options={})
-      @state_machine.add_state(name, @klass, options)
+      @state_machine.add_state(name, klass, options)
 
-      if @klass.instance_methods.include?("#{name}?")
-        warn "#{@klass.name}: The aasm state name #{name} is already used!"
+      if klass.instance_methods.include?("#{name}?")
+        warn "#{klass.name}: The aasm state name #{name} is already used!"
       end
 
       aasm_name = @name
-      @klass.send :define_method, "#{name}?", ->() do
+      klass.send :define_method, "#{name}?", ->() do
         aasm(:"#{aasm_name}").current_state == :"#{name}"
       end
 
-      unless @klass.const_defined?("STATE_#{name.upcase}")
-        @klass.const_set("STATE_#{name.upcase}", name)
+      unless klass.const_defined?("STATE_#{name.upcase}")
+        klass.const_set("STATE_#{name.upcase}", name)
       end
     end
 
@@ -83,8 +84,8 @@ module AASM
     def event(name, options={}, &block)
       @state_machine.add_event(name, options, &block)
 
-      if @klass.instance_methods.include?("may_#{name}?".to_sym)
-        warn "#{@klass.name}: The aasm event name #{name} is already used!"
+      if klass.instance_methods.include?("may_#{name}?".to_sym)
+        warn "#{klass.name}: The aasm event name #{name} is already used!"
       end
 
       # an addition over standard aasm so that, before firing an event, you can ask
@@ -92,16 +93,16 @@ module AASM
       # on the transition will let this happen.
       aasm_name = @name
 
-      @klass.send :define_method, "may_#{name}?", ->(*args) do
+      klass.send :define_method, "may_#{name}?", ->(*args) do
         aasm(:"#{aasm_name}").may_fire_event?(:"#{name}", *args)
       end
 
-      @klass.send :define_method, "#{name}!", ->(*args, &block) do
+      klass.send :define_method, "#{name}!", ->(*args, &block) do
         aasm(:"#{aasm_name}").current_event = :"#{name}!"
         aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => true}, *args, &block)
       end
 
-      @klass.send :define_method, "#{name}", ->(*args, &block) do
+      klass.send :define_method, "#{name}", ->(*args, &block) do
         aasm(:"#{aasm_name}").current_event = :"#{name}"
         aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => false}, *args, &block)
       end
@@ -145,7 +146,7 @@ module AASM
 
     # aasm.event(:event_name).human?
     def human_event_name(event) # event_name?
-      AASM::Localizer.new.human_event_name(@klass, event)
+      AASM::Localizer.new.human_event_name(klass, event)
     end
 
     def states_for_select
