@@ -10,5 +10,7 @@ gem "rails", "4.2.0"
 gem 'sequel'
 gem 'mongo_mapper'
 gem 'bson_ext',                          :platforms => :ruby
+gem 'dynamoid', '~> 1',                  :platforms => :ruby
+gem 'aws-sdk', '~>2',                    :platforms => :ruby
 
 gemspec :path => "../"

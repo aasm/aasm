@@ -8,5 +8,7 @@ gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "rails", "4.2.0"
 gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
+gem 'dynamoid', '~> 1',                 :platforms => :ruby
+gem 'aws-sdk', '~>2',                   :platforms => :ruby
 
 gemspec :path => "../"

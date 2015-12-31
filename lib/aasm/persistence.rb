@@ -14,6 +14,8 @@ module AASM
           include_persistence base, :mongo_mapper
         elsif hierarchy.include?("Sequel::Model")
           include_persistence base, :sequel
+        elsif hierarchy.include?("Dynamoid::Document")
+          include_persistence base, :dynamoid
         else
           include_persistence base, :plain
         end
