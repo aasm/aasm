@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased
+## 4.5.2
 
  * fix arity difference between Procs and lambdas (see [issue #293](https://github.com/aasm/aasm/issues/293) for details)
 
