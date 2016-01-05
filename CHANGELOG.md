@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * fix arity difference between Procs and lambdas (see [issue #293](https://github.com/aasm/aasm/issues/293) for details)
+
 ## 4.5.1
 
  * make sure to use override configuration options if state machine is defined more than once (see [issue #287](https://github.com/aasm/aasm/issues/287) for details)

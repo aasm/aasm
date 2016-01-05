@@ -1,6 +1,9 @@
 class Guardian
   include AASM
 
+  def inner_guard(options={})
+  end
+
   aasm do
     state :alpha, :initial => true
     state :beta
@@ -10,6 +13,13 @@ class Guardian
     end
     event :use_one_guard_that_fails do
       transitions :from => :alpha, :to => :beta, :guard => :fail
+    end
+
+    event :use_proc_guard_with_params do
+      transitions :from => :alpha, :to => :beta, :guard => Proc.new { |options={}| inner_guard(options) }
+    end
+    event :use_lambda_guard_with_params do
+      transitions :from => :alpha, :to => :beta, :guard => lambda { |options={}| inner_guard(options) }
     end
 
     event :use_guards_that_succeed do

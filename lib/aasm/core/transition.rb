@@ -55,7 +55,7 @@ module AASM::Core
         arity = record.send(:method, code.to_sym).arity
         arity == 0 ? record.send(code) : record.send(code, *args)
       when Proc
-        code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
       when Array
         if options[:guard]
           # invoke guard callbacks
