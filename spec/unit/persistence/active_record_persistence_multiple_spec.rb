@@ -113,6 +113,20 @@ describe "instance methods" do
         end
       end
     end
+
+    if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+      # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
+      context "when AASM enum setting is not enabled and aasm column not present" do
+
+        let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
+
+        it "should raise NoMethodError for transitions" do
+          expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, "undefined method 'status' for MultipleWithEnumWithoutColumn")
+        end
+      end
+
+    end
+
   end
 
   context "when AASM is configured to use enum" do
