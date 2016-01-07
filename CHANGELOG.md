@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * add generators to configure active_record and mongoid after install (see [issue #261](https://github.com/aasm/aasm/issues/261) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+
 ## 4.5.2
 
  * fix arity difference between Procs and lambdas (see [issue #293](https://github.com/aasm/aasm/issues/293) for details)
