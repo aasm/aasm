@@ -13,7 +13,16 @@ module AASM::Core
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [:after, :before, :error, :success, :after_commit], &block) if block
+      add_options_from_dsl(@options, [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :success,
+      ], &block) if block
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just
@@ -41,6 +50,10 @@ module AASM::Core
 
     def transitions_to_state(state)
       @transitions.select { |t| t.to == state }
+    end
+
+    def fire_global_callbacks(callback_name, record, *args)
+      invoke_callbacks(state_machine.global_callbacks[callback_name], record, args)
     end
 
     def fire_callbacks(callback_name, record, *args)
@@ -145,6 +158,5 @@ module AASM::Core
           false
       end
     end
-
   end
 end # AASM

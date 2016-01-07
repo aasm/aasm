@@ -157,11 +157,24 @@ module AASM
         end
 
         def aasm_fire_event(state_machine_name, name, options, *args, &block)
-          success = options[:persist] ? self.class.transaction(:requires_new => requires_new?(state_machine_name)) { super } : super
+          event = self.class.aasm(state_machine_name).state_machine.events[name]
 
-          if success && options[:persist]
-            event = self.class.aasm(state_machine_name).state_machine.events[name]
-            event.fire_callbacks(:after_commit, self, *args)
+          if options[:persist]
+            event.fire_callbacks(:before_transaction, self, *args)
+            event.fire_global_callbacks(:before_all_transactions, self, *args)
+          end
+
+          begin
+            success = options[:persist] ? self.class.transaction(:requires_new => requires_new?(state_machine_name)) { super } : super
+            if options[:persist] && success
+              event.fire_callbacks(:after_commit, self, *args)
+              event.fire_global_callbacks(:after_all_commits, self, *args)
+            end
+          ensure
+            if options[:persist]
+              event.fire_callbacks(:after_transaction, self, *args)
+              event.fire_global_callbacks(:after_all_transactions, self, *args)
+            end
           end
 
           success

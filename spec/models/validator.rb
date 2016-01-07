@@ -1,23 +1,51 @@
 require 'active_record'
 
 class Validator < ActiveRecord::Base
+  attr_accessor :after_all_transactions_performed,
+    :after_transaction_performed_on_fail,
+    :after_transaction_performed_on_run,
+    :before_all_transactions_performed,
+    :before_transaction_performed_on_fail,
+    :before_transaction_performed_on_run
 
   include AASM
+
   aasm :column => :status do
+    before_all_transactions :before_all_transactions
+    after_all_transactions  :after_all_transactions
+
     state :sleeping, :initial => true
     state :running
     state :failed, :after_enter => :fail
 
     event :run, :after_commit => :change_name! do
+      after_transaction do
+        @after_transaction_performed_on_run = true
+      end
+
+      before_transaction do
+        @before_transaction_performed_on_run = true
+      end
+
       transitions :to => :running, :from => :sleeping
     end
+
     event :sleep do
       after_commit do |name|
         change_name_on_sleep name
       end
       transitions :to => :sleeping, :from => :running
     end
+
     event :fail do
+      after_transaction do
+        @after_transaction_performed_on_fail = true
+      end
+
+      before_transaction do
+        @before_transaction_performed_on_fail = true
+      end
+
       transitions :to => :failed, :from => [:sleeping, :running]
     end
   end
@@ -36,6 +64,14 @@ class Validator < ActiveRecord::Base
 
   def fail
     raise StandardError.new('failed on purpose')
+  end
+
+  def after_all_transactions
+    @after_all_transactions_performed = true
+  end
+
+  def before_all_transactions
+    @before_all_transactions_performed = true
   end
 end
 

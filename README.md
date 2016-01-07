@@ -146,6 +146,7 @@ Here you can see a list of all possible callbacks, together with their order of 
 
 ```ruby
 begin
+  event           before_all_events
   event           before
   event           guards
   transition      guards
@@ -160,8 +161,13 @@ begin
   old_state       after_exit
   new_state       after_enter
   event           after
+  event           after_all_events
 rescue
   event           error
+  event           error_on_all_events
+ensure
+  event           ensure
+  event           ensure_on_all_events
 end
 ```
 
@@ -613,6 +619,17 @@ end
 Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a transition
 callback or the state update fails, all changes to any database record are rolled back.
 Mongodb does not support transactions.
+
+There are currently 3 transactional callbacks that can be handled on the event, and 2 transactional callbacks for all events.
+
+```ruby
+  event           before_all_transactions
+  event           before_transaction
+  event           aasm_fire_event (within transaction)
+  event           after_commit (if event successful)
+  event           after_transaction
+  event           after_all_transactions
+```
 
 If you want to make sure a depending action happens only after the transaction is committed,
 use the `after_commit` callback along with the auto-save (bang) methods, like this:
