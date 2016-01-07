@@ -129,11 +129,9 @@ module AASM
         end
 
         # Ensures that if the aasm_state column is nil and the record is new
-        # then the initial state gets populated before validation on create
+        # then the initial state gets populated after initialization
         #
         #   foo = Foo.new
-        #   foo.aasm_state # => nil
-        #   foo.valid?
         #   foo.aasm_state # => "open" (where :open is the initial state)
         #
         #
