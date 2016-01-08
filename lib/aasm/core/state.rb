@@ -70,8 +70,8 @@ module AASM::Core
     def _fire_callbacks(action, record, args)
       case action
         when Symbol, String
-          arity = record.send(:method, action.to_sym).arity
-          record.send(action, *(arity < 0 ? args : args[0...arity]))
+          arity = record.__send__(:method, action.to_sym).arity
+          record.__send__(action, *(arity < 0 ? args : args[0...arity]))
         when Proc
           arity = action.arity
           action.call(record, *(arity < 0 ? args : args[0...arity]))

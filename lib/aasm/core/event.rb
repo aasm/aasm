@@ -141,8 +141,8 @@ module AASM::Core
           unless record.respond_to?(code, true)
             raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{record.inspect}:#{record.class}")
           end
-          arity = record.send(:method, code.to_sym).arity
-          record.send(code, *(arity < 0 ? args : args[0...arity]))
+          arity = record.__send__(:method, code.to_sym).arity
+          record.__send__(code, *(arity < 0 ? args : args[0...arity]))
           true
 
         when Proc

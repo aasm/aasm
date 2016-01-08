@@ -52,8 +52,8 @@ module AASM::Core
 
       case code
       when Symbol, String
-        arity = record.send(:method, code.to_sym).arity
-        arity == 0 ? record.send(code) : record.send(code, *args)
+        arity = record.__send__(:method, code.to_sym).arity
+        arity == 0 ? record.__send__(code) : record.__send__(code, *args)
       when Proc
         code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
       when Array
