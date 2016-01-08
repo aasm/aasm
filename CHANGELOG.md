@@ -1,9 +1,13 @@
 # CHANGELOG
 
+## unreleased
+
+ * add new callbacks: transactions, all events, ensure (see [issue #282](https://github.com/aasm/aasm/issues/282) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+
 ## 4.6.0
 
  * fix: make sure the column is actually present for _ActiveRecord_ enums (see [issue #265](https://github.com/aasm/aasm/issues/265) and [issue #152](https://github.com/aasm/aasm/issues/152) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
-* add generators to configure active_record and mongoid after install (see [issue #261](https://github.com/aasm/aasm/issues/261) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+ * add generators to configure active_record and mongoid after install (see [issue #261](https://github.com/aasm/aasm/issues/261) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
 
 ## 4.5.2
 
