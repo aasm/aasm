@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased
+## 4.7.0
 
  * fix: allow :send as event name (see [issue #257](https://github.com/aasm/aasm/issues/257) for details)
  * add new callbacks: transactions, all events, ensure (see [issue #282](https://github.com/aasm/aasm/issues/282) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
