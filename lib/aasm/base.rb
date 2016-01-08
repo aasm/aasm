@@ -28,6 +28,9 @@ module AASM
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
 
+      # allow a AASM::Base sub-class to be used for state machine
+      configure :with_klass, AASM::Base
+
       configure :enum, nil
 
       # make sure to raise an error if no_direct_assignment is enabled

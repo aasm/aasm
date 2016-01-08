@@ -2,7 +2,7 @@ class CustomAASMBase < AASM::Base
   # A custom transiton that we want available across many AASM models.
   def count_transitions!
     klass.class_eval do
-      aasm_with CustomAASMBase do
+      aasm :with_klass => CustomAASMBase do
         after_all_transitions :increment_transition_count
       end
     end
@@ -35,7 +35,7 @@ class SimpleCustomExample
   include AASM
 
   # Let's build an AASM state machine with our custom class.
-  aasm_with CustomAASMBase do
+  aasm :with_klass => CustomAASMBase do
     requires_guards!
     count_transitions!
 

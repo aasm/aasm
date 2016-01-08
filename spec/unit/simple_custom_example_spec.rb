@@ -27,7 +27,7 @@ describe 'Custom AASM::Base' do
       Class.new do
         include AASM
 
-        aasm_with String do
+        aasm :with_klass => String do
         end
       end
     end
