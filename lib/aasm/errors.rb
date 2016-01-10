@@ -10,11 +10,11 @@ module AASM
     end
 
     def message
-      "Event '#{event_name}' cannot transition from '#{object.aasm(state_machine_name).current_state}'#{reasoning}"
+      "Event '#{event_name}' cannot transition from '#{object.aasm(state_machine_name).current_state}'. #{reasoning}"
     end
 
     def reasoning
-      ". Failed callback(s): #{@failures}." unless failures.empty?
+      "Failed callback(s): #{@failures}." unless failures.empty?
     end
   end
 

@@ -58,7 +58,7 @@ module AASM::Core
         failures << code unless result
         result
       when Proc
-        result = (code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+        result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
         failures << code.source_location.join('#') unless result
         result
       when Array
