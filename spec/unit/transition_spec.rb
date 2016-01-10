@@ -31,7 +31,7 @@ describe 'transitions' do
     expect(silencer).to be_smiling
   end
 
-  it 'should call the block when success' do
+  it 'should call the block on success' do
     silencer = Silencer.new
     success = false
     expect {
@@ -41,7 +41,7 @@ describe 'transitions' do
     }.to change { success }.to(true)
   end
 
-  it 'should not call the block when failure' do
+  it 'should not call the block on failure' do
     silencer = Silencer.new
     success = false
     expect {

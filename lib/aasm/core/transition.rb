@@ -31,6 +31,7 @@ module AASM::Core
     end
 
     def execute(obj, *args)
+      invoke_callbacks_compatible_with_guard(event.state_machine.global_callbacks[:after_all_transitions], obj, args)
       invoke_callbacks_compatible_with_guard(@after, obj, args)
     end
 
@@ -52,8 +53,8 @@ module AASM::Core
 
       case code
       when Symbol, String
-        arity = record.send(:method, code.to_sym).arity
-        result = (arity == 0 ? record.send(code) : result = record.send(code, *args))
+        arity = record.__send__(:method, code.to_sym).arity
+        result = (arity == 0 ? record.__send__(code) : result = record.__send__(code, *args))
         failures << code unless result
         result
       when Proc

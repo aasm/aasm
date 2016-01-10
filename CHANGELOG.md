@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## 4.7.0
+
+ * fix: allow :send as event name (see [issue #257](https://github.com/aasm/aasm/issues/257) for details)
+ * add new callbacks: transactions, all events, ensure (see [issue #282](https://github.com/aasm/aasm/issues/282) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+
+## 4.6.0
+
+ * fix: make sure the column is actually present for _ActiveRecord_ enums (see [issue #265](https://github.com/aasm/aasm/issues/265) and [issue #152](https://github.com/aasm/aasm/issues/152) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+ * add generators to configure active_record and mongoid after install (see [issue #261](https://github.com/aasm/aasm/issues/261) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+
+## 4.5.2
+
+ * fix arity difference between Procs and lambdas (see [issue #293](https://github.com/aasm/aasm/issues/293) for details)
+
+## 4.5.1
+
+ * make sure to use override configuration options if state machine is defined more than once (see [issue #287](https://github.com/aasm/aasm/issues/287) for details)
+
+## 4.5.0
+
+ * add RSpec matchers `have_state`, `allow_event` and `allow_transition_to` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)
+ * add RSpec matcher `transition_from` (see [issue #178](https://github.com/aasm/aasm/issues/178) for details, thanks to [@thomasstephane](https://github.com/thomasstephane))
+
+## 4.4.1
+
+ * add support for rejecting certain events on inspection (see [issue #272](https://github.com/aasm/aasm/issues/272)  for details, thanks to [@dubroe](https://github.com/dubroe))
+
+## 4.4.0
+
+ * add support global transation callbacks (see [issue #221](https://github.com/aasm/aasm/issues/221) and [issue #253](https://github.com/aasm/aasm/issues/253) for details)
+ * add support (bugfix) for Mongoid >= 5.0 (see [issue #277](https://github.com/aasm/aasm/issues/277) and [issue #278](https://github.com/aasm/aasm/issues/278) for details)
+
 ## 4.3.0
 
  * add support for multiple state machines per class (see [issue #158](https://github.com/aasm/aasm/issues/158) and [issue #240](https://github.com/aasm/aasm/issues/240) for details)

@@ -39,7 +39,20 @@ module AASM
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
       @aasm ||= {}
-      @aasm[state_machine_name] ||= AASM::Base.new(self, state_machine_name, AASM::StateMachine[self][state_machine_name], options)
+      if @aasm[state_machine_name]
+        # make sure to use provided options
+        options.each do |key, value|
+          @aasm[state_machine_name].state_machine.config.send("#{key}=", value)
+        end
+      else
+        # create a new base
+        @aasm[state_machine_name] = AASM::Base.new(
+          self,
+          state_machine_name,
+          AASM::StateMachine[self][state_machine_name],
+          options
+        )
+      end
       @aasm[state_machine_name].instance_eval(&block) if block # new DSL
       @aasm[state_machine_name]
     end
@@ -75,6 +88,12 @@ private
     begin
       old_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
 
+      event.fire_global_callbacks(
+        :before_all_events,
+        self,
+        *process_args(event, aasm(state_machine_name).current_state, *args)
+      )
+
       # new event before callback
       event.fire_callbacks(
         :before,
@@ -97,7 +116,12 @@ private
         aasm_failed(state_machine_name, event_name, old_state, event.failed_callbacks)
       end
     rescue StandardError => e
-      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) || raise(e)
+      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
+      event.fire_global_callbacks(:error_on_all_events, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
+      raise(e)
+    ensure
+      event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
+      event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
   end
 
@@ -131,6 +155,11 @@ private
         *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_callbacks(
         :after,
+        self,
+        *process_args(event, old_state.name, *args)
+      )
+      event.fire_global_callbacks(
+        :after_all_events,
         self,
         *process_args(event, old_state.name, *args)
       )

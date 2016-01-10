@@ -113,6 +113,20 @@ describe "instance methods" do
         end
       end
     end
+
+    if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+      # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
+      context "when AASM enum setting is not enabled and aasm column not present" do
+
+        let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
+
+        it "should raise NoMethodError for transitions" do
+          expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, "undefined method 'status' for MultipleWithEnumWithoutColumn")
+        end
+      end
+
+    end
+
   end
 
   context "when AASM is configured to use enum" do
@@ -297,6 +311,19 @@ describe "named scopes with the new DSL" do
 
   it "does not create scopes if requested" do
     expect(MultipleNoScope).not_to respond_to(:pending)
+  end
+
+  context "result of scope" do
+    let!(:dsl1) { MultipleSimpleNewDsl.create!(status: :new) }
+    let!(:dsl2) { MultipleSimpleNewDsl.create!(status: :unknown_scope) }
+
+    after do
+      MultipleSimpleNewDsl.destroy_all
+    end
+
+    it "created scope works as where(name: :scope_name)" do
+      expect(MultipleSimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
+    end
   end
 end # scopes
 

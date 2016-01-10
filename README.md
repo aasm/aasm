@@ -98,6 +98,8 @@ class Job
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
 
+    after_all_transitions :log_status_change
+
     event :run, :after => :notify_somebody do
       before do
         log('Preparing to run')
@@ -115,6 +117,10 @@ class Job
       end
       transitions :from => :running, :to => :sleeping
     end
+  end
+
+  def log_status_change
+    puts "changing from #{aasm.from_state} to #{aasm.to_state} (event: #{aasm.current_event})"
   end
 
   def set_process(name)
@@ -140,11 +146,13 @@ Here you can see a list of all possible callbacks, together with their order of 
 
 ```ruby
 begin
+  event           before_all_events
   event           before
   event           guards
   transition      guards
   old_state       before_exit
   old_state       exit
+                  after_all_transitions
   transition      after
   new_state       before_enter
   new_state       enter
@@ -153,8 +161,13 @@ begin
   old_state       after_exit
   new_state       after_enter
   event           after
+  event           after_all_events
 rescue
   event           error
+  event           error_on_all_events
+ensure
+  event           ensure
+  event           ensure_on_all_events
 end
 ```
 
@@ -172,8 +185,9 @@ Note that when passing arguments to a state transition, the first argument must 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
-During the transition's `:after` callback (and reliably only then) you can access the
-originating state (the from-state) and the target state (the to state), like this:
+During the transition's `:after` callback (and reliably only then, or in the global
+`after_all_transitions` callback) you can access the originating state (the from-state)
+and the target state (the to state), like this:
 
 ```ruby
   def set_process(name)
@@ -606,8 +620,19 @@ Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a tr
 callback or the state update fails, all changes to any database record are rolled back.
 Mongodb does not support transactions.
 
+There are currently 3 transactional callbacks that can be handled on the event, and 2 transactional callbacks for all events.
+
+```ruby
+  event           before_all_transactions
+  event           before_transaction
+  event           aasm_fire_event (within transaction)
+  event           after_commit (if event successful)
+  event           after_transaction
+  event           after_all_transactions
+```
+
 If you want to make sure a depending action happens only after the transaction is committed,
-use the `after_commit` callback, like this:
+use the `after_commit` callback along with the auto-save (bang) methods, like this:
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -626,6 +651,18 @@ class Job < ActiveRecord::Base
     ...
   end
 end
+
+job = Job.where(state: 'sleeping').first!
+job.run! # Saves the model and triggers the after_commit callback
+```
+
+Note that the following will not run the `after_commit` callbacks because
+the auto-save method is not used:
+
+```ruby
+job = Job.where(state: 'sleeping').first!
+job.run
+job.save! #notify_about_running_job is not run
 ```
 
 If you want to encapsulate state changes within an own transaction, the behavior
@@ -704,6 +741,8 @@ job.aasm.states(:permitted => true).map(&:name)
 # show all possible (triggerable) events (allowed by transitions)
 job.aasm.events.map(&:name)
 => [:sleep]
+job.aasm.events(:reject => :sleep).map(&:name)
+=> []
 
 # list states for select
 Job.aasm.states_for_select
@@ -711,6 +750,41 @@ Job.aasm.states_for_select
 ```
 
 
+### Testing
+
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+expect(job).to transition_from(:sleeping).to(:running).on_event(:run)
+expect(job).not_to transition_from(:sleeping).to(:cleaning).on_event(:run)
+expect(job).to have_state(:sleeping)
+expect(job).not_to have_state(:running)
+expect(job).to allow_event :run
+expect(job).to_not allow_event :clean
+expect(job).to allow_transition_to(:running)
+expect(job).to_not allow_transition_to(:cleaning)
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+expect(multiple).to transition_from(:standing).to(:walking).on_event(:walk).on(:move)
+expect(multiple).to_not transition_from(:standing).to(:running).on_event(:walk).on(:move)
+expect(multiple).to have_state(:standing).on(:move)
+expect(multiple).not_to have_state(:walking).on(:move)
+expect(multiple).to allow_event(:walk).on(:move)
+expect(multiple).to_not allow_event(:hold).on(:move)
+expect(multiple).to allow_transition_to(:walking).on(:move)
+expect(multiple).to_not allow_transition_to(:running).on(:move)
+expect(multiple).to transition_from(:sleeping).to(:processing).on_event(:start).on(:work)
+expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
+expect(multiple).to have_state(:sleeping).on(:work)
+expect(multiple).not_to have_state(:processing).on(:work)
+expect(multiple).to allow_event(:start).on(:move)
+expect(multiple).to_not allow_event(:stop).on(:move)
+expect(multiple).to allow_transition_to(:processing).on(:move)
+expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+```
 
 ## <a id="installation">Installation ##
 
@@ -733,6 +807,17 @@ gem 'aasm'
 % rake build
 % sudo gem install pkg/aasm-x.y.z.gem
 ```
+
+### Generators
+
+After installing Aasm you can run generator:
+
+```sh
+% rails generate aasm NAME [COLUMN_NAME]
+```
+Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state'). 
+This will create a model (if one does not exist) and configure it with aasm block.
+For Active record orm a migration file is added to add aasm state column to table.
 
 ## Latest changes ##
 
@@ -771,7 +856,7 @@ purpose.
 
 ## License ##
 
-Copyright (c) 2006-2015 Scott Barron
+Copyright (c) 2006-2016 Scott Barron
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -113,6 +113,20 @@ describe "instance methods" do
         end
       end
     end
+
+    if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+      # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
+      context "when AASM enum setting is not enabled and aasm column not present" do
+
+        let(:with_enum_without_column) {WithEnumWithoutColumn.new}
+
+        it "should raise NoMethodError for transitions" do
+          expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, "undefined method 'status' for WithEnumWithoutColumn")
+        end
+      end
+
+    end
+
   end
 
   context "when AASM is configured to use enum" do
@@ -299,6 +313,18 @@ describe "named scopes with the new DSL" do
     expect(NoScope).not_to respond_to(:pending)
   end
 
+  context "result of scope" do
+    let!(:dsl1) { SimpleNewDsl.create!(status: :new) }
+    let!(:dsl2) { SimpleNewDsl.create!(status: :unknown_scope) }
+
+    after do
+      SimpleNewDsl.destroy_all
+    end
+
+    it "created scope works as where(name: :scope_name)" do
+      expect(SimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
+    end
+  end
 end # scopes
 
 describe "direct assignment" do
@@ -468,7 +494,72 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name")
       end
+    end
 
+    describe 'before and after transaction callbacks' do
+      [:after, :before].each do |event_type|
+        describe "#{event_type}_transaction callback" do
+          it "should fire :#{event_type}_transaction if transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            expect { validator.run! }.to change { validator.send("#{event_type}_transaction_performed_on_run") }.from(nil).to(true)
+            expect(validator).to be_running
+          end
+
+          it "should fire :#{event_type}_transaction if transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect do
+              begin
+                validator.fail!
+              rescue => ignored
+              end
+            end.to change { validator.send("#{event_type}_transaction_performed_on_fail") }.from(nil).to(true)
+            expect(validator).to_not be_running
+          end
+
+          it "should not fire :#{event_type}_transaction if not saving" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+            expect { validator.run }.to_not change { validator.send("#{event_type}_transaction_performed_on_run") }
+            expect(validator).to be_running
+            expect(validator.name).to eq("name")
+          end
+        end
+      end
+    end
+
+    describe 'before and after all transactions callbacks' do
+      [:after, :before].each do |event_type|
+        describe "#{event_type}_all_transactions callback" do
+          it "should fire :#{event_type}_all_transactions if transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            expect { validator.run! }.to change { validator.send("#{event_type}_all_transactions_performed") }.from(nil).to(true)
+            expect(validator).to be_running
+          end
+
+          it "should fire :#{event_type}_all_transactions if transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect do
+              begin
+                validator.fail!
+              rescue => ignored
+              end
+            end.to change { validator.send("#{event_type}_all_transactions_performed") }.from(nil).to(true)
+            expect(validator).to_not be_running
+          end
+
+          it "should not fire :#{event_type}_all_transactions if not saving" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+            expect { validator.run }.to_not change { validator.send("#{event_type}_all_transactions_performed") }
+            expect(validator).to be_running
+            expect(validator.name).to eq("name")
+          end
+        end
+      end
     end
 
     context "when not persisting" do
