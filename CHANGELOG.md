@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * improve error handling in case of an exception during transitioning (see [issue #275](https://github.com/aasm/aasm/pull/275) for details, thanks to [@chriswoodrich](https://github.com/chriswoodrich))
+
 ## 4.7.0
 
  * fix: allow :send as event name (see [issue #257](https://github.com/aasm/aasm/issues/257) for details)
