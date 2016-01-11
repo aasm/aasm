@@ -109,6 +109,35 @@ describe 'firing an event' do
     expect(event.fire(obj, {}, nil, 'arg1', 'arg2')).to eq(:closed)
   end
 
+  context 'when given a gaurd proc' do
+    it 'should have access to callback failures in the transitions' do
+      event = AASM::Core::Event.new(:graduate, state_machine) do
+        transitions :to => :alumni, :from => [:student, :applicant],
+          :guard => Proc.new { 1 + 1 == 3 }
+      end
+      line_number = __LINE__ - 2
+      obj = double('object', :aasm => double('aasm', :current_state => :student))
+
+      event.fire(obj, {}, nil)
+      expect(event.failed_callbacks).to eq ["#{__FILE__}##{line_number}"]
+    end
+  end
+
+  context 'when given a guard symbol' do
+    it 'should have access to callback failures in the transitions' do
+      event = AASM::Core::Event.new(:graduate, state_machine) do
+        transitions :to => :alumni, :from => [:student, :applicant],
+          guard: :paid_tuition?
+      end
+
+      obj = double('object', :aasm => double('aasm', :current_state => :student))
+      allow(obj).to receive(:paid_tuition?).and_return(false)
+
+      event.fire(obj, {}, nil)
+      expect(event.failed_callbacks).to eq [:paid_tuition?]
+    end
+  end
+
 end
 
 describe 'should fire callbacks' do

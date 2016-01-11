@@ -6,7 +6,7 @@ describe 'transitions' do
     process = ProcessWithNewDsl.new
     expect { process.stop! }.to raise_error do |err|
       expect(err.class).to eql(AASM::InvalidTransition)
-      expect(err.message).to eql("Event 'stop' cannot transition from 'sleeping'")
+      expect(err.message).to eql("Event 'stop' cannot transition from 'sleeping'. ")
       expect(err.object).to eql(process)
       expect(err.event_name).to eql(:stop)
     end
@@ -143,6 +143,17 @@ describe AASM::Core::Transition, '- when performing guard checks' do
     expect(obj).to receive(:test)
 
     expect(st.allowed?(obj)).to be false
+  end
+
+  it 'should add the name of the failed method calls to the failures instance var' do
+    opts = {:from => 'foo', :to => 'bar', :guard => :test}
+    st = AASM::Core::Transition.new(event, opts)
+
+    obj = double('object')
+    expect(obj).to receive(:test)
+
+    st.allowed?(obj)
+    expect(st.failures).to eq [:test]
   end
 
   it 'should call the method on the object if unless is a symbol' do

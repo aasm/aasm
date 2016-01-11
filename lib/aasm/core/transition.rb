@@ -2,7 +2,7 @@ module AASM::Core
   class Transition
     include DslHelper
 
-    attr_reader :from, :to, :event, :opts
+    attr_reader :from, :to, :event, :opts, :failures
     alias_method :options, :opts
 
     def initialize(event, opts, &block)
@@ -13,6 +13,7 @@ module AASM::Core
       @to = opts[:to]
       @guards = Array(opts[:guards]) + Array(opts[:guard]) + Array(opts[:if])
       @unless = Array(opts[:unless]) #TODO: This could use a better name
+      @failures = []
 
       if opts[:on_transition]
         warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
@@ -53,9 +54,13 @@ module AASM::Core
       case code
       when Symbol, String
         arity = record.__send__(:method, code.to_sym).arity
-        arity == 0 ? record.__send__(code) : record.__send__(code, *args)
+        result = (arity == 0 ? record.__send__(code) : result = record.__send__(code, *args))
+        failures << code unless result
+        result
       when Proc
-        code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+        failures << code.source_location.join('#') unless result
+        result
       when Array
         if options[:guard]
           # invoke guard callbacks

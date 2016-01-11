@@ -110,10 +110,10 @@ private
         if new_state_name = event.fire(self, {:may_fire => may_fire_to}, *args)
           aasm_fired(state_machine_name, event, old_state, new_state_name, options, *args, &block)
         else
-          aasm_failed(state_machine_name, event_name, old_state)
+          aasm_failed(state_machine_name, event_name, old_state, event.failed_callbacks)
         end
       else
-        aasm_failed(state_machine_name, event_name, old_state)
+        aasm_failed(state_machine_name, event_name, old_state, event.failed_callbacks)
       end
     rescue StandardError => e
       event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
@@ -172,13 +172,13 @@ private
     persist_successful
   end
 
-  def aasm_failed(state_machine_name, event_name, old_state)
+  def aasm_failed(state_machine_name, event_name, old_state, failures = [])
     if self.respond_to?(:aasm_event_failed)
       self.aasm_event_failed(event_name, old_state.name)
     end
 
     if AASM::StateMachine[self.class][state_machine_name].config.whiny_transitions
-      raise AASM::InvalidTransition.new(self, event_name, state_machine_name)
+      raise AASM::InvalidTransition.new(self, event_name, state_machine_name, failures)
     else
       false
     end
