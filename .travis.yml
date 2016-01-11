@@ -3,13 +3,11 @@ language: ruby
 cache: bundler
 
 rvm:
-  # - 1.8.7
-  # - 1.9.2
   - 1.9.3
   - 2.0.0
   - 2.1
   - 2.2
-  # - jruby-18mode # JRuby in 1.8 mode
+  - 2.3
   - jruby-1.7 # JRuby in 1.9 mode
   - jruby-9.0.4.0
   - rbx-2.5.8
@@ -33,5 +31,9 @@ matrix:
   exclude:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_4.1.gemfile
+    - rvm: 2.2
+      gemfile: gemfiles/rails_3.2_stable.gemfile
+    - rvm: 2.3
+      gemfile: gemfiles/rails_3.2_stable.gemfile
     - rvm: jruby-19mode
       gemfile: gemfiles/rails_4.1.gemfile
