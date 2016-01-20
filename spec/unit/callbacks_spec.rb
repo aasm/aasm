@@ -94,6 +94,39 @@ describe 'callbacks for the new DSL' do
     callback.close!
   end
 
+
+  it "works fine after reload" do
+    show_debug_log = false
+
+    callback = Callbacks::Basic.new(:log => show_debug_log)
+    callback.aasm.current_state
+
+    # reload the class
+    Callbacks.send(:remove_const, :Basic)
+    load 'models/callbacks/basic.rb'
+
+    unless show_debug_log
+      expect(callback).to receive(:before_event).once.ordered
+      expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
+      expect(callback).to receive(:exit_open).once.ordered
+      # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+      # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+      expect(callback).to receive(:after_all_transitions).once.ordered
+      expect(callback).to receive(:after_transition).once.ordered
+      expect(callback).to receive(:before_enter_closed).once.ordered
+      expect(callback).to receive(:enter_closed).once.ordered
+      expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+      expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
+      expect(callback).to receive(:after_enter_closed).once.ordered
+      expect(callback).to receive(:after_event).once.ordered
+    end
+
+    # puts "------- close!"
+    callback.close!
+  end
+
   it "does not run any state callback if the event guard fails" do
     callback = Callbacks::Basic.new(:log => false)
     callback.aasm.current_state
