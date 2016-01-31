@@ -23,7 +23,7 @@ module AASM
 
       def include_persistence(base, type)
         require File.join(File.dirname(__FILE__), 'persistence', "#{type}_persistence")
-        base.send(:include, constantize("AASM::Persistence::#{capitalize(type)}Persistence"))
+        base.send(:include, constantize("#{capitalize(type)}Persistence"))
       end
 
       def capitalize(string_or_symbol)
@@ -31,7 +31,7 @@ module AASM
       end
 
       def constantize(string)
-        instance_eval(string)
+        AASM::Persistence.const_get(string)
       end
 
     end # class << self

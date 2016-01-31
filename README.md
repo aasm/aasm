@@ -750,6 +750,11 @@ Job.aasm.states_for_select
 ```
 
 
+### RubyMotion support
+
+To use AASM with a RubyMotion project, use it with the [motion-bundler](https://github.com/archan937/motion-bundler) gem.
+
+
 ### Testing
 
 AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
@@ -815,7 +820,7 @@ After installing Aasm you can run generator:
 ```sh
 % rails generate aasm NAME [COLUMN_NAME]
 ```
-Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state'). 
+Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state').
 This will create a model (if one does not exist) and configure it with aasm block.
 For Active record orm a migration file is added to add aasm state column to table.
 

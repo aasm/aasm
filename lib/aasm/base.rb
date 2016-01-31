@@ -31,17 +31,16 @@ module AASM
 
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
-      @klass.class_eval %Q(
-        def #{@state_machine.config.column}=(state_name)
-          if self.class.aasm(:#{@name}).state_machine.config.no_direct_assignment
-            raise AASM::NoDirectAssignmentError.new(
-              'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
-            )
-          else
-            super
-          end
+      aasm_name = @name
+      @klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
+          raise AASM::NoDirectAssignmentError.new(
+            'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
+          )
+        else
+          super(state_name)
         end
-      )
+      end
     end
 
     # This method is both a getter and a setter
@@ -70,11 +69,10 @@ module AASM
         warn "#{@klass.name}: The aasm state name #{name} is already used!"
       end
 
-      @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
-        def #{name}?
-          aasm(:#{@name}).current_state == :#{name}
-        end
-      EORUBY
+      aasm_name = @name
+      @klass.send :define_method, "#{name}?", ->() do
+        aasm(:"#{aasm_name}").current_state == :"#{name}"
+      end
 
       unless @klass.const_defined?("STATE_#{name.upcase}")
         @klass.const_set("STATE_#{name.upcase}", name)
@@ -92,21 +90,21 @@ module AASM
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
-      @klass.class_eval <<-EORUBY, __FILE__, __LINE__ + 1
-        def may_#{name}?(*args)
-          aasm(:#{@name}).may_fire_event?(:#{name}, *args)
-        end
+      aasm_name = @name
 
-        def #{name}!(*args, &block)
-          aasm(:#{@name}).current_event = :#{name}!
-          aasm_fire_event(:#{@name}, :#{name}, {:persist => true}, *args, &block)
-        end
+      @klass.send :define_method, "may_#{name}?", ->(*args) do
+        aasm(:"#{aasm_name}").may_fire_event?(:"#{name}", *args)
+      end
 
-        def #{name}(*args, &block)
-          aasm(:#{@name}).current_event = :#{name}
-          aasm_fire_event(:#{@name}, :#{name}, {:persist => false}, *args, &block)
-        end
-      EORUBY
+      @klass.send :define_method, "#{name}!", ->(*args, &block) do
+        aasm(:"#{aasm_name}").current_event = :"#{name}!"
+        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => true}, *args, &block)
+      end
+
+      @klass.send :define_method, "#{name}", ->(*args, &block) do
+        aasm(:"#{aasm_name}").current_event = :"#{name}"
+        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => false}, *args, &block)
+      end
     end
 
     def after_all_transitions(*callbacks, &block)
