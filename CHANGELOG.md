@@ -2,6 +2,7 @@
 
 ## unreleased
 
+ * make compatible with [RubyMotion](http://www.rubymotion.com) (see [issue #315](https://github.com/aasm/aasm/pull/315) for details, thanks to [@Infotaku](https://github.com/Infotaku))
  * improve error handling in case of an exception during transitioning (see [issue #275](https://github.com/aasm/aasm/pull/275) for details, thanks to [@chriswoodrich](https://github.com/chriswoodrich))
 
 ## 4.7.0
