@@ -61,6 +61,18 @@ module AASM::Core
         result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
         failures << code.source_location.join('#') unless result
         result
+      when Class
+        arity = code.instance_method(:initialize).arity
+        if arity == 0
+          instance = code.new
+        elsif arity == 1
+          instance = code.new(record)
+        else
+          instance = code.new(record, *args)
+        end
+        result = instance.call
+        failures << instance.method(:call).source_location.join('#') unless result
+        result
       when Array
         if options[:guard]
           # invoke guard callbacks
