@@ -754,6 +754,9 @@ Job.aasm.states_for_select
 
 To use AASM with a RubyMotion project, use it with the [motion-bundler](https://github.com/archan937/motion-bundler) gem.
 
+Warning: Due to the way key-value observation (KVO) works in iOS, 
+you currently CANNOT use AASM with an object you are observing. (Yes.. that's pretty sad).
+
 
 ### Testing
 
