@@ -3,9 +3,10 @@
 ## unreleased
 
  * add support for [dynamoid](http://joshsymonds.com/Dynamoid/) (see [issue #300](https://github.com/aasm/aasm/pull/300) for details, thanks to [@LeeChSien](https://github.com/LeeChSien))
- * fix: permitted states now respect guards (see [issue #308](https://github.com/aasm/aasm/pull/308) for details, thanks to [@eebs](https://github.com/eebs))
  * make compatible with [RubyMotion](http://www.rubymotion.com) (see [issue #315](https://github.com/aasm/aasm/pull/315) for details, thanks to [@Infotaku](https://github.com/Infotaku))
  * improve error handling in case of an exception during transitioning (see [issue #275](https://github.com/aasm/aasm/pull/275) for details, thanks to [@chriswoodrich](https://github.com/chriswoodrich))
+ * fix: permitted states now respect guards (see [issue #308](https://github.com/aasm/aasm/pull/308) for details, thanks to [@eebs](https://github.com/eebs))
+ * fix: reloading the env now doesn't add callbacks twice anymore (see [issue #311](https://github.com/aasm/aasm/pull/311) for details, thanks to [@lingceng](https://github.com/lingceng))
 
 ## 4.7.0
 
