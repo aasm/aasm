@@ -62,14 +62,18 @@ module AASM::Core
           # we should pass the arguments or not, since its does return 0 even in
           # presence of optional parameters.
           result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+
+          failures << code.source_location.join('#') unless result
         else
-          # In RubyMotion's Proc, the parameter method does not exists, however its
+          # In RubyMotion's Proc, the 'parameter' method does not exists, however its
           # 'arity' method works just like the one from Method, only returning 0 when
           # there is no parameters whatsoever, optional or not.
           result = (code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+
+          # Sadly, RubyMotion's Proc does not define the method 'source_location' either.
+          failures << code unless result
         end
 
-        failures << code.source_location.join('#') unless result
         result
       when Array
         if options[:guard]
