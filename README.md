@@ -534,6 +534,11 @@ end
 However it's not yet as feature complete as _ActiveRecord_. For example, there are
 scopes defined yet. See [Automatic Scopes](#automatic-scopes).
 
+### Dynamoid
+
+Since version `4.8.0` _AASM_ also supports [Dynamoid](http://joshsymonds.com/Dynamoid/) as
+persistence ORM.
+
 ### Mongoid
 
 AASM also supports persistence to Mongodb if you're using Mongoid. Make sure

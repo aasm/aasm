@@ -7,8 +7,11 @@ gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "rails", "~>4.2"
 gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
-gem 'dynamoid', '~> 1'
-gem 'aws-sdk', '~>2'
+
+# testing dynamoid
+# gem 'dynamoid', '~> 1'
+# gem 'aws-sdk', '~>2'
+
 # Since mongoid V4 requires incompatible bson V2, cannot have mongoid (V4 or greater)
 # and mongo_mapper ( or mongo ) in the same application
 # gem 'mongo_mapper', '~> 0.13'
