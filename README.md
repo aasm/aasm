@@ -778,6 +778,8 @@ expect(job).to allow_event :run
 expect(job).to_not allow_event :clean
 expect(job).to allow_transition_to(:running)
 expect(job).to_not allow_transition_to(:cleaning)
+# on_event also accept arguments
+expect(job).to transition_from(:sleeping).to(:running).on_event(:run, :defragmentation)
 
 # classes with multiple state machine
 multiple = SimpleMultipleExample.new
