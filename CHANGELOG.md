@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## unreleased
+
+ * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+
+
 ## 4.8.0
 
  * add support for [dynamoid](http://joshsymonds.com/Dynamoid/) (see [issue #300](https://github.com/aasm/aasm/pull/300) for details, thanks to [@LeeChSien](https://github.com/LeeChSien))
