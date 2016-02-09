@@ -18,6 +18,9 @@ module AASM
     # forbid direct assignment in aasm_state column (in ActiveRecord)
     attr_accessor :no_direct_assignment
 
+    # allow a AASM::Base sub-class to be used for state machine
+    attr_accessor :with_klass
+
     attr_accessor :enum
   end
 end

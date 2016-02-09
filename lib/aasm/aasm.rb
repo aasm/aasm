@@ -38,6 +38,12 @@ module AASM
 
       AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
 
+      # use a default despite the DSL configuration default.
+      # this is because configuration hasn't been setup for the AASM class but we are accessing a DSL option already for the class.
+      aasm_klass = options[:with_klass] || AASM::Base
+
+      raise ArgumentError, "The class #{aasm_klass} must inherit from AASM::Base!" unless aasm_klass.ancestors.include?(AASM::Base)
+
       @aasm ||= {}
       if @aasm[state_machine_name]
         # make sure to use provided options
@@ -46,7 +52,7 @@ module AASM
         end
       else
         # create a new base
-        @aasm[state_machine_name] = AASM::Base.new(
+        @aasm[state_machine_name] = aasm_klass.new(
           self,
           state_machine_name,
           AASM::StateMachine[self][state_machine_name],
