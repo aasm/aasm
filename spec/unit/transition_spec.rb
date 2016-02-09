@@ -300,3 +300,66 @@ describe AASM::Core::Transition, '- when executing the transition with an :after
   end
 
 end
+
+describe AASM::Core::Transition, '- when executing the transition with a Class' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:event) { AASM::Core::Event.new(:event, state_machine) }
+
+  class AfterTransitionClass
+    def initialize(record)
+      @record = record
+    end
+
+    def call
+      "from: #{@record.aasm.from_state} to: #{@record.aasm.to_state}"
+    end
+  end
+
+  class AfterTransitionClassWithArgs
+    def initialize(record, args)
+      @record = record
+      @args = args
+    end
+
+    def call
+      "arg1: #{@args[:arg1]}, arg2: #{@args[:arg2]}"
+    end
+  end
+
+  class AfterTransitionClassWithoutArgs
+    def call
+      'success'
+    end
+  end
+
+  it 'passes the record to the initialize method on the class to give access to the from_state and to_state' do
+    opts = {:from => 'foo', :to => 'bar', :after => AfterTransitionClass}
+    transition = AASM::Core::Transition.new(event, opts)
+    obj = double('object', :aasm => AASM::InstanceBase.new('object'))
+
+    return_value = transition.execute(obj)
+
+    expect(return_value).to eq('from: foo to: bar')
+  end
+
+  it 'should pass args to the initialize method on the class if it accepts them' do
+    opts = {:from => 'foo', :to => 'bar', :after => AfterTransitionClassWithArgs}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    return_value = st.execute(obj, args)
+
+    expect(return_value).to eq('arg1: 1, arg2: 2')
+  end
+
+  it 'should NOT pass args if the call method of the class if it does NOT accept them' do
+    opts = {:from => 'foo', :to => 'bar', :after => AfterTransitionClassWithoutArgs}
+    st = AASM::Core::Transition.new(event, opts)
+    obj = double('object', :aasm => 'aasm')
+
+    return_value = st.execute(obj)
+
+    expect(return_value).to eq('success')
+  end
+end

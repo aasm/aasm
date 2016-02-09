@@ -106,6 +106,7 @@ class Job
       end
 
       transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) }
+      transitions :from => :running, :to => :finished, :after => LogRunTime
     end
 
     event :sleep do
@@ -136,11 +137,33 @@ class Job
   end
 
 end
+
+class LogRunTime
+  def call
+    log "Job was running for X seconds"
+  end
+end
 ```
 
 In this case `do_something` is called before actually entering the state `sleeping`,
 while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
 is finished.
+
+AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `runnung` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
+
+```
+class LogRunTime
+  # optional args parameter can be omitted, but if you define initialize
+  # you must accept the model instance as the first parameter to it.
+  def initialize(job, args = {})
+    @job = job
+  end
+  
+  def call
+    log "Job was running for #{@job.run_time} seconds"
+  end
+end
+```
 
 Here you can see a list of all possible callbacks, together with their order of calling:
 
