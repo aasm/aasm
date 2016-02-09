@@ -53,13 +53,13 @@ module AASM::Core
 
       case code
       when Symbol, String
-        result = (record.__send__(:method, code.to_sym).arity == 0 ? record.__send__(code) : result = record.__send__(code, *args))
+        result = (record.__send__(:method, code.to_sym).arity == 0 ? record.__send__(code) : record.__send__(code, *args))
         failures << code unless result
         result
       when Proc
         if code.respond_to?(:parameters)
           # In Ruby's Proc, the 'arity' method is not a good condidate to know if
-          # we should pass the arguments or not, since its does return 0 even in
+          # we should pass the arguments or not, since it does return 0 even in
           # presence of optional parameters.
           result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
 
@@ -85,7 +85,14 @@ module AASM::Core
           instance = code.new(record, *args)
         end
         result = instance.call
-        failures << instance.method(:call).source_location.join('#') unless result
+
+        if Method.method_defined?(:source_location)
+          failures << instance.method(:call).source_location.join('#') unless result
+        else
+          # RubyMotion support ('source_location' not defined for Method)
+          failures << instance.method(:call) unless result
+        end
+
         result
       when Array
         if options[:guard]
