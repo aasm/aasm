@@ -2,8 +2,9 @@
 
 ## unreleased
 
- * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
  * add support for callback classes (`after` only) (see [issue #316](https://github.com/aasm/aasm/pull/316) for details, thanks to [@mlr](https://github.com/mlr))
+ * fix: support database sharding for _ActiveRecord_ (see [issue #289](https://github.com/aasm/aasm/pull/289) for details, thanks to [@scambra](https://github.com/scambra))
+ * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
 
 
 ## 4.8.0
