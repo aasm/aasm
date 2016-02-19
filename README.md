@@ -149,7 +149,7 @@ In this case `do_something` is called before actually entering the state `sleepi
 while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
 is finished.
 
-AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `runnung` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
+AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
 
 ```
 class LogRunTime
