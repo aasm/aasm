@@ -7,6 +7,7 @@
  * support pessimistic locking for _ActiveRecord_ (see [issue #283](https://github.com/aasm/aasm/pull/283) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
  * fix: support database sharding for _ActiveRecord_ (see [issue #289](https://github.com/aasm/aasm/pull/289) for details, thanks to [@scambra](https://github.com/scambra))
  * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+ * fix: Rails generator now features the correct namespace (see [issue #328](https://github.com/aasm/aasm/pull/328) and [issue #329](https://github.com/aasm/aasm/pull/329) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
 
 
 ## 4.8.0
