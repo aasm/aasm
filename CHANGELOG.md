@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased
+## 4.9.0
 
  * add support for callback classes (`after` only) (see [issue #316](https://github.com/aasm/aasm/pull/316) for details, thanks to [@mlr](https://github.com/mlr))
  * allow easier extension of _AASM_ (utilising the idea of _ApplicationRecords_ from _Rails 5_) (see [issue #296](https://github.com/aasm/aasm/pull/296) for details, thanks to [@mlr](https://github.com/mlr))
