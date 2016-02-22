@@ -3,8 +3,7 @@ require 'rails/generators/named_base'
 module AASM
   module Generators
     class AASMGenerator < Rails::Generators::NamedBase
-
-      source_root File.expand_path("../templates", __FILE__)
+      namespace "aasm"
       argument :column_name, type: :string, default: 'aasm_state'
 
       desc "Generates a model with the given NAME (if one does not exist) with aasm " <<
