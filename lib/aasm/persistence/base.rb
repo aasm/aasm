@@ -82,7 +82,7 @@ module AASM
 
     def create_for_active_record(name)
       conditions = {
-        @klass.table_name => { @klass.aasm(@name).attribute_name => name.to_s }
+        @klass.aasm.attribute_name => name.to_s
       }
       if ActiveRecord::VERSION::MAJOR >= 3
         @klass.class_eval do
