@@ -31,6 +31,7 @@ module AASM
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
+        base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
 
         base.after_initialize do
           aasm_ensure_initial_state
@@ -38,6 +39,23 @@ module AASM
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
+      end
+
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          conditions = {
+            table_name => { aasm(state_machine_name).attribute_name => scope_name.to_s }
+          }
+          if ActiveRecord::VERSION::MAJOR >= 3
+            class_eval do
+              scope scope_name, lambda { where(conditions) }
+            end
+          else
+            class_eval do
+              named_scope scope_name, :conditions => conditions
+            end
+          end
+        end
       end
 
       module InstanceMethods

@@ -33,8 +33,21 @@ module AASM
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
+        base.extend AASM::Persistence::MongoidPersistence::ClassMethods
 
         base.after_initialize :aasm_ensure_initial_state
+      end
+
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          scope_options = lambda {
+            send(
+              :where,
+              { aasm(state_machine_name).attribute_name.to_sym => scope_name.to_s }
+            )
+          }
+          send(:scope, scope_name, scope_options)
+        end
       end
 
       module InstanceMethods
