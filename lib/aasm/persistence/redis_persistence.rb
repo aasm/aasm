@@ -15,7 +15,6 @@ module AASM
         # redis-objects removed the key from redis when set to nil
         def initialize(*args)
           super
-          #require "pry"; binding.pry
           state = send(self.class.aasm.attribute_name)
           state.value = aasm.determine_state_name(self.class.aasm.initial_state)
         end
