@@ -74,13 +74,10 @@ module AASM
     def state(name, options={})
       @state_machine.add_state(name, klass, options)
 
-      if klass.instance_methods.include?("#{name}?")
-        warn "#{klass.name}: The aasm state name #{name} is already used!"
-      end
-
-      aasm_name = @name
-      klass.send :define_method, "#{name}?", ->() do
-        aasm(:"#{aasm_name}").current_state == :"#{name}"
+      aasm_name = @name.to_sym
+      state = name.to_sym
+      safely_define_method klass, "#{name}?", -> do
+        aasm(aasm_name).current_state == state
       end
 
       unless klass.const_defined?("STATE_#{name.upcase}")
@@ -92,27 +89,24 @@ module AASM
     def event(name, options={}, &block)
       @state_machine.add_event(name, options, &block)
 
-      if klass.instance_methods.include?("may_#{name}?".to_sym)
-        warn "#{klass.name}: The aasm event name #{name} is already used!"
-      end
+      aasm_name = @name.to_sym
+      event = name.to_sym
 
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
-      aasm_name = @name
-
-      klass.send :define_method, "may_#{name}?", ->(*args) do
-        aasm(:"#{aasm_name}").may_fire_event?(:"#{name}", *args)
+      safely_define_method klass, "may_#{name}?", ->(*args) do
+        aasm(aasm_name).may_fire_event?(event, *args)
       end
 
-      klass.send :define_method, "#{name}!", ->(*args, &block) do
-        aasm(:"#{aasm_name}").current_event = :"#{name}!"
-        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => true}, *args, &block)
+      safely_define_method klass, "#{name}!", ->(*args, &block) do
+        aasm(aasm_name).current_event = :"#{name}!"
+        aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
       end
 
-      klass.send :define_method, "#{name}", ->(*args, &block) do
-        aasm(:"#{aasm_name}").current_event = :"#{name}"
-        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => false}, *args, &block)
+      safely_define_method klass, name, ->(*args, &block) do
+        aasm(aasm_name).current_event = event
+        aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
     end
 
@@ -181,6 +175,14 @@ module AASM
       elsif @state_machine.config.send(key).nil?
         @state_machine.config.send("#{key}=", default_value)
       end
+    end
+
+    def safely_define_method(klass, method_name, method_definition)
+      if klass.instance_methods.include?(method_name.to_sym)
+        warn "#{klass.name}: overriding method '#{method_name}'!"
+      end
+
+      klass.send(:define_method, method_name, method_definition)
     end
 
   end
