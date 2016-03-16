@@ -79,8 +79,6 @@ module AASM
     # [1..] state
     def state(*args)
       names, options = interpret_state_args(args)
-      puts names.inspect
-      puts options.inspect
       names.each do |name|
         @state_machine.add_state(name, klass, options)
 
