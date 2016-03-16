@@ -1,5 +1,5 @@
 ActiveRecord::Migration.suppress_messages do
-  %w{gates multiple_gates readers writers transients simples no_scopes multiple_no_scopes no_direct_assignments multiple_no_direct_assignments thieves multiple_thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_true_enums with_false_enums false_states multiple_with_enums multiple_with_true_enums multiple_with_false_enums multiple_false_states readme_jobs}.each do |table_name|
+  %w{gates multiple_gates readers writers transients simples no_scopes multiple_no_scopes no_direct_assignments multiple_no_direct_assignments thieves multiple_thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_enum_without_columns multiple_with_enum_without_columns with_true_enums with_false_enums false_states multiple_with_enums multiple_with_true_enums multiple_with_false_enums multiple_false_states readme_jobs}.each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "aasm_state"
     end
@@ -17,24 +17,19 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
-  ActiveRecord::Migration.create_table "validators", :force => true do |t|
-    t.string "name"
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "multiple_validators", :force => true do |t|
-    t.string "name"
-    t.string "status"
+  %w(validators multiple_validators).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "name"
+      t.string "status"
+    end
   end
 
-  ActiveRecord::Migration.create_table "transactors", :force => true do |t|
-    t.string "name"
-    t.string "status"
-    t.integer "worker_id"
-  end
-  ActiveRecord::Migration.create_table "multiple_transactors", :force => true do |t|
-    t.string "name"
-    t.string "status"
-    t.integer "worker_id"
+  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors multiple_transactors).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "name"
+      t.string "status"
+      t.integer "worker_id"
+    end
   end
 
   ActiveRecord::Migration.create_table "workers", :force => true do |t|

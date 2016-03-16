@@ -35,11 +35,23 @@ module AASM
 
     def states(options={})
       if options[:permitted]
-        # ugliness level 1000
-        permitted_event_names = events(:permitted => true).map(&:name)
-        transitions = @instance.class.aasm(@name).state_machine.events.values_at(*permitted_event_names).compact.map {|e| e.transitions_from_state(current_state) }
-        tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
-        @instance.class.aasm(@name).states.select {|s| tos.include?(s.name.to_sym)}
+        permitted_events = events(:permitted => true)
+
+        # An array of arrays. Each inner array represents the transitions that
+        # transition from the current state for an event
+        event_transitions = permitted_events.map {|e| e.transitions_from_state(current_state) }
+
+        # An array of symbols that are possible :to transition states
+        to_state_names = event_transitions.map do |transitions|
+          return nil if transitions.empty?
+
+          # Return the :to state of the first transition that is allowed or nil
+          transition = transitions.find { |t| t.allowed?(@instance) }
+          transition ? transition.to : nil
+        end.flatten.compact.uniq
+
+        # Select states that are in to_state_names
+        @instance.class.aasm(@name).states.select {|s| to_state_names.include?(s.name)}
       else
         @instance.class.aasm(@name).states
       end

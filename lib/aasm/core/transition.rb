@@ -2,7 +2,7 @@ module AASM::Core
   class Transition
     include DslHelper
 
-    attr_reader :from, :to, :event, :opts
+    attr_reader :from, :to, :event, :opts, :failures
     alias_method :options, :opts
 
     def initialize(event, opts, &block)
@@ -13,6 +13,7 @@ module AASM::Core
       @to = opts[:to]
       @guards = Array(opts[:guards]) + Array(opts[:guard]) + Array(opts[:if])
       @unless = Array(opts[:unless]) #TODO: This could use a better name
+      @failures = []
 
       if opts[:on_transition]
         warn '[DEPRECATION] :on_transition is deprecated, use :after instead'
@@ -52,10 +53,40 @@ module AASM::Core
 
       case code
       when Symbol, String
-        arity = record.send(:method, code.to_sym).arity
-        arity == 0 ? record.send(code) : record.send(code, *args)
+        result = (record.__send__(:method, code.to_sym).arity == 0 ? record.__send__(code) : result = record.__send__(code, *args))
+        failures << code unless result
+        result
       when Proc
-        code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        if code.respond_to?(:parameters)
+          # In Ruby's Proc, the 'arity' method is not a good condidate to know if
+          # we should pass the arguments or not, since its does return 0 even in
+          # presence of optional parameters.
+          result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+
+          failures << code.source_location.join('#') unless result
+        else
+          # In RubyMotion's Proc, the 'parameter' method does not exists, however its
+          # 'arity' method works just like the one from Method, only returning 0 when
+          # there is no parameters whatsoever, optional or not.
+          result = (code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
+
+          # Sadly, RubyMotion's Proc does not define the method 'source_location' either.
+          failures << code unless result
+        end
+
+        result
+      when Class
+        arity = code.instance_method(:initialize).arity
+        if arity == 0
+          instance = code.new
+        elsif arity == 1
+          instance = code.new(record)
+        else
+          instance = code.new(record, *args)
+        end
+        result = instance.call
+        failures << instance.method(:call).source_location.join('#') unless result
+        result
       when Array
         if options[:guard]
           # invoke guard callbacks

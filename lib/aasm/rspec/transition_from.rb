@@ -2,8 +2,7 @@ RSpec::Matchers.define :transition_from do |from_state|
   match do |obj|
     @state_machine_name ||= :default
     obj.aasm(@state_machine_name).current_state = from_state.to_sym
-    # expect(obj).to receive(:broadcast_event).with(@event.to_s, obj, from_state, @to_state)
-    obj.send(@event) && obj.aasm(@state_machine_name).current_state == @to_state.to_sym
+    obj.send(@event, *@args) && obj.aasm(@state_machine_name).current_state == @to_state.to_sym
   end
 
   chain :on do |state_machine_name|
@@ -14,12 +13,13 @@ RSpec::Matchers.define :transition_from do |from_state|
     @to_state = state
   end
 
-  chain :on_event do |event|
+  chain :on_event do |event, *args|
     @event = event
+    @args = args
   end
 
   description do
-    "transition state to :#{@to_state} from :#{expected} on event :#{@event} (on :#{@state_machine_name})"
+    "transition state to :#{@to_state} from :#{expected} on event :#{@event}, with params: #{@args} (on :#{@state_machine_name})"
   end
 
   failure_message do |obj|

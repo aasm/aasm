@@ -1,3 +1,3 @@
 module AASM
-  VERSION = "4.5.0"
+  VERSION = "4.9.0"
 end

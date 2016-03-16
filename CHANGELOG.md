@@ -1,5 +1,42 @@
 # CHANGELOG
 
+## 4.9.0
+
+ * add support for callback classes (`after` only) (see [issue #316](https://github.com/aasm/aasm/pull/316) for details, thanks to [@mlr](https://github.com/mlr))
+ * allow easier extension of _AASM_ (utilising the idea of _ApplicationRecords_ from _Rails 5_) (see [issue #296](https://github.com/aasm/aasm/pull/296) for details, thanks to [@mlr](https://github.com/mlr))
+ * support pessimistic locking for _ActiveRecord_ (see [issue #283](https://github.com/aasm/aasm/pull/283) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+ * fix: support database sharding for _ActiveRecord_ (see [issue #289](https://github.com/aasm/aasm/pull/289) for details, thanks to [@scambra](https://github.com/scambra))
+ * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+ * fix: Rails generator now features the correct namespace (see [issue #328](https://github.com/aasm/aasm/pull/328) and [issue #329](https://github.com/aasm/aasm/pull/329) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+
+
+## 4.8.0
+
+ * add support for [dynamoid](http://joshsymonds.com/Dynamoid/) (see [issue #300](https://github.com/aasm/aasm/pull/300) for details, thanks to [@LeeChSien](https://github.com/LeeChSien))
+ * make compatible with [RubyMotion](http://www.rubymotion.com) (see [issue #315](https://github.com/aasm/aasm/pull/315) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+ * improve error handling in case of an exception during transitioning (see [issue #275](https://github.com/aasm/aasm/pull/275) for details, thanks to [@chriswoodrich](https://github.com/chriswoodrich))
+ * rspec matcher `on_event` now supports arguments (see [issue #309](https://github.com/aasm/aasm/pull/309) for details, thanks to [@zacviandier](https://github.com/zacviandier))
+ * fix: permitted states now respect guards (see [issue #308](https://github.com/aasm/aasm/pull/308) for details, thanks to [@eebs](https://github.com/eebs))
+ * fix: reloading the env now doesn't add callbacks twice anymore (see [issue #311](https://github.com/aasm/aasm/pull/311) for details, thanks to [@lingceng](https://github.com/lingceng))
+
+## 4.7.0
+
+ * fix: allow :send as event name (see [issue #257](https://github.com/aasm/aasm/issues/257) for details)
+ * add new callbacks: transactions, all events, ensure (see [issue #282](https://github.com/aasm/aasm/issues/282) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+
+## 4.6.0
+
+ * fix: make sure the column is actually present for _ActiveRecord_ enums (see [issue #265](https://github.com/aasm/aasm/issues/265) and [issue #152](https://github.com/aasm/aasm/issues/152) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+ * add generators to configure active_record and mongoid after install (see [issue #261](https://github.com/aasm/aasm/issues/261) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+
+## 4.5.2
+
+ * fix arity difference between Procs and lambdas (see [issue #293](https://github.com/aasm/aasm/issues/293) for details)
+
+## 4.5.1
+
+ * make sure to use override configuration options if state machine is defined more than once (see [issue #287](https://github.com/aasm/aasm/issues/287) for details)
+
 ## 4.5.0
 
  * add RSpec matchers `have_state`, `allow_event` and `allow_transition_to` (see [issue #147](https://github.com/aasm/aasm/issues/147) for details)

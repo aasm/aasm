@@ -44,7 +44,7 @@ module AASM
     def add_global_callbacks(name, *callbacks, &block)
       @global_callbacks[name] ||= []
       callbacks.each do |callback|
-        @global_callbacks[name] << callback
+        @global_callbacks[name] << callback unless @global_callbacks[name].include? callback
       end
       @global_callbacks[name] << block if block
     end

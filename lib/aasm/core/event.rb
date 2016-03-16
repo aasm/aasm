@@ -13,7 +13,16 @@ module AASM::Core
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [:after, :before, :error, :success, :after_commit], &block) if block
+      add_options_from_dsl(@options, [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :success,
+      ], &block) if block
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just
@@ -43,6 +52,10 @@ module AASM::Core
       @transitions.select { |t| t.to == state }
     end
 
+    def fire_global_callbacks(callback_name, record, *args)
+      invoke_callbacks(state_machine.global_callbacks[callback_name], record, args)
+    end
+
     def fire_callbacks(callback_name, record, *args)
       # strip out the first element in args if it's a valid to_state
       # #given where we're coming from, this condition implies args not empty
@@ -70,6 +83,10 @@ module AASM::Core
         end
       end
       @transitions
+    end
+
+    def failed_callbacks
+      transitions.flat_map(&:failures)
     end
 
   private
@@ -128,8 +145,8 @@ module AASM::Core
           unless record.respond_to?(code, true)
             raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{record.inspect}:#{record.class}")
           end
-          arity = record.send(:method, code.to_sym).arity
-          record.send(code, *(arity < 0 ? args : args[0...arity]))
+          arity = record.__send__(:method, code.to_sym).arity
+          record.__send__(code, *(arity < 0 ? args : args[0...arity]))
           true
 
         when Proc
@@ -145,6 +162,5 @@ module AASM::Core
           false
       end
     end
-
   end
 end # AASM

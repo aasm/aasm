@@ -17,6 +17,7 @@ describe 'inspection for common cases' do
   context "instance level inspection" do
     let(:foo) { Foo.new }
     let(:two) { FooTwo.new }
+    let(:multi) { MultiTransitioner.new }
 
     it "delivers all states" do
       states = foo.aasm.states
@@ -37,11 +38,13 @@ describe 'inspection for common cases' do
       states = two.aasm.states
       expect(states).to include(:open)
       expect(states).to include(:closed)
+      expect(states).to include(:final)
       expect(states).to include(:foo)
 
       states = two.aasm.states(:permitted => true)
       expect(states).to include(:closed)
       expect(states).not_to include(:open)
+      expect(states).not_to include(:final)
 
       two.close
       expect(two.aasm.states(:permitted => true)).to be_empty
@@ -53,6 +56,18 @@ describe 'inspection for common cases' do
       expect(events).to include(:null)
       foo.close
       expect(foo.aasm.events).to be_empty
+    end
+
+    it "delivers permitted states when multiple transitions are defined" do
+      multi.can_run = false
+      states = multi.aasm.states(:permitted => true)
+      expect(states).to_not include(:running)
+      expect(states).to include(:dancing)
+
+      multi.can_run = true
+      states = multi.aasm.states(:permitted => true)
+      expect(states).to include(:running)
+      expect(states).to_not include(:dancing)
     end
   end
 
