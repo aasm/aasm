@@ -21,7 +21,7 @@ exclude_files = [
 Motion::Project::App.setup do |app|
   parent = File.expand_path File.dirname(__FILE__)
 
-  app.files << Dir.glob(File.join(parent, "aasm/**/*.rb")).reject { |file| exclude_files.any? { |exclude| file.match(exclude) } }
+  app.files.unshift Dir.glob(File.join(parent, "aasm/**/*.rb")).reject { |file| exclude_files.any? { |exclude| file.match(exclude) } }
 
   app.files_dependencies file_dependencies.inject({}, &->(file_dependencies, (file, *dependencies)) do
     file = File.join(parent, file)
