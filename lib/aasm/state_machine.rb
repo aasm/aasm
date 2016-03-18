@@ -10,6 +10,13 @@ module AASM
       (@machines ||= {})[klass.to_s] = machine
     end
 
+    def self.inherit(klass, alias_klass)
+      AASM::StateMachine[alias_klass] = {}
+      AASM::StateMachine[klass].keys.each do |state_machine_name|
+        AASM::StateMachine[alias_klass][state_machine_name] = AASM::StateMachine[klass][state_machine_name].clone
+      end
+    end
+
     attr_accessor :states, :events, :initial_state, :config, :name, :global_callbacks
 
     def initialize(name)

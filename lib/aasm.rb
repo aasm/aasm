@@ -12,5 +12,4 @@ require 'aasm/core/state'
 require 'aasm/localizer'
 require 'aasm/state_machine'
 require 'aasm/persistence'
-require 'aasm/persistence/plain_persistence' # RubyMotion support
 require 'aasm/aasm'
