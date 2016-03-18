@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## not yet released
+
+* fix: some issues with RubyMotion (see [issue #320](https://github.com/aasm/aasm/pull/320) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+
 ## 4.9.0
 
  * add support for callback classes (`after` only) (see [issue #316](https://github.com/aasm/aasm/pull/316) for details, thanks to [@mlr](https://github.com/mlr))
