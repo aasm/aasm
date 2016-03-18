@@ -6,6 +6,7 @@
  * fix: transitions now work in dup'ed copies (see [issue #325](https://github.com/aasm/aasm/pull/325) which fixes [issue #273](https://github.com/aasm/aasm/pull/273) for details, thanks to [@lingceng](https://github.com/lingceng))
  * fix: allow skipping the `aasm_ensure_initial_state` callback (see [issue #326](https://github.com/aasm/aasm/pull/326) for details, thanks to [@sineed](https://github.com/sineed))
  * fix: has_many association helper works again for Mongoid (see [issue #333](https://github.com/aasm/aasm/pull/333) which fixes [issue #332](https://github.com/aasm/aasm/pull/332) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+ * improve performance / refactor: load and run only code which is needed (see [issue #336](https://github.com/aasm/aasm/pull/336) for details, thanks to [@csmuc](https://github.com/csmuc))
 
 ## 4.9.0
 
