@@ -268,15 +268,15 @@ describe "instance methods" do
 end
 
 if ActiveRecord::VERSION::MAJOR < 4 && ActiveRecord::VERSION::MINOR < 2 # won't work with Rails >= 4.2
-describe "direct state column access" do
-  it "accepts false states" do
-    f = MultipleFalseState.create!
-    expect(f.aasm_state).to eql false
-    expect {
-      f.aasm(:left).events.map(&:name)
-    }.to_not raise_error
+  describe "direct state column access" do
+    it "accepts false states" do
+      f = MultipleFalseState.create!
+      expect(f.aasm_state).to eql false
+      expect {
+        f.aasm(:left).events.map(&:name)
+      }.to_not raise_error
+    end
   end
-end
 end
 
 describe 'subclasses' do
@@ -467,7 +467,7 @@ describe 'transitions with persistence' do
     end
 
     describe "after_commit callback" do
-      it "should fire :after_commit if transaction was successful" do
+      it "should fire state's :after_commit if transaction was successful" do
         validator = MultipleValidator.create(:name => 'name')
         expect(validator).to be_sleeping
 
@@ -475,25 +475,73 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name changed")
 
-        validator.sleep!("sleeper")
+        validator.sleep!
         expect(validator).to be_sleeping
-        expect(validator.name).to eq("sleeper")
+        expect(validator.name).to eq("name changed slept")
       end
 
-      it "should not fire :after_commit if transaction failed" do
+      it "should not fire state's :after_commit if transaction failed" do
         validator = MultipleValidator.create(:name => 'name')
+
         expect { validator.fail! }.to raise_error(StandardError, 'failed on purpose')
         expect(validator.name).to eq("name")
       end
 
-      it "should not fire if not saving" do
+      it "should fire state's :after_commit if manually persisted" do
         validator = MultipleValidator.create(:name => 'name')
         expect(validator).to be_sleeping
+
+        validator.run
+        validator.save!
+        expect(validator).to be_running
+        expect(validator.name).to eq("name changed")
+      end
+
+      it "should not immediately fire state's :after_commit if not saving" do
+        validator = MultipleValidator.create(:name => 'name')
+        expect(validator).to be_sleeping
+
         validator.run
         expect(validator).to be_running
         expect(validator.name).to eq("name")
       end
 
+      it "should fire all events' :after_commit hooks in if saving" do
+        validator = MultipleValidator.create(:name => 'name')
+        expect(validator).to be_sleeping
+
+        validator.wake!(" feeling grumpy")
+        expect(validator).to be_awake
+
+        validator.sleep!
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name awoke feeling grumpy slept")
+      end
+
+      it "should fire all events' :after_commit hooks in order if manually persisted" do
+        validator = MultipleValidator.create(:name => 'name')
+        expect(validator).to be_sleeping
+
+        validator.wake(" feeling grumpy")
+        expect(validator).to be_awake
+
+        validator.sleep
+        validator.save!
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name awoke feeling grumpy slept")
+      end
+
+      it "should not immediately fire any events' :after_commit hooks if not saving" do
+        validator = MultipleValidator.create(:name => 'name')
+        expect(validator).to be_sleeping
+
+        validator.wake
+        expect(validator).to be_awake
+
+        validator.sleep
+        expect(validator).to be_sleeping
+        expect(validator.name).to eq("name")
+      end
     end
 
     context "when not persisting" do
