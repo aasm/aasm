@@ -889,7 +889,7 @@ In the meantime you can use [my fork](https://github.com/Infotaku/cdq.git), ther
 AASM still has some issues with object proxies, so if you are using some libraries that put proxies in front of your objects, use
 `AASM::StateMachine.copy_over(self, :ProxyClass)` after having defined your states.
 ex :
-```
+```ruby
 class WillBeProxiedByCDQ < CDQManagedObject; end
 o = WillBeProxiedByCDQ.new
 o.class
@@ -905,7 +905,7 @@ o.class
 => NSKVONotifying_WillBeProxiedByKVO
 ```
 Any of these will break AASM if you include it to their class :
-```
+```ruby
 class WillBeProxiedByCDQ < CDQManagedObject
   include AASM
 
@@ -942,7 +942,7 @@ o.state1?
 => Error
 ```
 Fix it by doing :
-```
+```ruby
 class WillBeProxiedByCDQ < CDQManagedObject
   include AASM
 
