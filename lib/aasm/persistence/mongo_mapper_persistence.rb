@@ -33,11 +33,19 @@ module AASM
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::MongoMapperPersistence::InstanceMethods)
+        base.extend AASM::Persistence::MongoMapperPersistence::ClassMethods
 
         base.before_create :aasm_ensure_initial_state
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
+      end
+
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          conditions = { aasm(state_machine_name).attribute_name.to_sym => scope_name.to_s }
+          scope(scope_name, lambda { where(conditions) })
+        end
       end
 
       module InstanceMethods
