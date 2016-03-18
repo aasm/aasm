@@ -423,7 +423,7 @@ AASM allows you to easily extend `AASM::Base` for your own application purposes.
 
 Let's suppose we have common logic across many AASM models. We can embody this logic in a sub-class of `AASM::Base`.
 
-```
+```ruby
 class CustomAASMBase < AASM::Base
   # A custom transiton that we want available across many AASM models.
   def count_transitions!
@@ -460,7 +460,7 @@ end
 
 When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with` key to our own class.
 
-```
+```ruby
 class SimpleCustomExample
   include AASM
 
