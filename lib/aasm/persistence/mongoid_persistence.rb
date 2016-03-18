@@ -96,7 +96,16 @@ module AASM
         #
         def aasm_ensure_initial_state
           AASM::StateMachine[self.class].keys.each do |state_machine_name|
-            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+            attribute_name = self.class.aasm(state_machine_name).attribute_name.to_s
+            # Do not load initial state when object attributes are not loaded,
+            # mongoid has_many relationship does not load child object attributes when
+            # only ids are loaded, for example parent.child_ids will not load child object attributes.
+            # This feature is introduced in mongoid > 4.
+            if attribute_names.include?(attribute_name) && attributes[attribute_name].blank?
+              # attribute_missing? is defined in mongoid > 4
+              return if Mongoid::VERSION.to_f >= 4 && attribute_missing?(attribute_name)
+              send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s)
+            end
           end
         end
       end # InstanceMethods
