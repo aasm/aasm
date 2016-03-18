@@ -16,6 +16,8 @@ module AASM
           include_persistence base, :sequel
         elsif hierarchy.include?("Dynamoid::Document")
           include_persistence base, :dynamoid
+        elsif hierarchy.include?("CDQManagedObject")
+          include_persistence base, :core_data_query
         else
           include_persistence base, :plain
         end

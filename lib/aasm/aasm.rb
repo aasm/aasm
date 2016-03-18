@@ -17,10 +17,7 @@ module AASM
   module ClassMethods
     # make sure inheritance (aka subclassing) works with AASM
     def inherited(base)
-      AASM::StateMachine[base] = {}
-      AASM::StateMachine[self].keys.each do |state_machine_name|
-        AASM::StateMachine[base][state_machine_name] = AASM::StateMachine[self][state_machine_name].clone
-      end
+      AASM::StateMachine.inherit(self, base)
       super
     end
 
