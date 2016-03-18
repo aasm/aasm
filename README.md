@@ -97,6 +97,7 @@ class Job
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
+    state :finished
 
     after_all_transitions :log_status_change
 
