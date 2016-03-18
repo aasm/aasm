@@ -32,9 +32,7 @@ module AASM
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
 
-        base.after_initialize do
-          aasm_ensure_initial_state
-        end
+        base.after_initialize :aasm_ensure_initial_state
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
