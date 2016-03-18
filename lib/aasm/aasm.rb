@@ -17,7 +17,7 @@ module AASM
   module ClassMethods
     # make sure inheritance (aka subclassing) works with AASM
     def inherited(base)
-      AASM::StateMachine.inherit(self, base)
+      AASM::StateMachine.copy_over(self, base)
       super
     end
 

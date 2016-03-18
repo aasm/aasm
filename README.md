@@ -158,7 +158,7 @@ class LogRunTime
   def initialize(job, args = {})
     @job = job
   end
-  
+
   def call
     log "Job was running for #{@job.run_time} seconds"
   end
@@ -882,11 +882,108 @@ Job.aasm.states_for_select
 
 ### RubyMotion support
 
-To use AASM with a RubyMotion project, use it with the [motion-bundler](https://github.com/archan937/motion-bundler) gem.
+Now supports [CodeDataQuery](https://github.com/infinitered/cdq.git) !
+However I'm still in the process of submitting my compatibility updates to their repository.
+In the meantime you can use [my fork](https://github.com/Infotaku/cdq.git), there may still be some minor issues but I intend to extensively use it myself, so fixes should come fast.
+
+AASM still has some issues with object proxies, so if you are using some libraries that put proxies in front of your objects, use
+`AASM::StateMachine.copy_over(self, :ProxyClass)` after having defined your states.
+ex :
+```
+class WillBeProxiedByCDQ < CDQManagedObject; end
+o = WillBeProxiedByCDQ.new
+o.class
+=> WillBeProxiedByCDQ_WillBeProxiedByCDQ_
+
+include BW::KVO # From BubbleWrap
+class WillBeProxiedByKVO
+  attr_accessor :any
+end
+o = WillBeProxiedByKVO.new
+observe(o, [:any]) do; end
+o.class
+=> NSKVONotifying_WillBeProxiedByKVO
+```
+Any of these will break AASM if you include it to their class :
+```
+class WillBeProxiedByCDQ < CDQManagedObject
+  include AASM
+
+  aasm do
+    state :state1, initial: true
+    state :state2
+
+    event :change_state do
+      transitions from: :state1, to: :state2
+    end
+  end
+end
+o = WillBeProxiedByCDQ.new
+=> Error
+
+include BW::KVO # From BubbleWrap
+class WillBeProxiedByKVO
+  include AASM
+
+  attr_accessor :any
+
+  aasm do
+    state :state1, initial: true
+    state :state2
+
+    event :change_state do
+      transitions from: :state1, to: :state2
+    end
+  end
+end
+o = WillBeProxiedByKVO.new
+observe(o, [:any]) do; end
+o.state1?
+=> Error
+```
+Fix it by doing :
+```
+class WillBeProxiedByCDQ < CDQManagedObject
+  include AASM
+
+  aasm do
+    state :state1, initial: true
+    state :state2
+
+    event :change_state do
+      transitions from: :state1, to: :state2
+    end
+  end
+  AASM::StateMachine.copy_over(self, :WillBeProxiedByCDQ_WillBeProxiedByCDQ_)
+end
+o = WillBeProxiedByCDQ.new
+o.state1?
+=> true
+
+include BW::KVO # From BubbleWrap
+class WillBeProxiedByKVO
+  include AASM
+
+  attr_accessor :any
+
+  aasm do
+    state :state1, initial: true
+    state :state2
+
+    event :change_state do
+      transitions from: :state1, to: :state2
+    end
+  end
+  AASM::StateMachine.copy_over(self, :NSKVONotifying_WillBeProxiedByKVO)
+end
+o = WillBeProxiedByKVO.new
+observe(o, [:any]) do; end
+o.state1?
+=> true
+```
+I'm working on a fix to remove all of that, but it does the trick for now.
 
 Warnings:
-- Due to the way key-value observation (KVO) works in iOS,
-you currently CANNOT use AASM with an object you are observing. (Yes.. that's pretty sad).
 - Due to RubyMotion Proc's lack of 'source_location' method, it may be harder
 to find out the origin of a "cannot transition from" error. I would recommend using
 the 'instance method symbol / string' way whenever possible when defining guardians and callbacks.
