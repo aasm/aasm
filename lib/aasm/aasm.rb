@@ -70,6 +70,11 @@ module AASM
     @aasm[name.to_sym] ||= AASM::InstanceBase.new(self, name.to_sym)
   end
 
+  def initialize_dup(other)
+    @aasm = {}
+    super
+  end
+
 private
 
   # Takes args and a from state and removes the first
