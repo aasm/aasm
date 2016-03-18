@@ -7,14 +7,19 @@ module AASM
         hierarchy = base.ancestors.map {|klass| klass.to_s}
 
         if hierarchy.include?("ActiveRecord::Base")
+          require_persistence(:active_record)
           include_persistence base, :active_record
         elsif hierarchy.include?("Mongoid::Document")
+          require_persistence(:active_record)
           include_persistence base, :mongoid
         elsif hierarchy.include?("MongoMapper::Document")
+          require_persistence(:active_record)
           include_persistence base, :mongo_mapper
         elsif hierarchy.include?("Sequel::Model")
+          require_persistence(:active_record)
           include_persistence base, :sequel
         elsif hierarchy.include?("Dynamoid::Document")
+          require_persistence(:active_record)
           include_persistence base, :dynamoid
         elsif hierarchy.include?("CDQManagedObject")
           include_persistence base, :core_data_query
@@ -25,8 +30,11 @@ module AASM
 
       private
 
-      def include_persistence(base, type)
+      def require_persistence(type)
         require File.join(File.dirname(__FILE__), 'persistence', "#{type}_persistence")
+      end
+
+      def include_persistence(base, type)
         base.send(:include, constantize("#{capitalize(type)}Persistence"))
       end
 

@@ -3,17 +3,25 @@ unless defined?(Motion::Project::App)
 end
 
 file_dependencies = {
-  'aasm/persistence/base.rb' => ['aasm/base.rb']
+  'aasm/aasm.rb' => ['aasm/persistence.rb'],
+  'aasm/persistence.rb' => ['aasm/persistence/plain_persistence.rb', 'aasm/persistence/core_data_query_persistence.rb'],
+  'aasm/persistence/base.rb' => ['aasm/base.rb'],
+  'aasm/persistence/core_data_query_persistence.rb' => ['aasm/persistence/base.rb']
 }
 
 exclude_files = [
-  'rspec'
+  'aasm/rspec.*',
+  'aasm/persistence/active_record_persistence.rb',
+  'aasm/persistence/dynamoid_persistence.rb',
+  'aasm/persistence/mongo_mapper_persistence.rb',
+  'aasm/persistence/mongoid_persistence.rb',
+  'aasm/persistence/sequel_persistence.rb'
 ]
 
 Motion::Project::App.setup do |app|
   parent = File.expand_path File.dirname(__FILE__)
 
-  app.files += Dir.glob(File.join(parent, "aasm/**/*.rb")).reject { |file| exclude_files.any? { |exclude| file.match(exclude) } }
+  app.files << Dir.glob(File.join(parent, "aasm/**/*.rb")).reject { |file| exclude_files.any? { |exclude| file.match(exclude) } }
 
   app.files_dependencies file_dependencies.inject({}, &->(file_dependencies, (file, *dependencies)) do
     file = File.join(parent, file)
