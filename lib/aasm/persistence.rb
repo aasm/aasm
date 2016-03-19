@@ -18,6 +18,8 @@ module AASM
           include_persistence base, :dynamoid
         elsif hierarchy.include?("CDQManagedObject")
           include_persistence base, :core_data_query
+        elsif hierarchy.include?("Redis::Objects")
+          include_persistence base, :redis
         else
           include_persistence base, :plain
         end
