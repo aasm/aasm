@@ -159,7 +159,7 @@ class LogRunTime
   def initialize(job, args = {})
     @job = job
   end
-  
+
   def call
     log "Job was running for #{@job.run_time} seconds"
   end
@@ -181,7 +181,8 @@ begin
   new_state       before_enter
   new_state       enter
   ...update state...
-  event         success             # if persist successful
+  transition      success             # if persist successful
+  event           success             # if persist successful
   old_state       after_exit
   new_state       after_enter
   event           after

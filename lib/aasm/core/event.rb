@@ -8,6 +8,7 @@ module AASM::Core
       @name = name
       @state_machine = state_machine
       @transitions = []
+      @valid_transitions = {}
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
 
@@ -62,6 +63,12 @@ module AASM::Core
       invoke_callbacks(@options[callback_name], record, args)
     end
 
+    def fire_transition_callbacks(obj, *args)
+      from_state = obj.aasm(state_machine.name).current_state
+      transition = @valid_transitions[from_state]
+      @valid_transitions[from_state].invoke_success_callbacks(obj, *args) if transition
+    end
+
     def ==(event)
       if event.is_a? Symbol
         name == event
@@ -103,7 +110,6 @@ module AASM::Core
       definitions
     end
 
-    # Execute if test == false, otherwise return true/false depending on whether it would fire
     def _fire(obj, options={}, to_state=nil, *args)
       result = options[:test_only] ? false : nil
       if @transitions.map(&:from).any?
@@ -130,6 +136,7 @@ module AASM::Core
           if options[:test_only]
             # result = true
           else
+            Array(transition.to).each {|to| @valid_transitions[to] = transition }
             transition.execute(obj, *args)
           end
 

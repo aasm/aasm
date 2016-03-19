@@ -149,6 +149,7 @@ private
       persist_successful = aasm(state_machine_name).set_current_state_with_persistence(new_state_name)
       if persist_successful
         yield if block_given?
+        event.fire_transition_callbacks(self, *process_args(event, old_state.name, *args))
         event.fire_callbacks(:success, self)
       end
     else
