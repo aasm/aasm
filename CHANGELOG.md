@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## not yet released
+## 4.10.0 (not yet released)
 
  * fix: some issues with RubyMotion (see [issue #320](https://github.com/aasm/aasm/pull/320) for details, thanks to [@Infotaku](https://github.com/Infotaku))
  * fix: transitions now work in dup'ed copies (see [issue #325](https://github.com/aasm/aasm/pull/325) which fixes [issue #273](https://github.com/aasm/aasm/pull/273) for details, thanks to [@lingceng](https://github.com/lingceng))
@@ -9,6 +9,7 @@
  * improve performance / refactor: load and run only code which is needed (see [issue #336](https://github.com/aasm/aasm/pull/336) for details, thanks to [@csmuc](https://github.com/csmuc))
  * improve: warn when overriding an existing method (see [issue #340](https://github.com/aasm/aasm/pull/340) which fixes [issue #335](https://github.com/aasm/aasm/pull/335) for details, thanks to [@pirj](https://github.com/pirj))
  * fix: correct error message (by not evaluating the current state lazily) (see [issue #341](https://github.com/aasm/aasm/pull/341) which fixes [issue #312](https://github.com/aasm/aasm/pull/312) for details, thanks to [@pirj](https://github.com/pirj))
+ * addition: support for Redis as persistence layer (see [issue #190](https://github.com/aasm/aasm/pull/190) for details, thanks to [@javajax](https://github.com/javajax))
 
 ## 4.9.0
 
