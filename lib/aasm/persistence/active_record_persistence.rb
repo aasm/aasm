@@ -91,11 +91,11 @@ module AASM
         end
 
         def aasm_enum(name=:default)
-          case AASM::StateMachine[self.class][name].config.enum
+          case AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
             when false then nil
             when true then aasm_guess_enum_method(name)
             when nil then aasm_guess_enum_method(name) if aasm_column_looks_like_enum(name)
-            else AASM::StateMachine[self.class][name].config.enum
+            else AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
           end
         end
 
@@ -111,7 +111,7 @@ module AASM
         end
 
         def aasm_skipping_validations(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
         end
 
         def aasm_write_attribute(state, name=:default)
@@ -140,7 +140,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             # checking via respond_to? does not work in Rails <= 3
             # if respond_to?(self.class.aasm(state_machine_name).attribute_name) && send(self.class.aasm(state_machine_name).attribute_name).blank? # Rails 4
             if aasm_column_is_blank?(state_machine_name)
@@ -187,18 +187,18 @@ module AASM
         end
 
         def requires_new?(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.requires_new_transaction
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.requires_new_transaction
         end
 
         def requires_lock?(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.requires_lock
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.requires_lock
         end
 
         def aasm_validate_states
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             unless aasm_skipping_validations(state_machine_name)
               if aasm_invalid_state?(state_machine_name)
-                self.errors.add(AASM::StateMachine[self.class][state_machine_name].config.column , "is invalid")
+                self.errors.add(AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.column , "is invalid")
               end
             end
           end

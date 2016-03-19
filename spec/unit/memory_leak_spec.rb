@@ -7,7 +7,7 @@
 #   end
 
 #   def machines
-#     AASM::StateMachine.instance_variable_get("@machines")
+#     AASM::StateMachineStore.instance_variable_get("@stores")
 #   end
 
 #   it "should be created without memory leak" do
