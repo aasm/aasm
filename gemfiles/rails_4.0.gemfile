@@ -10,5 +10,6 @@ gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.
 gem 'sequel'
 gem 'dynamoid', '~> 1',                 :platforms => :ruby
 gem 'aws-sdk', '~>2',                   :platforms => :ruby
+gem "redis-objects"
 
 gemspec :path => "../"

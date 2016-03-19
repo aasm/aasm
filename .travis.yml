@@ -14,7 +14,9 @@ rvm:
   - jruby-9.0.4.0
   - rbx-2.5.8
 
-services: mongodb
+services:
+  - mongodb
+  - redis-server
 
 gemfile:
   - gemfiles/rails_3.2_stable.gemfile

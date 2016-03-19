@@ -12,5 +12,6 @@ gem 'mongo_mapper'
 gem 'bson_ext',                          :platforms => :ruby
 gem 'dynamoid', '~> 1',                  :platforms => :ruby
 gem 'aws-sdk', '~>2',                    :platforms => :ruby
+gem "redis-objects"
 
 gemspec :path => "../"
