@@ -7,6 +7,7 @@
  * fix: allow skipping the `aasm_ensure_initial_state` callback (see [issue #326](https://github.com/aasm/aasm/pull/326) for details, thanks to [@sineed](https://github.com/sineed))
  * fix: has_many association helper works again for Mongoid (see [issue #333](https://github.com/aasm/aasm/pull/333) which fixes [issue #332](https://github.com/aasm/aasm/pull/332) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
  * improve performance / refactor: load and run only code which is needed (see [issue #336](https://github.com/aasm/aasm/pull/336) for details, thanks to [@csmuc](https://github.com/csmuc))
+ * improve: warn when overriding an existing method (see [issue #340](https://github.com/aasm/aasm/pull/340) which fixes [issue #335](https://github.com/aasm/aasm/pull/335) for details, thanks to [@pirj](https://github.com/pirj))
 
 ## 4.9.0
 
