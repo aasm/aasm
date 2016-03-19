@@ -72,6 +72,6 @@ describe 'redis' do
     end
 
   rescue LoadError
-    puts "Not running Sequel specs because sequel gem is not installed!!!"
+    puts "Not running Redis specs because sequel gem is not installed!!!"
   end
 end

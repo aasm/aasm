@@ -44,8 +44,8 @@ module AASM
         # NOTE: intended to be called from an event
         #
         # This allows for nil aasm states - be sure to add validation to your model
-        def aasm_read_state
-          state = send(self.class.aasm.attribute_name)
+        def aasm_read_state(name=:default)
+          state = send(self.class.aasm(name).attribute_name)
 
           if state.value.nil?
             nil
