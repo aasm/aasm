@@ -109,7 +109,7 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:before_event).once.ordered
       expect(callback).to receive(:event_guard).once.ordered.and_return(true)
       expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
-      expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
+      expect(callback).to receive(:before_exit_open).once.ordered                    # these should be before the state changes
       expect(callback).to receive(:exit_open).once.ordered
       # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
       # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
@@ -117,8 +117,9 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:after_transition).once.ordered
       expect(callback).to receive(:before_enter_closed).once.ordered
       expect(callback).to receive(:enter_closed).once.ordered
-      expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
-      expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
+      expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)   # this is when the state changes
+      expect(callback).to receive(:success_transition).once.ordered.and_return(true) # these should be after the state changes
+      expect(callback).to receive(:after_exit_open).once.ordered
       expect(callback).to receive(:after_enter_closed).once.ordered
       expect(callback).to receive(:after_event).once.ordered
     end
@@ -142,6 +143,7 @@ describe 'callbacks for the new DSL' do
     expect(callback).to_not receive(:before_enter_closed)
     expect(callback).to_not receive(:enter_closed)
     expect(callback).to_not receive(:aasm_write_state)
+    expect(callback).to_not receive(:success_transition)
     expect(callback).to_not receive(:after_exit_open)
     expect(callback).to_not receive(:after_enter_closed)
     expect(callback).to_not receive(:after_event)
@@ -184,6 +186,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
         expect(callback).to_not receive(:aasm_write_state)
+        expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:after_exit_open)
         expect(callback).to_not receive(:after_enter_closed)
         expect(callback).to_not receive(:after_event)
@@ -214,6 +217,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to receive(:after).once.ordered
 
         expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
         expect(callback).to_not receive(:after_enter_closed)
@@ -236,6 +240,7 @@ describe 'callbacks for the new DSL' do
       expect(callback).to_not receive(:before_enter_closed)
       expect(callback).to_not receive(:enter_closed)
       expect(callback).to_not receive(:aasm_write_state)
+      expect(callback).to_not receive(:success_transition)
       expect(callback).to_not receive(:after_exit_open)
       expect(callback).to_not receive(:after_enter_closed)
       expect(callback).to_not receive(:after)
@@ -252,14 +257,16 @@ describe 'callbacks for the new DSL' do
 
     cb.reset_data
     cb.close!(:arg1, :arg2)
-    expect(cb.data).to eql 'before(:arg1,:arg2) before_exit_open(:arg1,:arg2) transition_proc(:arg1,:arg2) before_enter_closed(:arg1,:arg2) aasm_write_state after_exit_open(:arg1,:arg2) after_enter_closed(:arg1,:arg2) after(:arg1,:arg2)'
+    expect(cb.data).to eql 'before(:arg1,:arg2) before_exit_open(:arg1,:arg2) transition_proc(:arg1,:arg2) before_enter_closed(:arg1,:arg2) aasm_write_state transition_success(:arg1,:arg2) after_exit_open(:arg1,:arg2) after_enter_closed(:arg1,:arg2) after(:arg1,:arg2)'
   end
 
   it "should call the callbacks given the to-state as argument" do
     cb = Callbacks::WithStateArg.new
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:success_method).never
     expect(cb).to receive(:transition_method2).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method2).with(:arg1).once.ordered
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:out_to_lunch, :arg1)
 
@@ -267,6 +274,7 @@ describe 'callbacks for the new DSL' do
     some_object = double('some object')
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method2).with(some_object).once.ordered
+    expect(cb).to receive(:success_method2).with(some_object).once.ordered
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(:out_to_lunch, some_object)
   end
@@ -276,6 +284,8 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:success_method).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:arg1)
 
@@ -284,6 +294,8 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:success_method).with(some_object).once.ordered
+    expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(some_object)
   end
@@ -299,7 +311,7 @@ describe 'event callbacks' do
 
         aasm do
           event :safe_close, :success => :success_callback, :error => :error_callback do
-            transitions :to => :closed, :from => [:open]
+            transitions :to => :closed, :from => [:open], :success => :transition_success_callback
           end
         end
       end

@@ -6,7 +6,7 @@ describe 'adding an event' do
     AASM::Core::Event.new(:close_order, state_machine, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
-      transitions :to => :closed, :from => [:open, :received]
+      transitions :to => :closed, :from => [:open, :received], success: [:transition_success_callback]
     end
   end
 
@@ -335,6 +335,24 @@ describe 'parametrised events' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:condition_hair)
     expect(pe).to receive(:fix_hair)
+    pe.dress!(:prettying_up)
+  end
+
+  it 'should call :success transition method with args' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:wear_makeup).with('foundation', 'SPF')
+    pe.dress!(:working, 'foundation', 'SPF')
+  end
+
+  it 'should call :success transition proc' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:wear_makeup).with('purple', 'slacks')
+    pe.dress!(:dating, 'purple', 'slacks')
+  end
+
+  it 'should call :success transition with an array of methods' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:touch_up_hair)
     pe.dress!(:prettying_up)
   end
 end

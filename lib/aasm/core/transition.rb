@@ -6,7 +6,7 @@ module AASM::Core
     alias_method :options, :opts
 
     def initialize(event, opts, &block)
-      add_options_from_dsl(opts, [:on_transition, :guard, :after], &block) if block
+      add_options_from_dsl(opts, [:on_transition, :guard, :after, :success], &block) if block
 
       @event = event
       @from = opts[:from]
@@ -21,6 +21,9 @@ module AASM::Core
       end
       @after = Array(opts[:after])
       @after = @after[0] if @after.size == 1
+
+      @success = Array(opts[:success])
+      @success = @success[0] if @success.size == 1
 
       @opts = opts
     end
@@ -41,6 +44,10 @@ module AASM::Core
 
     def from?(value)
       @from == value
+    end
+
+    def invoke_success_callbacks(obj, *args)
+      _fire_callbacks(@success, obj, args)
     end
 
     private
@@ -107,6 +114,20 @@ module AASM::Core
         end
       else
         true
+      end
+    end
+
+    def _fire_callbacks(code, record, args)
+      case code
+        when Symbol, String
+          arity = record.send(:method, code.to_sym).arity
+          record.send(code, *(arity < 0 ? args : args[0...arity]))
+        when Proc
+          code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
+        when Array
+          @success.map {|a| _fire_callbacks(a, obj, args)}
+        else
+          true
       end
     end
 

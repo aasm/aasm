@@ -1,8 +1,7 @@
 module AASM
   class Base
 
-    attr_reader :klass,
-      :state_machine
+    attr_reader :klass, :state_machine
 
     def initialize(klass, name, state_machine, options={}, &block)
       @klass = klass
@@ -38,6 +37,9 @@ module AASM
 
       configure :enum, nil
 
+      # Set to true to namespace reader methods and constants
+      configure :namespace, false
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
@@ -71,20 +73,29 @@ module AASM
     end
 
     # define a state
-    def state(name, options={})
-      @state_machine.add_state(name, klass, options)
+    # args
+    # [0] state
+    # [1] options (or nil)
+    # or
+    # [0] state
+    # [1..] state
+    def state(*args)
+      names, options = interpret_state_args(args)
+      names.each do |name|
+        @state_machine.add_state(name, klass, options)
 
-      if klass.instance_methods.include?("#{name}?")
-        warn "#{klass.name}: The aasm state name #{name} is already used!"
-      end
+        aasm_name = @name.to_sym
+        state = name.to_sym
 
-      aasm_name = @name
-      klass.send :define_method, "#{name}?", ->() do
-        aasm(:"#{aasm_name}").current_state == :"#{name}"
-      end
+        method_name = namespace? ? "#{namespace}_#{name}" : name
+        safely_define_method klass, "#{method_name}?", -> do
+          aasm(aasm_name).current_state == state
+        end
 
-      unless klass.const_defined?("STATE_#{name.upcase}")
-        klass.const_set("STATE_#{name.upcase}", name)
+        const_name = namespace? ? "STATE_#{namespace.upcase}_#{name.upcase}" : "STATE_#{name.upcase}"
+        unless klass.const_defined?(const_name)
+          klass.const_set(const_name, name)
+        end
       end
     end
 
@@ -92,27 +103,24 @@ module AASM
     def event(name, options={}, &block)
       @state_machine.add_event(name, options, &block)
 
-      if klass.instance_methods.include?("may_#{name}?".to_sym)
-        warn "#{klass.name}: The aasm event name #{name} is already used!"
-      end
+      aasm_name = @name.to_sym
+      event = name.to_sym
 
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
-      aasm_name = @name
-
-      klass.send :define_method, "may_#{name}?", ->(*args) do
-        aasm(:"#{aasm_name}").may_fire_event?(:"#{name}", *args)
+      safely_define_method klass, "may_#{name}?", ->(*args) do
+        aasm(aasm_name).may_fire_event?(event, *args)
       end
 
-      klass.send :define_method, "#{name}!", ->(*args, &block) do
-        aasm(:"#{aasm_name}").current_event = :"#{name}!"
-        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => true}, *args, &block)
+      safely_define_method klass, "#{name}!", ->(*args, &block) do
+        aasm(aasm_name).current_event = :"#{name}!"
+        aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
       end
 
-      klass.send :define_method, "#{name}", ->(*args, &block) do
-        aasm(:"#{aasm_name}").current_event = :"#{name}"
-        aasm_fire_event(:"#{aasm_name}", :"#{name}", {:persist => false}, *args, &block)
+      safely_define_method klass, name, ->(*args, &block) do
+        aasm(aasm_name).current_event = event
+        aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
     end
 
@@ -165,6 +173,7 @@ module AASM
       if options[:transition]
         @state_machine.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
       else
+
         events.map {|e| e.transitions_to_state(state)}.flatten.map(&:from).flatten
       end
     end
@@ -180,6 +189,36 @@ module AASM
         @state_machine.config.send("#{key}=", @options[key])
       elsif @state_machine.config.send(key).nil?
         @state_machine.config.send("#{key}=", default_value)
+      end
+    end
+
+    def safely_define_method(klass, method_name, method_definition)
+      if klass.instance_methods.include?(method_name.to_sym)
+        warn "#{klass.name}: overriding method '#{method_name}'!"
+      end
+
+      klass.send(:define_method, method_name, method_definition)
+    end
+
+    def namespace?
+      !!@state_machine.config.namespace
+    end
+
+    def namespace
+      if @state_machine.config.namespace == true
+        @name
+      else
+        @state_machine.config.namespace
+      end
+    end
+
+    def interpret_state_args(args)
+      if args.last.is_a?(Hash) && args.size == 2
+        [[args.first], args.last]
+      elsif args.size > 0
+        [args, {}]
+      else
+        raise "count not parse states: #{args}"
       end
     end
 

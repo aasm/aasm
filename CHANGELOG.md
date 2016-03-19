@@ -1,12 +1,27 @@
 # CHANGELOG
 
-## unreleased
+## 4.10.0 (not yet released)
+
+ * fix: some issues with RubyMotion (see [issue #320](https://github.com/aasm/aasm/pull/320) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+ * fix: transitions now work in dup'ed copies (see [issue #325](https://github.com/aasm/aasm/pull/325) which fixes [issue #273](https://github.com/aasm/aasm/pull/273) for details, thanks to [@lingceng](https://github.com/lingceng))
+ * fix: allow skipping the `aasm_ensure_initial_state` callback (see [issue #326](https://github.com/aasm/aasm/pull/326) for details, thanks to [@sineed](https://github.com/sineed))
+ * fix: has_many association helper works again for Mongoid (see [issue #333](https://github.com/aasm/aasm/pull/333) which fixes [issue #332](https://github.com/aasm/aasm/pull/332) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
+ * improve performance / refactor: load and run only code which is needed (see [issue #336](https://github.com/aasm/aasm/pull/336) for details, thanks to [@csmuc](https://github.com/csmuc))
+ * improve: warn when overriding an existing method (see [issue #340](https://github.com/aasm/aasm/pull/340) which fixes [issue #335](https://github.com/aasm/aasm/pull/335) for details, thanks to [@pirj](https://github.com/pirj))
+ * fix: correct error message (by not evaluating the current state lazily) (see [issue #341](https://github.com/aasm/aasm/pull/341) which fixes [issue #312](https://github.com/aasm/aasm/pull/312) for details, thanks to [@pirj](https://github.com/pirj))
+ * addition: support for Redis as persistence layer (see [issue #190](https://github.com/aasm/aasm/pull/190) for details, thanks to [@javajax](https://github.com/javajax))
+ * addition: support transition `:success` callbacks (see [issue #239](https://github.com/aasm/aasm/pull/239) which fixes [issue #236](https://github.com/aasm/aasm/pull/236) for details, thanks to [@brega](https://github.com/brega))
+ * addition: support for namespacing methods and state names (see [issue #259](https://github.com/aasm/aasm/pull/259) for details, thanks to [@allspiritseve](https://github.com/allspiritseve))
+ * addition: support for defining multiple states in one line (see [issue #288](https://github.com/aasm/aasm/pull/288) which fixes [issue #146](https://github.com/aasm/aasm/pull/146) for details, thanks to [@HParker](https://github.com/HParker))
+
+## 4.9.0
 
  * add support for callback classes (`after` only) (see [issue #316](https://github.com/aasm/aasm/pull/316) for details, thanks to [@mlr](https://github.com/mlr))
  * allow easier extension of _AASM_ (utilising the idea of _ApplicationRecords_ from _Rails 5_) (see [issue #296](https://github.com/aasm/aasm/pull/296) for details, thanks to [@mlr](https://github.com/mlr))
  * support pessimistic locking for _ActiveRecord_ (see [issue #283](https://github.com/aasm/aasm/pull/283) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
  * fix: support database sharding for _ActiveRecord_ (see [issue #289](https://github.com/aasm/aasm/pull/289) for details, thanks to [@scambra](https://github.com/scambra))
  * fix: some issues with RubyMotion (see [issue #318](https://github.com/aasm/aasm/pull/318) for details, thanks to [@Infotaku](https://github.com/Infotaku))
+ * fix: Rails generator now features the correct namespace (see [issue #328](https://github.com/aasm/aasm/pull/328) and [issue #329](https://github.com/aasm/aasm/pull/329) for details, thanks to [@anilmaurya](https://github.com/anilmaurya))
 
 
 ## 4.8.0

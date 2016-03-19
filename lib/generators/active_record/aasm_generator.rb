@@ -5,7 +5,7 @@ module ActiveRecord
   module Generators
     class AASMGenerator < ActiveRecord::Generators::Base
       include AASM::Generators::OrmHelpers
-
+      namespace "active_record:aasm"
       argument :column_name, type: :string, default: 'aasm_state'
 
       source_root File.expand_path("../templates", __FILE__)
@@ -16,11 +16,11 @@ module ActiveRecord
         else
           migration_template "migration.rb", "db/migrate/aasm_create_#{table_name}.rb"
         end
-      end 
+      end
 
       def generate_model
         invoke "active_record:model", [name], migration: false unless model_exists?
-      end 
+      end
 
       def inject_aasm_content
         content = model_contents

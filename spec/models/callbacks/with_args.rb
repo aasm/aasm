@@ -29,7 +29,7 @@ module Callbacks
         :after_exit   => :after_exit_closed
 
       event :close, :before => :before, :after => :after do
-        transitions :to => :closed, :from => [:open], :after => :transition_proc
+        transitions :to => :closed, :from => [:open], :after => :transition_proc, :success => :transition_success_proc
       end
 
       event :open, :before => :before, :after => :after do
@@ -57,5 +57,6 @@ module Callbacks
     def before(arg1, *args); log("before(#{arg1.inspect},#{args.map(&:inspect).join(',')})"); end
     def transition_proc(arg1, arg2); log("transition_proc(#{arg1.inspect},#{arg2.inspect})"); end
     def after(*args); log("after(#{args.map(&:inspect).join(',')})"); end
+    def transition_success_proc(*args); log("transition_success(#{args.map(&:inspect).join(',')})"); end
   end
 end

@@ -79,15 +79,17 @@ describe AASM::Core::Transition do
     expect(st.opts[:after]).to eql [:after_callback]
   end
 
-  it 'should set after and guard from dsl' do
+  it 'should set after, guard and success from dsl' do
     opts = {:from => 'foo', :to => 'bar', :guard => 'g'}
     st = AASM::Core::Transition.new(event, opts) do
       guard :gg
       after :after_callback
+      success :after_persist
     end
 
     expect(st.opts[:guard]).to eql ['g', :gg]
     expect(st.opts[:after]).to eql [:after_callback] # TODO fix this bad code coupling
+    expect(st.opts[:success]).to eql [:after_persist] # TODO fix this bad code coupling
   end
 
   it 'should pass equality check if from and to are the same' do
@@ -359,6 +361,63 @@ describe AASM::Core::Transition, '- when executing the transition with a Class' 
     obj = double('object', :aasm => 'aasm')
 
     return_value = st.execute(obj)
+
+    expect(return_value).to eq('success')
+  end
+end
+
+describe AASM::Core::Transition, '- when invoking the transition :success method call' do
+  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:event) { AASM::Core::Event.new(:event, state_machine) }
+
+  it 'should accept a String for the method name' do
+    opts = {:from => 'foo', :to => 'bar', :success => 'test'}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    expect(obj).to receive(:test)
+
+    st.invoke_success_callbacks(obj, args)
+  end
+
+  it 'should accept a Symbol for the method name' do
+    opts = {:from => 'foo', :to => 'bar', :success => :test}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    expect(obj).to receive(:test)
+
+    st.invoke_success_callbacks(obj, args)
+  end
+
+  it 'should pass args if the target method accepts them' do
+    opts = {:from => 'foo', :to => 'bar', :success => :test}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    def obj.test(args)
+      "arg1: #{args[:arg1]} arg2: #{args[:arg2]}"
+    end
+
+    return_value = st.invoke_success_callbacks(obj, args)
+
+    expect(return_value).to eq('arg1: 1 arg2: 2')
+  end
+
+  it 'should NOT pass args if the target method does NOT accept them' do
+    opts = {:from => 'foo', :to => 'bar', :success => :test}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    def obj.test
+      'success'
+    end
+
+    return_value = st.invoke_success_callbacks(obj, args)
 
     expect(return_value).to eq('success')
   end

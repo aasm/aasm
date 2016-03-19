@@ -63,53 +63,11 @@ module AASM
     private
 
     def create_scope?(name)
-      @state_machine.config.create_scopes && !@klass.respond_to?(name)
+      @state_machine.config.create_scopes && !@klass.respond_to?(name) && @klass.respond_to?(:aasm_create_scope)
     end
 
     def create_scope(name)
-      if ancestors_include?("ActiveRecord::Base")
-        create_for_active_record(name)
-      elsif ancestors_include?("Mongoid::Document")
-        create_for_mongoid(name)
-      elsif ancestors_include?("MongoMapper::Document")
-        create_for_mongomapper(name)
-      end
-    end
-
-    def ancestors_include?(class_name)
-      @klass.ancestors.map { |klass| klass.to_s }.include?(class_name)
-    end
-
-    def create_for_active_record(name)
-      conditions = {
-        @klass.table_name => { @klass.aasm(@name).attribute_name => name.to_s }
-      }
-      if ActiveRecord::VERSION::MAJOR >= 3
-        @klass.class_eval do
-          scope name, lambda { where(conditions) }
-        end
-      else
-        @klass.class_eval do
-          named_scope name, :conditions => conditions
-        end
-      end
-    end
-
-    def create_for_mongoid(name)
-      klass = @klass
-      state_machine_name = @name
-      scope_options = lambda {
-        klass.send(
-          :where,
-          { klass.aasm(state_machine_name).attribute_name.to_sym => name.to_s }
-        )
-      }
-      @klass.send(:scope, name, scope_options)
-    end
-
-    def create_for_mongomapper(name)
-      conditions = { @klass.aasm(@name).attribute_name.to_sym => name.to_s }
-      @klass.scope(name, lambda { @klass.where(conditions) })
+      @klass.aasm_create_scope(@name, name)
     end
   end # Base
 

@@ -17,4 +17,7 @@ gem 'sequel'
 # gem 'mongo_mapper', '~> 0.13'
 # gem 'bson_ext',                          :platforms => :ruby
 
+# uncomment if you want to run specs for Redis persistence
+# gem "redis-objects"
+
 gemspec

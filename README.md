@@ -28,8 +28,7 @@ class Job
 
   aasm do
     state :sleeping, :initial => true
-    state :running
-    state :cleaning
+    state :running, :cleaning
 
     event :run do
       transitions :from => :sleeping, :to => :running
@@ -97,6 +96,7 @@ class Job
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
+    state :finished
 
     after_all_transitions :log_status_change
 
@@ -149,7 +149,7 @@ In this case `do_something` is called before actually entering the state `sleepi
 while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
 is finished.
 
-AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `runnung` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
+AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
 
 ```
 class LogRunTime
@@ -180,7 +180,8 @@ begin
   new_state       before_enter
   new_state       enter
   ...update state...
-  event         success             # if persist successful
+  transition      success             # if persist successful
+  event           success             # if persist successful
   old_state       after_exit
   new_state       after_enter
   event           after
@@ -404,7 +405,7 @@ simple.aasm(:work).current
 
 _AASM_ doesn't prohibit to define the same event in more than one state machine. The
 latest definition "wins" and overrides previous definitions. Nonetheless, a warning is issued:
-`SimpleMultipleExample: The aasm event name run is already used!`.
+`SimpleMultipleExample: overriding method 'run'!`.
 
 All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
 So, for example, to use inspection on a class level, you have to use
@@ -423,7 +424,7 @@ AASM allows you to easily extend `AASM::Base` for your own application purposes.
 
 Let's suppose we have common logic across many AASM models. We can embody this logic in a sub-class of `AASM::Base`.
 
-```
+```ruby
 class CustomAASMBase < AASM::Base
   # A custom transiton that we want available across many AASM models.
   def count_transitions!
@@ -460,7 +461,7 @@ end
 
 When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with` key to our own class.
 
-```
+```ruby
 class SimpleCustomExample
   include AASM
 
@@ -658,6 +659,21 @@ class Job
   key :aasm_state,                   Symbol
   aasm do
     ...
+  end
+end
+```
+
+### Redis
+
+AASM also supports persistence in Redis.
+Make sure to include Redis::Objects before you include AASM.
+
+```ruby
+class User
+  include Redis::Objects
+  include AASM
+
+  aasm do
   end
 end
 ```

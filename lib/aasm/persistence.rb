@@ -7,20 +7,23 @@ module AASM
         hierarchy = base.ancestors.map {|klass| klass.to_s}
 
         if hierarchy.include?("ActiveRecord::Base")
-          require_persistence(:active_record)
+          require_persistence :active_record
           include_persistence base, :active_record
         elsif hierarchy.include?("Mongoid::Document")
-          require_persistence(:mongoid)
+          require_persistence :mongoid
           include_persistence base, :mongoid
         elsif hierarchy.include?("MongoMapper::Document")
-          require_persistence(:mongo_mapper)
+          require_persistence :mongo_mapper
           include_persistence base, :mongo_mapper
         elsif hierarchy.include?("Sequel::Model")
-          require_persistence(:sequel)
+          require_persistence :sequel
           include_persistence base, :sequel
         elsif hierarchy.include?("Dynamoid::Document")
-          require_persistence(:dynamoid)
+          require_persistence :dynamoid
           include_persistence base, :dynamoid
+        elsif hierarchy.include?("Redis::Objects")
+          require_persistence :redis
+          include_persistence base, :redis
         elsif hierarchy.include?("CDQManagedObject")
           include_persistence base, :core_data_query
         else

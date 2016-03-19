@@ -14,8 +14,15 @@ module AASM
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::CoreDataQueryPersistence::InstanceMethods)
+        base.extend AASM::Persistence::CoreDataQueryPersistence::ClassMethods
 
         base.after_initialize :aasm_ensure_initial_state
+      end
+
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          scope(scope_name.to_sym, lambda { where(aasm(state_machine_name).attribute_name.to_sym).eq(scope_name.to_s) })
+        end
       end
 
       module InstanceMethods

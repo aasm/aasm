@@ -28,7 +28,7 @@ module Callbacks
       state :failed
 
       event :close, :before => :before, :after => :after, :guard => :event_guard do
-        transitions :to => :closed, :from => [:open], :guard => :transition_guard, :after => :transitioning
+        transitions :to => :closed, :from => [:open], :guard => :transition_guard, :after => :transitioning, :success => :success_transition
         transitions :to => :failed, :from => [:open]
       end
 
@@ -58,6 +58,7 @@ module Callbacks
     def event_guard; log('event_guard'); !@fail_event_guard; end
     def transition_guard; log('transition_guard'); !@fail_transition_guard; end
     def transitioning; log('transitioning'); end
+    def success_transition; log('transition success'); end
 
     def before; log('before'); end
     def after; log('after'); end
