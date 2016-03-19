@@ -35,6 +35,7 @@ matrix:
   allow_failures:
     - rvm: rbx-2.2.1
     - rvm: jruby-1.7
+    - rvm: 2.3
   exclude:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_4.1.gemfile
