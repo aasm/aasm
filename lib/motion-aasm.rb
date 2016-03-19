@@ -15,7 +15,8 @@ exclude_files = [
   'aasm/persistence/dynamoid_persistence.rb',
   'aasm/persistence/mongo_mapper_persistence.rb',
   'aasm/persistence/mongoid_persistence.rb',
-  'aasm/persistence/sequel_persistence.rb'
+  'aasm/persistence/sequel_persistence.rb',
+  'aasm/persistence/redis_persistence.rb'
 ]
 
 Motion::Project::App.setup do |app|
