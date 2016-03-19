@@ -73,28 +73,29 @@ module AASM
     end
 
     # define a state
-    def state(name, options={})
-      @state_machine.add_state(name, klass, options)
+    # args
+    # [0] state
+    # [1] options (or nil)
+    # or
+    # [0] state
+    # [1..] state
+    def state(*args)
+      names, options = interpret_state_args(args)
+      names.each do |name|
+        @state_machine.add_state(name, klass, options)
 
-      aasm_name = @name.to_sym
-      state = name.to_sym
+        aasm_name = @name.to_sym
+        state = name.to_sym
 
-      if namespace?
-        method_name = "#{namespace}_#{name}"
-      else
-        method_name = name
-      end
-      safely_define_method klass, "#{method_name}?", -> do
-        aasm(aasm_name).current_state == state
-      end
+        method_name = namespace? ? "#{namespace}_#{name}" : name
+        safely_define_method klass, "#{method_name}?", -> do
+          aasm(aasm_name).current_state == state
+        end
 
-      if namespace?
-        const_name = "STATE_#{namespace.upcase}_#{name.upcase}"
-      else
-        const_name = "STATE_#{name.upcase}"
-      end
-      unless klass.const_defined?(const_name)
-        klass.const_set(const_name, name)
+        const_name = namespace? ? "STATE_#{namespace.upcase}_#{name.upcase}" : "STATE_#{name.upcase}"
+        unless klass.const_defined?(const_name)
+          klass.const_set(const_name, name)
+        end
       end
     end
 
@@ -172,6 +173,7 @@ module AASM
       if options[:transition]
         @state_machine.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
       else
+
         events.map {|e| e.transitions_to_state(state)}.flatten.map(&:from).flatten
       end
     end
@@ -209,5 +211,16 @@ module AASM
         @state_machine.config.namespace
       end
     end
+
+    def interpret_state_args(args)
+      if args.last.is_a?(Hash) && args.size == 2
+        [[args.first], args.last]
+      elsif args.size > 0
+        [args, {}]
+      else
+        raise "count not parse states: #{args}"
+      end
+    end
+
   end
 end
