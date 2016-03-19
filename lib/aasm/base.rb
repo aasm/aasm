@@ -1,8 +1,7 @@
 module AASM
   class Base
 
-    attr_reader :klass,
-      :state_machine
+    attr_reader :klass, :state_machine
 
     def initialize(klass, name, state_machine, options={}, &block)
       @klass = klass
@@ -37,6 +36,9 @@ module AASM
       configure :with_klass, AASM::Base
 
       configure :enum, nil
+
+      # Set to true to namespace reader methods and constants
+      configure :namespace, false
 
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
@@ -76,12 +78,23 @@ module AASM
 
       aasm_name = @name.to_sym
       state = name.to_sym
-      safely_define_method klass, "#{name}?", -> do
+
+      if namespace?
+        method_name = "#{namespace}_#{name}"
+      else
+        method_name = name
+      end
+      safely_define_method klass, "#{method_name}?", -> do
         aasm(aasm_name).current_state == state
       end
 
-      unless klass.const_defined?("STATE_#{name.upcase}")
-        klass.const_set("STATE_#{name.upcase}", name)
+      if namespace?
+        const_name = "STATE_#{namespace.upcase}_#{name.upcase}"
+      else
+        const_name = "STATE_#{name.upcase}"
+      end
+      unless klass.const_defined?(const_name)
+        klass.const_set(const_name, name)
       end
     end
 
@@ -185,5 +198,16 @@ module AASM
       klass.send(:define_method, method_name, method_definition)
     end
 
+    def namespace?
+      !!@state_machine.config.namespace
+    end
+
+    def namespace
+      if @state_machine.config.namespace == true
+        @name
+      else
+        @state_machine.config.namespace
+      end
+    end
   end
 end
