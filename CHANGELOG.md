@@ -12,6 +12,7 @@
  * addition: support for Redis as persistence layer (see [issue #190](https://github.com/aasm/aasm/pull/190) for details, thanks to [@javajax](https://github.com/javajax))
  * addition: support transition `:success` callbacks (see [issue #239](https://github.com/aasm/aasm/pull/239) which fixes [issue #236](https://github.com/aasm/aasm/pull/236) for details, thanks to [@brega](https://github.com/brega))
  * addition: support for namespacing methods and state names (see [issue #259](https://github.com/aasm/aasm/pull/259) for details, thanks to [@allspiritseve](https://github.com/allspiritseve))
+ * addition: support for defining multiple states in one line (see [issue #288](https://github.com/aasm/aasm/pull/288) which fixes [issue #146](https://github.com/aasm/aasm/pull/146) for details, thanks to [@HParker](https://github.com/HParker))
 
 ## 4.9.0
 
