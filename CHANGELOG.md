@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 4.10.0 (not yet released)
+## 4.10.0
 
  * fix: some issues with RubyMotion (see [issue #320](https://github.com/aasm/aasm/pull/320) and [issue #343](https://github.com/aasm/aasm/pull/343) for details, thanks to [@Infotaku](https://github.com/Infotaku))
  * fix: transitions now work in dup'ed copies (see [issue #325](https://github.com/aasm/aasm/pull/325) which fixes [issue #273](https://github.com/aasm/aasm/pull/273) for details, thanks to [@lingceng](https://github.com/lingceng))
