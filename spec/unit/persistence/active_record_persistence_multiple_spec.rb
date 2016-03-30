@@ -452,7 +452,7 @@ describe 'transitions with persistence' do
 
       it "should only rollback changes in the main transaction not the nested one" do
         # change configuration to not require new transaction
-        AASM::StateMachine[MultipleTransactor][:left].config.requires_new_transaction = false
+        AASM::StateMachineStore[MultipleTransactor][:left].config.requires_new_transaction = false
 
         expect(transactor).to be_sleeping
         expect(worker.status).to eq('sleeping')

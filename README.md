@@ -898,11 +898,11 @@ Job.aasm.states_for_select
 
 ### RubyMotion support
 
-To use AASM with a RubyMotion project, use it with the [motion-bundler](https://github.com/archan937/motion-bundler) gem.
+Now supports [CodeDataQuery](https://github.com/infinitered/cdq.git) !
+However I'm still in the process of submitting my compatibility updates to their repository.
+In the meantime you can use [my fork](https://github.com/Infotaku/cdq.git), there may still be some minor issues but I intend to extensively use it myself, so fixes should come fast.
 
 Warnings:
-- Due to the way key-value observation (KVO) works in iOS,
-you currently CANNOT use AASM with an object you are observing. (Yes.. that's pretty sad).
 - Due to RubyMotion Proc's lack of 'source_location' method, it may be harder
 to find out the origin of a "cannot transition from" error. I would recommend using
 the 'instance method symbol / string' way whenever possible when defining guardians and callbacks.

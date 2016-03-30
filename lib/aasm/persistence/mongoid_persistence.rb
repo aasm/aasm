@@ -1,5 +1,3 @@
-require_relative 'base'
-
 module AASM
   module Persistence
     module MongoidPersistence
@@ -108,7 +106,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             attribute_name = self.class.aasm(state_machine_name).attribute_name.to_s
             # Do not load initial state when object attributes are not loaded,
             # mongoid has_many relationship does not load child object attributes when

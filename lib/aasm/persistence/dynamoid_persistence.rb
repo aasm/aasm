@@ -1,5 +1,3 @@
-require_relative 'base'
-
 module AASM
   module Persistence
     module DynamoidPersistence
@@ -16,7 +14,7 @@ module AASM
         #
         base.class_eval %Q(
           def method_missing(method_name, *arguments, &block)
-            if (AASM::StateMachine[self.class].keys.map { |state_machine_name| self.class.aasm(state_machine_name).attribute_name.to_s + "=" }).include? method_name.to_s
+            if (AASM::StateMachineStore.fetch(self.class, true).machine_names.map { |state_machine_name| self.class.aasm(state_machine_name).attribute_name.to_s + "=" }).include? method_name.to_s
               attribute_name = method_name.to_s.gsub("=", '')
               write_attribute(attribute_name.to_sym, *arguments)
             else
@@ -84,7 +82,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             aasm(state_machine_name).enter_initial_state if send(self.class.aasm(state_machine_name).attribute_name).blank?
           end
         end

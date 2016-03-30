@@ -1,21 +1,6 @@
 module AASM
   class StateMachine
-
-    # the following two methods provide the storage of all state machines
-    def self.[](klass)
-      (@machines ||= {})[klass.to_s]
-    end
-
-    def self.[]=(klass, machine)
-      (@machines ||= {})[klass.to_s] = machine
-    end
-
-    def self.inherit(klass, alias_klass)
-      AASM::StateMachine[alias_klass] = {}
-      AASM::StateMachine[klass].keys.each do |state_machine_name|
-        AASM::StateMachine[alias_klass][state_machine_name] = AASM::StateMachine[klass][state_machine_name].clone
-      end
-    end
+    # the following four methods provide the storage of all state machines
 
     attr_accessor :states, :events, :initial_state, :config, :name, :global_callbacks
 

@@ -1,5 +1,3 @@
-require_relative 'base'
-
 module AASM
   module Persistence
     module CoreDataQueryPersistence
@@ -16,8 +14,15 @@ module AASM
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::CoreDataQueryPersistence::InstanceMethods)
+        base.extend AASM::Persistence::CoreDataQueryPersistence::ClassMethods
 
         base.after_initialize :aasm_ensure_initial_state
+      end
+
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          scope(scope_name.to_sym, lambda { where(aasm(state_machine_name).attribute_name.to_sym).eq(scope_name.to_s) })
+        end
       end
 
       module InstanceMethods
@@ -71,7 +76,7 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
           end
         end

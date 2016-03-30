@@ -8,7 +8,7 @@ module AASM
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see class method inherited
-    AASM::StateMachine[base] ||= {}
+    AASM::StateMachineStore.register(base)
 
     AASM::Persistence.load_persistence(base)
     super
@@ -17,7 +17,8 @@ module AASM
   module ClassMethods
     # make sure inheritance (aka subclassing) works with AASM
     def inherited(base)
-      AASM::StateMachine.inherit(self, base)
+      AASM::StateMachineStore.register(base, self)
+
       super
     end
 
@@ -33,7 +34,7 @@ module AASM
         options = args[0] || {}
       end
 
-      AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
+      AASM::StateMachineStore.fetch(self, true).register(state_machine_name, AASM::StateMachine.new(state_machine_name))
 
       # use a default despite the DSL configuration default.
       # this is because configuration hasn't been setup for the AASM class but we are accessing a DSL option already for the class.
@@ -52,7 +53,7 @@ module AASM
         @aasm[state_machine_name] = aasm_klass.new(
           self,
           state_machine_name,
-          AASM::StateMachine[self][state_machine_name],
+          AASM::StateMachineStore.fetch(self, true).machine(state_machine_name),
           options
         )
       end
@@ -63,7 +64,7 @@ module AASM
 
   # this is the entry point for all instance-level access to AASM
   def aasm(name=:default)
-    unless AASM::StateMachine[self.class][name.to_sym]
+    unless AASM::StateMachineStore.fetch(self.class, true).machine(name)
       raise AASM::UnknownStateMachineError.new("There is no state machine with the name '#{name}' defined in #{self.class.name}!")
     end
     @aasm ||= {}
@@ -186,7 +187,7 @@ private
       self.aasm_event_failed(event_name, old_state.name)
     end
 
-    if AASM::StateMachine[self.class][state_machine_name].config.whiny_transitions
+    if AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.whiny_transitions
       raise AASM::InvalidTransition.new(self, event_name, state_machine_name, failures)
     else
       false

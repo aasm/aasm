@@ -1,5 +1,3 @@
-require_relative 'base'
-
 module AASM
   module Persistence
     module MongoMapperPersistence
@@ -95,11 +93,11 @@ module AASM
 
         private
         def aasm_enum(name=:default)
-          case AASM::StateMachine[self.class][name].config.enum
+          case AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
           when false then nil
           when true then aasm_guess_enum_method(name)
           when nil then aasm_guess_enum_method(name) if aasm_column_looks_like_enum(name)
-          else AASM::StateMachine[self.class][name].config.enum
+          else AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
           end
         end
 
@@ -112,7 +110,7 @@ module AASM
         end
 
         def aasm_skipping_validations(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
         end
 
         def aasm_write_attribute(state, name=:default)
@@ -143,17 +141,17 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
           end
         end
 
         def aasm_validate_states
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
-            unless AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
+            unless AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
               if aasm(state_machine_name).current_state && !aasm(state_machine_name).states.include?(aasm(state_machine_name).current_state)
-                self.errors.add(AASM::StateMachine[self.class][state_machine_name].config.column , "is invalid")
+                self.errors.add(AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.column , "is invalid")
               end
             end
           end
