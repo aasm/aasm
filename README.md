@@ -524,7 +524,7 @@ successful or `false` if errors occur. Exceptions are not raised.
 If you want make sure the state gets saved without running validations (and
 thereby maybe persisting aninvalid object state), simply tell AASM to skip the
 validations. Be aware that when skipping validations, only the state column will
-be updated in the database (just like ActiveRecord `change_column` is working).
+be updated in the database (just like ActiveRecord `update_column` is working).
 
 ```ruby
 class Job < ActiveRecord::Base
