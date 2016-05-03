@@ -151,7 +151,7 @@ is finished.
 
 AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
 
-```
+```ruby
 class LogRunTime
   # optional args parameter can be omitted, but if you define initialize
   # you must accept the model instance as the first parameter to it.
