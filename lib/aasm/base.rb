@@ -193,7 +193,7 @@ module AASM
     end
 
     def safely_define_method(klass, method_name, method_definition)
-      if klass.instance_methods.include?(method_name.to_sym)
+      if !@options[:enum] && klass.instance_methods.include?(method_name.to_sym)
         warn "#{klass.name}: overriding method '#{method_name}'!"
       end
 
