@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y))
+
 ## 4.10.0
 
  * fix: some issues with RubyMotion (see [issue #320](https://github.com/aasm/aasm/pull/320) and [issue #343](https://github.com/aasm/aasm/pull/343) for details, thanks to [@Infotaku](https://github.com/Infotaku))
