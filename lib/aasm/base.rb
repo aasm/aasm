@@ -193,8 +193,8 @@ module AASM
     end
 
     def safely_define_method(klass, method_name, method_definition)
-      # Warn if method already exists and it did not originate from an enum
-      if klass.instance_methods.include?(method_name.to_sym) &&
+      # Warn if method exists and it did not originate from an enum
+      if klass.method_defined?(method_name) &&
          ! ( @state_machine.config.enum &&
              klass.respond_to?(:defined_enums) &&
              klass.defined_enums.values.any?{ |methods|
