@@ -40,9 +40,9 @@ matrix:
     - gemfile: gemfiles/rails_5.0.gemfile
   exclude:
     - rvm: 1.9.3
-      gemfile:
-        - gemfiles/rails_4.1.gemfile
-        - gemfiles/rails_5.0.gemfile
+      gemfile: gemfiles/rails_4.1.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_5.0.gemfile
     - rvm: 2.2
       gemfile: gemfiles/rails_3.2_stable.gemfile
     - rvm: 2.3
