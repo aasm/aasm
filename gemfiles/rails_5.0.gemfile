@@ -9,7 +9,10 @@ gem "mime-types", "~> 2" if Gem::Version.create(RUBY_VERSION.dup) <= Gem::Versio
 gem "rails", "5.0.0.beta4"
 gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
-gem 'dynamoid', '~> 1',                 :platforms => :ruby
+
+# dynamoid is not yet Rails 5 compatible
+# gem 'dynamoid', '~> 1',                 :platforms => :ruby
+
 gem 'aws-sdk', '~>2',                   :platforms => :ruby
 
 gemspec :path => "../"
