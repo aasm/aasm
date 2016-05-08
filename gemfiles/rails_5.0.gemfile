@@ -6,9 +6,6 @@ gem 'rubinius-developer_tools',         :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 
-gem "rack", "~> 1" if Gem::Version.create(RUBY_VERSION.dup) <= Gem::Version.create('2.2.2')
-gem "mime-types", "~> 2" if Gem::Version.create(RUBY_VERSION.dup) <= Gem::Version.create('1.9.3')
-
 gem "rails", "5.0.0.beta4"
 
 # mongoid is not yet Rails 5 compatible
