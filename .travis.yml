@@ -30,7 +30,6 @@ before_script:
 
 matrix:
   allow_failures:
-    - rvm: rbx-2.2.1
     - rvm: jruby-1.7
     - rvm: 2.3
     - gemfile: gemfiles/rails_5.0.gemfile
