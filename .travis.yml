@@ -30,8 +30,6 @@ before_script:
 
 matrix:
   allow_failures:
-    - rvm: jruby-1.7
-    - gemfile: gemfiles/rails_5.0.gemfile
   exclude:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_4.1.gemfile
@@ -41,3 +39,5 @@ matrix:
       gemfile: gemfiles/rails_3.2_stable.gemfile
     - rvm: 2.3.1
       gemfile: gemfiles/rails_3.2_stable.gemfile
+    - rvm: jruby-1.7
+    - gemfile: gemfiles/rails_5.0.gemfile
