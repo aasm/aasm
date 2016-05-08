@@ -4,8 +4,6 @@ cache: bundler
 
 rvm:
   - 1.9.3
-  - 2.0.0
-  - 2.1
   - 2.2
   - 2.3
   - jruby-1.7 # JRuby in 1.9 mode
