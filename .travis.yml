@@ -18,8 +18,6 @@ gemfile:
   # - gemfiles/rails_3.2_stable.gemfile
   # - gemfiles/rails_4.0.gemfile
   # - gemfiles/rails_4.0_mongo_mapper.gemfile
-  # - gemfiles/rails_4.1.gemfile
-  # - gemfiles/rails_4.1_mongo_mapper.gemfile
   # - gemfiles/rails_4.2.gemfile
   # - gemfiles/rails_4.2_mongoid_5.gemfile
   # - gemfiles/rails_4.2_mongo_mapper.gemfile
@@ -45,5 +43,3 @@ matrix:
       gemfile: gemfiles/rails_3.2_stable.gemfile
     - rvm: 2.3
       gemfile: gemfiles/rails_3.2_stable.gemfile
-    - rvm: jruby-19mode
-      gemfile: gemfiles/rails_4.1.gemfile
