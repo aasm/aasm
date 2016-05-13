@@ -392,6 +392,18 @@ describe AASM::Core::Transition, '- when invoking the transition :success method
     st.invoke_success_callbacks(obj, args)
   end
 
+  it 'should accept a Array for the method name' do
+    opts = {:from => 'foo', :to => 'bar', :success => [:test1, :test2]}
+    st = AASM::Core::Transition.new(event, opts)
+    args = {:arg1 => '1', :arg2 => '2'}
+    obj = double('object', :aasm => 'aasm')
+
+    expect(obj).to receive(:test1)
+    expect(obj).to receive(:test2)
+
+    st.invoke_success_callbacks(obj, args)
+  end
+
   it 'should pass args if the target method accepts them' do
     opts = {:from => 'foo', :to => 'bar', :success => :test}
     st = AASM::Core::Transition.new(event, opts)
