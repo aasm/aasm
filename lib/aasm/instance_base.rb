@@ -34,19 +34,22 @@ module AASM
     end
 
     def states(options={})
-      if options[:permitted]
-        permitted_events = events(:permitted => true)
-
+      if options.has_key?(:permitted)
+        selected_events = events(:permitted => options[:permitted])
         # An array of arrays. Each inner array represents the transitions that
         # transition from the current state for an event
-        event_transitions = permitted_events.map {|e| e.transitions_from_state(current_state) }
+        event_transitions = selected_events.map {|e| e.transitions_from_state(current_state) }
 
-        # An array of symbols that are possible :to transition states
+        # An array of :to transition states
         to_state_names = event_transitions.map do |transitions|
           return nil if transitions.empty?
 
-          # Return the :to state of the first transition that is allowed or nil
-          transition = transitions.find { |t| t.allowed?(@instance) }
+          # Return the :to state of the first transition that is allowed (or not) or nil
+          if options[:permitted] 
+            transition = transitions.find { |t| t.allowed?(@instance) }
+          else
+            transition = transitions.find { |t| !t.allowed?(@instance) }
+          end
           transition ? transition.to : nil
         end.flatten.compact.uniq
 
@@ -64,10 +67,14 @@ module AASM
       options[:reject] = Array(options[:reject])
       events.reject! { |e| options[:reject].include?(e.name) }
 
-      if options[:permitted]
+      if options.has_key?(:permitted)
         # filters the results of events_for_current_state so that only those that
         # are really currently possible (given transition guards) are shown.
-        events.select! { |e| @instance.send("may_#{e.name}?") }
+        if options[:permitted]
+          events.select! { |e| @instance.send("may_#{e.name}?") }
+        else
+          events.select! { |e| !@instance.send("may_#{e.name}?") }
+        end
       end
 
       events
