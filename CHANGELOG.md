@@ -2,7 +2,7 @@
 
 ## unreleased
 
- * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y))
+ * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y), and [issue #353](https://github.com/aasm/aasm/pull/353) for details, thanks to [@nathanstitt](https://github.com/nathanstitt))
 
 ## 4.10.0
 
