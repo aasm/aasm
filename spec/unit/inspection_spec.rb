@@ -25,10 +25,15 @@ describe 'inspection for common cases' do
       expect(states).to include(:closed)
       expect(states).to include(:final)
 
-      states = foo.aasm.states(:permitted => true)
-      expect(states).to include(:closed)
-      expect(states).not_to include(:open)
-      expect(states).not_to include(:final)
+      permitted_states = foo.aasm.states(:permitted => true)
+      expect(permitted_states).to include(:closed)
+      expect(permitted_states).not_to include(:open)
+      expect(permitted_states).not_to include(:final)
+
+      blocked_states = foo.aasm.states(:permitted => false)
+      expect(blocked_states).to include(:closed)
+      expect(blocked_states).not_to include(:open)
+      expect(blocked_states).to include(:final)
 
       foo.close
       expect(foo.aasm.states(:permitted => true)).to be_empty
@@ -122,5 +127,18 @@ describe 'permitted events' do
   it 'should not include events in the reject option' do
     expect(foo.aasm.events(:permitted => true, reject: :close)).not_to include(:close)
     expect(foo.aasm.events(:permitted => true, reject: [:close])).not_to include(:close)
+  end
+end
+
+describe 'not permitted events' do
+  let(:foo) {Foo.new}
+
+  it 'work' do
+    expect(foo.aasm.events(:permitted => false)).to include(:null)
+    expect(foo.aasm.events(:permitted => false)).not_to include(:close)
+  end
+
+  it 'should not include events in the reject option' do
+    expect(foo.aasm.events(:permitted => false, reject: :null)).to eq([])
   end
 end

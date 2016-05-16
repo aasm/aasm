@@ -866,29 +866,70 @@ end
 
 ### Inspection
 
-AASM supports a couple of methods to find out which states or events are provided or permitted.
+AASM supports query methods for states and events
 
-Given this `Job` class:
+Given the following `Job` class:
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running, :cleaning
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :clean do
+      transitions :from => :running, :to => :cleaning, :guard => :cleaning_needed?
+    end
+
+    event :sleep do
+      transitions :from => [:running, :cleaning], :to => :sleeping
+    end
+  end
+  
+  def cleaning_needed?
+    false
+  end
+end
+```
 
 ```ruby
 # show all states
-Job.aasm.states.map(&:name)
-=> [:sleeping, :running, :cleaning]
+Job.aasm.states.map(&:name) 
+#=> [:sleeping, :running, :cleaning]
 
 job = Job.new
 
-# show all permitted (reachable / possible) states
-job.aasm.states(:permitted => true).map(&:name)
-=> [:running]
+# show all permitted states (from initial state)
+job.aasm.states(:permitted => true).map(&:name) 
+#=> [:running]
+
 job.run
 job.aasm.states(:permitted => true).map(&:name)
-=> [:cleaning, :sleeping]
+#=> [:sleeping]
 
-# show all possible (triggerable) events (allowed by transitions)
+# show all non permitted states
+job.aasm.states(:permitted => false).map(&:name) 
+#=> [:cleaning]
+
+# show all possible (triggerable) events from the current state
 job.aasm.events.map(&:name)
-=> [:sleep]
+#=> [:clean, :sleep]
+
+# show all permitted events
+job.aasm.events(:permitted => true).map(&:name)
+#=> [:sleep]
+
+# show all non permitted events
+job.aasm.events(:permitted => false).map(&:name)
+#=> [:clean]
+
+# show all possible events except a specific one
 job.aasm.events(:reject => :sleep).map(&:name)
-=> []
+#=> [:clean]
 
 # list states for select
 Job.aasm.states_for_select
