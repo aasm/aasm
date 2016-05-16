@@ -125,7 +125,7 @@ module AASM::Core
         when Proc
           code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
         when Array
-          @success.map {|a| _fire_callbacks(a, obj, args)}
+          code.map {|a| _fire_callbacks(a, record, args)}
         else
           true
       end
