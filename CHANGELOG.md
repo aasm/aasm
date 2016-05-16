@@ -4,6 +4,7 @@
 
  * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y), and [issue #353](https://github.com/aasm/aasm/pull/353) for details, thanks to [@nathanstitt](https://github.com/nathanstitt))
  * fix: handle array of success callbacks for transitions properly (see [issue #363](https://github.com/aasm/aasm/pull/363) for details, thanks to [@shunichi](https://github.com/shunichi))
+ * support `permitted: false` for states and events query/inspection methods (see [issue #364](https://github.com/aasm/aasm/pull/364) for details, thanks to [@hspazio](https://github.com/hspazio))
 
 ## 4.10.0
 
