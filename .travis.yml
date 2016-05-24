@@ -43,3 +43,7 @@ matrix:
       gemfile: gemfiles/rails_3.2_stable.gemfile
     - rvm: jruby-1.7
       gemfile: gemfiles/rails_5.0.gemfile
+
+notifications:
+  slack:
+    secure: MsPY8sUW5TVblcWc5NGkkWJlHxCMnhNa3IFPSVWthlk0fz+CLfOrLjQ+brQup/AJ7BRtyBKQ8udpqLj/R7CJKAiVVDAlUBcHqXk/WDusssGzJkDMrLVDefq++YCg5TdbcIaHt8WBVg6pD8H4kQJMJxmtcziQtiW1Qt0pwfuNJ+k=
