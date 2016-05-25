@@ -8,7 +8,7 @@ class WithEnumWithoutColumn < ActiveRecord::Base
     }
   end
 
-  aasm :column => :status do
+  aasm :column => :status, :ignore_override_warnings => true do
     state :closed, initial: true
     state :opened
 
@@ -27,7 +27,7 @@ class MultipleWithEnumWithoutColumn < ActiveRecord::Base
     }
   end
 
-  aasm :left, :column => :status do
+  aasm :left, :column => :status, :ignore_override_warnings => true do
     state :closed, initial: true
     state :opened
 

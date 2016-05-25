@@ -3,7 +3,7 @@ class ComplexExample
 
   attr_accessor :activation_code, :activated_at, :deleted_at
 
-  aasm do
+  aasm :ignore_override_warnings => true do
     state :passive
     state :pending, :initial => true, :before_enter => :make_activation_code
     state :active,  :before_enter => :do_activate
@@ -92,7 +92,7 @@ class ComplexExampleMultiple
 
   attr_accessor :activation_code, :activated_at, :deleted_at
 
-  aasm(:left) do
+  aasm(:left, :ignore_override_warnings => true) do
     state :passive
     state :pending, :initial => true, :before_enter => :make_activation_code
     state :active,  :before_enter => :do_activate
@@ -136,7 +136,7 @@ class ComplexExampleMultiple
     end
   end
 
-  aasm(:right) do
+  aasm(:right, :ignore_override_warnings => true) do
     state :passive
     state :pending, :initial => true, :before_enter => :make_activation_code
     state :active,  :before_enter => :do_activate

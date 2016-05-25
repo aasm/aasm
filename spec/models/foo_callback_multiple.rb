@@ -1,7 +1,7 @@
 class FooCallbackMultiple
   include AASM
 
-  aasm(:left) do
+  aasm(:left, :ignore_override_warnings => true) do
     state :open, :initial => true, :before_exit => :before_exit
     state :closed, :before_enter => :before_enter
     state :final
@@ -15,7 +15,7 @@ class FooCallbackMultiple
     end
   end
 
-  aasm(:right, :column => :right) do
+  aasm(:right, :column => :right, :ignore_override_warnings => true) do
     state :green, :initial => true
     state :yellow
     state :red

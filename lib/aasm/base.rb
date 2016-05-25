@@ -48,6 +48,12 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      # These are the methods that will be override in a sub-class.
+      configure :override_methods, []
+
+      # Ignore all warnings, to be used at your own risk.
+      configure :ignore_override_warnings, false
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
@@ -208,7 +214,16 @@ module AASM
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
              })
+<<<<<<< 9866206609cc1b0d4d772292319803d907401a1b
          @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
+=======
+
+        # Do not warn if the method is acknowledged to be overridden.
+        if @state_machine.config.ignore_override_warnings == false &&
+           !@state_machine.config.override_methods.include?(method_name.to_sym)
+          warn "#{klass.name}: overriding method '#{method_name}'!"
+        end
+>>>>>>> Allow the ability to ignore warnings on intentional overriden methods
       end
 
       klass.send(:define_method, method_name, method_definition)

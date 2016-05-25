@@ -12,6 +12,28 @@ describe 'warns when overrides a method' do
     end
   end
 
+  module AcknowledgedClumsy
+    def self.included base
+      base.send :include, AASM
+
+      base.aasm(:ignore_override_warnings => true) do
+        state :valid
+        event(:save) { }
+      end
+    end
+  end
+
+  module SlightlyAcknowledgedClumsy
+    def self.included base
+      base.send :include, AASM
+
+      base.aasm(:override_methods => [:valid?]) do
+        state :valid
+        event(:save) { }
+      end
+    end
+  end
+
   module WithEnumBase
     def self.included base
       base.send :include, AASM
@@ -28,17 +50,32 @@ describe 'warns when overrides a method' do
   end
 
   describe 'state' do
-    let(:base_klass) do
+    let(:error_message) { %r{overriding method 'valid\?'!} }
+    let(:clumsy_base) do
       Class.new do
         def valid?; end
       end
     end
 
-    subject { base_klass.send :include, Clumsy }
+    context 'with Clumsy' do
+      it do
+        expect { clumsy_base.send :include, Clumsy }.
+          to output(error_message).to_stderr
+      end
+    end
 
-    it 'should log to warn' do
-      expect_any_instance_of(Logger).to receive(:warn).with(": overriding method 'valid?'!")
-      subject
+    context 'with AcknowledgedClumsy' do
+      it do
+        expect { clumsy_base.send :include, AcknowledgedClumsy }.
+          to_not output(error_message).to_stderr
+      end
+    end
+
+    context 'with SlightlyAcknowledgedClumsy' do
+      it do
+        expect { clumsy_base.send :include, SlightlyAcknowledgedClumsy }.
+          to_not output(error_message).to_stderr
+      end
     end
   end
 
@@ -67,19 +104,37 @@ describe 'warns when overrides a method' do
         end
       end
 
-      subject { base_klass.send :include, Clumsy }
-
-      it 'should log to warn' do
-        expect_any_instance_of(Logger).to receive(:warn).exactly(3).times do |logger, message|
-          expect(
-            [
-              ": overriding method 'may_save?'!",
-              ": overriding method 'save!'!",
-              ": overriding method 'save'!"
-            ]
-          ).to include(message)
+      context 'with Clumsy' do
+        it do
+          expect { base_klass.send :include, Clumsy }.
+            to output(error_override_may_save?).to_stderr
+          expect { base_klass.send :include, Clumsy }.
+            to output(error_override_save!).to_stderr
+          expect { base_klass.send :include, Clumsy }.
+            to output(error_override_save).to_stderr
         end
-        subject
+      end
+
+      context 'with AcknowledgedClumsy' do
+        it do
+          expect { base_klass.send :include, AcknowledgedClumsy }.
+            to_not output(error_override_may_save?).to_stderr
+          expect { base_klass.send :include, AcknowledgedClumsy }.
+            to_not output(error_override_save!).to_stderr
+          expect { base_klass.send :include, AcknowledgedClumsy }.
+            to_not output(error_override_save).to_stderr
+        end
+      end
+
+      context 'with SlightlyAcknowledgedClumsy' do
+        it do
+          expect { base_klass.send :include, SlightlyAcknowledgedClumsy }.
+            to output(error_override_may_save?).to_stderr
+          expect { base_klass.send :include, SlightlyAcknowledgedClumsy }.
+            to output(error_override_save!).to_stderr
+          expect { base_klass.send :include, SlightlyAcknowledgedClumsy }.
+            to output(error_override_save).to_stderr
+        end
       end
     end
   end

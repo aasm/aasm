@@ -1,7 +1,7 @@
 class DoubleDefiner
   include AASM
 
-  aasm do
+  aasm ignore_override_warnings: true do
     state :started
     state :finished
 
