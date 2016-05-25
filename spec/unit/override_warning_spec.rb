@@ -28,42 +28,59 @@ describe 'warns when overrides a method' do
   end
 
   describe 'state' do
-    class Base
-      def valid?; end
+    let(:base_klass) do
+      Class.new do
+        def valid?; end
+      end
     end
-    it do
-      expect { Base.send :include, Clumsy }.
-        to output(/Base: overriding method 'valid\?'!/).to_stderr
+
+    subject { base_klass.send :include, Clumsy }
+
+    it 'should log to warn' do
+      expect_any_instance_of(Logger).to receive(:warn).with(": overriding method 'valid?'!")
+      subject
     end
   end
 
   describe 'enum' do
-    class EnumBase
-      def valid?; end
+    let(:enum_base_klass) do
+      Class.new do
+        def valid?; end
+      end
     end
-    it "dosn't warn when overriding an enum" do
-      expect { EnumBase.send :include, WithEnumBase }.
-        not_to output(/EnumBase: overriding method 'valid\?'!/).to_stderr
+
+    subject { enum_base_klass.send :include, WithEnumBase }
+
+    it 'should not log to warn' do
+      expect_any_instance_of(Logger).to receive(:warn).never
+      subject
     end
   end
 
   describe 'event' do
     context 'may?' do
-      class Base
-        def may_save?; end
-        def save!; end
-        def save; end
+      let(:base_klass) do
+        Class.new do
+          def may_save?; end
+          def save!; end
+          def save; end
+        end
       end
-      let(:klass) { Base }
-      it do
-        expect { Base.send :include, Clumsy }.
-          to output(/Base: overriding method 'may_save\?'!/).to_stderr
-        expect { Base.send :include, Clumsy }.
-          to output(/Base: overriding method 'save!'!/).to_stderr
-        expect { Base.send :include, Clumsy }.
-          to output(/Base: overriding method 'save'!/).to_stderr
+
+      subject { base_klass.send :include, Clumsy }
+
+      it 'should log to warn' do
+        expect_any_instance_of(Logger).to receive(:warn).exactly(3).times do |logger, message|
+          expect(
+            [
+              ": overriding method 'may_save?'!",
+              ": overriding method 'save!'!",
+              ": overriding method 'save'!"
+            ]
+          ).to include(message)
+        end
+        subject
       end
     end
   end
-
 end

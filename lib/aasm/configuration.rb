@@ -28,5 +28,8 @@ module AASM
 
     # namespace reader methods and constants
     attr_accessor :namespace
+
+    # Configure a logger, with default being a Logger to STDERR
+    attr_accessor :logger
   end
 end
