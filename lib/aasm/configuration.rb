@@ -37,8 +37,5 @@ module AASM
 
     # These are the methods that will be override in a sub-class.
     attr_accessor :override_methods
-
-    # Ignore all warnings, to be used at your own risk.
-    attr_accessor :ignore_override_warnings
   end
 end

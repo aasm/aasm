@@ -51,9 +51,6 @@ module AASM
       # These are the methods that will be override in a sub-class.
       configure :override_methods, []
 
-      # Ignore all warnings, to be used at your own risk.
-      configure :ignore_override_warnings, false
-
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
@@ -219,8 +216,7 @@ module AASM
 =======
 
         # Do not warn if the method is acknowledged to be overridden.
-        if @state_machine.config.ignore_override_warnings == false &&
-           !@state_machine.config.override_methods.include?(method_name.to_sym)
+        if !@state_machine.config.override_methods.include?(method_name.to_sym)
           warn "#{klass.name}: overriding method '#{method_name}'!"
         end
 >>>>>>> Allow the ability to ignore warnings on intentional overriden methods

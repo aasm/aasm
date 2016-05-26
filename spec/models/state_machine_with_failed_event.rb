@@ -1,7 +1,7 @@
 class StateMachineWithFailedEvent
   include AASM
 
-  aasm :ignore_override_warnings => true do
+  aasm do
     state :init, :initial => true
     state :failed
     state :sent

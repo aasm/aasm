@@ -1,7 +1,7 @@
 class ComplexActiveRecordExample < ActiveRecord::Base
   include AASM
 
-  aasm :left, :column => 'left', :ignore_override_warnings => true do
+  aasm :left, :column => 'left' do
     state :one, :initial => true
     state :two
     state :three
@@ -15,7 +15,7 @@ class ComplexActiveRecordExample < ActiveRecord::Base
     end
   end
 
-  aasm :right, :column => 'right', :ignore_override_warnings => true do
+  aasm :right, :column => 'right' do
     state :alpha, :initial => true
     state :beta
     state :gamma

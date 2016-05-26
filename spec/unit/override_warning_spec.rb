@@ -12,17 +12,6 @@ describe 'warns when overrides a method' do
     end
   end
 
-  module AcknowledgedClumsy
-    def self.included base
-      base.send :include, AASM
-
-      base.aasm(:ignore_override_warnings => true) do
-        state :valid
-        event(:save) { }
-      end
-    end
-  end
-
   module SlightlyAcknowledgedClumsy
     def self.included base
       base.send :include, AASM
@@ -61,13 +50,6 @@ describe 'warns when overrides a method' do
       it do
         expect { clumsy_base.send :include, Clumsy }.
           to output(error_message).to_stderr
-      end
-    end
-
-    context 'with AcknowledgedClumsy' do
-      it do
-        expect { clumsy_base.send :include, AcknowledgedClumsy }.
-          to_not output(error_message).to_stderr
       end
     end
 
@@ -112,17 +94,6 @@ describe 'warns when overrides a method' do
             to output(error_override_save!).to_stderr
           expect { base_klass.send :include, Clumsy }.
             to output(error_override_save).to_stderr
-        end
-      end
-
-      context 'with AcknowledgedClumsy' do
-        it do
-          expect { base_klass.send :include, AcknowledgedClumsy }.
-            to_not output(error_override_may_save?).to_stderr
-          expect { base_klass.send :include, AcknowledgedClumsy }.
-            to_not output(error_override_save!).to_stderr
-          expect { base_klass.send :include, AcknowledgedClumsy }.
-            to_not output(error_override_save).to_stderr
         end
       end
 

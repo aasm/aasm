@@ -1,7 +1,7 @@
 module Fooable
   def self.included(base)
     base.class_eval do
-      aasm :ignore_override_warnings => true do
+      aasm do
         state :open, :initial => true, :before_exit => :before_exit
         state :closed, :before_enter => :before_enter
         state :final
