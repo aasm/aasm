@@ -8,12 +8,22 @@ module AASM::Core
       @name = name
       @state_machine = state_machine
       @transitions = []
+      @valid_transitions = {}
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [:after, :before, :error, :success, :after_commit], &block) if block
+      add_options_from_dsl(@options, [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :success,
+      ], &block) if block
     end
 
     # called internally by Ruby 1.9 after clone()
@@ -53,10 +63,20 @@ module AASM::Core
       @transitions.select { |t| t.to == state }
     end
 
+    def fire_global_callbacks(callback_name, record, *args)
+      invoke_callbacks(state_machine.global_callbacks[callback_name], record, args)
+    end
+
     def fire_callbacks(callback_name, record, *args)
       # strip out the first element in args if it's a valid to_state
       # #given where we're coming from, this condition implies args not empty
       invoke_callbacks(@options[callback_name], record, args)
+    end
+
+    def fire_transition_callbacks(obj, *args)
+      from_state = obj.aasm(state_machine.name).current_state
+      transition = @valid_transitions[from_state]
+      @valid_transitions[from_state].invoke_success_callbacks(obj, *args) if transition
     end
 
     def ==(event)
@@ -82,6 +102,10 @@ module AASM::Core
       @transitions
     end
 
+    def failed_callbacks
+      transitions.flat_map(&:failures)
+    end
+
   private
 
     def attach_event_guards(definitions)
@@ -96,7 +120,6 @@ module AASM::Core
       definitions
     end
 
-    # Execute if test == false, otherwise return true/false depending on whether it would fire
     def _fire(obj, options={}, to_state=nil, *args)
       result = options[:test_only] ? false : nil
       if @transitions.map(&:from).any?
@@ -123,6 +146,7 @@ module AASM::Core
           if options[:test_only]
             # result = true
           else
+            Array(transition.to).each {|to| @valid_transitions[to] = transition }
             transition.execute(obj, *args)
           end
 
@@ -138,8 +162,8 @@ module AASM::Core
           unless record.respond_to?(code, true)
             raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{record.inspect}:#{record.class}")
           end
-          arity = record.send(:method, code.to_sym).arity
-          record.send(code, *(arity < 0 ? args : args[0...arity]))
+          arity = record.__send__(:method, code.to_sym).arity
+          record.__send__(code, *(arity < 0 ? args : args[0...arity]))
           true
 
         when Proc
@@ -155,6 +179,5 @@ module AASM::Core
           false
       end
     end
-
   end
 end # AASM

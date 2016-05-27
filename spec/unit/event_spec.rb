@@ -6,7 +6,7 @@ describe 'adding an event' do
     AASM::Core::Event.new(:close_order, state_machine, {:success => :success_callback}) do
       before :before_callback
       after :after_callback
-      transitions :to => :closed, :from => [:open, :received]
+      transitions :to => :closed, :from => [:open, :received], success: [:transition_success_callback]
     end
   end
 
@@ -107,6 +107,35 @@ describe 'firing an event' do
     expect(obj).to receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
     expect(event.fire(obj, {}, nil, 'arg1', 'arg2')).to eq(:closed)
+  end
+
+  context 'when given a gaurd proc' do
+    it 'should have access to callback failures in the transitions' do
+      event = AASM::Core::Event.new(:graduate, state_machine) do
+        transitions :to => :alumni, :from => [:student, :applicant],
+          :guard => Proc.new { 1 + 1 == 3 }
+      end
+      line_number = __LINE__ - 2
+      obj = double('object', :aasm => double('aasm', :current_state => :student))
+
+      event.fire(obj, {}, nil)
+      expect(event.failed_callbacks).to eq ["#{__FILE__}##{line_number}"]
+    end
+  end
+
+  context 'when given a guard symbol' do
+    it 'should have access to callback failures in the transitions' do
+      event = AASM::Core::Event.new(:graduate, state_machine) do
+        transitions :to => :alumni, :from => [:student, :applicant],
+          guard: :paid_tuition?
+      end
+
+      obj = double('object', :aasm => double('aasm', :current_state => :student))
+      allow(obj).to receive(:paid_tuition?).and_return(false)
+
+      event.fire(obj, {}, nil)
+      expect(event.failed_callbacks).to eq [:paid_tuition?]
+    end
   end
 
 end
@@ -306,6 +335,24 @@ describe 'parametrised events' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:condition_hair)
     expect(pe).to receive(:fix_hair)
+    pe.dress!(:prettying_up)
+  end
+
+  it 'should call :success transition method with args' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:wear_makeup).with('foundation', 'SPF')
+    pe.dress!(:working, 'foundation', 'SPF')
+  end
+
+  it 'should call :success transition proc' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:wear_makeup).with('purple', 'slacks')
+    pe.dress!(:dating, 'purple', 'slacks')
+  end
+
+  it 'should call :success transition with an array of methods' do
+    pe.wakeup!(:showering)
+    expect(pe).to receive(:touch_up_hair)
     pe.dress!(:prettying_up)
   end
 end

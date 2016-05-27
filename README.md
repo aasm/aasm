@@ -28,8 +28,7 @@ class Job
 
   aasm do
     state :sleeping, :initial => true
-    state :running
-    state :cleaning
+    state :running, :cleaning
 
     event :run do
       transitions :from => :sleeping, :to => :running
@@ -97,6 +96,9 @@ class Job
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
     state :running
+    state :finished
+
+    after_all_transitions :log_status_change
 
     event :run, :after => :notify_somebody do
       before do
@@ -104,6 +106,7 @@ class Job
       end
 
       transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) }
+      transitions :from => :running, :to => :finished, :after => LogRunTime
     end
 
     event :sleep do
@@ -115,6 +118,10 @@ class Job
       end
       transitions :from => :running, :to => :sleeping
     end
+  end
+
+  def log_status_change
+    puts "changing from #{aasm.from_state} to #{aasm.to_state} (event: #{aasm.current_event})"
   end
 
   def set_process(name)
@@ -130,31 +137,61 @@ class Job
   end
 
 end
+
+class LogRunTime
+  def call
+    log "Job was running for X seconds"
+  end
+end
 ```
 
 In this case `do_something` is called before actually entering the state `sleeping`,
 while `notify_somebody` is called after the transition `run` (from `sleeping` to `running`)
 is finished.
 
+AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
+
+```ruby
+class LogRunTime
+  # optional args parameter can be omitted, but if you define initialize
+  # you must accept the model instance as the first parameter to it.
+  def initialize(job, args = {})
+    @job = job
+  end
+
+  def call
+    log "Job was running for #{@job.run_time} seconds"
+  end
+end
+```
+
 Here you can see a list of all possible callbacks, together with their order of calling:
 
 ```ruby
 begin
+  event           before_all_events
   event           before
   event           guards
   transition      guards
   old_state       before_exit
   old_state       exit
+                  after_all_transitions
   transition      after
   new_state       before_enter
   new_state       enter
   ...update state...
-  event         success             # if persist successful
+  transition      success             # if persist successful
+  event           success             # if persist successful
   old_state       after_exit
   new_state       after_enter
   event           after
+  event           after_all_events
 rescue
   event           error
+  event           error_on_all_events
+ensure
+  event           ensure
+  event           ensure_on_all_events
 end
 ```
 
@@ -172,8 +209,9 @@ Note that when passing arguments to a state transition, the first argument must 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
-During the transition's `:after` callback (and reliably only then) you can access the
-originating state (the from-state) and the target state (the to state), like this:
+During the transition's `:after` callback (and reliably only then, or in the global
+`after_all_transitions` callback) you can access the originating state (the from-state)
+and the target state (the to state), like this:
 
 ```ruby
   def set_process(name)
@@ -365,9 +403,9 @@ simple.aasm(:work).current
 
 ```
 
-_AASM_ doesn't prohibit to define the same event in both state machines. The
-latest definition "wins" and overrides previous definitions. A warning is issued:
-`SimpleMultipleExample: The event name run is already used!`.
+_AASM_ doesn't prohibit to define the same event in more than one state machine. The
+latest definition "wins" and overrides previous definitions. Nonetheless, a warning is issued:
+`SimpleMultipleExample: overriding method 'run'!`.
 
 All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
 So, for example, to use inspection on a class level, you have to use
@@ -378,8 +416,73 @@ SimpleMultipleExample.aasm(:work).states
 ```
 
 *Final note*: Support for multiple state machines per class is a pretty new feature
-(since version `4.3`), so please bear with us in case it doesn't as expected.
+(since version `4.3`), so please bear with us in case it doesn't work as expected.
 
+### Extending AASM
+
+AASM allows you to easily extend `AASM::Base` for your own application purposes.
+
+Let's suppose we have common logic across many AASM models. We can embody this logic in a sub-class of `AASM::Base`.
+
+```ruby
+class CustomAASMBase < AASM::Base
+  # A custom transiton that we want available across many AASM models.
+  def count_transitions!
+    klass.class_eval do
+      aasm :with_klass => CustomAASMBase do
+        after_all_transitions :increment_transition_count
+      end
+    end
+  end
+
+  # A custom annotation that we want available across many AASM models.
+  def requires_guards!
+    klass.class_eval do
+      attr_reader :authorizable_called,
+        :transition_count,
+        :fillable_called
+
+      def authorizable?
+        @authorizable_called = true
+      end
+
+      def fillable?
+        @fillable_called = true
+      end
+
+      def increment_transition_count
+        @transition_count ||= 0
+        @transition_count += 1
+      end
+    end
+  end
+end
+```
+
+When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with` key to our own class.
+
+```ruby
+class SimpleCustomExample
+  include AASM
+
+  # Let's build an AASM state machine with our custom class.
+  aasm :with_klass => CustomAASMBase do
+    requires_guards!
+    count_transitions!
+
+    state :initialised, :initial => true
+    state :filled_out
+    state :authorised
+
+    event :fill_out do
+      transitions :from => :initialised, :to => :filled_out, :guard => :fillable?
+    end
+    event :authorise do
+      transitions :from => :filled_out, :to => :authorised, :guard => :authorizable?
+    end
+  end
+end
+```
 
 
 ### ActiveRecord
@@ -415,11 +518,13 @@ job.run   # not saved
 job.run!  # saved
 ```
 
-Saving includes running all validations on the `Job` class. If you want make sure
-the state gets saved without running validations (and thereby maybe persisting an
-invalid object state), simply tell AASM to skip the validations. Be aware that
-when skipping validations, only the state column will be updated in the database
-(just like ActiveRecord `change_column` is working).
+Saving includes running all validations on the `Job` class, and returns `true` if
+successful or `false` if errors occur. Exceptions are not raised.
+
+If you want make sure the state gets saved without running validations (and
+thereby maybe persisting aninvalid object state), simply tell AASM to skip the
+validations. Be aware that when skipping validations, only the state column will
+be updated in the database (just like ActiveRecord `update_column` is working).
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -520,6 +625,11 @@ end
 However it's not yet as feature complete as _ActiveRecord_. For example, there are
 scopes defined yet. See [Automatic Scopes](#automatic-scopes).
 
+### Dynamoid
+
+Since version `4.8.0` _AASM_ also supports [Dynamoid](http://joshsymonds.com/Dynamoid/) as
+persistence ORM.
+
 ### Mongoid
 
 AASM also supports persistence to Mongodb if you're using Mongoid. Make sure
@@ -549,6 +659,21 @@ class Job
   key :aasm_state,                   Symbol
   aasm do
     ...
+  end
+end
+```
+
+### Redis
+
+AASM also supports persistence in Redis.
+Make sure to include Redis::Objects before you include AASM.
+
+```ruby
+class User
+  include Redis::Objects
+  include AASM
+
+  aasm do
   end
 end
 ```
@@ -606,8 +731,19 @@ Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a tr
 callback or the state update fails, all changes to any database record are rolled back.
 Mongodb does not support transactions.
 
+There are currently 3 transactional callbacks that can be handled on the event, and 2 transactional callbacks for all events.
+
+```ruby
+  event           before_all_transactions
+  event           before_transaction
+  event           aasm_fire_event (within transaction)
+  event           after_commit (if event successful)
+  event           after_transaction
+  event           after_all_transactions
+```
+
 If you want to make sure a depending action happens only after the transaction is committed,
-use the `after_commit` callback, like this:
+use the `after_commit` callback along with the auto-save (bang) methods, like this:
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -626,6 +762,18 @@ class Job < ActiveRecord::Base
     ...
   end
 end
+
+job = Job.where(state: 'sleeping').first!
+job.run! # Saves the model and triggers the after_commit callback
+```
+
+Note that the following will not run the `after_commit` callbacks because
+the auto-save method is not used:
+
+```ruby
+job = Job.where(state: 'sleeping').first!
+job.run
+job.save! #notify_about_running_job is not run
 ```
 
 If you want to encapsulate state changes within an own transaction, the behavior
@@ -648,6 +796,41 @@ end
 ```
 
 which then leads to `transaction(:requires_new => false)`, the Rails default.
+
+### Pessimistic Locking
+
+AASM supports [Active Record pessimistic locking via `with_lock`](http://api.rubyonrails.org/classes/ActiveRecord/Locking/Pessimistic.html#method-i-with_lock) for database persistence layers.
+
+| Option | Purpose |
+| ------ | ------- |
+| `false` (default) | No lock is obtained | |
+| `true` | Obtain a blocking pessimistic lock e.g. `FOR UPDATE` |
+| String | Obtain a lock based on the SQL string e.g. `FOR UPDATE NOWAIT` |
+
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :requires_lock => true do
+    ...
+  end
+
+  ...
+end
+```
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :requires_lock => 'FOR UPDATE NOWAIT' do
+    ...
+  end
+
+  ...
+end
+```
 
 
 ### Column name & migration
@@ -683,27 +866,70 @@ end
 
 ### Inspection
 
-AASM supports a couple of methods to find out which states or events are provided or permitted.
+AASM supports query methods for states and events
 
-Given this `Job` class:
+Given the following `Job` class:
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :sleeping, :initial => true
+    state :running, :cleaning
+
+    event :run do
+      transitions :from => :sleeping, :to => :running
+    end
+
+    event :clean do
+      transitions :from => :running, :to => :cleaning, :guard => :cleaning_needed?
+    end
+
+    event :sleep do
+      transitions :from => [:running, :cleaning], :to => :sleeping
+    end
+  end
+  
+  def cleaning_needed?
+    false
+  end
+end
+```
 
 ```ruby
 # show all states
-Job.aasm.states.map(&:name)
-=> [:sleeping, :running, :cleaning]
+Job.aasm.states.map(&:name) 
+#=> [:sleeping, :running, :cleaning]
 
 job = Job.new
 
-# show all permitted (reachable / possible) states
-job.aasm.states(:permitted => true).map(&:name)
-=> [:running]
+# show all permitted states (from initial state)
+job.aasm.states(:permitted => true).map(&:name) 
+#=> [:running]
+
 job.run
 job.aasm.states(:permitted => true).map(&:name)
-=> [:cleaning, :sleeping]
+#=> [:sleeping]
 
-# show all possible (triggerable) events (allowed by transitions)
+# show all non permitted states
+job.aasm.states(:permitted => false).map(&:name) 
+#=> [:cleaning]
+
+# show all possible (triggerable) events from the current state
 job.aasm.events.map(&:name)
-=> [:sleep]
+#=> [:clean, :sleep]
+
+# show all permitted events
+job.aasm.events(:permitted => true).map(&:name)
+#=> [:sleep]
+
+# show all non permitted events
+job.aasm.events(:permitted => false).map(&:name)
+#=> [:clean]
+
+# show all possible events except a specific one
+job.aasm.events(:reject => :sleep).map(&:name)
+#=> [:clean]
 
 # list states for select
 Job.aasm.states_for_select
@@ -711,6 +937,55 @@ Job.aasm.states_for_select
 ```
 
 
+### RubyMotion support
+
+Now supports [CodeDataQuery](https://github.com/infinitered/cdq.git) !
+However I'm still in the process of submitting my compatibility updates to their repository.
+In the meantime you can use [my fork](https://github.com/Infotaku/cdq.git), there may still be some minor issues but I intend to extensively use it myself, so fixes should come fast.
+
+Warnings:
+- Due to RubyMotion Proc's lack of 'source_location' method, it may be harder
+to find out the origin of a "cannot transition from" error. I would recommend using
+the 'instance method symbol / string' way whenever possible when defining guardians and callbacks.
+
+
+### Testing
+
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+expect(job).to transition_from(:sleeping).to(:running).on_event(:run)
+expect(job).not_to transition_from(:sleeping).to(:cleaning).on_event(:run)
+expect(job).to have_state(:sleeping)
+expect(job).not_to have_state(:running)
+expect(job).to allow_event :run
+expect(job).to_not allow_event :clean
+expect(job).to allow_transition_to(:running)
+expect(job).to_not allow_transition_to(:cleaning)
+# on_event also accept arguments
+expect(job).to transition_from(:sleeping).to(:running).on_event(:run, :defragmentation)
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+expect(multiple).to transition_from(:standing).to(:walking).on_event(:walk).on(:move)
+expect(multiple).to_not transition_from(:standing).to(:running).on_event(:walk).on(:move)
+expect(multiple).to have_state(:standing).on(:move)
+expect(multiple).not_to have_state(:walking).on(:move)
+expect(multiple).to allow_event(:walk).on(:move)
+expect(multiple).to_not allow_event(:hold).on(:move)
+expect(multiple).to allow_transition_to(:walking).on(:move)
+expect(multiple).to_not allow_transition_to(:running).on(:move)
+expect(multiple).to transition_from(:sleeping).to(:processing).on_event(:start).on(:work)
+expect(multiple).to_not transition_from(:sleeping).to(:sleeping).on_event(:start).on(:work)
+expect(multiple).to have_state(:sleeping).on(:work)
+expect(multiple).not_to have_state(:processing).on(:work)
+expect(multiple).to allow_event(:start).on(:move)
+expect(multiple).to_not allow_event(:stop).on(:move)
+expect(multiple).to allow_transition_to(:processing).on(:move)
+expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+```
 
 ## <a id="installation">Installation ##
 
@@ -733,6 +1008,17 @@ gem 'aasm'
 % rake build
 % sudo gem install pkg/aasm-x.y.z.gem
 ```
+
+### Generators
+
+After installing Aasm you can run generator:
+
+```sh
+% rails generate aasm NAME [COLUMN_NAME]
+```
+Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state').
+This will create a model (if one does not exist) and configure it with aasm block.
+For Active record orm a migration file is added to add aasm state column to table.
 
 ## Latest changes ##
 
@@ -771,7 +1057,7 @@ purpose.
 
 ## License ##
 
-Copyright (c) 2006-2015 Scott Barron
+Copyright (c) 2006-2016 Scott Barron
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -5,10 +5,11 @@ gem 'rubysl',                           :platforms => :rbx
 gem 'rubinius-developer_tools',         :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-gem "rails", "3.2.21"
-gem 'mongoid', '~>3.1' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
+gem "mime-types", "~> 2" if Gem::Version.create(RUBY_VERSION.dup) <= Gem::Version.create('1.9.3')
+gem "rails", "4.2.5"
+gem 'mongoid', '~>5.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
-gem 'mongo_mapper', '~>0.13'
-gem 'bson_ext',                          :platforms => :ruby
+gem 'dynamoid', '~> 1',                 :platforms => :ruby
+gem 'aws-sdk', '~>2',                   :platforms => :ruby
 
 gemspec :path => "../"

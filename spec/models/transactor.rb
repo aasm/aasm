@@ -26,6 +26,54 @@ private
 
 end
 
+class NoLockTransactor < ActiveRecord::Base
+
+  belongs_to :worker
+
+  include AASM
+
+  aasm :column => :status do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :to => :running, :from => :sleeping
+    end
+  end
+end
+
+class LockTransactor < ActiveRecord::Base
+
+  belongs_to :worker
+
+  include AASM
+
+  aasm :column => :status, requires_lock: true do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :to => :running, :from => :sleeping
+    end
+  end
+end
+
+class LockNoWaitTransactor < ActiveRecord::Base
+
+  belongs_to :worker
+
+  include AASM
+
+  aasm :column => :status, requires_lock: 'FOR UPDATE NOWAIT' do
+    state :sleeping, :initial => true
+    state :running
+
+    event :run do
+      transitions :to => :running, :from => :sleeping
+    end
+  end
+end
+
 class MultipleTransactor < ActiveRecord::Base
 
   belongs_to :worker

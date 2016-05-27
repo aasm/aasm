@@ -113,6 +113,20 @@ describe "instance methods" do
         end
       end
     end
+
+    if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+      # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
+      context "when AASM enum setting is not enabled and aasm column not present" do
+
+        let(:with_enum_without_column) {WithEnumWithoutColumn.new}
+
+        it "should raise NoMethodError for transitions" do
+          expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, "undefined method 'status' for WithEnumWithoutColumn")
+        end
+      end
+
+    end
+
   end
 
   context "when AASM is configured to use enum" do
@@ -299,6 +313,18 @@ describe "named scopes with the new DSL" do
     expect(NoScope).not_to respond_to(:pending)
   end
 
+  context "result of scope" do
+    let!(:dsl1) { SimpleNewDsl.create!(status: :new) }
+    let!(:dsl2) { SimpleNewDsl.create!(status: :unknown_scope) }
+
+    after do
+      SimpleNewDsl.destroy_all
+    end
+
+    it "created scope works as where(name: :scope_name)" do
+      expect(SimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
+    end
+  end
 end # scopes
 
 describe "direct assignment" do
@@ -399,6 +425,39 @@ describe 'transitions with persistence' do
     expect(persistor).not_to be_sleeping
   end
 
+  describe 'pessimistic locking' do
+    let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
+
+    subject { transactor.run! }
+
+    context 'no lock' do
+      let(:transactor) { NoLockTransactor.create!(:name => 'no_lock_transactor', :worker => worker) }
+
+      it 'should not invoke lock!' do
+        expect(transactor).to_not receive(:lock!)
+        subject
+      end
+    end
+
+    context 'a default lock' do
+      let(:transactor) { LockTransactor.create!(:name => 'lock_transactor', :worker => worker) }
+
+      it 'should invoke lock! with true' do
+        expect(transactor).to receive(:lock!).with(true).and_call_original
+        subject
+      end
+    end
+
+    context 'a FOR UPDATE NOWAIT lock' do
+      let(:transactor) { LockNoWaitTransactor.create!(:name => 'lock_no_wait_transactor', :worker => worker) }
+
+      it 'should invoke lock! with FOR UPDATE NOWAIT' do
+        expect(transactor).to receive(:lock!).with('FOR UPDATE NOWAIT').and_call_original
+        subject
+      end
+    end
+  end
+
   describe 'transactions' do
     let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
     let(:transactor) { Transactor.create!(:name => 'transactor', :worker => worker) }
@@ -427,7 +486,7 @@ describe 'transitions with persistence' do
 
       it "should only rollback changes in the main transaction not the nested one" do
         # change configuration to not require new transaction
-        AASM::StateMachine[Transactor][:default].config.requires_new_transaction = false
+        AASM::StateMachineStore[Transactor][:default].config.requires_new_transaction = false
 
         expect(transactor).to be_sleeping
         expect(worker.status).to eq('sleeping')
@@ -468,7 +527,72 @@ describe 'transitions with persistence' do
         expect(validator).to be_running
         expect(validator.name).to eq("name")
       end
+    end
 
+    describe 'before and after transaction callbacks' do
+      [:after, :before].each do |event_type|
+        describe "#{event_type}_transaction callback" do
+          it "should fire :#{event_type}_transaction if transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            expect { validator.run! }.to change { validator.send("#{event_type}_transaction_performed_on_run") }.from(nil).to(true)
+            expect(validator).to be_running
+          end
+
+          it "should fire :#{event_type}_transaction if transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect do
+              begin
+                validator.fail!
+              rescue => ignored
+              end
+            end.to change { validator.send("#{event_type}_transaction_performed_on_fail") }.from(nil).to(true)
+            expect(validator).to_not be_running
+          end
+
+          it "should not fire :#{event_type}_transaction if not saving" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+            expect { validator.run }.to_not change { validator.send("#{event_type}_transaction_performed_on_run") }
+            expect(validator).to be_running
+            expect(validator.name).to eq("name")
+          end
+        end
+      end
+    end
+
+    describe 'before and after all transactions callbacks' do
+      [:after, :before].each do |event_type|
+        describe "#{event_type}_all_transactions callback" do
+          it "should fire :#{event_type}_all_transactions if transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            expect { validator.run! }.to change { validator.send("#{event_type}_all_transactions_performed") }.from(nil).to(true)
+            expect(validator).to be_running
+          end
+
+          it "should fire :#{event_type}_all_transactions if transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect do
+              begin
+                validator.fail!
+              rescue => ignored
+              end
+            end.to change { validator.send("#{event_type}_all_transactions_performed") }.from(nil).to(true)
+            expect(validator).to_not be_running
+          end
+
+          it "should not fire :#{event_type}_all_transactions if not saving" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+            expect { validator.run }.to_not change { validator.send("#{event_type}_all_transactions_performed") }
+            expect(validator).to be_running
+            expect(validator.name).to eq("name")
+          end
+        end
+      end
     end
 
     context "when not persisting" do
