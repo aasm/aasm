@@ -33,6 +33,8 @@ module AASM
 
         base.after_initialize :aasm_ensure_initial_state
 
+        base.after_commit :aasm_after_commit_hooks
+
         # ensure state is in the list of states
         base.validate :aasm_validate_states
       end
@@ -189,8 +191,10 @@ module AASM
             end
 
             if options[:persist] && success
-              event.fire_callbacks(:after_commit, self, *args)
-              event.fire_global_callbacks(:after_all_commits, self, *args)
+              # Delegating to ActiveRecord
+              #
+              # event.fire_callbacks(:after_commit, self, *args)
+              # event.fire_global_callbacks(:after_all_commits, self, *args)
             end
           ensure
             if options[:persist]
@@ -200,6 +204,28 @@ module AASM
           end
 
           success
+        end
+
+        def aasm_after_commit_hooks
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
+            unless aasm_invalid_state?(state_machine_name)
+              new_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
+              new_state.fire_callbacks(:after_commit, self)
+            end
+
+            events_fired = aasm(state_machine_name).events_fired
+
+            until events_fired.empty?
+              event_name, *args = events_fired.shift
+
+              self.class.aasm(state_machine_name).state_machine.events[event_name].fire_callbacks(:after_commit, self, *args)
+              self.class.aasm(state_machine_name).state_machine.events[event_name].fire_global_callbacks(:after_all_commits, self, *args)
+            end
+          end
+        ensure
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
+            aasm(state_machine_name).events_fired.clear
+          end
         end
 
         def requires_new?(state_machine_name)
