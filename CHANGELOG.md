@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## (not yet released)
+
+* support `logger` configuration (see [issue #370](https://github.com/aasm/aasm/pull/370) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+
+
 ## 4.10.1
 
  * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y), and [issue #353](https://github.com/aasm/aasm/pull/353) for details, thanks to [@nathanstitt](https://github.com/nathanstitt))
