@@ -10,7 +10,7 @@ class Validator < ActiveRecord::Base
 
   include AASM
 
-  aasm :column => :status do
+  aasm :column => :status, :whiny_persistence => true do
     before_all_transactions :before_all_transactions
     after_all_transactions  :after_all_transactions
 
@@ -78,7 +78,7 @@ end
 class MultipleValidator < ActiveRecord::Base
 
   include AASM
-  aasm :left, :column => :status do
+  aasm :left, :column => :status, :whiny_persistence => true do
     state :sleeping, :initial => true
     state :running
     state :failed, :after_enter => :fail
