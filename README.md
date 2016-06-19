@@ -869,6 +869,7 @@ end
 AASM supports query methods for states and events
 
 Given the following `Job` class:
+
 ```ruby
 class Job
   include AASM
@@ -889,7 +890,7 @@ class Job
       transitions :from => [:running, :cleaning], :to => :sleeping
     end
   end
-  
+
   def cleaning_needed?
     false
   end
@@ -936,6 +937,23 @@ Job.aasm.states_for_select
 => [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
 ```
 
+
+### Warning output
+
+Warnings are by default printed to `STDERR`. If you want to log those warnings to another output,
+use
+
+```ruby
+class Job
+  include AASM
+
+  aasm :logger => Rails.logger do
+    ...
+  end
+end
+```
+
+Be aware though, that this is not yet released. It will be part of _AASM_ version `4.11.0`.
 
 ### RubyMotion support
 
