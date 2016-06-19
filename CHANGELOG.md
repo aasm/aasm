@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## (not yet released)
+## 4.11.0
 
  * support `logger` configuration (see [issue #370](https://github.com/aasm/aasm/pull/370) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
  * support configuration to let bang transitions fail if object is invalid (see [issue #366](https://github.com/aasm/aasm/pull/366) and [issue #262](https://github.com/aasm/aasm/issues/262) for details, thanks to [@Wildebeest](https://github.com/Wildebeest))
