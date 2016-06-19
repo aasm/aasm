@@ -9,7 +9,10 @@ module AASM
     # for all persistence layers: create named scopes for each state
     attr_accessor :create_scopes
 
-    # for ActiveRecord: don't store any new state if the model is invalid
+    # for ActiveRecord: when the model is invalid, true -> raise, false -> return false
+    attr_accessor :whiny_persistence
+
+    # for ActiveRecord: store the new state even if the model is invalid and return true
     attr_accessor :skip_validation_on_save
 
     # for ActiveRecord: use requires_new for nested transactions?
