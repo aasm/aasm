@@ -210,16 +210,10 @@ module AASM
              klass.respond_to?(:defined_enums) &&
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
-             })
-<<<<<<< 9866206609cc1b0d4d772292319803d907401a1b
-         @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
-=======
+             }) &&
+         ! @state_machine.config.override_methods.include?(method_name.to_sym)
 
-        # Do not warn if the method is acknowledged to be overridden.
-        if !@state_machine.config.override_methods.include?(method_name.to_sym)
-          warn "#{klass.name}: overriding method '#{method_name}'!"
-        end
->>>>>>> Allow the ability to ignore warnings on intentional overriden methods
+        @state_machine.config.logger.warn("#{klass.name}: overriding method '#{method_name}'!")
       end
 
       klass.send(:define_method, method_name, method_definition)
