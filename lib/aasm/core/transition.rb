@@ -29,11 +29,13 @@ module AASM::Core
     end
 
     def allowed?(obj, *args)
+      prepare_for_transition!
       invoke_callbacks_compatible_with_guard(@guards, obj, args, :guard => true) &&
       invoke_callbacks_compatible_with_guard(@unless, obj, args, :unless => true)
     end
 
     def execute(obj, *args)
+      prepare_for_transition!
       invoke_callbacks_compatible_with_guard(event.state_machine.global_callbacks[:after_all_transitions], obj, args)
       invoke_callbacks_compatible_with_guard(@after, obj, args)
     end
@@ -51,6 +53,14 @@ module AASM::Core
     end
 
     private
+
+    def prepare_for_transition!
+      clear_failures!
+    end
+
+    def clear_failures!
+      @failures.clear
+    end
 
     def invoke_callbacks_compatible_with_guard(code, record, args, options={})
       if record.respond_to?(:aasm)
