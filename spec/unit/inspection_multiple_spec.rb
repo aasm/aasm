@@ -187,6 +187,19 @@ describe 'aasm.from_states_for_state' do
   end
 end
 
+describe 'aasm.to_states_for_state' do
+  it "should return all to states for a state" do
+    expect(ComplexExampleMultiple.aasm(:left)).to respond_to(:to_states_for_state)
+    tos = ComplexExampleMultiple.aasm(:left).to_states_for_state(:active)
+    [:suspended, :deleted].each {|to| expect(tos).to include(to)}
+  end
+
+  it "should return to states for a state for a particular transition only" do
+    tos = ComplexExampleMultiple.aasm(:left).to_states_for_state(:active, :transition => :left_suspend)
+    [:suspended].each {|to| expect(tos).to include(to)}
+  end
+end
+
 describe 'permitted events' do
   let(:foo) {FooMultiple.new}
 
