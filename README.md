@@ -418,6 +418,28 @@ SimpleMultipleExample.aasm(:work).states
 *Final note*: Support for multiple state machines per class is a pretty new feature
 (since version `4.3`), so please bear with us in case it doesn't work as expected.
 
+### Auto-generated Status Constants
+
+AASM automatically [generates constants](https://github.com/aasm/aasm/pull/60)
+for each status so you don't have to explicitly define them.
+
+```ruby
+class Foo
+  include AASM
+
+  aasm do
+    state :initialized
+    state :calculated
+    state :finalized
+  end
+end
+
+> Foo::STATE_INITIALIZED
+#=> :initialized
+> Foo::STATE_CALCULATED
+#=> :calculated
+```
+
 ### Extending AASM
 
 AASM allows you to easily extend `AASM::Base` for your own application purposes.
