@@ -10,7 +10,7 @@ gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.
 gem 'sequel'
 
 platforms :ruby_19 do
-  gem 'tins', '~> 1.6.0'
+  gem 'tins', '1.6.0'
 end
 # testing dynamoid
 # gem 'dynamoid', '~> 1'
