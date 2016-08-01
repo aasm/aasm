@@ -132,7 +132,7 @@ class Job
     ...
   end
 
-  def notify_somebody(user)
+  def notify_somebody
     ...
   end
 
