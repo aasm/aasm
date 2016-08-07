@@ -1,5 +1,5 @@
 module Minitest::Assertions
-  def assert_event_allowed(object, event, **options))
+  def assert_event_allowed(object, event, **options)
     state_machine_name = options[:on] || :default
     assert object.aasm(state_machine_name).may_fire_event?(event),
           "Expected that the event :#{event} would be allowed (on :#{state_machine_name})"

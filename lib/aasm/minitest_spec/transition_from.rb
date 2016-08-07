@@ -14,8 +14,7 @@ module MiniTest::Assertions
   def _transitions_from?(object, from_state, *args, **options)
     state_machine_name = options[:on] || :default
     object.aasm(state_machine_name).current_state = from_state.to_sym
-    object.send(options[:on_event], *args)
-    options[:to].to_sym == object.aasm(state_machine_name).current_state
+    object.send(options[:on_event], *args) && options[:to].to_sym == object.aasm(state_machine_name).current_state
   end
 
   Object.infect_an_assertion :assert_transitions_from, :must_transition_from, :do_not_flip

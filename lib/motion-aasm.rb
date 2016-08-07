@@ -11,6 +11,7 @@ file_dependencies = {
 
 exclude_files = [
   'aasm/rspec.*',
+  'aasm/minitest_spec.*',
   'aasm/persistence/active_record_persistence.rb',
   'aasm/persistence/dynamoid_persistence.rb',
   'aasm/persistence/mongo_mapper_persistence.rb',
