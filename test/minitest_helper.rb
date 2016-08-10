@@ -41,8 +41,8 @@ begin
 
   Dynamoid.logger.level = Logger::FATAL
 
-  RSpec.configure do |c|
-    c.before(:each) do
+  class Minitest::Spec
+    before do
       Dynamoid.adapter.list_tables.each do |table|
         Dynamoid.adapter.delete_table(table) if table =~ /^#{Dynamoid::Config.namespace}/
       end
