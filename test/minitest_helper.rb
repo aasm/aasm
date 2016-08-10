@@ -3,7 +3,6 @@ $LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'spe
 $LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 require 'aasm'
 require 'minitest/autorun'
-require 'minitest/spec'
 require 'aasm/minitest_spec'
 require 'pry'
 
