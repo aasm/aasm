@@ -5,8 +5,8 @@ require "aasm/version"
 Gem::Specification.new do |s|
   s.name        = "aasm"
   s.version     = AASM::VERSION
-  s.authors     = ["Scott Barron", "Travis Tilley", "Thorsten Boettger"]
-  s.email       = %q{scott@elitists.net, ttilley@gmail.com, aasm@mt7.de}
+  s.authors     = ["Thorsten Boettger", "Anil Maurya"]
+  s.email       = %q{aasm@mt7.de, anilmaurya8dec@gmail.com}
   s.homepage    = %q{https://github.com/aasm/aasm}
   s.summary     = %q{State machine mixin for Ruby objects}
   s.description = %q{AASM is a continuation of the acts-as-state-machine rails plugin, built for plain Ruby objects.}

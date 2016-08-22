@@ -1058,6 +1058,7 @@ Feel free to
 * [Scott Barron](https://github.com/rubyist) (2006–2009, original author)
 * [Travis Tilley](https://github.com/ttilley) (2009–2011)
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
+* [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
 
 ## Contributing ##
