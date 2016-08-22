@@ -33,9 +33,9 @@ module AASM
       AASM::Localizer.new.human_state_name(@instance.class, state_object_for_name(current_state))
     end
 
-    def states(options={})
+    def states(options={}, *args)
       if options.has_key?(:permitted)
-        selected_events = events(:permitted => options[:permitted])
+        selected_events = events({:permitted => options[:permitted]}, *args)
         # An array of arrays. Each inner array represents the transitions that
         # transition from the current state for an event
         event_transitions = selected_events.map {|e| e.transitions_from_state(current_state) }
@@ -45,10 +45,10 @@ module AASM
           return nil if transitions.empty?
 
           # Return the :to state of the first transition that is allowed (or not) or nil
-          if options[:permitted] 
-            transition = transitions.find { |t| t.allowed?(@instance) }
+          if options[:permitted]
+            transition = transitions.find { |t| t.allowed?(@instance, *args) }
           else
-            transition = transitions.find { |t| !t.allowed?(@instance) }
+            transition = transitions.find { |t| !t.allowed?(@instance, *args) }
           end
           transition ? transition.to : nil
         end.flatten.compact.uniq
@@ -60,7 +60,7 @@ module AASM
       end
     end
 
-    def events(options={})
+    def events(options={}, *args)
       state = options[:state] || current_state
       events = @instance.class.aasm(@name).events.select {|e| e.transitions_from_state?(state) }
 
@@ -71,9 +71,9 @@ module AASM
         # filters the results of events_for_current_state so that only those that
         # are really currently possible (given transition guards) are shown.
         if options[:permitted]
-          events.select! { |e| @instance.send("may_#{e.name}?") }
+          events.select! { |e| @instance.send("may_#{e.name}?", *args) }
         else
-          events.select! { |e| !@instance.send("may_#{e.name}?") }
+          events.select! { |e| !@instance.send("may_#{e.name}?", *args) }
         end
       end
 

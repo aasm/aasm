@@ -935,6 +935,9 @@ job.aasm.events(:reject => :sleep).map(&:name)
 # list states for select
 Job.aasm.states_for_select
 => [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
+
+# show permitted states with guard parameter
+job.aasm.states({:permitted => true}, guard_parameter).map(&:name)
 ```
 
 
