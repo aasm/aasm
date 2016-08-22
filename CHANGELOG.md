@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## unreleased
+
+ * fix: permissible states not respecting guard parameters(see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389]
+
 ## 4.11.0
 
  * support `logger` configuration (see [issue #370](https://github.com/aasm/aasm/pull/370) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
@@ -329,4 +333,3 @@
 
  * supporting i18n
  * supporting regular expressions for hash values and strings
-
