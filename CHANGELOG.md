@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 5.0.0 (not yet released)
+
+ * use _ActiveRecord_ `after_commit` hooks if available (see [issue #367](https://github.com/aasm/aasm/pull/367) for details, thanks to [@rringler](https://github.com/rringler))
+
 ## unreleased
 
  * fix: permissible states not respecting guard parameters(see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389]
