@@ -24,7 +24,7 @@ module AASM
       configure :skip_validation_on_save, false
 
       # raise if the model is invalid (in ActiveRecord)
-      configure :whiny_persistence, false
+      configure :whiny_persistence, true
 
       # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
