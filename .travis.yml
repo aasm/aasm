@@ -46,4 +46,4 @@ matrix:
 
 notifications:
   slack:
-    secure: MsPY8sUW5TVblcWc5NGkkWJlHxCMnhNa3IFPSVWthlk0fz+CLfOrLjQ+brQup/AJ7BRtyBKQ8udpqLj/R7CJKAiVVDAlUBcHqXk/WDusssGzJkDMrLVDefq++YCg5TdbcIaHt8WBVg6pD8H4kQJMJxmtcziQtiW1Qt0pwfuNJ+k=
+    secure: gpltVWntdKz0nSE6A5UvuX4qbN35uW51nsW+Ojgqm8Qsv8K240/NlZRYutFHr7GnJTe0rEEP2Oy3ZBnBtZKFn13RlTEAU/FCAxebr4H24rr29Ypwwp5xjiSE4MuoBEnroo4lw6ka3LsJnrY2PKRMiLJGsS0WsEPY4x8NUG/vyY8=

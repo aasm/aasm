@@ -132,7 +132,7 @@ class Job
     ...
   end
 
-  def notify_somebody(user)
+  def notify_somebody
     ...
   end
 
@@ -417,6 +417,28 @@ SimpleMultipleExample.aasm(:work).states
 
 *Final note*: Support for multiple state machines per class is a pretty new feature
 (since version `4.3`), so please bear with us in case it doesn't work as expected.
+
+### Auto-generated Status Constants
+
+AASM automatically [generates constants](https://github.com/aasm/aasm/pull/60)
+for each status so you don't have to explicitly define them.
+
+```ruby
+class Foo
+  include AASM
+
+  aasm do
+    state :initialized
+    state :calculated
+    state :finalized
+  end
+end
+
+> Foo::STATE_INITIALIZED
+#=> :initialized
+> Foo::STATE_CALCULATED
+#=> :calculated
+```
 
 ### Extending AASM
 
@@ -935,6 +957,9 @@ job.aasm.events(:reject => :sleep).map(&:name)
 # list states for select
 Job.aasm.states_for_select
 => [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
+
+# show permitted states with guard parameter
+job.aasm.states({:permitted => true}, guard_parameter).map(&:name)
 ```
 
 
@@ -1055,6 +1080,7 @@ Feel free to
 * [Scott Barron](https://github.com/rubyist) (2006–2009, original author)
 * [Travis Tilley](https://github.com/ttilley) (2009–2011)
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
+* [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
 
 ## Contributing ##
