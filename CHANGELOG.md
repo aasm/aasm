@@ -3,6 +3,7 @@
 ## 5.0.0 (not yet released)
 
  * use _ActiveRecord_ `after_commit` hooks if available (see [issue #367](https://github.com/aasm/aasm/pull/367) for details, thanks to [@rringler](https://github.com/rringler))
+ * `whiny_persistance` defaults to `true` now (see [issue #378](https://github.com/aasm/aasm/pull/378) for details
 
 ## unreleased
 
