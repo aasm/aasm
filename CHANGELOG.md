@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## unreleased
+
+ * fix: permissible states not respecting guard parameters(see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389]
+
+## 4.11.0
+
+ * support `logger` configuration (see [issue #370](https://github.com/aasm/aasm/pull/370) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
+ * support configuration to let bang transitions fail if object is invalid (see [issue #366](https://github.com/aasm/aasm/pull/366) and [issue #262](https://github.com/aasm/aasm/issues/262) for details, thanks to [@Wildebeest](https://github.com/Wildebeest))
+
+
 ## 4.10.1
 
  * fix: suppress warnings when using ActiveRecord enums feature (see [issue #346](https://github.com/aasm/aasm/pull/346) for details, thanks to [@110y](https://github.com/110y), and [issue #353](https://github.com/aasm/aasm/pull/353) for details, thanks to [@nathanstitt](https://github.com/nathanstitt))
@@ -323,4 +333,3 @@
 
  * supporting i18n
  * supporting regular expressions for hash values and strings
-

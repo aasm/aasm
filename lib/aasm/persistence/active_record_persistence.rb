@@ -78,7 +78,12 @@ module AASM
             self.save
           end
 
-          success ? true : aasm_rollback(name, old_value)
+          unless success
+            aasm_rollback(name, old_value)
+            raise ActiveRecord::RecordInvalid.new(self) if aasm_whiny_persistence(name)
+          end
+
+          success
         end
 
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
@@ -130,6 +135,10 @@ module AASM
 
         def aasm_skipping_validations(state_machine_name)
           AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
+        end
+
+        def aasm_whiny_persistence(state_machine_name)
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.whiny_persistence
         end
 
         def aasm_write_attribute(state, name=:default)

@@ -1,3 +1,5 @@
+require 'logger'
+
 module AASM
   class Base
 
@@ -21,6 +23,9 @@ module AASM
       # don't store any new state if the model is invalid (in ActiveRecord)
       configure :skip_validation_on_save, false
 
+      # raise if the model is invalid (in ActiveRecord)
+      configure :whiny_persistence, false
+
       # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
 
@@ -39,6 +44,9 @@ module AASM
 
       # Set to true to namespace reader methods and constants
       configure :namespace, false
+
+      # Configure a logger, with default being a Logger to STDERR
+      configure :logger, Logger.new(STDERR)
 
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
@@ -202,7 +210,7 @@ module AASM
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
              })
-        warn "#{klass.name}: overriding method '#{method_name}'!"
+         @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
       end
 
       klass.send(:define_method, method_name, method_definition)

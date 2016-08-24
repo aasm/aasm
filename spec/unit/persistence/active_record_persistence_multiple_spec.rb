@@ -386,6 +386,30 @@ describe 'transitions with persistence' do
 
     validator.name = nil
     expect(validator).not_to be_valid
+    expect { validator.run! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect(validator).to be_sleeping
+
+    validator.reload
+    expect(validator).not_to be_running
+    expect(validator).to be_sleeping
+
+    validator.name = 'another name'
+    expect(validator).to be_valid
+    expect(validator.run!).to be_truthy
+    expect(validator).to be_running
+
+    validator.reload
+    expect(validator).to be_running
+    expect(validator).not_to be_sleeping
+  end
+
+  it 'should not store states for invalid models silently if configured' do
+    validator = MultipleSilentPersistor.create(:name => 'name')
+    expect(validator).to be_valid
+    expect(validator).to be_sleeping
+
+    validator.name = nil
+    expect(validator).not_to be_valid
     expect(validator.run!).to be_falsey
     expect(validator).to be_sleeping
 

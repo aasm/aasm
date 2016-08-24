@@ -17,7 +17,7 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
-  %w(validators multiple_validators).each do |table_name|
+  %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
       t.string "status"
@@ -30,20 +30,6 @@ ActiveRecord::Migration.suppress_messages do
       t.string "status"
       t.integer "worker_id"
     end
-  end
-
-  ActiveRecord::Migration.create_table "workers", :force => true do |t|
-    t.string "name"
-    t.string "status"
-  end
-
-  ActiveRecord::Migration.create_table "invalid_persistors", :force => true do |t|
-    t.string "name"
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "multiple_invalid_persistors", :force => true do |t|
-    t.string "name"
-    t.string "status"
   end
 
   ActiveRecord::Migration.create_table "fathers", :force => true do |t|

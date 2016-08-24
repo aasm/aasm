@@ -132,7 +132,7 @@ class Job
     ...
   end
 
-  def notify_somebody(user)
+  def notify_somebody
     ...
   end
 
@@ -418,6 +418,28 @@ SimpleMultipleExample.aasm(:work).states
 *Final note*: Support for multiple state machines per class is a pretty new feature
 (since version `4.3`), so please bear with us in case it doesn't work as expected.
 
+### Auto-generated Status Constants
+
+AASM automatically [generates constants](https://github.com/aasm/aasm/pull/60)
+for each status so you don't have to explicitly define them.
+
+```ruby
+class Foo
+  include AASM
+
+  aasm do
+    state :initialized
+    state :calculated
+    state :finalized
+  end
+end
+
+> Foo::STATE_INITIALIZED
+#=> :initialized
+> Foo::STATE_CALCULATED
+#=> :calculated
+```
+
 ### Extending AASM
 
 AASM allows you to easily extend `AASM::Base` for your own application purposes.
@@ -522,7 +544,7 @@ Saving includes running all validations on the `Job` class, and returns `true` i
 successful or `false` if errors occur. Exceptions are not raised.
 
 If you want make sure the state gets saved without running validations (and
-thereby maybe persisting aninvalid object state), simply tell AASM to skip the
+thereby maybe persisting an invalid object state), simply tell AASM to skip the
 validations. Be aware that when skipping validations, only the state column will
 be updated in the database (just like ActiveRecord `update_column` is working).
 
@@ -869,6 +891,7 @@ end
 AASM supports query methods for states and events
 
 Given the following `Job` class:
+
 ```ruby
 class Job
   include AASM
@@ -889,7 +912,7 @@ class Job
       transitions :from => [:running, :cleaning], :to => :sleeping
     end
   end
-  
+
   def cleaning_needed?
     false
   end
@@ -934,8 +957,28 @@ job.aasm.events(:reject => :sleep).map(&:name)
 # list states for select
 Job.aasm.states_for_select
 => [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
+
+# show permitted states with guard parameter
+job.aasm.states({:permitted => true}, guard_parameter).map(&:name)
 ```
 
+
+### Warning output
+
+Warnings are by default printed to `STDERR`. If you want to log those warnings to another output,
+use
+
+```ruby
+class Job
+  include AASM
+
+  aasm :logger => Rails.logger do
+    ...
+  end
+end
+```
+
+Be aware though, that this is not yet released. It will be part of _AASM_ version `4.11.0`.
 
 ### RubyMotion support
 
@@ -1037,6 +1080,7 @@ Feel free to
 * [Scott Barron](https://github.com/rubyist) (2006–2009, original author)
 * [Travis Tilley](https://github.com/ttilley) (2009–2011)
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
+* [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
 
 ## Contributing ##
