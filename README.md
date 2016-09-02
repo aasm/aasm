@@ -1054,7 +1054,7 @@ gem 'aasm'
 
 ### Generators
 
-After installing Aasm you can run generator:
+After installing AASM you can run generator:
 
 ```sh
 % rails generate aasm NAME [COLUMN_NAME]
