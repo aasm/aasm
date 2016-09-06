@@ -112,12 +112,8 @@ module AASM::Core
 
     def _fire(obj, options={}, to_state=nil, *args)
       result = options[:test_only] ? false : nil
-      if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state }
-        return result if transitions.size == 0
-      else
-        transitions = @transitions
-      end
+      transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state || t.from == nil}
+      return result if transitions.size == 0
 
       # If to_state is not nil it either contains a potential
       # to_state or an arg
