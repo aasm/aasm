@@ -2,6 +2,8 @@
 
 ## unreleased
 
+ * fix: Multiple transition behavior when one of the transitions does not
+ have a "from" parameter (see [issue #392](https://github.com/aasm/aasm/issues/392) for details)
  * fix: permissible states not respecting guard parameters (see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389](https://github.com/aasm/aasm/pull/389)
 
 ## 4.11.0
