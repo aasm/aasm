@@ -5,7 +5,7 @@ class SimpleMongoMapper
   key :status, String
 
   aasm column: :status do
-    state :unknown_scope
+    state :unknown_scope, :another_unknown_scope
     state :next
   end
 end
@@ -17,7 +17,7 @@ class SimpleMongoMapperMultiple
   key :status, String
 
   aasm :left, column: :status do
-    state :unknown_scope
+    state :unknown_scope, :another_unknown_scope
     state :next
   end
 end
