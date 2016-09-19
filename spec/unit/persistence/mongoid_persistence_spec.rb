@@ -24,9 +24,12 @@ describe 'mongoid' do
     describe "named scopes with the old DSL" do
 
       context "Does not already respond_to? the scope name" do
-        it "should add a scope" do
+        it "should add a scope for each state" do
           expect(SimpleMongoid).to respond_to(:unknown_scope)
+          expect(SimpleMongoid).to respond_to(:another_unknown_scope)
+
           expect(SimpleMongoid.unknown_scope.class).to eq(Mongoid::Criteria)
+          expect(SimpleMongoid.another_unknown_scope.class).to eq(Mongoid::Criteria)
         end
       end
 

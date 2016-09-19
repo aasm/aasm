@@ -296,9 +296,12 @@ end
 
 describe "named scopes with the new DSL" do
   context "Does not already respond_to? the scope name" do
-    it "should add a scope" do
+    it "should add a scope for each state" do
       expect(MultipleSimpleNewDsl).to respond_to(:unknown_scope)
+      expect(MultipleSimpleNewDsl).to respond_to(:another_unknown_scope)
+
       expect(MultipleSimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+      expect(MultipleSimpleNewDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
     end
   end
 
