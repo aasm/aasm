@@ -2,6 +2,7 @@
 
 ## unreleased
 
+ * fix: Scopes when states are defined as a series of symbols (see [issue #397](https://github.com/aasm/aasm/pull/397) for details, thanks to [@evheny0](https://github.com/evheny0))
  * fix: Multiple transition behavior when one of the transitions does not
  have a "from" parameter (see [issue #392](https://github.com/aasm/aasm/issues/392) for details)
  * fix: permissible states not respecting guard parameters (see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389](https://github.com/aasm/aasm/pull/389)
