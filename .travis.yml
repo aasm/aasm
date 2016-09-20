@@ -28,6 +28,10 @@ before_script:
   - wget -O - http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest | tar xz --directory /tmp/dynamodb
   - java -Djava.library.path=/tmp/dynamodb/DynamoDBLocal_lib -jar /tmp/dynamodb/DynamoDBLocal.jar -inMemory -delayTransientStatuses -port 30180 &
 
+script:
+  - bundle exec rspec spec
+  - bundle exec rake test
+
 matrix:
   allow_failures:
     - rvm: jruby-9.0.5.0
