@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## unreleased
+## 4.11.1
 
  * fix: generator file name when using custom column name instead of
   aasm_state (see [issue #398](https://github.com/aasm/aasm/pull/398) for details,
