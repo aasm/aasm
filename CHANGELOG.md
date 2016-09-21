@@ -2,6 +2,9 @@
 
 ## unreleased
 
+ * fix: generator file name when using custom column name instead of
+  aasm_state (see [issue #398](https://github.com/aasm/aasm/pull/398) for details,
+  thanks to [@bastianwegge](https://github.com/bastianwegge))
  * fix: Scopes when states are defined as a series of symbols (see [issue #397](https://github.com/aasm/aasm/pull/397) for details, thanks to [@evheny0](https://github.com/evheny0))
  * fix: Multiple transition behavior when one of the transitions does not
  have a "from" parameter (see [issue #392](https://github.com/aasm/aasm/issues/392) for details)
