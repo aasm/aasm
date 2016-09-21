@@ -36,4 +36,9 @@ describe ActiveRecord::Generators::AASMGenerator, type: :generator do
     assert_migration "db/migrate/add_aasm_state_to_jobs.rb"
   end
 
+  it "add custom aasm_column in existing model" do
+    run_generator %w(job state)
+    assert_migration "db/migrate/add_state_to_jobs.rb"
+  end
+
 end
