@@ -50,8 +50,7 @@ module AASM
 
       module InstanceMethods
 
-        # Writes <tt>state</tt> to the state column and persists it to the database
-        # using update_attribute (which bypasses validation)
+        # Writes <tt>state</tt> to the state field and persists it to the database
         #
         #   foo = Foo.find(1)
         #   foo.aasm.current_state # => :opened
@@ -62,17 +61,24 @@ module AASM
         # NOTE: intended to be called from an event
         def aasm_write_state(state, name=:default)
           old_value = read_attribute(self.class.aasm(name).attribute_name)
-          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
+          aasm_write_attribute(state, name)
 
-          unless self.save(:validate => false)
-            write_attribute(self.class.aasm(name).attribute_name, old_value)
-            return false
+          success = if aasm_skipping_validations(name)
+                      value = aasm_raw_attribute_value(state, name)
+                      aasm_update_column(name, value)
+                    else
+                      self.save
+                    end
+
+          unless success
+            aasm_rollback(name, old_value)
+            raise Mongoid::Errors::Validations.new(self) if aasm_whiny_persistence(name)
           end
 
-          true
+          success
         end
 
-        # Writes <tt>state</tt> to the state column, but does not persist it to the database
+        # Writes <tt>state</tt> to the state field, but does not persist it to the database
         #
         #   foo = Foo.find(1)
         #   foo.aasm.current_state # => :opened
@@ -85,10 +91,43 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state_without_persistence(state, name=:default)
-          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
+          aasm_write_attribute(state, name)
         end
 
       private
+
+        def aasm_update_column(name, value)
+          attribute_name = self.class.aasm(name).attribute_name
+
+          if Mongoid::VERSION.to_f >= 4
+            set(Hash[attribute_name, value])
+          else
+            set(attribute_name, value)
+          end
+
+          true
+        end
+
+        def aasm_rollback(name, old_value)
+          write_attribute(self.class.aasm(name).attribute_name, old_value)
+          false
+        end
+
+        def aasm_skipping_validations(state_machine_name)
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
+        end
+
+        def aasm_whiny_persistence(state_machine_name)
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.whiny_persistence
+        end
+
+        def aasm_write_attribute(state, name=:default)
+          write_attribute(self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name))
+        end
+
+        def aasm_raw_attribute_value(state, _name=:default)
+          state.to_s
+        end
 
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
