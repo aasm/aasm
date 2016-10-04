@@ -325,6 +325,12 @@ describe 'parametrised events' do
     pe.dress!(:working, 'blue', 'jeans')
   end
 
+  it 'should call :after transition method if arg is nil' do
+    dryer = nil
+    expect(pe).to receive(:wet_hair).with(dryer)
+    pe.shower!(dryer)
+  end
+
   it 'should call :after transition proc' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:wear_clothes).with('purple', 'slacks')
@@ -342,6 +348,12 @@ describe 'parametrised events' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:wear_makeup).with('foundation', 'SPF')
     pe.dress!(:working, 'foundation', 'SPF')
+  end
+
+  it 'should call :success transition method if arg is nil' do
+    shirt_color = nil
+    expect(pe).to receive(:wear_clothes).with(shirt_color)
+    pe.shower!(shirt_color)
   end
 
   it 'should call :success transition proc' do
