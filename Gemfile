@@ -5,7 +5,7 @@ gem 'rubysl',                           :platforms => :rbx
 gem "jruby-openssl",                    :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "mime-types", "~> 2" if Gem::Version.create(RUBY_VERSION.dup) <= Gem::Version.create('1.9.3')
-gem "rails", "~>4.2"
+gem "rails", ">4.2"
 gem 'mongoid', '~>4.0' if Gem::Version.create(RUBY_VERSION.dup) >= Gem::Version.create('1.9.3')
 gem 'sequel'
 
