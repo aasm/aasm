@@ -128,12 +128,13 @@ module AASM::Core
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if (options.key?(:may_fire) && Array(transition.to).include?(options[:may_fire])) ||
+        if (options.key?(:may_fire) && transition.eql?(options[:may_fire])) ||
            (!options.key?(:may_fire) && transition.allowed?(obj, *args))
-          result = to_state || Array(transition.to).first
+
           if options[:test_only]
-            # result = true
+            result = transition
           else
+            result = to_state || Array(transition.to).first
             Array(transition.to).each {|to| @valid_transitions[to] = transition }
             transition.execute(obj, *args)
           end
