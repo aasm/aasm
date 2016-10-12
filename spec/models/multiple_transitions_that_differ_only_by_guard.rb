@@ -1,7 +1,7 @@
 class MultipleTransitionsThatDifferOnlyByGuard
   include AASM
 
-  attr_accessor :executed_correctly
+  attr_accessor :executed_second
 
   aasm do
     state :start, :initial => true
@@ -26,6 +26,6 @@ class MultipleTransitionsThatDifferOnlyByGuard
   end
 
   def this_should_execute
-    self.executed_correctly = true
+    self.executed_second = true
   end
 end
