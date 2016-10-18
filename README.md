@@ -10,7 +10,7 @@ This package contains AASM, a library for adding finite state machines to Ruby c
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for
 [ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html),
-[Mongoid](http://mongoid.org/), and [Mongomapper](http://mongomapper.com/) but it can be used for any Ruby class, no matter what
+[Mongoid](http://mongoid.org/), [Mongomapper](http://mongomapper.com/), and [Sequel](http://sequel.jeremyevans.net) but it can be used for any Ruby class, no matter what
 parent class it has (if any).
 
 ## Upgrade from version 3 to 4
