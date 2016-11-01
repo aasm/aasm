@@ -1009,7 +1009,7 @@ expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
 
 #### Minitest
 
-AASM provides assertions and rspec-like expectations for [Minitest](https://github.com/blowmage/minitest-rails).
+AASM provides assertions and rspec-like expectations for [Minitest](https://github.com/seattlerb/minitest).
 
 ##### Assertions
 
