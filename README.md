@@ -1028,6 +1028,9 @@ expect(multiple).to allow_event(:start).on(:move)
 expect(multiple).to_not allow_event(:stop).on(:move)
 expect(multiple).to allow_transition_to(:processing).on(:move)
 expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+# allow_event also accepts arguments
+expect(job).to allow_event(:run).with(:defragmentation)
+
 ```
 
 ## <a id="installation">Installation ##
