@@ -180,6 +180,7 @@ begin
   new_state       before_enter
   new_state       enter
   ...update state...
+  event           before_success      # if persist successful
   transition      success             # if persist successful
   event           success             # if persist successful
   old_state       after_exit
@@ -921,13 +922,13 @@ end
 
 ```ruby
 # show all states
-Job.aasm.states.map(&:name) 
+Job.aasm.states.map(&:name)
 #=> [:sleeping, :running, :cleaning]
 
 job = Job.new
 
 # show all permitted states (from initial state)
-job.aasm.states(:permitted => true).map(&:name) 
+job.aasm.states(:permitted => true).map(&:name)
 #=> [:running]
 
 job.run
@@ -935,7 +936,7 @@ job.aasm.states(:permitted => true).map(&:name)
 #=> [:sleeping]
 
 # show all non permitted states
-job.aasm.states(:permitted => false).map(&:name) 
+job.aasm.states(:permitted => false).map(&:name)
 #=> [:cleaning]
 
 # show all possible (triggerable) events from the current state

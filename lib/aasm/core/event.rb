@@ -22,6 +22,7 @@ module AASM::Core
         :before_transaction,
         :ensure,
         :error,
+        :before_success,
         :success,
       ], &block) if block
     end

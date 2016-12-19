@@ -118,6 +118,7 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:before_enter_closed).once.ordered
       expect(callback).to receive(:enter_closed).once.ordered
       expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)   # this is when the state changes
+      expect(callback).to receive(:event_before_success).once.ordered
       expect(callback).to receive(:success_transition).once.ordered.and_return(true) # these should be after the state changes
       expect(callback).to receive(:after_exit_open).once.ordered
       expect(callback).to receive(:after_enter_closed).once.ordered
@@ -143,6 +144,7 @@ describe 'callbacks for the new DSL' do
     expect(callback).to_not receive(:before_enter_closed)
     expect(callback).to_not receive(:enter_closed)
     expect(callback).to_not receive(:aasm_write_state)
+    expect(callback).to_not receive(:event_before_success)
     expect(callback).to_not receive(:success_transition)
     expect(callback).to_not receive(:after_exit_open)
     expect(callback).to_not receive(:after_enter_closed)
@@ -186,6 +188,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
         expect(callback).to_not receive(:aasm_write_state)
+        expect(callback).to_not receive(:event_before_success)
         expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:after_exit_open)
         expect(callback).to_not receive(:after_enter_closed)
@@ -217,6 +220,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to receive(:after).once.ordered
 
         expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:event_before_success)
         expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
@@ -240,6 +244,7 @@ describe 'callbacks for the new DSL' do
       expect(callback).to_not receive(:before_enter_closed)
       expect(callback).to_not receive(:enter_closed)
       expect(callback).to_not receive(:aasm_write_state)
+      expect(callback).to_not receive(:event_before_success)
       expect(callback).to_not receive(:success_transition)
       expect(callback).to_not receive(:after_exit_open)
       expect(callback).to_not receive(:after_enter_closed)
