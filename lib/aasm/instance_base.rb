@@ -14,7 +14,6 @@ module AASM
 
     def current_state=(state)
       @instance.aasm_write_state_without_persistence(state, @name)
-      # @current_state = state
     end
 
     def enter_initial_state
@@ -22,7 +21,6 @@ module AASM
       state_object = state_object_for_name(state_name)
 
       state_object.fire_callbacks(:before_enter, @instance)
-      # state_object.fire_callbacks(:enter, @instance)
       self.current_state = state_name
       state_object.fire_callbacks(:after_enter, @instance)
 
