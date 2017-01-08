@@ -147,6 +147,7 @@ describe "instance methods" do
       context "when AASM is configured to skip validations on save" do
         before :each do
           allow(gate).to receive(:aasm_skipping_validations).and_return(true)
+          allow(gate).to receive(:aasm_timestamp).and_return(false)
         end
 
         it "passes state code instead of state symbol to update_all" do
@@ -167,6 +168,7 @@ describe "instance methods" do
         it "delegates state update to the helper method" do
           # Let's pretend that validation is passed
           allow(gate).to receive(:save).and_return(true)
+          allow(gate).to receive(:aasm_timestamp).and_return(false)
 
           gate.aasm_write_state state_sym, :left
 
@@ -215,6 +217,7 @@ describe "instance methods" do
     before :each do
       allow(gate).to receive(:write_attribute)
       allow(gate).to receive(:aasm_raw_attribute_value).and_return(value)
+      allow(gate).to receive(:aasm_timestamp).and_return(false)
 
       gate.send(:aasm_write_attribute, sym, :left)
     end

@@ -66,17 +66,19 @@ module AASM
         #
         # NOTE: intended to be called from an event
         def aasm_write_state(state, name=:default)
+          do_timestamp = aasm_update_timestamp?(state, name)
           old_value = read_attribute(self.class.aasm(name).attribute_name)
+          old_timestamp = read_attribute(aasm_timestamp_name(state, name)) if do_timestamp
           aasm_write_attribute state, name
 
           success = if aasm_skipping_validations(name)
-            value = aasm_raw_attribute_value(state, name)
-            aasm_update_column(name, value)
+            aasm_update_column(name, state)
           else
             self.save
           end
 
           unless success
+            aasm_timestamp_rollback(name, state, old_timestamp) if do_timestamp
             aasm_rollback(name, old_value)
             raise ActiveRecord::RecordInvalid.new(self) if aasm_whiny_persistence(name)
           end
@@ -102,12 +104,21 @@ module AASM
 
       private
 
-        def aasm_update_column(name, value)
-          self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
+        def aasm_update_column(name, state)
+          updates = {self.class.aasm(name).attribute_name => aasm_raw_attribute_value(state, name)}
+          if aasm_update_timestamp?(state, name)
+            updates[aasm_timestamp_name(state, name)] = ::DateTime.now
+          end
+          self.class.where(self.class.primary_key => self.id).update_all(updates) == 1
         end
 
         def aasm_rollback(name, old_value)
           write_attribute(self.class.aasm(name).attribute_name, old_value)
+          false
+        end
+
+        def aasm_timestamp_rollback(name, state, old_timestamp)
+          write_attribute(aasm_timestamp_name(state, name), old_timestamp)
           false
         end
 
@@ -140,6 +151,7 @@ module AASM
         end
 
         def aasm_write_attribute(state, name=:default)
+          aasm_update_timestamp(state, name)
           write_attribute(self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name))
         end
 

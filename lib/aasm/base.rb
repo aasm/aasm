@@ -34,6 +34,9 @@ module AASM
       # string for a specific lock type i.e. FOR UPDATE NOWAIT
       configure :requires_lock, false
 
+      # Set to true to automatically set `"#{state_name}_at" = ::Date.now` on state changes
+      configure :timestamp, false
+
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
 

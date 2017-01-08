@@ -41,6 +41,32 @@ module AASM
         end
       end
 
+      def aasm_update_timestamp(state, name)
+        if aasm_update_timestamp?(state, name)
+          write_attribute(aasm_timestamp_name(state, name), ::DateTime.now)
+        end
+      end
+
+      def aasm_update_timestamp?(state, name)
+        !state.to_s.empty? && aasm_timestamp(state, name)
+      end
+
+      def aasm_timestamp_name(state, name)
+        ts = aasm_timestamp(state, name)
+        case ts
+          when Symbol, String
+            ts
+          when TrueClass
+            "#{state}_at"
+          else
+            nil
+        end
+      end
+
+      def aasm_timestamp(state, name)
+        self.aasm(name).state_object_for_name(state.to_s.to_sym).options[:timestamp]
+      end
+
       module ClassMethods
         def aasm_column(attribute_name=nil)
           warn "[DEPRECATION] aasm_column is deprecated. Use aasm.attribute_name instead"
@@ -69,6 +95,7 @@ module AASM
     def create_scope(name)
       @klass.aasm_create_scope(@name, name)
     end
+
   end # Base
 
 end # AASM

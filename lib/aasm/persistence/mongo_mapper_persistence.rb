@@ -101,7 +101,7 @@ module AASM
           end
         end
 
-        def aasm_column_looks_like_enum(name)
+        def aasm_column_looks_like_enum(name=:default)
           self.class.keys[self.class.aasm(name).attribute_name.to_s].type == Integer
         end
 

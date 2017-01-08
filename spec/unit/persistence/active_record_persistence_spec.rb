@@ -11,7 +11,13 @@ load_schema
 # ActiveRecord::Base.logger = Logger.new(STDERR)
 
 describe "instance methods" do
-  let(:gate) {Gate.new}
+  let(:now) { ::DateTime.parse("Sat, 07 Jan 2017 19:03:56.805164000 -0800") }
+
+  before :each do
+    allow(::DateTime).to receive(:now).and_return(now)
+  end
+  let(:gate) { Gate.new }
+  let(:tgate) { TimestampGate.new }
 
   it "should respond to aasm persistence methods" do
     expect(gate).to respond_to(:aasm_read_state)
@@ -130,7 +136,7 @@ describe "instance methods" do
   end
 
   context "when AASM is configured to use enum" do
-    let(:state_sym) { :running }
+    let(:state_sym) { :closed }
     let(:state_code) { 2 }
     let(:enum_name) { :states }
     let(:enum) { Hash[state_sym, state_code] }
@@ -141,12 +147,22 @@ describe "instance methods" do
       allow(gate).to receive(:write_attribute)
 
       allow(Gate).to receive(enum_name).and_return(enum)
+
+
+      allow(tgate).to receive(:aasm_enum).and_return(enum_name)
+      allow(tgate).to receive(:aasm_write_attribute)
+      allow(tgate).to receive(:write_attribute)
+
+      allow(TimestampGate).to receive(enum_name).and_return(enum)
     end
 
     describe "aasm_write_state" do
       context "when AASM is configured to skip validations on save" do
         before :each do
-          allow(gate).to receive(:aasm_skipping_validations).and_return(true)
+          allow(::DateTime).to receive(:now).and_return(now)
+
+          allow(tgate).to receive(:aasm_skipping_validations).and_return(true)
+          #allow(gate).to receive(:aasm_timestamp).and_return(false)
         end
 
         it "passes state code instead of state symbol to update_all" do
@@ -154,12 +170,14 @@ describe "instance methods" do
           # parameters in the middle of the chain, so we need to use
           # intermediate object instead.
           obj = double(Object, update_all: 1)
-          allow(Gate).to receive(:where).and_return(obj)
+          allow(TimestampGate).to receive(:where).and_return(obj)
 
-          gate.aasm_write_state state_sym
+          expect(tgate.attributes["gate_opened_at"]).to eq now
+
+          tgate.aasm_write_state state_sym
 
           expect(obj).to have_received(:update_all)
-            .with(Hash[gate.class.aasm.attribute_name, state_code])
+            .with({tgate.class.aasm.attribute_name => state_code, "closed_at" => now})
         end
       end
 
@@ -167,6 +185,7 @@ describe "instance methods" do
         it "delegates state update to the helper method" do
           # Let's pretend that validation is passed
           allow(gate).to receive(:save).and_return(true)
+          allow(gate).to receive(:aasm_timestamp).and_return(false)
 
           gate.aasm_write_state state_sym
 
@@ -215,6 +234,7 @@ describe "instance methods" do
     before :each do
       allow(gate).to receive(:write_attribute)
       allow(gate).to receive(:aasm_raw_attribute_value).and_return(value)
+      allow(gate).to receive(:aasm_timestamp).and_return(false)
 
       gate.send(:aasm_write_attribute, sym)
     end

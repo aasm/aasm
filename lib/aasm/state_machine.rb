@@ -21,12 +21,14 @@ module AASM
     end
 
     def add_state(state_name, klass, options)
-      set_initial_state(state_name, options)
+      options[:timestamp] ||= @config.timestamp unless options[:timestamp].is_a? FalseClass
 
       # allow reloading, extending or redefining a state
       @states.delete(state_name) if @states.include?(state_name)
 
       @states << AASM::Core::State.new(state_name, klass, self, options)
+      set_initial_state(state_name, options)
+      @states
     end
 
     def add_event(name, options, &block)
