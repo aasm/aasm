@@ -14,10 +14,6 @@ services:
   - mongodb
   - redis-server
 
-install:
-    - gem install nokogiri -v '1.6.8.1'
-    - bundle install
-
 gemfile:
   - gemfiles/rails_3.2_stable.gemfile
   - gemfiles/rails_4.0.gemfile
