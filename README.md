@@ -86,7 +86,7 @@ the transition succeeds :
 
 ### Bang Methods
 
-Each even method also comes in a "bang" flavor. The "bang" version, e.g. `job.run!`, **automatically persists** the record after a successful state transition. It is important to note that the "bang" in this case _does not have anything to do with the event raising an exception_ or not.
+Each event method also comes in a "bang" flavor. The "bang" version, e.g. `job.run!`, **automatically persists** the record after a successful state transition. It is important to note that the "bang" in this case _does not have anything to do with the event raising an exception_ or not.
 
 ```ruby
 job.may_run? # => true
