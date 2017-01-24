@@ -12,6 +12,17 @@ describe 'warns when overrides a method' do
     end
   end
 
+  module SlightlyAcknowledgedClumsy
+    def self.included base
+      base.send :include, AASM
+
+      base.aasm(:override_methods => [:valid?, :save!, :save]) do
+        state :valid
+        event(:save) { }
+      end
+    end
+  end
+
   module WithEnumBase
     def self.included base
       base.send :include, AASM
@@ -34,11 +45,28 @@ describe 'warns when overrides a method' do
       end
     end
 
-    subject { base_klass.send :include, Clumsy }
+    context 'with Clumsy' do
+      subject { base_klass.send :include, Clumsy }
 
-    it 'should log to warn' do
-      expect_any_instance_of(Logger).to receive(:warn).with(": overriding method 'valid?'!")
-      subject
+      it 'should log to warn' do
+        expect_any_instance_of(Logger).to receive(:warn).exactly(1).times do |logger, message|
+          expect(
+            [
+              ": overriding method 'valid?'!"
+            ]
+          ).to include(message)
+        end
+        subject
+      end
+    end
+
+    context 'with SlightlyAcknowledgedClumsy' do
+      subject { base_klass.send :include, SlightlyAcknowledgedClumsy }
+
+      it 'should log to warn' do
+        expect_any_instance_of(Logger).to_not  receive(:warn)
+        subject
+      end
     end
   end
 
@@ -67,19 +95,36 @@ describe 'warns when overrides a method' do
         end
       end
 
-      subject { base_klass.send :include, Clumsy }
+      context 'with Clumsy' do
+        subject { base_klass.send :include, Clumsy }
 
-      it 'should log to warn' do
-        expect_any_instance_of(Logger).to receive(:warn).exactly(3).times do |logger, message|
-          expect(
-            [
-              ": overriding method 'may_save?'!",
-              ": overriding method 'save!'!",
-              ": overriding method 'save'!"
-            ]
-          ).to include(message)
+        it 'should log to warn' do
+          expect_any_instance_of(Logger).to receive(:warn).exactly(3).times do |logger, message|
+            expect(
+              [
+                ": overriding method 'may_save?'!",
+                ": overriding method 'save!'!",
+                ": overriding method 'save'!"
+              ]
+            ).to include(message)
+          end
+          subject
         end
-        subject
+      end
+
+      context 'with SlightlyAcknowledgedClumsy' do
+        subject { base_klass.send :include, SlightlyAcknowledgedClumsy }
+
+        it 'should log to warn' do
+          expect_any_instance_of(Logger).to receive(:warn).exactly(1).times do |logger, message|
+            expect(
+              [
+                ": overriding method 'may_save?'!",
+              ]
+            ).to include(message)
+          end
+          subject
+        end
       end
     end
   end

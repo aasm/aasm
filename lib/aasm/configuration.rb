@@ -34,5 +34,8 @@ module AASM
 
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
+
+    # These are the methods that will be override in a sub-class.
+    attr_accessor :override_methods
   end
 end

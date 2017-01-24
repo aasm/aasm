@@ -29,5 +29,4 @@ class ComplexActiveRecordExample < ActiveRecord::Base
       transitions :from => :beta, :to => :alpha
     end
   end
-
 end

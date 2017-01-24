@@ -408,8 +408,14 @@ _AASM_ doesn't prohibit to define the same event in more than one state machine.
 latest definition "wins" and overrides previous definitions. Nonetheless, a warning is issued:
 `SimpleMultipleExample: overriding method 'run'!`.
 
+If you want to acknowledge the override to suppress the warning, you may do so with `override_methods`:
+
+```ruby
+aasm(:move, override_methods: [:run!])
+```
+
 All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
-So, for example, to use inspection on a class level, you have to use
+So, for example, to use inspection on a class level, you have to use:
 
 ```ruby
 SimpleMultipleExample.aasm(:work).states
