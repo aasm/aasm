@@ -74,6 +74,11 @@ describe 'inspection for common cases' do
       expect(states).to include(:running)
       expect(states).to_not include(:dancing)
     end
+
+    it "transitions to correct state if from state is missing from one transitions" do
+      multi.sleep
+      expect(multi.aasm.current_state).to eq(:sleeping)
+    end
   end
 
   it 'should list states in the order they have been defined' do

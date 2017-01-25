@@ -28,9 +28,12 @@ describe 'mongo_mapper' do
     describe "named scopes with the old DSL" do
 
       context "Does not already respond_to? the scope name" do
-        it "should add a scope" do
+        it "should add a scope for each state" do
           expect(SimpleMongoMapper).to respond_to(:unknown_scope)
+          expect(SimpleMongoMapper).to respond_to(:another_unknown_scope)
+
           expect(SimpleMongoMapper.unknown_scope.class).to eq(MongoMapper::Plugins::Querying::DecoratedPluckyQuery)
+          expect(SimpleMongoMapper.another_unknown_scope.class).to eq(MongoMapper::Plugins::Querying::DecoratedPluckyQuery)
           #expect(SimpleMongoMapper.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
         end
       end

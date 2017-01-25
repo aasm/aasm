@@ -11,6 +11,10 @@ class ParametrisedEvent
       transitions :from => :sleeping, :to => [:showering, :working]
     end
 
+    event :shower do
+      transitions :from => :sleeping, :to => :showering, :after => :wet_hair, :success => :wear_clothes
+    end
+
     event :dress do
       transitions :from => :sleeping, :to => :working, :after => :wear_clothes, :success => :wear_makeup
       transitions :from => :showering, :to => [:working, :dating], :after => Proc.new { |*args| wear_clothes(*args) }, :success => proc { |*args| wear_makeup(*args) }
@@ -22,6 +26,9 @@ class ParametrisedEvent
   end
 
   def wear_makeup(makeup, moisturizer)
+  end
+
+  def wet_hair(dryer)
   end
 
   def condition_hair

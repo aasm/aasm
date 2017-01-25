@@ -6,7 +6,12 @@ class Validator < ActiveRecord::Base
     :after_transaction_performed_on_run,
     :before_all_transactions_performed,
     :before_transaction_performed_on_fail,
-    :before_transaction_performed_on_run
+    :before_transaction_performed_on_run,
+    :invalid
+
+  validate do |model|
+    errors.add(:validator, "invalid") if invalid
+  end
 
   include AASM
 

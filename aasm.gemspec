@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', ">= 3"
   s.add_development_dependency 'generator_spec'
+  s.add_development_dependency 'appraisal'
 
   # debugging
   # s.add_development_dependency 'debugger'

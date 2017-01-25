@@ -296,9 +296,12 @@ end
 
 describe "named scopes with the new DSL" do
   context "Does not already respond_to? the scope name" do
-    it "should add a scope" do
+    it "should add a scope for each state" do
       expect(SimpleNewDsl).to respond_to(:unknown_scope)
+      expect(SimpleNewDsl).to respond_to(:another_unknown_scope)
+
       expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+      expect(SimpleNewDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
     end
   end
 
@@ -541,6 +544,14 @@ describe 'transitions with persistence' do
       it "should not fire :after_commit if transaction failed" do
         validator = Validator.create(:name => 'name')
         expect { validator.fail! }.to raise_error(StandardError, 'failed on purpose')
+        expect(validator.name).to eq("name")
+      end
+
+      it "should not fire :after_commit if validation failed when saving object" do
+        validator = Validator.create(:name => 'name')
+        validator.invalid = true
+        expect { validator.run! }.to raise_error(ActiveRecord::RecordInvalid, 'Invalid record')
+        expect(validator).to be_sleeping
         expect(validator.name).to eq("name")
       end
 

@@ -4,6 +4,10 @@ describe 'dynamoid' do
     require 'logger'
     require 'spec_helper'
 
+    puts "------------------------------------------------------------------------"
+    puts "dynamoid gem found, running Dynamoid specs"
+    puts "------------------------------------------------------------------------"
+
     Dir[File.dirname(__FILE__) + "/../../models/dynamoid/*.rb"].sort.each do |f|
       require File.expand_path(f)
     end

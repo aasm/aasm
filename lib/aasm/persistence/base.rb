@@ -53,9 +53,9 @@ module AASM
 
   class Base
     # make sure to create a (named) scope for each state
-    def state_with_scope(name, *args)
-      state_without_scope(name, *args)
-      create_scope(name) if create_scope?(name)
+    def state_with_scope(*args)
+      names = state_without_scope(*args)
+      names.each { |name| create_scope(name) if create_scope?(name) }
     end
     alias_method :state_without_scope, :state
     alias_method :state, :state_with_scope

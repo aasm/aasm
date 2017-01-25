@@ -10,7 +10,7 @@ class GuardWithParams
 
   def user_is_manager?(user)
     ok = false
-    if user.has_role? :manager
+    if user && user.has_role?(:manager)
       ok = true
     end
     return ok

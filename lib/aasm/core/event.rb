@@ -22,6 +22,7 @@ module AASM::Core
         :before_transaction,
         :ensure,
         :error,
+        :before_success,
         :success,
       ], &block) if block
     end
@@ -112,12 +113,8 @@ module AASM::Core
 
     def _fire(obj, options={}, to_state=nil, *args)
       result = options[:test_only] ? false : nil
-      if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state }
-        return result if transitions.size == 0
-      else
-        transitions = @transitions
-      end
+      transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state || t.from == nil}
+      return result if transitions.size == 0
 
       # If to_state is not nil it either contains a potential
       # to_state or an arg
@@ -126,16 +123,19 @@ module AASM::Core
           args.unshift(to_state)
           to_state = nil
         end
+      else
+        args.unshift(nil) if args.blank? # If single arg given which is nil, push it back to args
       end
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if (options.key?(:may_fire) && Array(transition.to).include?(options[:may_fire])) ||
+        if (options.key?(:may_fire) && transition.eql?(options[:may_fire])) ||
            (!options.key?(:may_fire) && transition.allowed?(obj, *args))
-          result = to_state || Array(transition.to).first
+
           if options[:test_only]
-            # result = true
+            result = transition
           else
+            result = to_state || Array(transition.to).first
             Array(transition.to).each {|to| @valid_transitions[to] = transition }
             transition.execute(obj, *args)
           end

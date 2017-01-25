@@ -2,6 +2,18 @@
 
 ## unreleased
 
+ * fix: multiple transitions in a single event with the same to and from states (see [issue #372](https://github.com/aasm/aasm/issues/372) and [issue #362](https://github.com/aasm/aasm/issues/362) for details, fixed with [pull-request #408](https://github.com/aasm/aasm/pull/408), thanks to [@dathanb](https://github.com/dathanb))
+ * fix: passing nil as a argument to callbacks (see [issue #404](https://github.com/aasm/aasm/issues/404) for details, fixed with [pull-request #406](https://github.com/aasm/aasm/pull/406), thanks to [@yogeshjain999](https://github.com/yogeshjain999))
+
+
+## 4.11.1
+
+ * fix: generator file name when using custom column name instead of
+  aasm_state (see [issue #398](https://github.com/aasm/aasm/pull/398) for details,
+  thanks to [@bastianwegge](https://github.com/bastianwegge))
+ * fix: Scopes when states are defined as a series of symbols (see [issue #397](https://github.com/aasm/aasm/pull/397) for details, thanks to [@evheny0](https://github.com/evheny0))
+ * fix: Multiple transition behavior when one of the transitions does not
+ have a "from" parameter (see [issue #392](https://github.com/aasm/aasm/issues/392) for details)
  * fix: permissible states not respecting guard parameters (see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389](https://github.com/aasm/aasm/pull/389)
 
 ## 4.11.0
