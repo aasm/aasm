@@ -4,6 +4,7 @@ require 'generators/mongoid/aasm_generator'
 
 begin
   require "mongoid"
+  puts "mongoid gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
 
   describe Mongoid::Generators::AASMGenerator, type: :generator do
     destination File.expand_path("../../../tmp", __FILE__)
@@ -29,5 +30,5 @@ begin
 
   end
 rescue LoadError
-  puts "Not running Mongoid specs because mongoid gem is not installed!!!"
+  puts "mongoid gem not found, not running mongoid specs \e[31m#{'✖'}\e[0m"
 end

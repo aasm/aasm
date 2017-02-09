@@ -3,6 +3,7 @@ describe 'dynamoid' do
     require 'dynamoid'
     require 'logger'
     require 'spec_helper'
+    puts "dynamoid gem found, running Dynamoid specs \e[32m#{'✔'}\e[0m"
 
     Dir[File.dirname(__FILE__) + "/../../models/dynamoid/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -133,8 +134,6 @@ describe 'dynamoid' do
     end
 
   rescue LoadError
-    puts "------------------------------------------------------------------------"
-    puts "Not running Dynamoid multiple-specs because dynamoid gem is not installed!!!"
-    puts "------------------------------------------------------------------------"
+    puts "dynamoid gem not found, not running Dynamoid specs \e[31m#{'✖'}\e[0m"
   end
 end
