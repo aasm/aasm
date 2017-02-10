@@ -1,9 +1,7 @@
-describe 'sequel' do
-  begin
-    require 'sequel'
-    require 'logger'
-    require 'spec_helper'
-    puts "sequel gem found, running Sequel specs \e[32m#{'✔'}\e[0m"
+require 'spec_helper'
+
+if defined?(Sequel)
+  describe 'sequel' do
 
     Dir[File.dirname(__FILE__) + "/../../models/sequel/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -93,7 +91,5 @@ describe 'sequel' do
       end
     end
 
-  rescue LoadError
-    puts "sequel gem not found, not running Sequel specs \e[31m#{'✖'}\e[0m"
   end
 end
