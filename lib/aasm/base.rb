@@ -208,7 +208,9 @@ module AASM
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
              })
-         @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
+        unless AASM::Configuration.hide_warnings
+          @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
+        end
       end
 
       klass.send(:define_method, method_name, method_definition)
