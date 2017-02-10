@@ -1,9 +1,7 @@
-describe 'mongoid' do
-  begin
-    require 'mongoid'
-    require 'logger'
-    require 'spec_helper'
-    puts "mongoid gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
+require 'spec_helper'
+
+if defined?(Mongoid::Document)
+  describe 'mongoid' do
 
     Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -86,7 +84,5 @@ describe 'mongoid' do
 
     end
 
-  rescue LoadError
-    puts "mongoid gem not found, not running mongoid specs \e[31m#{'✖'}\e[0m"
   end
 end
