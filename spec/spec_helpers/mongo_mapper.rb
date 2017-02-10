@@ -1,3 +1,4 @@
+# encoding: utf-8
 begin
   require 'mongo_mapper'
   puts "mongo_mapper gem found, running MongoMapper specs \e[32m#{'✔'}\e[0m"

@@ -1,3 +1,4 @@
+# encoding: utf-8
 begin
   require 'sequel'
   puts "sequel gem found, running Sequel specs \e[32m#{'✔'}\e[0m"

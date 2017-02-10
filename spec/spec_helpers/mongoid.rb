@@ -1,3 +1,4 @@
+# encoding: utf-8
 begin
   require 'mongoid'
   puts "mongoid gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
