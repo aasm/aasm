@@ -124,7 +124,7 @@ module AASM::Core
           to_state = nil
         end
       else
-        args.unshift(nil) if args.blank? # If single arg given which is nil, push it back to args
+        args.unshift(nil) if args.nil? || args.empty? # If single arg given which is nil, push it back to args
       end
 
       transitions.each do |transition|
