@@ -1,5 +1,3 @@
-require 'active_record'
-
 class Validator < ActiveRecord::Base
   attr_accessor :after_all_transactions_performed,
     :after_transaction_performed_on_fail,

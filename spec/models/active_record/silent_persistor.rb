@@ -1,8 +1,6 @@
-require 'active_record'
-
-class InvalidPersistor < ActiveRecord::Base
+class SilentPersistor < ActiveRecord::Base
   include AASM
-  aasm :column => :status, :skip_validation_on_save => true do
+  aasm :column => :status, :whiny_persistence => false do
     state :sleeping, :initial => true
     state :running
     event :run do
@@ -15,9 +13,9 @@ class InvalidPersistor < ActiveRecord::Base
   validates_presence_of :name
 end
 
-class MultipleInvalidPersistor < ActiveRecord::Base
+class MultipleSilentPersistor < ActiveRecord::Base
   include AASM
-  aasm :left, :column => :status, :skip_validation_on_save => true do
+  aasm :left, :column => :status, :whiny_persistence => false do
     state :sleeping, :initial => true
     state :running
     event :run do
