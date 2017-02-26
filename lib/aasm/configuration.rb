@@ -35,6 +35,9 @@ module AASM
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
 
+    # the state machine binded to this one
+    attr_accessor :binding_state_machine
+
     class << self
       attr_accessor :hide_warnings
     end

@@ -48,6 +48,8 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      configure :binding_state_machine, nil
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
