@@ -28,7 +28,7 @@ class SimpleMultipleExample
     end
   end
 
-  aasm(:question, :binding_state_machine => :work) do
+  aasm(:question) do
     state :answered, :initial => true
     state :asked
 
