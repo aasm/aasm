@@ -159,6 +159,11 @@ private
       yield if block_given?
     end
 
+    binding_event = event.options[:binding_event]
+    if binding_event
+      __send__("#{binding_event}#{'!' if persist}")
+    end
+
     if persist_successful
       old_state.fire_callbacks(:after_exit, self,
         *process_args(event, aasm(state_machine_name).current_state, *args))

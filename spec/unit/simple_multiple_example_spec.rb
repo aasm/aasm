@@ -60,4 +60,32 @@ describe 'state machine' do
     expect(SimpleMultipleExample::STATE_PROCESSING).to eq(:processing)
     expect(SimpleMultipleExample::STATE_RUNNING).to eq(:running)
   end
+
+  context 'triggers binding_events in bindind_state_machine' do
+    it 'does persist' do
+      expect(simple).to be_sleeping
+      expect(simple).to be_answered
+      expect(simple).to receive(:start!).and_call_original
+      simple.ask!
+      expect(simple).to be_asked
+      expect(simple).to be_processing
+      expect(simple).to receive(:stop!).and_call_original
+      simple.answer!
+      expect(simple).to be_sleeping
+      expect(simple).to be_answered
+    end
+
+    it 'does not persist' do
+      expect(simple).to be_sleeping
+      expect(simple).to be_answered
+      expect(simple).to receive(:start).and_call_original
+      simple.ask
+      expect(simple).to be_asked
+      expect(simple).to be_processing
+      expect(simple).to receive(:stop).and_call_original
+      simple.answer
+      expect(simple).to be_sleeping
+      expect(simple).to be_answered
+    end
+  end
 end
