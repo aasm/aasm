@@ -416,6 +416,46 @@ SimpleMultipleExample.aasm(:work).states
 # => [:standing, :walking, :running]
 ```
 
+### Binding event
+
+Allow an event to be bound to another
+```ruby
+class Example
+  include AASM
+
+  aasm(:work) do
+    state :sleeping, :initial => true
+    state :processing
+
+    event :start do
+      transitions :from => :sleeping, :to => :processing
+    end
+    event :stop do
+      transitions :from => :processing, :to => :sleeping
+    end
+  end
+
+  aasm(:question) do
+    state :answered, :initial => true
+    state :asked
+
+    event :ask, :binding_event => :start do
+      transitions :from => :answered, :to => :asked
+    end
+    event :answer, :binding_event => :stop do
+      transitions :from => :asked, :to => :answered
+    end
+  end
+end
+
+example = Example.new
+example.aasm(:work).current_state #=> :sleeping
+example.aasm(:question).current_state #=> :answered
+example.ask
+example.aasm(:work).current_state #=> :processing
+example.aasm(:question).current_state #=> :asked
+```
+
 *Final note*: Support for multiple state machines per class is a pretty new feature
 (since version `4.3`), so please bear with us in case it doesn't work as expected.
 
