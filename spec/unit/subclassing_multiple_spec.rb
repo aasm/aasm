@@ -19,7 +19,7 @@ describe 'subclassing with multiple state machines' do
     expect(SuperClassMultiple.aasm(:right).states).not_to include(:archived)
   end
 
-  it "should have the same events as its parent" do
+  it 'should have the same events as its parent' do
     expect(SubClassMultiple.aasm(:left).events).to eq(SuperClassMultiple.aasm(:left).events)
     expect(SubClassMultiple.aasm(:right).events).to eq(SuperClassMultiple.aasm(:right).events)
   end
@@ -33,6 +33,24 @@ describe 'subclassing with multiple state machines' do
     son = SubClassMultiple.new
     son.update_state
     expect(son.aasm(:left).current_state).to eq(:ended)
+  end
+
+  it 'should allow the child to modify its left state machine ..' do
+    son = SubClassMultiple.new
+    expect(son.left_called_after).to eq(nil)
+    expect(son.right_called_after).to eq(nil)
+    son.foo
+    expect(son.left_called_after).to eq(true)
+    expect(son.right_called_after).to eq(nil)
+  end
+
+  it 'should allow the child to modify its right state machine' do
+    son = SubClassMultiple.new
+    expect(son.right_called_after).to eq(nil)
+    expect(son.left_called_after).to eq(nil)
+    son.close
+    expect(son.right_called_after).to eq(true)
+    expect(son.left_called_after).to eq(nil)
   end
 
 end
