@@ -573,6 +573,8 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Bang events
+
 You can tell AASM to auto-save the object or leave it unsaved
 
 ```ruby
