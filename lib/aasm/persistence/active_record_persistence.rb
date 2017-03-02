@@ -103,7 +103,7 @@ module AASM
       private
 
         def aasm_update_column(name, value)
-          self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
+          self.class.unscoped.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
         end
 
         def aasm_rollback(name, old_value)

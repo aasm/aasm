@@ -156,7 +156,8 @@ if defined?(ActiveRecord)
             # parameters in the middle of the chain, so we need to use
             # intermediate object instead.
             obj = double(Object, update_all: 1)
-            allow(MultipleGate).to receive(:where).and_return(obj)
+            allow(MultipleGate).to receive_message_chain(:unscoped, :where)
+              .and_return(obj)
 
             gate.aasm_write_state state_sym, :left
 
