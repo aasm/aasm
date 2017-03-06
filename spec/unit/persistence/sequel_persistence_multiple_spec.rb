@@ -1,8 +1,7 @@
-describe 'sequel' do
-  begin
-    require 'sequel'
-    require 'logger'
-    require 'spec_helper'
+require 'spec_helper'
+
+if defined?(Sequel)
+  describe 'sequel' do
 
     Dir[File.dirname(__FILE__) + "/../../models/sequel/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -145,9 +144,5 @@ describe 'sequel' do
       end
     end
 
-  rescue LoadError
-    puts "------------------------------------------------------------------------"
-    puts "Not running Sequel multiple-specs because sequel gem is not installed!!!"
-    puts "------------------------------------------------------------------------"
   end
 end

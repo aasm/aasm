@@ -1,8 +1,7 @@
-describe 'mongoid' do
-  begin
-    require 'mongoid'
-    require 'logger'
-    require 'spec_helper'
+require 'spec_helper'
+
+if defined?(Mongoid::Document)
+  describe 'mongoid' do
 
     Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -72,6 +71,85 @@ describe 'mongoid' do
 
     end
 
+    describe 'transitions with persistence' do
+
+      it "should work for valid models" do
+        valid_object = MultipleValidatorMongoid.create(:name => 'name')
+        expect(valid_object).to be_sleeping
+        valid_object.status = :running
+        expect(valid_object).to be_running
+      end
+
+      it 'should not store states for invalid models' do
+        validator = MultipleValidatorMongoid.create(:name => 'name')
+        expect(validator).to be_valid
+        expect(validator).to be_sleeping
+
+        validator.name = nil
+        expect(validator).not_to be_valid
+        expect { validator.run! }.to raise_error(Mongoid::Errors::Validations)
+        expect(validator).to be_sleeping
+
+        validator.reload
+        expect(validator).not_to be_running
+        expect(validator).to be_sleeping
+
+        validator.name = 'another name'
+        expect(validator).to be_valid
+        expect(validator.run!).to be_truthy
+        expect(validator).to be_running
+
+        validator.reload
+        expect(validator).to be_running
+        expect(validator).not_to be_sleeping
+      end
+
+      it 'should not store states for invalid models silently if configured' do
+        validator = MultipleSilentPersistorMongoid.create(:name => 'name')
+        expect(validator).to be_valid
+        expect(validator).to be_sleeping
+
+        validator.name = nil
+        expect(validator).not_to be_valid
+        expect(validator.run!).to be_falsey
+        expect(validator).to be_sleeping
+
+        validator.reload
+        expect(validator).not_to be_running
+        expect(validator).to be_sleeping
+
+        validator.name = 'another name'
+        expect(validator).to be_valid
+        expect(validator.run!).to be_truthy
+        expect(validator).to be_running
+
+        validator.reload
+        expect(validator).to be_running
+        expect(validator).not_to be_sleeping
+      end
+
+      it 'should store states for invalid models if configured' do
+        persistor = MultipleInvalidPersistorMongoid.create(:name => 'name')
+        expect(persistor).to be_valid
+        expect(persistor).to be_sleeping
+
+        persistor.name = nil
+        expect(persistor).not_to be_valid
+        expect(persistor.run!).to be_truthy
+        expect(persistor).to be_running
+
+        persistor = MultipleInvalidPersistorMongoid.find(persistor.id)
+        persistor.valid?
+        expect(persistor).to be_valid
+        expect(persistor).to be_running
+        expect(persistor).not_to be_sleeping
+
+        persistor.reload
+        expect(persistor).to be_running
+        expect(persistor).not_to be_sleeping
+      end
+    end
+
     describe "complex example" do
       it "works" do
         record = ComplexMongoidExample.new
@@ -122,9 +200,5 @@ describe 'mongoid' do
       end
     end
 
-  rescue LoadError
-    puts "--------------------------------------------------------------------------"
-    puts "Not running Mongoid multiple-specs because mongoid gem is not installed!!!"
-    puts "--------------------------------------------------------------------------"
   end
 end

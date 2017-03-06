@@ -1,8 +1,11 @@
-require 'active_record'
-
-class InvalidPersistor < ActiveRecord::Base
+class InvalidPersistorMongoid
+  include Mongoid::Document
   include AASM
-  aasm :column => :status, :skip_validation_on_save => true do
+
+  field :name
+  field :status
+
+  aasm :left, column: :status, skip_validation_on_save: true do
     state :sleeping, :initial => true
     state :running
     event :run do
@@ -15,9 +18,14 @@ class InvalidPersistor < ActiveRecord::Base
   validates_presence_of :name
 end
 
-class MultipleInvalidPersistor < ActiveRecord::Base
+class MultipleInvalidPersistorMongoid
+  include Mongoid::Document
   include AASM
-  aasm :left, :column => :status, :skip_validation_on_save => true do
+
+  field :name
+  field :status
+
+  aasm :left, column: :status, skip_validation_on_save: true do
     state :sleeping, :initial => true
     state :running
     event :run do

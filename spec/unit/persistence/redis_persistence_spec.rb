@@ -1,9 +1,7 @@
+require 'spec_helper'
 
-describe 'redis' do
-  begin
-    require 'redis-objects'
-    require 'logger'
-    require 'spec_helper'
+if defined?(Redis::Objects)
+  describe 'redis' do
 
     before(:all) do
       Redis.current = Redis.new(host: '127.0.0.1', port: 6379)
@@ -71,7 +69,5 @@ describe 'redis' do
       end
     end
 
-  rescue LoadError
-    puts "Not running Redis specs because sequel gem is not installed!!!"
   end
 end

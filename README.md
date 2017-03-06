@@ -416,6 +416,46 @@ SimpleMultipleExample.aasm(:work).states
 # => [:standing, :walking, :running]
 ```
 
+### Binding event
+
+Allow an event to be bound to another
+```ruby
+class Example
+  include AASM
+
+  aasm(:work) do
+    state :sleeping, :initial => true
+    state :processing
+
+    event :start do
+      transitions :from => :sleeping, :to => :processing
+    end
+    event :stop do
+      transitions :from => :processing, :to => :sleeping
+    end
+  end
+
+  aasm(:question) do
+    state :answered, :initial => true
+    state :asked
+
+    event :ask, :binding_event => :start do
+      transitions :from => :answered, :to => :asked
+    end
+    event :answer, :binding_event => :stop do
+      transitions :from => :asked, :to => :answered
+    end
+  end
+end
+
+example = Example.new
+example.aasm(:work).current_state #=> :sleeping
+example.aasm(:question).current_state #=> :answered
+example.ask
+example.aasm(:work).current_state #=> :processing
+example.aasm(:question).current_state #=> :asked
+```
+
 *Final note*: Support for multiple state machines per class is a pretty new feature
 (since version `4.3`), so please bear with us in case it doesn't work as expected.
 
@@ -533,6 +573,8 @@ class Job < ActiveRecord::Base
 end
 ```
 
+### Bang events
+
 You can tell AASM to auto-save the object or leave it unsaved
 
 ```ruby
@@ -541,8 +583,10 @@ job.run   # not saved
 job.run!  # saved
 ```
 
-Saving includes running all validations on the `Job` class, and returns `true` if
-successful or `false` if errors occur. Exceptions are not raised.
+Saving includes running all validations on the `Job` class. If
+`whiny_persistence` flag is set to `true`, exception is raised in case of
+failure. If `whiny_persistence` flag is set to false, methods with a bang return
+`true` if the state transition is successful or `false` if an error occurs.
 
 If you want make sure the state gets saved without running validations (and
 thereby maybe persisting an invalid object state), simply tell AASM to skip the
@@ -1084,14 +1128,7 @@ Feel free to
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
 
-## Contributing ##
-
-1. Read the [Contributor Code of Conduct](https://github.com/aasm/aasm/blob/master/CODE_OF_CONDUCT.md)
-2. Fork it
-3. Create your feature branch (git checkout -b my-new-feature)
-4. Commit your changes (git commit -am 'Added some feature')
-5. Push to the branch (git push origin my-new-feature)
-6. Create new Pull Request
+[## Contributing ##](contributing.md)
 
 ## Warranty ##
 

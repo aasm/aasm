@@ -34,5 +34,9 @@ module AASM
 
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
+
+    class << self
+      attr_accessor :hide_warnings
+    end
   end
 end

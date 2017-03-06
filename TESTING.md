@@ -12,6 +12,14 @@ For all supported Rails/ORM combinations:
 
     appraisal rspec
 
-Or for s specific one:
+Or for specific one:
 
     appraisal rails_4.2 rspec
+
+Or for one particular test file
+
+    appraisal rails_4.2_mongo_mapper rspec spec/unit/persistence/mongo_mapper_persistence_multiple_spec.rb
+
+Or down to one test case
+
+    appraisal rails_4.2_mongo_mapper rspec spec/unit/persistence/mongo_mapper_persistence_multiple_spec.rb:92

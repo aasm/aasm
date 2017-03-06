@@ -1,8 +1,7 @@
-describe 'mongo_mapper' do
-  begin
-    require 'mongo_mapper'
-    require 'logger'
-    require 'spec_helper'
+require 'spec_helper'
+
+if defined?(MongoMapper)
+  describe 'mongo_mapper' do
 
     Dir[File.dirname(__FILE__) + "/../../models/mongo_mapper/*.rb"].sort.each do |f|
       require File.expand_path(f)
@@ -141,9 +140,5 @@ describe 'mongo_mapper' do
       end
     end
 
-  rescue LoadError
-    puts "--------------------------------------------------------------------------"
-    puts "Not running MongoMapper specs because mongo_mapper gem is not installed!!!"
-    puts "--------------------------------------------------------------------------"
   end
 end

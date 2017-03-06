@@ -19,39 +19,6 @@ def load_schema
   require File.dirname(__FILE__) + "/database.rb"
 end
 
-# Dynamoid initialization
-begin
-  require 'dynamoid'
-  require 'aws-sdk-resources'
-
-  ENV['ACCESS_KEY'] ||= 'abcd'
-  ENV['SECRET_KEY'] ||= '1234'
-
-  Aws.config.update({
-    region: 'us-west-2',
-    credentials: Aws::Credentials.new(ENV['ACCESS_KEY'], ENV['SECRET_KEY'])
-  })
-
-  Dynamoid.configure do |config|
-    config.namespace = "dynamoid_tests"
-    config.endpoint = 'http://127.0.0.1:30180'
-    config.warn_on_scan = false
-  end
-
-  Dynamoid.logger.level = Logger::FATAL
-
-  RSpec.configure do |c|
-    c.before(:each) do
-      Dynamoid.adapter.list_tables.each do |table|
-        Dynamoid.adapter.delete_table(table) if table =~ /^#{Dynamoid::Config.namespace}/
-      end
-      Dynamoid.adapter.tables.clear
-    end
-  end
-rescue LoadError
-  # Without Dynamoid settings
-end
-
 # custom spec helpers
 Dir[File.dirname(__FILE__) + "/spec_helpers/**/*.rb"].sort.each { |f| require File.expand_path(f) }
 

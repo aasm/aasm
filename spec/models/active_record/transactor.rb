@@ -1,5 +1,3 @@
-require 'active_record'
-
 class Transactor < ActiveRecord::Base
 
   belongs_to :worker
