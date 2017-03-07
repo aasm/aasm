@@ -2,12 +2,12 @@
 
 source "https://rubygems.org"
 
+gem "rails", "5.0.0"
 gem "sqlite3", :platforms => :ruby
 gem "rubysl", :platforms => :rbx
 gem "rubinius-developer_tools", :platforms => :rbx
-gem "jruby-openssl", :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-gem "rails", "5.0.0"
+gem "mongoid", "~>6.0"
 gem "sequel"
 gem "aws-sdk", "~>2", :platforms => :ruby
 

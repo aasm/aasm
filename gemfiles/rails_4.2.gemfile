@@ -2,18 +2,16 @@
 
 source "https://rubygems.org"
 
+gem "rails", "4.2.5"
 gem "sqlite3", :platforms => :ruby
 gem "nokogiri", "1.6.8.1", :platforms => [:ruby_19]
 gem "rubysl", :platforms => :rbx
 gem "rubinius-developer_tools", :platforms => :rbx
-gem "jruby-openssl", :platforms => :jruby
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
 gem "mime-types", "~> 2", :platforms => [:ruby_19, :jruby]
-gem "rails", "4.2.5"
+gem "mongoid", "~>4.0", :platforms => [:ruby_22, :ruby_23, :jruby]
 gem "sequel"
-if ENV['CI'] = 'true'
-  gem "dynamoid", "~> 1", :platforms => :ruby
-end
+gem "dynamoid", "~> 1", :platforms => :ruby
 gem "aws-sdk", "~>2", :platforms => :ruby
 
 gemspec :path => "../"
