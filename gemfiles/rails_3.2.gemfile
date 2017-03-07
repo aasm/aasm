@@ -2,11 +2,11 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~>3.2.22"
 gem "sqlite3", :platforms => :ruby
 gem "rubysl", :platforms => :rbx
 gem "rubinius-developer_tools", :platforms => :rbx
 gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
+gem "rails", "~>3.2.22"
 gem "mongoid", "~>3.1"
 gem "sequel"
 gem "bson_ext", :platforms => :ruby

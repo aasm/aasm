@@ -14,10 +14,9 @@ services:
   - redis-server
 
 gemfile:
-  - gemfiles/rails_3.2_stable.gemfile
+  - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.0.gemfile
   - gemfiles/rails_4.2.gemfile
-  - gemfiles/rails_4.2_mongoid_4.gemfile
   - gemfiles/rails_4.2_mongoid_5.gemfile
   - gemfiles/rails_5.0.gemfile
 
@@ -28,27 +27,20 @@ before_script:
   - mongod --version
 
 matrix:
-  allow_failures:
-    - rvm: jruby-9.0.5.0
-      gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: rbx-2.5.8
-      gemfile: gemfiles/rails_5.0.gemfile
   exclude:
     - rvm: 1.9.3
-      gemfile: gemfiles/rails_4.2_mongoid_4.gemfile
-    - rvm: 1.9.3
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
     - rvm: 1.9.3
       gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: 2.2.5
-      gemfile: gemfiles/rails_3.2_stable.gemfile
-    - rvm: 2.3.1
-      gemfile: gemfiles/rails_3.2_stable.gemfile
-    - rvm: jruby-1.7
-      gemfile: gemfiles/rails_4.2_mongoid_4.gemfile
+    - rvm: 2.2.6
+      gemfile: gemfiles/rails_3.2.gemfile
+    - rvm: 2.3.3
+      gemfile: gemfiles/rails_3.2.gemfile
     - rvm: jruby-1.7
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
     - rvm: jruby-1.7
+      gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails_5.0.gemfile
 
 notifications:
