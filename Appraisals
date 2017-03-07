@@ -1,8 +1,4 @@
 appraise 'rails_3.2' do
-  gem 'sqlite3',                          :platforms => :ruby
-  gem 'rubysl',                           :platforms => :rbx
-  gem 'rubinius-developer_tools',         :platforms => :rbx
-  gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
   gem 'rails', '~>3.2.22'
   gem 'mongoid', '~>3.1'
   gem 'sequel'
@@ -11,10 +7,6 @@ appraise 'rails_3.2' do
 end
 
 appraise 'rails_4.0' do
-  gem 'sqlite3',                          :platforms => :ruby
-  gem 'rubysl',                           :platforms => :rbx
-  gem 'rubinius-developer_tools',         :platforms => :rbx
-  gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
   gem 'mime-types', '~> 2',               :platforms => [:ruby_19, :jruby]
   gem 'rails', '4.0.13'
   gem 'mongoid', '~>4.0'
@@ -25,14 +17,10 @@ appraise 'rails_4.0' do
 end
 
 appraise 'rails_4.2' do
-  gem 'sqlite3',                          :platforms => :ruby
   gem 'nokogiri', '1.6.8.1',              :platforms => [:ruby_19]
-  gem 'rubysl',                           :platforms => :rbx
-  gem 'rubinius-developer_tools',         :platforms => :rbx
-  gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
   gem 'mime-types', '~> 2',               :platforms => [:ruby_19, :jruby]
   gem 'rails', '4.2.5'
-  gem 'mongoid', '~>4.0',                 :platforms => [:ruby_22, :ruby_23, :jruby]
+  gem 'mongoid', '~>4.0'
   gem 'sequel'
   gem 'dynamoid', '~> 1',                 :platforms => :ruby
   gem 'aws-sdk', '~>2',                   :platforms => :ruby
@@ -41,14 +29,10 @@ end
 appraise 'rails_4.2_mongoid_5' do
   gem 'mime-types', '~> 2',               :platforms => [:ruby_19, :jruby]
   gem 'rails', '4.2.5'
-  gem 'mongoid', '~>5.0',                 :platforms => [:ruby_22, :ruby_23, :jruby]
+  gem 'mongoid', '~>5.0'
 end
 
 appraise 'rails_5.0' do
-  gem 'sqlite3',                          :platforms => :ruby
-  gem 'rubysl',                           :platforms => :rbx
-  gem 'rubinius-developer_tools',         :platforms => :rbx
-  gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
   gem 'rails', '5.0.0'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
