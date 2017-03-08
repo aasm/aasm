@@ -18,8 +18,8 @@ Or for specific one:
 
 Or for one particular test file
 
-    appraisal rails_4.2_mongo_mapper rspec spec/unit/persistence/mongo_mapper_persistence_multiple_spec.rb
+    appraisal rails_4.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb
 
 Or down to one test case
 
-    appraisal rails_4.2_mongo_mapper rspec spec/unit/persistence/mongo_mapper_persistence_multiple_spec.rb:92
+    appraisal rails_4.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb:92

@@ -12,9 +12,6 @@ module AASM
         elsif hierarchy.include?("Mongoid::Document")
           require_persistence :mongoid
           include_persistence base, :mongoid
-        elsif hierarchy.include?("MongoMapper::Document")
-          require_persistence :mongo_mapper
-          include_persistence base, :mongo_mapper
         elsif hierarchy.include?("Sequel::Model")
           require_persistence :sequel
           include_persistence base, :sequel
