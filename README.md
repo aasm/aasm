@@ -1111,7 +1111,7 @@ Feel free to
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
 
-[## Contributing ##](contributing.md)
+## [Contributing](CONTRIBUTING.md)
 
 ## Warranty ##
 
