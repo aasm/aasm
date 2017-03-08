@@ -9,6 +9,13 @@ module AASM::Core
       update(options)
     end
 
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @options = {}
+      orig.options.each_pair { |name, setting| @options[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
+    end
+
     def ==(state)
       if state.is_a? Symbol
         name == state
