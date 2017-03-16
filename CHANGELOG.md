@@ -2,6 +2,12 @@
 
 ## unreleased
 
+ * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
+ * Drop Support for Mongo Mapper [see [pull-request #439](https://github.com/aasm/aasm/pull/439)], thanks to [@reidmorrison](https://github.com/reidmorrison)
+ * add :binding_event option to event [see [pull-request #438](https://github.com/aasm/aasm/pull/438)], thanks to [@leanhdaovn](https://github.com/leanhdaovn)
+ * fix: `skip_validation_on_save: true` for default_scope records, [see [pull-request #433](https://github.com/aasm/aasm/pull/433)], thanks to [@larissa](https://github.com/larissa)
+ * Deep clone state machine during inheritance so that state machines in child classes can be modified (see [pull-request #429](https://github.com/aasm/aasm/pull/429)), thanks to [@reidmorrison](https://github.com/reidmorrison) and [@Tybot204](https://github.com/Tybot204)
+ * add before_success callback for event (see [pull-request #422](https://github.com/aasm/aasm/pull/422)), thanks to [@timsly ](https://github.com/timsly)
  * fix: multiple transitions in a single event with the same to and from states (see [issue #372](https://github.com/aasm/aasm/issues/372) and [issue #362](https://github.com/aasm/aasm/issues/362) for details, fixed with [pull-request #408](https://github.com/aasm/aasm/pull/408), thanks to [@dathanb](https://github.com/dathanb))
  * fix: passing nil as a argument to callbacks (see [issue #404](https://github.com/aasm/aasm/issues/404) for details, fixed with [pull-request #406](https://github.com/aasm/aasm/pull/406), thanks to [@yogeshjain999](https://github.com/yogeshjain999))
 
