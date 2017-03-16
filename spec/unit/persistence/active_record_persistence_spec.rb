@@ -156,11 +156,30 @@ if defined?(ActiveRecord)
             # parameters in the middle of the chain, so we need to use
             # intermediate object instead.
             obj = double(Object, update_all: 1)
-            allow(Gate).to receive(:where).and_return(obj)
+            allow(Gate).to receive_message_chain(:unscoped, :where).and_return(obj)
 
             gate.aasm_write_state state_sym
 
             expect(obj).to have_received(:update_all)
+              .with(Hash[gate.class.aasm.attribute_name, state_code])
+          end
+
+          it "searches model outside of default_scope when update_all" do
+            # stub_chain does not allow us to give expectations on call
+            # parameters in the middle of the chain, so we need to use
+            # intermediate object instead.
+            unscoped = double(Object, update_all: 1)
+            scoped = double(Object, update_all: 1)
+
+            allow(Gate).to receive(:unscoped).and_return(unscoped)
+            allow(Gate).to receive(:where).and_return(scoped)
+            allow(unscoped).to receive(:where).and_return(unscoped)
+
+            gate.aasm_write_state state_sym
+
+            expect(unscoped).to have_received(:update_all)
+              .with(Hash[gate.class.aasm.attribute_name, state_code])
+            expect(scoped).to_not have_received(:update_all)
               .with(Hash[gate.class.aasm.attribute_name, state_code])
           end
         end
