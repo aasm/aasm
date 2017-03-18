@@ -42,7 +42,7 @@ module AASM
 
       raise ArgumentError, "The class #{aasm_klass} must inherit from AASM::Base!" unless aasm_klass.ancestors.include?(AASM::Base)
 
-      @aasm ||= {}
+      @aasm ||= Concurrent::Map.new
       if @aasm[state_machine_name]
         # make sure to use provided options
         options.each do |key, value|
@@ -67,12 +67,12 @@ module AASM
     unless AASM::StateMachineStore.fetch(self.class, true).machine(name)
       raise AASM::UnknownStateMachineError.new("There is no state machine with the name '#{name}' defined in #{self.class.name}!")
     end
-    @aasm ||= {}
+    @aasm ||= Concurrent::Map.new
     @aasm[name.to_sym] ||= AASM::InstanceBase.new(self, name.to_sym)
   end
 
   def initialize_dup(other)
-    @aasm = {}
+    @aasm = Concurrent::Map.new
     super
   end
 
