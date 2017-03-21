@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 4.12.0
+
  * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
  * Drop Support for Mongo Mapper [see [pull-request #439](https://github.com/aasm/aasm/pull/439)], thanks to [@reidmorrison](https://github.com/reidmorrison)
  * add :binding_event option to event [see [pull-request #438](https://github.com/aasm/aasm/pull/438)], thanks to [@leanhdaovn](https://github.com/leanhdaovn)
