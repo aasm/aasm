@@ -1006,8 +1006,6 @@ class Job
 end
 ```
 
-Be aware though, that this is not yet released. It will be part of _AASM_ version `4.11.0`.
-
 ### RubyMotion support
 
 Now supports [CodeDataQuery](https://github.com/infinitered/cdq.git) !
