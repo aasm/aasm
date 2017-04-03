@@ -1020,7 +1020,9 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 
 ### Testing
 
-AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+#### RSpec
+
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this:
 
 ```ruby
 # classes with only the default state machine
@@ -1054,6 +1056,90 @@ expect(multiple).to allow_event(:start).on(:move)
 expect(multiple).to_not allow_event(:stop).on(:move)
 expect(multiple).to allow_transition_to(:processing).on(:move)
 expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+```
+
+#### Minitest
+
+AASM provides assertions and rspec-like expectations for [Minitest](https://github.com/seattlerb/minitest).
+
+##### Assertions
+
+List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
+
+Add `require 'aasm/minitest' to your `test_helper.rb` file and use them like this:
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+assert_transitions_from job, :sleeping, to: :running, on_event: :run
+refute_transitions_from job, :sleeping, to: :cleaning, on_event: :run
+assert_have_state job, :sleeping
+refute_have_state job, :running
+assert_event_allowed job, :run
+refute_event_allowed job, :clean
+assert_transition_to_allowed job, :running
+refute_transition_to_allowed job, :cleaning
+# on_event also accept arguments
+assert_transitions_from job, :sleeping, :defragmentation, to: :running, on_event: :run
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+assert_transitions_from multiple, :standing, to: :walking, on_event: :walk, on: :move
+refute_transitions_from multiple, :standing, to: :running, on_event: :walk, on: :move
+assert_have_state multiple, :standing, on: :move
+refute_have_state multiple, :walking, on: :move
+assert_event_allowed multiple, :walk, on: :move
+refute_event_allowed multiple, :hold, on: :move
+assert_transition_to_allowed multiple, :walking, on: :move
+refute_transition_to_allowed multiple, :running, on: :move
+assert_transitions_from multiple, :sleeping, to: :processing, on_event: :start, on: :work
+refute_transitions_from multiple, :sleeping, to: :sleeping, on_event: :start, on: :work
+assert_have_state multiple, :sleeping, on: :work
+refute_have_state multiple, :processing, on: :work
+assert_event_allowed multiple, :start, on: :move
+refute_event_allowed multiple, :stop, on: :move
+assert_transition_to_allowed multiple, :processing, on: :move
+refute_transition_to_allowed multiple, :sleeping, on: :move
+```
+
+##### Expectations
+
+List of supported expectations: `must_transition_from`, `wont_transition_from`, `must_have_state`, `wont_have_state`, `must_allow_event`, `wont_allow_event`, `must_allow_transition_to`, `wont_allow_transition_to`.
+
+Add `require 'aasm/minitest_spec'` to your `test_helper.rb` file and use them like this:
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+job.must_transition_from :sleeping, to: :running, on_event: :run
+job.wont_transition_from :sleeping, to: :cleaning, on_event: :run
+job.must_have_state :sleeping
+job.wont_have_state :running
+job.must_allow_event :run
+job.wont_allow_event :clean
+job.must_allow_transition_to :running
+job.wont_allow_transition_to :cleaning
+# on_event also accept arguments
+job.must_transition_from :sleeping, :defragmentation, to: :running, on_event: :run
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+multiple.must_transition_from :standing, to: :walking, on_event: :walk, on: :move
+multiple.wont_transition_from :standing, to: :running, on_event: :walk, on: :move
+multiple.must_have_state :standing, on: :move
+multiple.wont_have_state :walking, on: :move
+multiple.must_allow_event :walk, on: :move
+multiple.wont_allow_event :hold, on: :move
+multiple.must_allow_transition_to :walking, on: :move
+multiple.wont_allow_transition_to :running, on: :move
+multiple.must_transition_from :sleeping, to: :processing, on_event: :start, on: :work
+multiple.wont_transition_from :sleeping, to: :sleeping, on_event: :start, on: :work
+multiple.must_have_state :sleeping, on: :work
+multiple.wont_have_state :processing, on: :work
+multiple.must_allow_event :start, on: :move
+multiple.wont_allow_event :stop, on: :move
+multiple.must_allow_transition_to :processing, on: :move
+multiple.wont_allow_transition_to :sleeping, on: :move
 ```
 
 ## <a id="installation">Installation ##

@@ -26,6 +26,10 @@ before_script:
   - java -Djava.library.path=/tmp/dynamodb/DynamoDBLocal_lib -jar /tmp/dynamodb/DynamoDBLocal.jar -inMemory -delayTransientStatuses -port 30180 &
   - mongod --version
 
+script:
+  - bundle exec rspec spec
+  - bundle exec rake test
+
 matrix:
   exclude:
     - rvm: 1.9.3
