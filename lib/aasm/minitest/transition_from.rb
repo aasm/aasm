@@ -1,13 +1,13 @@
 module Minitest::Assertions
   def assert_transitions_from(object, from_state, *args)
-    options = args.extract_options!
+    options = args.first
     options[:on] ||= :default
     assert _transitions_from?(object, from_state, args, options),
           "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, (on :#{options[:on]})"
   end
 
   def refute_transitions_from(object, from_state, *args)
-    options = args.extract_options!
+    options = args.first
     options[:on] ||= :default
     refute _transitions_from?(object, from_state, args, options),
           "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, (on :#{options[:on]})"
