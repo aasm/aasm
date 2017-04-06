@@ -210,6 +210,14 @@ Note that when passing arguments to a state transition, the first argument must 
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
+Also, you can define a method that will be called if any event fails:
+
+```
+def aasm_event_failed(event_name, new_state)
+  # use custom exception/messages, report metrics, etc
+end
+```
+
 During the transition's `:after` callback (and reliably only then, or in the global
 `after_all_transitions` callback) you can access the originating state (the from-state)
 and the target state (the to state), like this:
