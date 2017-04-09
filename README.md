@@ -456,9 +456,6 @@ example.aasm(:work).current_state #=> :processing
 example.aasm(:question).current_state #=> :asked
 ```
 
-*Final note*: Support for multiple state machines per class is a pretty new feature
-(since version `4.3`), so please bear with us in case it doesn't work as expected.
-
 ### Auto-generated Status Constants
 
 AASM automatically [generates constants](https://github.com/aasm/aasm/pull/60)
