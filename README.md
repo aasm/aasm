@@ -1018,6 +1018,8 @@ class Job
 end
 ```
 
+You can hide warnings by setting `AASM::Configuration.hide_warnings = true`
+
 ### RubyMotion support
 
 Now supports [CodeDataQuery](https://github.com/infinitered/cdq.git) !
