@@ -901,6 +901,9 @@ class Job < ActiveRecord::Base
     ...
   end
 
+  aasm :another_state_machine, column: 'second_state' do
+    ...
+  end
 end
 ```
 
