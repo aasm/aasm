@@ -213,7 +213,7 @@ callback, which can handle it or re-raise it for further propagation.
 Also, you can define a method that will be called if any event fails:
 
 ```
-def aasm_event_failed(event_name, new_state)
+def aasm_event_failed(event_name, old_state_name)
   # use custom exception/messages, report metrics, etc
 end
 ```
