@@ -96,7 +96,7 @@ module AASM::Core
           @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
-        if @transitions.empty? && definitions[:to]
+        if !definitions[:from] && definitions[:to]
           @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions), &block)
         end
       end
