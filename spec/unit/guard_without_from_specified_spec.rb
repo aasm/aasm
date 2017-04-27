@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "transitions withour from specified" do
+describe "transitions without from specified" do
   let(:guardian) { GuardianWithoutFromSpecified.new }
 
   it "allows the transitions if guard succeeds" do
