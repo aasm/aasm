@@ -165,37 +165,6 @@ class LogRunTime
 end
 ```
 
-Here you can see a list of all possible callbacks, together with their order of calling:
-
-```ruby
-begin
-  event           before_all_events
-  event           before
-  event           guards
-  transition      guards
-  old_state       before_exit
-  old_state       exit
-                  after_all_transitions
-  transition      after
-  new_state       before_enter
-  new_state       enter
-  ...update state...
-  event           before_success      # if persist successful
-  transition      success             # if persist successful
-  event           success             # if persist successful
-  old_state       after_exit
-  new_state       after_enter
-  event           after
-  event           after_all_events
-rescue
-  event           error
-  event           error_on_all_events
-ensure
-  event           ensure
-  event           ensure_on_all_events
-end
-```
-
 Also, you can pass parameters to events:
 
 ```ruby
@@ -226,6 +195,39 @@ and the target state (the to state), like this:
   def set_process(name)
     logger.info "from #{aasm.from_state} to #{aasm.to_state}"
   end
+```
+
+#### Lifecycle
+
+Here you can see a list of all possible callbacks, together with their order of calling:
+
+```ruby
+begin
+  event           before_all_events
+  event           before
+  event           guards
+  transition      guards
+  old_state       before_exit
+  old_state       exit
+                  after_all_transitions
+  transition      after
+  new_state       before_enter
+  new_state       enter
+  ...update state...
+  event           before_success      # if persist successful
+  transition      success             # if persist successful
+  event           success             # if persist successful
+  old_state       after_exit
+  new_state       after_enter
+  event           after
+  event           after_all_events
+rescue
+  event           error
+  event           error_on_all_events
+ensure
+  event           ensure
+  event           ensure_on_all_events
+end
 ```
 
 #### The current event triggered
