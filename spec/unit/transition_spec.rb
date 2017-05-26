@@ -158,6 +158,18 @@ describe AASM::Core::Transition, '- when performing guard checks' do
     expect(st.failures).to eq [:test]
   end
 
+  it 'should clear failures array between attempts' do
+    opts = {:from => 'foo', :to => 'bar', :guard => :test}
+    st = AASM::Core::Transition.new(event, opts)
+
+    obj = double('object')
+    expect(obj).to receive(:test).exactly(3).times
+
+    3.times { st.allowed?(obj) }
+
+    expect(st.failures).to eq [:test]
+  end
+
   it 'should call the method on the object if unless is a symbol' do
     opts = {:from => 'foo', :to => 'bar', :unless => :test}
     st = AASM::Core::Transition.new(event, opts)
