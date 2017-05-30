@@ -957,6 +957,24 @@ end
 
 which then leads to `transaction(:requires_new => false)`, the Rails default.
 
+Additionally, if you do not want any of your active record actions to be
+wrapped in a transaction, you can specify the `use_transactions` flag. This can
+be useful if you want want to persist things to the database that happen as a
+result of a transaction or callback, even when some error occurs. The
+`use_transactions` flag is true by default.
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm :use_transactions => false do
+    ...
+  end
+
+  ...
+end
+```
+
 ### Pessimistic Locking
 
 AASM supports [Active Record pessimistic locking via `with_lock`](http://api.rubyonrails.org/classes/ActiveRecord/Locking/Pessimistic.html#method-i-with_lock) for database persistence layers.

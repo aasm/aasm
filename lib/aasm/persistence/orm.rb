@@ -102,6 +102,10 @@ module AASM
         AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.skip_validation_on_save
       end
 
+      def use_transactions?(state_machine_name)
+        AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.use_transactions
+      end
+
       def requires_new?(state_machine_name)
         AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.requires_new_transaction
       end
@@ -118,7 +122,11 @@ module AASM
           event.fire_global_callbacks(:before_all_transactions, self, *args)
 
           begin
-            success = aasm_transaction(requires_new?(state_machine_name), requires_lock?(state_machine_name)) do
+            success = if options[:persist] && use_transactions?(state_machine_name)
+              aasm_transaction(requires_new?(state_machine_name), requires_lock?(state_machine_name)) do
+                super
+              end
+            else
               super
             end
 
