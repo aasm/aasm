@@ -188,7 +188,7 @@ module AASM
           end
 
           begin
-            success = if options[:persist]
+            success = if options[:persist] && use_transactions?(state_machine_name)
               self.class.transaction(:requires_new => requires_new?(state_machine_name)) do
                 lock!(requires_lock?(state_machine_name)) if requires_lock?(state_machine_name)
                 super
@@ -213,6 +213,10 @@ module AASM
 
         def requires_new?(state_machine_name)
           AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.requires_new_transaction
+        end
+
+        def use_transactions?(state_machine_name)
+          AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.use_transactions
         end
 
         def requires_lock?(state_machine_name)

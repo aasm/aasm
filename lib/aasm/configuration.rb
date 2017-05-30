@@ -15,6 +15,9 @@ module AASM
     # for ActiveRecord: store the new state even if the model is invalid and return true
     attr_accessor :skip_validation_on_save
 
+    # for ActiveRecord: use transactions
+    attr_accessor :use_transactions
+
     # for ActiveRecord: use requires_new for nested transactions?
     attr_accessor :requires_new_transaction
 

@@ -26,6 +26,9 @@ module AASM
       # raise if the model is invalid (in ActiveRecord)
       configure :whiny_persistence, false
 
+      # Use transactions (in ActiveRecord)
+      configure :use_transactions, true
+
       # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
 
