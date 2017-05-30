@@ -24,7 +24,7 @@ ActiveRecord::Migration.suppress_messages do
     end
   end
 
-  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors multiple_transactors).each do |table_name|
+  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors no_transactors multiple_transactors).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
       t.string "status"

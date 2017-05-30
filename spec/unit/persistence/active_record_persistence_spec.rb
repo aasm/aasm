@@ -506,6 +506,20 @@ if defined?(ActiveRecord)
       end
     end
 
+    describe 'without transactions' do
+      let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
+      let(:no_transactor) { NoTransactor.create!(:name => 'transactor', :worker => worker) }
+
+      it 'should not rollback all changes' do
+        expect(no_transactor).to be_sleeping
+        expect(worker.status).to eq('sleeping')
+
+        expect {no_transactor.run!}.to raise_error(StandardError, 'failed on purpose')
+        expect(no_transactor).to be_running
+        expect(worker.reload.status).to eq('running')
+      end
+    end
+
     describe 'transactions' do
       let(:worker) { Worker.create!(:name => 'worker', :status => 'sleeping') }
       let(:transactor) { Transactor.create!(:name => 'transactor', :worker => worker) }
