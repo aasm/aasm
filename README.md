@@ -425,9 +425,55 @@ simple.aasm(:work).current
 
 ```
 
-_AASM_ doesn't prohibit to define the same event in more than one state machine. The
-latest definition "wins" and overrides previous definitions. Nonetheless, a warning is issued:
+#### Handling naming conflicts between multiple state machines
+
+_AASM_ doesn't prohibit to define the same event in more than one state
+machine. If no namespace is provided, the latest definition "wins" and
+overrides previous definitions. Nonetheless, a warning is issued:
 `SimpleMultipleExample: overriding method 'run'!`.
+
+Alternatively, you can provide a namespace for each state machine:
+
+```ruby
+class NamespacedMultipleExample
+  include AASM
+  aasm(:status) do
+    state :unapproved, :initial => true
+    state :approved
+
+    event :approve do
+      transitions :from => :unapproved, :to => :approved
+    end
+
+    event :unapprove do
+      transitions :from => :approved, :to => :unapproved
+    end
+  end
+
+  aasm(:review_status, namespace: :review) do
+    state :unapproved, :initial => true
+    state :approved
+
+    event :approve do
+      transitions :from => :unapproved, :to => :approved
+    end
+
+    event :unapprove do
+      transitions :from => :approved, :to => :unapproved
+    end
+  end
+end
+
+namespaced = NamespacedMultipleExample.new
+
+namespaced.aasm(:status).current_state
+# => :unapproved
+namespaced.aasm(:review_status).current_state
+# => :unapproved
+namespaced.approve_review
+namespaced.aasm(:review_status).current_state
+# => :approved
+```
 
 All _AASM_ class- and instance-level `aasm` methods accept a state machine selector.
 So, for example, to use inspection on a class level, you have to use
