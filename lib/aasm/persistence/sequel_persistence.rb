@@ -87,7 +87,7 @@ module AASM
         # NOTE: intended to be called from an event
         def aasm_write_state state, name=:default
           aasm_column = self.class.aasm(name).attribute_name
-          update_only({aasm_column => state.to_s}, aasm_column)
+          update_fields({aasm_column => state.to_s}, [aasm_column], missing: :skip)
         end
 
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
