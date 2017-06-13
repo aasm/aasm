@@ -139,7 +139,7 @@ if defined?(ActiveRecord)
 
       before :each do
         allow(gate).to receive(:aasm_enum).and_return(enum_name)
-        allow(gate).to receive(:aasm_write_attribute)
+        allow(gate).to receive(:aasm_write_state_attribute)
         allow(gate).to receive(:write_attribute)
 
         allow(Gate).to receive(enum_name).and_return(enum)
@@ -191,7 +191,7 @@ if defined?(ActiveRecord)
 
             gate.aasm_write_state state_sym
 
-            expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
+            expect(gate).to have_received(:aasm_write_state_attribute).with(state_sym, :default)
             expect(gate).to_not have_received :write_attribute
           end
         end
@@ -201,7 +201,7 @@ if defined?(ActiveRecord)
         it "delegates state update to the helper method" do
           gate.aasm_write_state_without_persistence state_sym
 
-          expect(gate).to have_received(:aasm_write_attribute).with(state_sym, :default)
+          expect(gate).to have_received(:aasm_write_state_attribute).with(state_sym, :default)
           expect(gate).to_not have_received :write_attribute
         end
       end
@@ -237,7 +237,7 @@ if defined?(ActiveRecord)
         allow(gate).to receive(:write_attribute)
         allow(gate).to receive(:aasm_raw_attribute_value).and_return(value)
 
-        gate.send(:aasm_write_attribute, sym)
+        gate.send(:aasm_write_state_attribute, sym)
       end
 
       it "generates attribute value using a helper method" do

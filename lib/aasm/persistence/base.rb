@@ -34,11 +34,15 @@ module AASM
       # This allows for nil aasm states - be sure to add validation to your model
       def aasm_read_state(name=:default)
         state = send(self.class.aasm(name).attribute_name)
-        if new_record?
-          state.blank? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : state.to_sym
+        if state.blank?
+          aasm_new_record? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : nil
         else
-          state.blank? ? nil : state.to_sym
+          state.to_sym
         end
+      end
+
+      def aasm_new_record?
+        raise("Define #aasm_new_record? in the AASM Persistence class.")
       end
 
       module ClassMethods
