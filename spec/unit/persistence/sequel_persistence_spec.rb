@@ -1,7 +1,7 @@
 require 'spec_helper'
 if defined?(Sequel)
   describe 'sequel' do
-  
+
     Dir[File.dirname(__FILE__) + "/../../models/sequel/*.rb"].sort.each do |f|
       require File.expand_path(f)
     end

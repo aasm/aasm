@@ -58,10 +58,6 @@ module AASM
           self.save
         end
 
-        def aasm_new_record?
-          new_record?
-        end
-
         def aasm_raise_invalid_record
           raise Mongoid::Errors::Validations.new(self)
         end
