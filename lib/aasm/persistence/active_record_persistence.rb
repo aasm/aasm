@@ -64,10 +64,6 @@ module AASM
           raise ActiveRecord::RecordInvalid.new(self)
         end
 
-        def aasm_new_record?
-          new_record?
-        end
-
         def aasm_save
           self.save
         end

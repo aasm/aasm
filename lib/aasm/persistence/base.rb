@@ -42,7 +42,7 @@ module AASM
       end
 
       def aasm_new_record?
-        raise("Define #aasm_new_record? in the AASM Persistence class.")
+        new_record?
       end
 
       module ClassMethods
