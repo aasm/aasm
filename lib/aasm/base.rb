@@ -109,6 +109,7 @@ module AASM
 
     # define an event
     def event(name, options={}, &block)
+      options = options.merge(klass: @klass)
       @state_machine.add_event(name, options, &block)
 
       aasm_name = @name.to_sym
@@ -176,10 +177,10 @@ module AASM
       @state_machine.events.values
     end
 
-    # aasm.event(:event_name).human?
-    def human_event_name(event) # event_name?
+    def human_event_name(event)
       AASM::Localizer.new.human_event_name(klass, event)
     end
+    # deprecate :human_event_name, 'Event#human_name'
 
     def states_for_select
       states.map { |state| state.for_select }
