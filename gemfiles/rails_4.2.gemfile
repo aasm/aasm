@@ -11,5 +11,6 @@ gem "mongoid", "~>4.0"
 gem "sequel"
 gem "dynamoid", "~> 1", :platforms => :ruby
 gem "aws-sdk", "~>2", :platforms => :ruby
+gem "redis-objects"
 
 gemspec :path => "../"

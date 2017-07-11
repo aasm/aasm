@@ -8,5 +8,6 @@ gem "rails", "5.0.0"
 gem "mongoid", "~>6.0"
 gem "sequel"
 gem "aws-sdk", "~>2", :platforms => :ruby
+gem "redis-objects"
 
 gemspec :path => "../"
