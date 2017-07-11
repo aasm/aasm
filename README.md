@@ -720,8 +720,10 @@ end
 
 ### Redis
 
-AASM also supports persistence in Redis.
-Make sure to include Redis::Objects before you include AASM.
+AASM also supports persistence in Redis via
+[Redis::Objects](https://github.com/nateware/redis-objects).
+Make sure to include Redis::Objects before you include AASM. Note that non-bang
+events will work as bang events, persisting the changes on every call.
 
 ```ruby
 class User

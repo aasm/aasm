@@ -24,6 +24,7 @@ appraise 'rails_4.2' do
   gem 'sequel'
   gem 'dynamoid', '~> 1',                 :platforms => :ruby
   gem 'aws-sdk', '~>2',                   :platforms => :ruby
+  gem 'redis-objects'
 end
 
 appraise 'rails_4.2_mongoid_5' do
@@ -41,4 +42,5 @@ appraise 'rails_5.0' do
   # gem 'dynamoid', '~> 1',                 :platforms => :ruby
 
   gem 'aws-sdk', '~>2',                   :platforms => :ruby
+  gem 'redis-objects'
 end
