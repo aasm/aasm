@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## unreleased
-
+ 
+* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking #475, thanks to [@Aryk] (https://github.com/Aryk)
+* Add aliases for event methods #476, thanks to [@Aryk] (https://github.com/Aryk)
+* Support Minitest spec expectations (#387), thanks to [@faragorn] (https://github.com/faragorn)
 ## 4.12.0
 
  * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
