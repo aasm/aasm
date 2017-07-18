@@ -1,7 +1,9 @@
 # CHANGELOG
 
 ## unreleased
- 
+
+## 4.12.1
+
 * DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking #475, thanks to [@Aryk] (https://github.com/Aryk)
 * Add aliases for event methods #476, thanks to [@Aryk] (https://github.com/Aryk)
 * Support Minitest spec expectations (#387), thanks to [@faragorn] (https://github.com/faragorn)
