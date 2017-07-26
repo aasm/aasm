@@ -194,6 +194,15 @@ module AASM
       end
     end
 
+    def to_states_for_state(state, options={})
+      if options[:transition]
+        @state_machine.events[options[:transition]].transitions_from_state(state).flatten.map(&:to).flatten
+      else
+
+        events.map {|e| e.transitions_from_state(state)}.flatten.map(&:to).flatten
+      end
+    end
+
     private
 
     def default_column
