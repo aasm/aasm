@@ -1,4 +1,6 @@
 module AASM
+  # this is used internally as an argument default value to represent no value
+  NO_VALUE = :_aasm_no_value
 
   # provide a state machine for the including class
   # make sure to load class methods as well
