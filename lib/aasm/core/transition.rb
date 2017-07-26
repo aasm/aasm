@@ -69,7 +69,7 @@ module AASM::Core
 
       case code
       when Symbol, String
-        result = (record.__send__(:method, code.to_sym).arity != 0 ? record.__send__(code, *args) : record.__send__(code))
+        result = (record.__send__(:method, code.to_sym).arity == 0 ? record.__send__(code) : record.__send__(code, *args))
         failures << code unless result
         result
       when Proc
