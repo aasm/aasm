@@ -40,11 +40,11 @@ module AASM::Core
     # a neutered version of fire - it doesn't actually fire the event, it just
     # executes the transition guards to determine if a transition is even
     # an option given current conditions.
-    def may_fire?(obj, to_state=nil, *args)
+    def may_fire?(obj, to_state=::AASM::NO_VALUE, *args)
       _fire(obj, {:test_only => true}, to_state, *args) # true indicates test firing
     end
 
-    def fire(obj, options={}, to_state=nil, *args)
+    def fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       _fire(obj, options, to_state, *args) # false indicates this is not a test (fire!)
     end
 
@@ -121,20 +121,19 @@ module AASM::Core
       definitions
     end
 
-    def _fire(obj, options={}, to_state=nil, *args)
+    def _fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       result = options[:test_only] ? false : nil
       transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state || t.from == nil}
       return result if transitions.size == 0
 
-      # If to_state is not nil it either contains a potential
-      # to_state or an arg
-      unless to_state == nil
-        if !to_state.respond_to?(:to_sym) || !transitions.map(&:to).flatten.include?(to_state.to_sym)
-          args.unshift(to_state)
-          to_state = nil
-        end
+      if to_state == ::AASM::NO_VALUE
+        to_state = nil
+      elsif to_state.respond_to?(:to_sym) && transitions.map(&:to).flatten.include?(to_state.to_sym)
+        # nop, to_state is a valid to-state
       else
-        args.unshift(nil) if args.nil? || args.empty? # If single arg given which is nil, push it back to args
+        # to_state is an argument
+        args.unshift(to_state)
+        to_state = nil
       end
 
       transitions.each do |transition|
