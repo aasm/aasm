@@ -106,7 +106,7 @@ describe 'firing an event' do
     obj = double('object', :aasm => double('aasm', :current_state => :open))
     expect(obj).to receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
-    expect(event.fire(obj, {}, nil, 'arg1', 'arg2')).to eq(:closed)
+    expect(event.fire(obj, {}, 'arg1', 'arg2')).to eq(:closed)
   end
 
   context 'when given a gaurd proc' do
@@ -118,7 +118,7 @@ describe 'firing an event' do
       line_number = __LINE__ - 2
       obj = double('object', :aasm => double('aasm', :current_state => :student))
 
-      event.fire(obj, {}, nil)
+      event.fire(obj, {})
       expect(event.failed_callbacks).to eq ["#{__FILE__}##{line_number}"]
     end
   end
@@ -133,7 +133,7 @@ describe 'firing an event' do
       obj = double('object', :aasm => double('aasm', :current_state => :student))
       allow(obj).to receive(:paid_tuition?).and_return(false)
 
-      event.fire(obj, {}, nil)
+      event.fire(obj, {})
       expect(event.failed_callbacks).to eq [:paid_tuition?]
     end
   end
@@ -315,7 +315,7 @@ describe 'parametrised events' do
   end
 
   it 'should transition to default state when :after transition invoked' do
-    pe.dress!(nil, 'purple', 'dressy')
+    pe.dress!('purple', 'dressy')
     expect(pe.aasm.current_state).to eq(:working)
   end
 

@@ -30,14 +30,14 @@ describe 'when being unsuspended' do
   it 'should be able to be unsuspended into active if polite' do
     auth.suspend!
     expect(auth.may_wait?(:waiting, :please)).to be true
-    auth.wait!(nil, :please)
+    auth.wait!(:please)
   end
 
   it 'should not be able to be unsuspended into active if not polite' do
     auth.suspend!
     expect(auth.may_wait?(:waiting)).not_to be true
     expect(auth.may_wait?(:waiting, :rude)).not_to be true
-    expect {auth.wait!(nil, :rude)}.to raise_error(AASM::InvalidTransition)
+    expect {auth.wait!(:rude)}.to raise_error(AASM::InvalidTransition)
     expect {auth.wait!}.to raise_error(AASM::InvalidTransition)
   end
 
