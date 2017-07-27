@@ -1,4 +1,4 @@
-class WrongArgumentsList
+class GuardArgumentsCheck
   include AASM
 
   aasm do
