@@ -1,5 +1,6 @@
 class WrongArgumentsList
   include AASM
+
   aasm do
     state :new, :reviewed, :finalized
 
@@ -10,8 +11,7 @@ class WrongArgumentsList
   end
 
   def arguments_list(arg1, arg2)
-    if arg1.nil?
-      puts "everything is ok"
-    end
+    return false unless arg1.nil?
+    true
   end
 end
