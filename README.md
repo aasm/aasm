@@ -282,10 +282,18 @@ class Cleaner
       end
       transitions :from => :idle, :to => :idle
     end
+    
+    event :clean_if_dirty do
+      transitions :from => :idle, :to => :cleaning, :guard => :if_dirty?
+    end
   end
 
   def cleaning_needed?
     false
+  end
+  
+  def if_dirty?(status)
+    status == :dirty
   end
 end
 
@@ -294,6 +302,9 @@ job.may_clean?            # => false
 job.clean                 # => raises AASM::InvalidTransition
 job.may_clean_if_needed?  # => true
 job.clean_if_needed!      # idle
+
+job.clean_if_dirty(:clean) # => false
+job.clean_if_dirty(:dirty) # => true
 ```
 
 You can even provide a number of guards, which all have to succeed to proceed
