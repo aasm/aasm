@@ -165,6 +165,40 @@ class LogRunTime
 end
 ```
 
+Also, you can pass parameters to events:
+
+```ruby
+  job = Job.new
+  job.run(:running, :defragmentation)
+```
+
+In this case the `set_process` would be called with `:defragmentation` argument.
+
+Note that when passing arguments to a state transition, the first argument must be the desired end state. In the above example, we wish to transition to `:running` state and run the callback with `:defragmentation` argument. You can also pass in `nil` as the desired end state, and AASM will try to transition to the first end state defined for that event.
+
+In case of an error during the event processing the error is rescued and passed to `:error`
+callback, which can handle it or re-raise it for further propagation.
+
+Also, you can define a method that will be called if any event fails:
+
+```
+def aasm_event_failed(event_name, old_state_name)
+  # use custom exception/messages, report metrics, etc
+end
+```
+
+During the transition's `:after` callback (and reliably only then, or in the global
+`after_all_transitions` callback) you can access the originating state (the from-state)
+and the target state (the to state), like this:
+
+```ruby
+  def set_process(name)
+    logger.info "from #{aasm.from_state} to #{aasm.to_state}"
+  end
+```
+
+#### Lifecycle
+
 Here you can see a list of all possible callbacks, together with their order of calling:
 
 ```ruby
@@ -194,30 +228,6 @@ ensure
   event           ensure
   event           ensure_on_all_events
 end
-```
-
-Also, you can pass parameters to events:
-
-```ruby
-  job = Job.new
-  job.run(:running, :defragmentation)
-```
-
-In this case the `set_process` would be called with `:defragmentation` argument.
-
-Note that when passing arguments to a state transition, the first argument must be the desired end state. In the above example, we wish to transition to `:running` state and run the callback with `:defragmentation` argument. You can also pass in `nil` as the desired end state, and AASM will try to transition to the first end state defined for that event.
-
-In case of an error during the event processing the error is rescued and passed to `:error`
-callback, which can handle it or re-raise it for further propagation.
-
-During the transition's `:after` callback (and reliably only then, or in the global
-`after_all_transitions` callback) you can access the originating state (the from-state)
-and the target state (the to state), like this:
-
-```ruby
-  def set_process(name)
-    logger.info "from #{aasm.from_state} to #{aasm.to_state}"
-  end
 ```
 
 #### The current event triggered
@@ -272,10 +282,18 @@ class Cleaner
       end
       transitions :from => :idle, :to => :idle
     end
+    
+    event :clean_if_dirty do
+      transitions :from => :idle, :to => :cleaning, :guard => :if_dirty?
+    end
   end
 
   def cleaning_needed?
     false
+  end
+  
+  def if_dirty?(status)
+    status == :dirty
   end
 end
 
@@ -284,6 +302,9 @@ job.may_clean?            # => false
 job.clean                 # => raises AASM::InvalidTransition
 job.may_clean_if_needed?  # => true
 job.clean_if_needed!      # idle
+
+job.clean_if_dirty(:clean) # => false
+job.clean_if_dirty(:dirty) # => true
 ```
 
 You can even provide a number of guards, which all have to succeed to proceed
@@ -455,9 +476,6 @@ example.ask
 example.aasm(:work).current_state #=> :processing
 example.aasm(:question).current_state #=> :asked
 ```
-
-*Final note*: Support for multiple state machines per class is a pretty new feature
-(since version `4.3`), so please bear with us in case it doesn't work as expected.
 
 ### Auto-generated Status Constants
 
@@ -715,8 +733,10 @@ end
 
 ### Redis
 
-AASM also supports persistence in Redis.
-Make sure to include Redis::Objects before you include AASM.
+AASM also supports persistence in Redis via
+[Redis::Objects](https://github.com/nateware/redis-objects).
+Make sure to include Redis::Objects before you include AASM. Note that non-bang
+events will work as bang events, persisting the changes on every call.
 
 ```ruby
 class User
@@ -896,6 +916,9 @@ class Job < ActiveRecord::Base
     ...
   end
 
+  aasm :another_state_machine, column: 'second_state' do
+    ...
+  end
 end
 ```
 
@@ -1006,7 +1029,7 @@ class Job
 end
 ```
 
-Be aware though, that this is not yet released. It will be part of _AASM_ version `4.11.0`.
+You can hide warnings by setting `AASM::Configuration.hide_warnings = true`
 
 ### RubyMotion support
 
@@ -1022,7 +1045,9 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 
 ### Testing
 
-AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this
+#### RSpec
+
+AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this:
 
 ```ruby
 # classes with only the default state machine
@@ -1056,6 +1081,90 @@ expect(multiple).to allow_event(:start).on(:move)
 expect(multiple).to_not allow_event(:stop).on(:move)
 expect(multiple).to allow_transition_to(:processing).on(:move)
 expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+```
+
+#### Minitest
+
+AASM provides assertions and rspec-like expectations for [Minitest](https://github.com/seattlerb/minitest).
+
+##### Assertions
+
+List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
+
+Add `require 'aasm/minitest' to your `test_helper.rb` file and use them like this:
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+assert_transitions_from job, :sleeping, to: :running, on_event: :run
+refute_transitions_from job, :sleeping, to: :cleaning, on_event: :run
+assert_have_state job, :sleeping
+refute_have_state job, :running
+assert_event_allowed job, :run
+refute_event_allowed job, :clean
+assert_transition_to_allowed job, :running
+refute_transition_to_allowed job, :cleaning
+# on_event also accept arguments
+assert_transitions_from job, :sleeping, :defragmentation, to: :running, on_event: :run
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+assert_transitions_from multiple, :standing, to: :walking, on_event: :walk, on: :move
+refute_transitions_from multiple, :standing, to: :running, on_event: :walk, on: :move
+assert_have_state multiple, :standing, on: :move
+refute_have_state multiple, :walking, on: :move
+assert_event_allowed multiple, :walk, on: :move
+refute_event_allowed multiple, :hold, on: :move
+assert_transition_to_allowed multiple, :walking, on: :move
+refute_transition_to_allowed multiple, :running, on: :move
+assert_transitions_from multiple, :sleeping, to: :processing, on_event: :start, on: :work
+refute_transitions_from multiple, :sleeping, to: :sleeping, on_event: :start, on: :work
+assert_have_state multiple, :sleeping, on: :work
+refute_have_state multiple, :processing, on: :work
+assert_event_allowed multiple, :start, on: :move
+refute_event_allowed multiple, :stop, on: :move
+assert_transition_to_allowed multiple, :processing, on: :move
+refute_transition_to_allowed multiple, :sleeping, on: :move
+```
+
+##### Expectations
+
+List of supported expectations: `must_transition_from`, `wont_transition_from`, `must_have_state`, `wont_have_state`, `must_allow_event`, `wont_allow_event`, `must_allow_transition_to`, `wont_allow_transition_to`.
+
+Add `require 'aasm/minitest_spec'` to your `test_helper.rb` file and use them like this:
+
+```ruby
+# classes with only the default state machine
+job = Job.new
+job.must_transition_from :sleeping, to: :running, on_event: :run
+job.wont_transition_from :sleeping, to: :cleaning, on_event: :run
+job.must_have_state :sleeping
+job.wont_have_state :running
+job.must_allow_event :run
+job.wont_allow_event :clean
+job.must_allow_transition_to :running
+job.wont_allow_transition_to :cleaning
+# on_event also accept arguments
+job.must_transition_from :sleeping, :defragmentation, to: :running, on_event: :run
+
+# classes with multiple state machine
+multiple = SimpleMultipleExample.new
+multiple.must_transition_from :standing, to: :walking, on_event: :walk, on: :move
+multiple.wont_transition_from :standing, to: :running, on_event: :walk, on: :move
+multiple.must_have_state :standing, on: :move
+multiple.wont_have_state :walking, on: :move
+multiple.must_allow_event :walk, on: :move
+multiple.wont_allow_event :hold, on: :move
+multiple.must_allow_transition_to :walking, on: :move
+multiple.wont_allow_transition_to :running, on: :move
+multiple.must_transition_from :sleeping, to: :processing, on_event: :start, on: :work
+multiple.wont_transition_from :sleeping, to: :sleeping, on_event: :start, on: :work
+multiple.must_have_state :sleeping, on: :work
+multiple.wont_have_state :processing, on: :work
+multiple.must_allow_event :start, on: :move
+multiple.wont_allow_event :stop, on: :move
+multiple.must_allow_transition_to :processing, on: :move
+multiple.wont_allow_transition_to :sleeping, on: :move
 ```
 
 ## <a id="installation">Installation ##

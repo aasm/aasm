@@ -1,17 +1,13 @@
-db = Sequel::DATABASES.first || Sequel.connect(SEQUEL_DB)
-
-# if you want to see the statements while running the spec enable the following line
-# db.loggers << Logger.new($stderr)
-db.create_table(:complex_sequel_examples) do
-  primary_key :id
-  String :left
-  String :right
-end
-
-module Sequel
-class ComplexExample < Sequel::Model(:complex_sequel_examples)
-
+class RedisComplexExample
+  include Redis::Objects
   include AASM
+
+  value :left
+  value :right
+
+  def id
+    1
+  end
 
   aasm :left, :column => 'left' do
     state :one, :initial => true
@@ -41,6 +37,4 @@ class ComplexExample < Sequel::Model(:complex_sequel_examples)
       transitions :from => :beta, :to => :alpha
     end
   end
-
-end
 end

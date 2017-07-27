@@ -130,6 +130,14 @@ module AASM
         aasm(aasm_name).current_event = event
         aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
+
+      # Create aliases for the event methods. Keep the old names to maintain backwards compatibility.
+      if namespace?
+        klass.send(:alias_method, "may_#{name}_#{namespace}?", "may_#{name}?")
+        klass.send(:alias_method, "#{name}_#{namespace}!", "#{name}!")
+        klass.send(:alias_method, "#{name}_#{namespace}", name)
+      end
+
     end
 
     def after_all_transitions(*callbacks, &block)

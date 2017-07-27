@@ -8,7 +8,7 @@ if defined?(Sequel)
     end
 
     before(:all) do
-      @model = SequelMultiple
+      @model = Sequel::Multiple
     end
 
     describe "instance methods" do
@@ -93,7 +93,7 @@ if defined?(Sequel)
 
     describe "complex example" do
       it "works" do
-        record = ComplexSequelExample.new
+        record = Sequel::ComplexExample.new
         expect(record.aasm(:left).current_state).to eql :one
         expect(record.left).to be_nil
         expect(record.aasm(:right).current_state).to eql :alpha
