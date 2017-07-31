@@ -9,18 +9,37 @@ module AASM
     # for all persistence layers: create named scopes for each state
     attr_accessor :create_scopes
 
-    # for ActiveRecord: don't store any new state if the model is invalid
+    # for ActiveRecord: when the model is invalid, true -> raise, false -> return false
+    attr_accessor :whiny_persistence
+
+    # for ActiveRecord: store the new state even if the model is invalid and return true
     attr_accessor :skip_validation_on_save
 
     # for ActiveRecord: use requires_new for nested transactions?
     attr_accessor :requires_new_transaction
 
+    # for ActiveRecord: use pessimistic locking
+    attr_accessor :requires_lock
+
     # forbid direct assignment in aasm_state column (in ActiveRecord)
     attr_accessor :no_direct_assignment
+
+    # allow a AASM::Base sub-class to be used for state machine
+    attr_accessor :with_klass
 
     # log all state changes in the database
     attr_accessor :log_state_changes
 
     attr_accessor :enum
+
+    # namespace reader methods and constants
+    attr_accessor :namespace
+
+    # Configure a logger, with default being a Logger to STDERR
+    attr_accessor :logger
+
+    class << self
+      attr_accessor :hide_warnings
+    end
   end
 end

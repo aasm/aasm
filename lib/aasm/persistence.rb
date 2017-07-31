@@ -7,13 +7,22 @@ module AASM
         hierarchy = base.ancestors.map {|klass| klass.to_s}
 
         if hierarchy.include?("ActiveRecord::Base")
+          require_persistence :active_record
           include_persistence base, :active_record
         elsif hierarchy.include?("Mongoid::Document")
+          require_persistence :mongoid
           include_persistence base, :mongoid
-        elsif hierarchy.include?("MongoMapper::Document")
-          include_persistence base, :mongo_mapper
         elsif hierarchy.include?("Sequel::Model")
+          require_persistence :sequel
           include_persistence base, :sequel
+        elsif hierarchy.include?("Dynamoid::Document")
+          require_persistence :dynamoid
+          include_persistence base, :dynamoid
+        elsif hierarchy.include?("Redis::Objects")
+          require_persistence :redis
+          include_persistence base, :redis
+        elsif hierarchy.include?("CDQManagedObject")
+          include_persistence base, :core_data_query
         else
           include_persistence base, :plain
         end
@@ -21,9 +30,12 @@ module AASM
 
       private
 
-      def include_persistence(base, type)
+      def require_persistence(type)
         require File.join(File.dirname(__FILE__), 'persistence', "#{type}_persistence")
-        base.send(:include, constantize("AASM::Persistence::#{capitalize(type)}Persistence"))
+      end
+
+      def include_persistence(base, type)
+        base.send(:include, constantize("#{capitalize(type)}Persistence"))
       end
 
       def capitalize(string_or_symbol)
@@ -31,7 +43,7 @@ module AASM
       end
 
       def constantize(string)
-        instance_eval(string)
+        AASM::Persistence.const_get(string)
       end
 
     end # class << self

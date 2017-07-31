@@ -1,5 +1,4 @@
-require_relative 'base'
-
+require 'aasm/persistence/orm'
 module AASM
   module Persistence
     module MongoidPersistence
@@ -32,52 +31,58 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
+        base.send(:include, AASM::Persistence::ORM)
         base.send(:include, AASM::Persistence::MongoidPersistence::InstanceMethods)
+        base.extend AASM::Persistence::MongoidPersistence::ClassMethods
 
         base.after_initialize :aasm_ensure_initial_state
       end
 
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          scope_options = lambda {
+            send(
+              :where,
+              { aasm(state_machine_name).attribute_name.to_sym => scope_name.to_s }
+            )
+          }
+          send(:scope, scope_name, scope_options)
+        end
+      end
+
       module InstanceMethods
 
-        # Writes <tt>state</tt> to the state column and persists it to the database
-        # using update_attribute (which bypasses validation)
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm.current_state # => :opened
-        #   foo.close!
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state(state, name=:default)
-          old_value = read_attribute(self.class.aasm(name).attribute_name)
-          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
+        private
 
-          unless self.save(:validate => false)
-            write_attribute(self.class.aasm(name).attribute_name, old_value)
-            return false
+        def aasm_save
+          self.save
+        end
+
+        def aasm_raise_invalid_record
+          raise Mongoid::Errors::Validations.new(self)
+        end
+
+        def aasm_supports_transactions?
+          false
+        end
+
+        def aasm_update_column(attribute_name, value)
+          if Mongoid::VERSION.to_f >= 4
+            set(Hash[attribute_name, value])
+          else
+            set(attribute_name, value)
           end
 
           true
         end
 
-        # Writes <tt>state</tt> to the state column, but does not persist it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm.current_state # => :opened
-        #   foo.close
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :opened
-        #   foo.save
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state, name=:default)
-          write_attribute(self.class.aasm(name).attribute_name, state.to_s)
+        def aasm_read_attribute(name)
+          read_attribute(name)
         end
 
-      private
+        def aasm_write_attribute(name, value)
+          write_attribute(name, value)
+        end
 
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
@@ -95,8 +100,17 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
-            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
+            attribute_name = self.class.aasm(state_machine_name).attribute_name.to_s
+            # Do not load initial state when object attributes are not loaded,
+            # mongoid has_many relationship does not load child object attributes when
+            # only ids are loaded, for example parent.child_ids will not load child object attributes.
+            # This feature is introduced in mongoid > 4.
+            if attribute_names.include?(attribute_name) && attributes[attribute_name].blank?
+              # attribute_missing? is defined in mongoid > 4
+              return if Mongoid::VERSION.to_f >= 4 && attribute_missing?(attribute_name)
+              send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s)
+            end
           end
         end
       end # InstanceMethods

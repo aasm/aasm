@@ -1,4 +1,6 @@
 module AASM
+  # this is used internally as an argument default value to represent no value
+  NO_VALUE = :_aasm_no_value
 
   # provide a state machine for the including class
   # make sure to load class methods as well
@@ -8,7 +10,7 @@ module AASM
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see class method inherited
-    AASM::StateMachine[base] ||= {}
+    AASM::StateMachineStore.register(base)
 
     AASM::Persistence.load_persistence(base)
     super
@@ -17,10 +19,8 @@ module AASM
   module ClassMethods
     # make sure inheritance (aka subclassing) works with AASM
     def inherited(base)
-      AASM::StateMachine[base] = {}
-      AASM::StateMachine[self].keys.each do |state_machine_name|
-        AASM::StateMachine[base][state_machine_name] = AASM::StateMachine[self][state_machine_name].clone
-      end
+      AASM::StateMachineStore.register(base, self)
+
       super
     end
 
@@ -38,10 +38,29 @@ module AASM
 
       self.has_many :aasm_state_change_logs, as: :model, class_name: 'AASM::StateChangeLog' if options[:log_state_changes]
 
-      AASM::StateMachine[self][state_machine_name] ||= AASM::StateMachine.new(state_machine_name)
+      AASM::StateMachineStore.fetch(self, true).register(state_machine_name, AASM::StateMachine.new(state_machine_name))
 
-      @aasm ||= {}
-      @aasm[state_machine_name] ||= AASM::Base.new(self, state_machine_name, AASM::StateMachine[self][state_machine_name], options)
+      # use a default despite the DSL configuration default.
+      # this is because configuration hasn't been setup for the AASM class but we are accessing a DSL option already for the class.
+      aasm_klass = options[:with_klass] || AASM::Base
+
+      raise ArgumentError, "The class #{aasm_klass} must inherit from AASM::Base!" unless aasm_klass.ancestors.include?(AASM::Base)
+
+      @aasm ||= Concurrent::Map.new
+      if @aasm[state_machine_name]
+        # make sure to use provided options
+        options.each do |key, value|
+          @aasm[state_machine_name].state_machine.config.send("#{key}=", value)
+        end
+      else
+        # create a new base
+        @aasm[state_machine_name] = aasm_klass.new(
+          self,
+          state_machine_name,
+          AASM::StateMachineStore.fetch(self, true).machine(state_machine_name),
+          options
+        )
+      end
       @aasm[state_machine_name].instance_eval(&block) if block # new DSL
       @aasm[state_machine_name]
     end
@@ -49,11 +68,16 @@ module AASM
 
   # this is the entry point for all instance-level access to AASM
   def aasm(name=:default)
-    unless AASM::StateMachine[self.class][name.to_sym]
+    unless AASM::StateMachineStore.fetch(self.class, true).machine(name)
       raise AASM::UnknownStateMachineError.new("There is no state machine with the name '#{name}' defined in #{self.class.name}!")
     end
-    @aasm ||= {}
+    @aasm ||= Concurrent::Map.new
     @aasm[name.to_sym] ||= AASM::InstanceBase.new(self, name.to_sym)
+  end
+
+  def initialize_dup(other)
+    @aasm = Concurrent::Map.new
+    super
   end
 
 private
@@ -77,6 +101,12 @@ private
     begin
       old_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
 
+      event.fire_global_callbacks(
+        :before_all_events,
+        self,
+        *process_args(event, aasm(state_machine_name).current_state, *args)
+      )
+
       # new event before callback
       event.fire_callbacks(
         :before,
@@ -93,13 +123,18 @@ private
         if new_state_name = event.fire(self, {:may_fire => may_fire_to}, *args)
           aasm_fired(state_machine_name, event, old_state, new_state_name, options, *args, &block)
         else
-          aasm_failed(state_machine_name, event_name, old_state)
+          aasm_failed(state_machine_name, event_name, old_state, event.failed_callbacks)
         end
       else
-        aasm_failed(state_machine_name, event_name, old_state)
+        aasm_failed(state_machine_name, event_name, old_state, event.failed_callbacks)
       end
     rescue StandardError => e
-      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) || raise(e)
+      event.fire_callbacks(:error, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
+      event.fire_global_callbacks(:error_on_all_events, self, e, *process_args(event, aasm(state_machine_name).current_state, *args)) ||
+      raise(e)
+    ensure
+      event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
+      event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
   end
 
@@ -119,11 +154,18 @@ private
       persist_successful = aasm(state_machine_name).set_current_state_with_persistence(new_state_name)
       if persist_successful
         yield if block_given?
+        event.fire_callbacks(:before_success, self)
+        event.fire_transition_callbacks(self, *process_args(event, old_state.name, *args))
         event.fire_callbacks(:success, self)
       end
     else
       aasm(state_machine_name).current_state = new_state_name
       yield if block_given?
+    end
+
+    binding_event = event.options[:binding_event]
+    if binding_event
+      __send__("#{binding_event}#{'!' if persist}")
     end
 
     if persist_successful
@@ -133,6 +175,11 @@ private
         *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_callbacks(
         :after,
+        self,
+        *process_args(event, old_state.name, *args)
+      )
+      event.fire_global_callbacks(
+        :after_all_events,
         self,
         *process_args(event, old_state.name, *args)
       )
@@ -158,13 +205,13 @@ private
     persist_successful
   end
 
-  def aasm_failed(state_machine_name, event_name, old_state)
+  def aasm_failed(state_machine_name, event_name, old_state, failures = [])
     if self.respond_to?(:aasm_event_failed)
       self.aasm_event_failed(event_name, old_state.name)
     end
 
-    if AASM::StateMachine[self.class][state_machine_name].config.whiny_transitions
-      raise AASM::InvalidTransition.new(self, event_name, state_machine_name)
+    if AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.whiny_transitions
+      raise AASM::InvalidTransition.new(self, event_name, state_machine_name, failures)
     else
       false
     end

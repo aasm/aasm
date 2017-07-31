@@ -9,6 +9,13 @@ module AASM::Core
       update(options)
     end
 
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @options = {}
+      orig.options.each_pair { |name, setting| @options[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
+    end
+
     def ==(state)
       if state.is_a? Symbol
         name == state
@@ -70,8 +77,8 @@ module AASM::Core
     def _fire_callbacks(action, record, args)
       case action
         when Symbol, String
-          arity = record.send(:method, action.to_sym).arity
-          record.send(action, *(arity < 0 ? args : args[0...arity]))
+          arity = record.__send__(:method, action.to_sym).arity
+          record.__send__(action, *(arity < 0 ? args : args[0...arity]))
         when Proc
           arity = action.arity
           action.call(record, *(arity < 0 ? args : args[0...arity]))

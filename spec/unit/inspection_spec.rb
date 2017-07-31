@@ -17,6 +17,7 @@ describe 'inspection for common cases' do
   context "instance level inspection" do
     let(:foo) { Foo.new }
     let(:two) { FooTwo.new }
+    let(:multi) { MultiTransitioner.new }
 
     it "delivers all states" do
       states = foo.aasm.states
@@ -24,10 +25,15 @@ describe 'inspection for common cases' do
       expect(states).to include(:closed)
       expect(states).to include(:final)
 
-      states = foo.aasm.states(:permitted => true)
-      expect(states).to include(:closed)
-      expect(states).not_to include(:open)
-      expect(states).not_to include(:final)
+      permitted_states = foo.aasm.states(:permitted => true)
+      expect(permitted_states).to include(:closed)
+      expect(permitted_states).not_to include(:open)
+      expect(permitted_states).not_to include(:final)
+
+      blocked_states = foo.aasm.states(:permitted => false)
+      expect(blocked_states).to include(:closed)
+      expect(blocked_states).not_to include(:open)
+      expect(blocked_states).to include(:final)
 
       foo.close
       expect(foo.aasm.states(:permitted => true)).to be_empty
@@ -37,11 +43,13 @@ describe 'inspection for common cases' do
       states = two.aasm.states
       expect(states).to include(:open)
       expect(states).to include(:closed)
+      expect(states).to include(:final)
       expect(states).to include(:foo)
 
       states = two.aasm.states(:permitted => true)
       expect(states).to include(:closed)
       expect(states).not_to include(:open)
+      expect(states).not_to include(:final)
 
       two.close
       expect(two.aasm.states(:permitted => true)).to be_empty
@@ -53,6 +61,23 @@ describe 'inspection for common cases' do
       expect(events).to include(:null)
       foo.close
       expect(foo.aasm.events).to be_empty
+    end
+
+    it "delivers permitted states when multiple transitions are defined" do
+      multi.can_run = false
+      states = multi.aasm.states(:permitted => true)
+      expect(states).to_not include(:running)
+      expect(states).to include(:dancing)
+
+      multi.can_run = true
+      states = multi.aasm.states(:permitted => true)
+      expect(states).to include(:running)
+      expect(states).to_not include(:dancing)
+    end
+
+    it "transitions to correct state if from state is missing from one transitions" do
+      multi.sleep
+      expect(multi.aasm.current_state).to eq(:sleeping)
     end
   end
 
@@ -107,5 +132,18 @@ describe 'permitted events' do
   it 'should not include events in the reject option' do
     expect(foo.aasm.events(:permitted => true, reject: :close)).not_to include(:close)
     expect(foo.aasm.events(:permitted => true, reject: [:close])).not_to include(:close)
+  end
+end
+
+describe 'not permitted events' do
+  let(:foo) {Foo.new}
+
+  it 'work' do
+    expect(foo.aasm.events(:permitted => false)).to include(:null)
+    expect(foo.aasm.events(:permitted => false)).not_to include(:close)
+  end
+
+  it 'should not include events in the reject option' do
+    expect(foo.aasm.events(:permitted => false, reject: :null)).to eq([])
   end
 end

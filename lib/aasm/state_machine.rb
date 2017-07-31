@@ -1,14 +1,6 @@
 module AASM
   class StateMachine
-
-    # the following two methods provide the storage of all state machines
-    def self.[](klass)
-      (@machines ||= {})[klass.to_s]
-    end
-
-    def self.[]=(klass, machine)
-      (@machines ||= {})[klass.to_s] = machine
-    end
+    # the following four methods provide the storage of all state machines
 
     attr_accessor :states, :events, :initial_state, :config, :name, :global_callbacks
 
@@ -24,8 +16,10 @@ module AASM
     # called internally by Ruby 1.9 after clone()
     def initialize_copy(orig)
       super
-      @states = @states.dup
-      @events = @events.dup
+      @states = orig.states.collect { |state| state.clone }
+      @events = {}
+      orig.events.each_pair { |name, event| @events[name] = event.clone }
+      @global_callbacks = @global_callbacks.dup
     end
 
     def add_state(state_name, klass, options)
@@ -44,7 +38,7 @@ module AASM
     def add_global_callbacks(name, *callbacks, &block)
       @global_callbacks[name] ||= []
       callbacks.each do |callback|
-        @global_callbacks[name] << callback
+        @global_callbacks[name] << callback unless @global_callbacks[name].include? callback
       end
       @global_callbacks[name] << block if block
     end

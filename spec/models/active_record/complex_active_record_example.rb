@@ -7,12 +7,16 @@ class ComplexActiveRecordExample < ActiveRecord::Base
     state :three
 
     event :increment do
-      transitions :from => :one, :to => :two
+      transitions :from => :one, :to => :two, guard: :allowed?
       transitions :from => :two, :to => :three
     end
     event :reset do
       transitions :from => :three, :to => :one
     end
+  end
+
+  def allowed?
+    true
   end
 
   aasm :right, :column => 'right' do

@@ -15,7 +15,6 @@ module AASM
 
     def current_state=(state)
       @instance.aasm_write_state_without_persistence(state, @name)
-      # @current_state = state
     end
 
     def enter_initial_state
@@ -23,7 +22,6 @@ module AASM
       state_object = state_object_for_name(state_name)
 
       state_object.fire_callbacks(:before_enter, @instance)
-      # state_object.fire_callbacks(:enter, @instance)
       self.current_state = state_name
       state_object.fire_callbacks(:after_enter, @instance)
 
@@ -34,29 +32,48 @@ module AASM
       AASM::Localizer.new.human_state_name(@instance.class, state_object_for_name(current_state))
     end
 
-    def states(options={})
-      if options[:permitted]
-        # ugliness level 1000
-        permitted_event_names = events(:permitted => true).map(&:name)
-        transitions = @instance.class.aasm(@name).state_machine.events.values_at(*permitted_event_names).compact.map {|e| e.transitions_from_state(current_state) }
-        tos = transitions.map {|t| t[0] ? t[0].to : nil}.flatten.compact.map(&:to_sym).uniq
-        @instance.class.aasm(@name).states.select {|s| tos.include?(s.name.to_sym)}
+    def states(options={}, *args)
+      if options.has_key?(:permitted)
+        selected_events = events({:permitted => options[:permitted]}, *args)
+        # An array of arrays. Each inner array represents the transitions that
+        # transition from the current state for an event
+        event_transitions = selected_events.map {|e| e.transitions_from_state(current_state) }
+
+        # An array of :to transition states
+        to_state_names = event_transitions.map do |transitions|
+          return nil if transitions.empty?
+
+          # Return the :to state of the first transition that is allowed (or not) or nil
+          if options[:permitted]
+            transition = transitions.find { |t| t.allowed?(@instance, *args) }
+          else
+            transition = transitions.find { |t| !t.allowed?(@instance, *args) }
+          end
+          transition ? transition.to : nil
+        end.flatten.compact.uniq
+
+        # Select states that are in to_state_names
+        @instance.class.aasm(@name).states.select {|s| to_state_names.include?(s.name)}
       else
         @instance.class.aasm(@name).states
       end
     end
 
-    def events(options={})
+    def events(options={}, *args)
       state = options[:state] || current_state
       events = @instance.class.aasm(@name).events.select {|e| e.transitions_from_state?(state) }
 
       options[:reject] = Array(options[:reject])
       events.reject! { |e| options[:reject].include?(e.name) }
 
-      if options[:permitted]
+      if options.has_key?(:permitted)
         # filters the results of events_for_current_state so that only those that
         # are really currently possible (given transition guards) are shown.
-        events.select! { |e| @instance.send("may_#{e.name}?") }
+        if options[:permitted]
+          events.select! { |e| @instance.send("may_#{e.name}?", *args) }
+        else
+          events.select! { |e| !@instance.send("may_#{e.name}?", *args) }
+        end
       end
 
       events

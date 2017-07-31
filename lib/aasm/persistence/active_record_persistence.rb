@@ -1,5 +1,4 @@
-require_relative 'base'
-
+require 'aasm/persistence/orm'
 module AASM
   module Persistence
     module ActiveRecordPersistence
@@ -30,101 +29,96 @@ module AASM
       #
       def self.included(base)
         base.send(:include, AASM::Persistence::Base)
+        base.send(:include, AASM::Persistence::ORM)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
+        base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
 
-        base.after_initialize do
-          aasm_ensure_initial_state
-        end
+        base.after_initialize :aasm_ensure_initial_state
 
         # ensure state is in the list of states
         base.validate :aasm_validate_states
       end
 
+      module ClassMethods
+        def aasm_create_scope(state_machine_name, scope_name)
+          conditions = {
+            table_name => { aasm(state_machine_name).attribute_name => scope_name.to_s }
+          }
+          if ActiveRecord::VERSION::MAJOR >= 3
+            class_eval do
+              scope scope_name, lambda { where(conditions) }
+            end
+          else
+            class_eval do
+              named_scope scope_name, :conditions => conditions
+            end
+          end
+        end
+      end
+
       module InstanceMethods
 
-        # Writes <tt>state</tt> to the state column and persists it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm.current_state # => :opened
-        #   foo.close!
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state(state, name=:default)
-          old_value = read_attribute(self.class.aasm(name).attribute_name)
-          aasm_write_attribute state, name
+        private
 
-          success = if aasm_skipping_validations(name)
-            value = aasm_raw_attribute_value(state, name)
-            self.class.where(self.class.primary_key => self.id).update_all(self.class.aasm(name).attribute_name => value) == 1
-          else
-            self.save
-          end
-          unless success
-            write_attribute(self.class.aasm(name).attribute_name, old_value)
-            return false
-          end
-
-          true
+        def aasm_raise_invalid_record
+          raise ActiveRecord::RecordInvalid.new(self)
         end
 
-        # Writes <tt>state</tt> to the state column, but does not persist it to the database
-        #
-        #   foo = Foo.find(1)
-        #   foo.aasm.current_state # => :opened
-        #   foo.close
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :opened
-        #   foo.save
-        #   foo.aasm.current_state # => :closed
-        #   Foo.find(1).aasm.current_state # => :closed
-        #
-        # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state, name=:default)
-          aasm_write_attribute(state, name)
+        def aasm_save
+          self.save
         end
 
-      private
+        def aasm_update_column(attribute_name, value)
+          self.class.unscoped.where(self.class.primary_key => self.id).update_all(attribute_name => value) == 1
+        end
+
+        def aasm_read_attribute(name)
+          read_attribute(name)
+        end
+
+        def aasm_write_attribute(name, value)
+          write_attribute(name, value)
+        end
+
+        def aasm_transaction(requires_new, requires_lock)
+          self.class.transaction(:requires_new => requires_new) do
+            lock!(requires_lock) if requires_lock
+            yield
+          end
+        end
+
         def aasm_enum(name=:default)
-          case AASM::StateMachine[self.class][name].config.enum
-            when false then nil
-            when true then aasm_guess_enum_method(name)
-            when nil then aasm_guess_enum_method(name) if aasm_column_looks_like_enum(name)
-            else AASM::StateMachine[self.class][name].config.enum
+          case AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
+          when false then nil
+          when true then aasm_guess_enum_method(name)
+          when nil then aasm_guess_enum_method(name) if aasm_column_looks_like_enum(name)
+          else AASM::StateMachineStore.fetch(self.class, true).machine(name).config.enum
           end
         end
 
         def aasm_column_looks_like_enum(name=:default)
-          self.class.columns_hash[self.class.aasm(name).attribute_name.to_s].type == :integer
+          column_name = self.class.aasm(name).attribute_name.to_s
+          column = self.class.columns_hash[column_name]
+          raise NoMethodError.new("undefined method '#{column_name}' for #{self.class}") if column.nil?
+          column.type == :integer
         end
 
         def aasm_guess_enum_method(name=:default)
           self.class.aasm(name).attribute_name.to_s.pluralize.to_sym
         end
 
-        def aasm_skipping_validations(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.skip_validation_on_save
-        end
-
-        def aasm_write_attribute(state, name=:default)
-          write_attribute(self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name))
-        end
-
         def aasm_raw_attribute_value(state, name=:default)
           if aasm_enum(name)
             self.class.send(aasm_enum(name))[state]
           else
-            state.to_s
+            super
           end
         end
 
         # Ensures that if the aasm_state column is nil and the record is new
-        # that the initial state gets populated before validation on create
+        # then the initial state gets populated after initialization
         #
         #   foo = Foo.new
-        #   foo.aasm_state # => nil
-        #   foo.valid?
         #   foo.aasm_state # => "open" (where :open is the initial state)
         #
         #
@@ -135,38 +129,32 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             # checking via respond_to? does not work in Rails <= 3
             # if respond_to?(self.class.aasm(state_machine_name).attribute_name) && send(self.class.aasm(state_machine_name).attribute_name).blank? # Rails 4
-            if attribute_names.include?(self.class.aasm(state_machine_name).attribute_name.to_s) && send(self.class.aasm(state_machine_name).attribute_name).blank?
+            if aasm_column_is_blank?(state_machine_name)
               aasm(state_machine_name).enter_initial_state
             end
           end
         end
 
-        def aasm_fire_event(state_machine_name, name, options, *args, &block)
-          success = options[:persist] ? self.class.transaction(:requires_new => requires_new?(state_machine_name)) { super } : super
-
-          if success && options[:persist]
-            event = self.class.aasm(state_machine_name).state_machine.events[name]
-            event.fire_callbacks(:after_commit, self, *args)
-          end
-
-          success
-        end
-
-        def requires_new?(state_machine_name)
-          AASM::StateMachine[self.class][state_machine_name].config.requires_new_transaction
+        def aasm_column_is_blank?(state_machine_name)
+          attribute_name = self.class.aasm(state_machine_name).attribute_name
+          attribute_names.include?(attribute_name.to_s) && send(attribute_name).blank?
         end
 
         def aasm_validate_states
-          AASM::StateMachine[self.class].keys.each do |state_machine_name|
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
             unless aasm_skipping_validations(state_machine_name)
-              if aasm(state_machine_name).current_state && !aasm(state_machine_name).states.include?(aasm(state_machine_name).current_state)
-                self.errors.add(AASM::StateMachine[self.class][state_machine_name].config.column , "is invalid")
+              if aasm_invalid_state?(state_machine_name)
+                self.errors.add(AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.column , "is invalid")
               end
             end
           end
+        end
+
+        def aasm_invalid_state?(state_machine_name)
+          aasm(state_machine_name).current_state && !aasm(state_machine_name).states.include?(aasm(state_machine_name).current_state)
         end
       end # InstanceMethods
 

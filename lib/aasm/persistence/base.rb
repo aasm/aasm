@@ -34,11 +34,15 @@ module AASM
       # This allows for nil aasm states - be sure to add validation to your model
       def aasm_read_state(name=:default)
         state = send(self.class.aasm(name).attribute_name)
-        if new_record?
-          state.blank? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : state.to_sym
+        if state.blank?
+          aasm_new_record? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : nil
         else
-          state.blank? ? nil : state.to_sym
+          state.to_sym
         end
+      end
+
+      def aasm_new_record?
+        new_record?
       end
 
       module ClassMethods
@@ -53,40 +57,22 @@ module AASM
 
   class Base
     # make sure to create a (named) scope for each state
-    def state_with_scope(name, *args)
-      state_without_scope(name, *args)
-      if @state_machine.config.create_scopes && !@klass.respond_to?(name)
-
-        if @klass.ancestors.map {|klass| klass.to_s}.include?("ActiveRecord::Base")
-          conditions = {
-            "#{@klass.table_name}" => { "#{@klass.aasm(@name).attribute_name}" => name.to_s }
-          }
-
-          if ActiveRecord::VERSION::MAJOR >= 3
-            @klass.class_eval do
-              scope name, lambda { where(conditions) }
-            end
-          else
-            @klass.class_eval do
-              named_scope name, :conditions => conditions
-            end
-          end
-        elsif @klass.ancestors.map {|klass| klass.to_s}.include?("Mongoid::Document")
-          klass = @klass
-          state_machine_name = @name
-          scope_options = lambda {
-            klass.send(:where, {klass.aasm(state_machine_name).attribute_name.to_sym => name.to_s})
-          }
-          @klass.send(:scope, name, scope_options)
-        elsif @klass.ancestors.map {|klass| klass.to_s}.include?("MongoMapper::Document")
-          conditions = { @klass.aasm(@name).attribute_name.to_sym => name.to_s }
-          @klass.scope(name, lambda { @klass.where(conditions) })
-        end
-
-      end
+    def state_with_scope(*args)
+      names = state_without_scope(*args)
+      names.each { |name| create_scope(name) if create_scope?(name) }
     end
     alias_method :state_without_scope, :state
     alias_method :state, :state_with_scope
+
+    private
+
+    def create_scope?(name)
+      @state_machine.config.create_scopes && !@klass.respond_to?(name) && @klass.respond_to?(:aasm_create_scope)
+    end
+
+    def create_scope(name)
+      @klass.aasm_create_scope(@name, name)
+    end
   end # Base
 
 end # AASM

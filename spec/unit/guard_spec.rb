@@ -27,6 +27,18 @@ describe "per-transition guards" do
     expect { guardian.use_guards_where_the_second_fails! }.to raise_error(AASM::InvalidTransition)
     expect(guardian).to be_alpha
   end
+
+  describe "with params" do
+    it "using a Proc" do
+      expect(guardian).to receive(:inner_guard).with({:flag => true}).and_return(true)
+      guardian.use_proc_guard_with_params(:flag => true)
+    end
+
+    it "using a lambda" do
+      expect(guardian).to receive(:inner_guard).with({:flag => true}).and_return(true)
+      guardian.use_lambda_guard_with_params(:flag => true)
+    end
+  end
 end
 
 describe "event guards" do
@@ -57,4 +69,21 @@ describe "event guards" do
     expect(guardian).to be_alpha
   end
 
+end
+
+if defined?(ActiveRecord)
+
+  Dir[File.dirname(__FILE__) + "/../models/active_record/*.rb"].sort.each do |f|
+    require File.expand_path(f)
+  end
+
+  load_schema
+
+  describe "ActiveRecord per-transition guards" do
+    let(:example) { ComplexActiveRecordExample.new }
+
+    it "should be able to increment" do
+      expect(example.may_increment?).to be true
+    end
+  end
 end
