@@ -185,7 +185,7 @@ private
       )
 
       self.aasm_event_fired(event.name, old_state.name, aasm(state_machine_name).current_state) if self.respond_to?(:aasm_event_fired)
-      if AASM::StateMachine[self.class][state_machine_name].config.log_state_changes
+      if AASM::StateMachineStore.fetch(self.class, true).machine(state_machine_name).config.log_state_changes
         local_aasm = aasm(state_machine_name)
         params = {
           model: self,
