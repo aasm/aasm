@@ -27,6 +27,9 @@ module AASM
     # allow a AASM::Base sub-class to be used for state machine
     attr_accessor :with_klass
 
+    # log all state changes in the database
+    attr_accessor :log_state_changes
+
     attr_accessor :enum
 
     # namespace reader methods and constants

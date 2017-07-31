@@ -11,6 +11,7 @@ module AASM
       # @state_machine = klass.aasm(@name).state_machine
       @state_machine = state_machine
       @state_machine.config.column ||= (options[:column] || default_column).to_sym
+      @state_machine.config.log_state_changes ||= (options[:log_state_changes] || false)
       # @state_machine.config.column = options[:column].to_sym if options[:column] # master
       @options = options
 
