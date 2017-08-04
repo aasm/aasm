@@ -1,12 +1,17 @@
 # CHANGELOG
 
 ## unreleased
+## 4.12.2
+
+* Fix guards parameter [#484](https://github.com/aasm/aasm/pull/484), thanks to [teohm](https://github.com/teohm)
+* Make errors more inspectable [#452](https://github.com/aasm/aasm/pull/452), thanks to [flexoid](https://github.com/flexoid)
+* Enable Dynamoid for Rails 5 [#483](https://github.com/aasm/aasm/pull/483), thanks to [focusshifter](https://github.com/focusshifter)
 
 ## 4.12.1
 
-* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking #475, thanks to [@Aryk] (https://github.com/Aryk)
-* Add aliases for event methods #476, thanks to [@Aryk] (https://github.com/Aryk)
-* Support Minitest spec expectations (#387), thanks to [@faragorn] (https://github.com/faragorn)
+* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking [#475](https://github.com/aasm/aasm/pull/475), thanks to [@Aryk] (https://github.com/Aryk)
+* Add aliases for event methods [#476](https://github.com/aasm/aasm/pull/476), thanks to [@Aryk] (https://github.com/Aryk)
+* Support Minitest spec expectations [#387](https://github.com/aasm/aasm/pull/387), thanks to [@faragorn] (https://github.com/faragorn)
 ## 4.12.0
 
  * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
