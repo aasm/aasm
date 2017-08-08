@@ -326,7 +326,7 @@ class Cleaner
       end
       transitions :from => :idle, :to => :idle
     end
-    
+
     event :clean_if_dirty do
       transitions :from => :idle, :to => :cleaning, :guard => :if_dirty?
     end
@@ -335,7 +335,7 @@ class Cleaner
   def cleaning_needed?
     false
   end
-  
+
   def if_dirty?(status)
     status == :dirty
   end
@@ -689,6 +689,10 @@ You can tell AASM to auto-save the object or leave it unsaved
 job = Job.new
 job.run   # not saved
 job.run!  # saved
+
+# or
+job.fire(:run) # not saved
+job.fire!(:run) # saved
 ```
 
 Saving includes running all validations on the `Job` class. If

@@ -103,6 +103,14 @@ module AASM
       end
     end
 
+    def fire(event_name, *args, &block)
+      @instance.send(:aasm_fire_event, @name, event_name, {persist: false}, *args, &block)
+    end
+
+    def fire!(event_name, *args, &block)
+      @instance.send(:aasm_fire_event, @name, event_name, {persist: true}, *args, &block)
+    end
+
     def set_current_state_with_persistence(state)
       save_success = @instance.aasm_write_state(state, @name)
       self.current_state = state if save_success
