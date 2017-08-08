@@ -91,9 +91,25 @@ describe 'when being unsuspended' do
     expect(auth.aasm(:right).may_fire_event?(:right_activate)).to be true
   end
 
-  it "should not be able to fire unknown events" do
+  it 'should not be able to fire unknown events' do
     expect(auth.aasm(:left).may_fire_event?(:unknown)).to be false
     expect(auth.aasm(:right).may_fire_event?(:unknown)).to be false
+  end
+
+  it 'should be able to fire event by name' do
+    expect(auth.aasm(:left).fire(:left_activate)).to be true
+    expect(auth.aasm(:left).current_state).to eq(:active)
+
+    expect(auth.aasm(:right).fire(:right_activate)).to be true
+    expect(auth.aasm(:right).current_state).to eq(:active)
+  end
+
+  it 'should be able to fire! event by name' do
+    expect(auth.aasm(:left).fire!(:left_activate)).to be true
+    expect(auth.aasm(:left).current_state).to eq(:active)
+
+    expect(auth.aasm(:right).fire!(:right_activate)).to be true
+    expect(auth.aasm(:right).current_state).to eq(:active)
   end
 
 end
