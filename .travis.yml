@@ -19,6 +19,7 @@ gemfile:
   - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_4.2_mongoid_5.gemfile
   - gemfiles/rails_5.0.gemfile
+  - gemfiles/rails_5.1.gemfile
 
 before_script:
   - mkdir /tmp/dynamodb
@@ -36,6 +37,8 @@ matrix:
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
     - rvm: 1.9.3
       gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_5.1.gemfile
     - rvm: 2.2.6
       gemfile: gemfiles/rails_3.2.gemfile
     - rvm: 2.3.3
@@ -44,8 +47,12 @@ matrix:
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
     - rvm: jruby-1.7
       gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: jruby-1.7
+      gemfile: gemfiles/rails_5.1.gemfile
     - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: jruby-9.0.5.0
+      gemfile: gemfiles/rails_5.1.gemfile
 
 notifications:
   slack:
