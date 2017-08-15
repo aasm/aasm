@@ -123,7 +123,7 @@ if defined?(ActiveRecord)
           let(:with_enum_without_column) {WithEnumWithoutColumn.new}
 
           it "should raise NoMethodError for transitions" do
-            expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, "undefined method 'status' for WithEnumWithoutColumn")
+            expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, /undefined method .status./)
           end
         end
 
