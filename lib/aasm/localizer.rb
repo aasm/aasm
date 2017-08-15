@@ -1,6 +1,8 @@
 module AASM
   class Localizer
     def human_event_name(klass, event)
+      return no_i18n_fallback(event.name) unless Module.const_defined?(:I18n)
+
       checklist = ancestors_list(klass).inject([]) do |list, ancestor|
         list << :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
         list
@@ -9,6 +11,8 @@ module AASM
     end
 
     def human_state_name(klass, state)
+      return no_i18n_fallback(state.name) unless Module.const_defined?(:I18n)
+
       checklist = ancestors_list(klass).inject([]) do |list, ancestor|
         list << item_for(klass, state, ancestor)
         list << item_for(klass, state, ancestor, :old_style => true)
@@ -18,6 +22,10 @@ module AASM
     end
 
   private
+
+    def no_i18n_fallback(name)
+      name.to_s.tr('_', ' ').capitalize
+    end
 
     def item_for(klass, state, ancestor, options={})
       separator = options[:old_style] ? '.' : '/'

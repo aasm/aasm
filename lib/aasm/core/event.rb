@@ -6,6 +6,7 @@ module AASM::Core
 
     def initialize(name, state_machine, options = {}, &block)
       @name = name
+      @klass = options[:klass]
       @state_machine = state_machine
       @transitions = []
       @valid_transitions = {}
@@ -106,6 +107,11 @@ module AASM::Core
     def failed_callbacks
       transitions.flat_map(&:failures)
     end
+
+    def human_name
+      @human_name ||= AASM::Localizer.new.human_event_name(@klass, self.name)
+    end
+    alias localized_name human_name
 
   private
 

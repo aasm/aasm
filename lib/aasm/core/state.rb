@@ -45,31 +45,21 @@ module AASM::Core
       end
     end
 
-    def display_name
-      @display_name ||= begin
-        if Module.const_defined?(:I18n)
-          localized_name
-        else
-          name.to_s.gsub(/_/, ' ').capitalize
-        end
-      end
+    def human_name
+      @human_name ||= AASM::Localizer.new.human_state_name(@klass, self)
     end
-
-    def localized_name
-      AASM::Localizer.new.human_state_name(@klass, self)
-    end
-    alias human_name localized_name
+    alias localized_name human_name
+    alias display_name human_name
+    # deprecate :display_name, :human_name
 
     def for_select
-      [display_name, name.to_s]
+      [human_name, name.to_s]
     end
 
   private
 
     def update(options = {})
-      if options.key?(:display) then
-        @display_name = options.delete(:display)
-      end
+      @human_name = options.delete(:display) if options.key?(:display)
       @options = options
       self
     end
