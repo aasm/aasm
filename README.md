@@ -1343,7 +1343,7 @@ purpose.
 
 ## License ##
 
-Copyright (c) 2006-2016 Scott Barron
+Copyright (c) 2006-2017 Scott Barron
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
