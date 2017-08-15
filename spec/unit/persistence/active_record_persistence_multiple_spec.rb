@@ -123,7 +123,7 @@ if defined?(ActiveRecord)
           let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
 
           it "should raise NoMethodError for transitions" do
-            expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, "undefined method 'status' for MultipleWithEnumWithoutColumn")
+            expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, /undefined method .status./)
           end
         end
 
