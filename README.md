@@ -691,8 +691,8 @@ job.run   # not saved
 job.run!  # saved
 
 # or
-job.fire(:run) # not saved
-job.fire!(:run) # saved
+job.aasm.fire(:run) # not saved
+job.aasm.fire!(:run) # saved
 ```
 
 Saving includes running all validations on the `Job` class. If
