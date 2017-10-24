@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## unreleased
+## 4.12.3
+
+* Add to AASM fire(event) and fire!(event) methods [#494](https://github.com/aasm/aasm/pull/494), thanks to [slayer](https://github.com/slayer)
+* Add `use_transactions` flag to persist changes to the database even when some error occurs. [#493](https://github.com/aasm/aasm/pull/493), thanks to Peter Lampesberger.
+
 ## 4.12.2
 
 * Fix guards parameter [#484](https://github.com/aasm/aasm/pull/484), thanks to [teohm](https://github.com/teohm)
