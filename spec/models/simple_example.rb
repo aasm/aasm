@@ -12,14 +12,6 @@ class SimpleExample
       transitions :from => :filled_out, :to => :authorised
     end
 
-    event :fill_out_with_args do
-      transitions :guard => [:arg_is_valid?],
-                  :from => :initialised,
-                  :to => :filled_out
-    end
   end
 
-  def arg_is_valid?(arg)
-    return arg
-  end
 end

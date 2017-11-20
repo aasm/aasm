@@ -64,8 +64,9 @@ describe 'state machine' do
     end
 
     it "works with custom arguments" do
-      expect(simple).to allow_event(:fill_out_with_args).with(true)
-      expect(simple).to_not allow_event(:fill_out_with_args).with(false)
+      example = SimpleExampleWithGuardArgs.new
+      expect(example).to allow_event(:fill_out_with_args).with(true)
+      expect(example).to_not allow_event(:fill_out_with_args).with(false)
     end
 
     it "works for multiple state machines" do

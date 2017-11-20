@@ -1,7 +1,7 @@
 require 'minitest_helper'
 
 class StateMachineTest < Minitest::Spec
-  
+
   let(:simple) { SimpleExample.new }
   let(:multiple) { SimpleMultipleExample.new }
 
