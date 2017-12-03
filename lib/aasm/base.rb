@@ -125,7 +125,7 @@ module AASM
       end
 
       safely_define_method klass, "#{name}!", ->(*args, &block) do
-        aasm(aasm_name).current_event = :"#{name}!"
+        aasm(aasm_name).current_event = event
         aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
       end
 
