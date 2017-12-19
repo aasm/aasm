@@ -630,7 +630,7 @@ class CustomAASMBase < AASM::Base
 end
 ```
 
-When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with` key to our own class.
+When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with_klass` key to our own class.
 
 ```ruby
 class SimpleCustomExample
