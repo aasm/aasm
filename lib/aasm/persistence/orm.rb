@@ -115,7 +115,7 @@ module AASM
       end
 
       # Returns true if event was fired successfully and transaction completed.
-      def aasm_fire_event(state_machine_name, name, options, *args, &block)
+      def aasm_fire_event(state_machine_name = :default, name, options, *args, &block)
         if aasm_supports_transactions? && options[:persist]
           event = self.class.aasm(state_machine_name).state_machine.events[name]
           event.fire_callbacks(:before_transaction, self, *args)
