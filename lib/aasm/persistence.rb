@@ -12,6 +12,9 @@ module AASM
         elsif hierarchy.include?("Mongoid::Document")
           require_persistence :mongoid
           include_persistence base, :mongoid
+        elsif hierarchy.include?("NoBrainer::Document")
+          require_persistence :no_brainer
+          include_persistence base, :no_brainer
         elsif hierarchy.include?("Sequel::Model")
           require_persistence :sequel
           include_persistence base, :sequel

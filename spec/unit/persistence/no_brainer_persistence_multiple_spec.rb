@@ -1,89 +1,88 @@
 require 'spec_helper'
 
-if defined?(Mongoid::Document)
-  describe 'mongoid' do
-
-    Dir[File.dirname(__FILE__) + "/../../models/mongoid/*.rb"].sort.each do |f|
+if defined?(NoBrainer::Document)
+  describe 'nobrainer' do
+    Dir[File.dirname(__FILE__) + '/../../models/nobrainer/*.rb'].sort.each do |f|
       require File.expand_path(f)
     end
 
     before(:all) do
-      # if you want to see the statements while running the spec enable the following line
-      # Mongoid.logger = Logger.new(STDERR)
+      # if you want to see the statements while running the spec enable the
+      # following line
+      # NoBrainer.configure do |config|
+      #   config.logger = Logger.new(STDERR)
+      # end
     end
 
     after do
-      Mongoid.purge!
+      NoBrainer.purge!
     end
 
-    describe "named scopes with the old DSL" do
+    describe 'named scopes with the old DSL' do
+      context 'Does not already respond_to? the scope name' do
+        it 'should add a scope for each state' do
+          expect(SimpleNoBrainerMultiple).to respond_to(:unknown_scope)
+          expect(SimpleNoBrainerMultiple).to respond_to(:another_unknown_scope)
 
-      context "Does not already respond_to? the scope name" do
-        it "should add a scope for each state" do
-          expect(SimpleMongoidMultiple).to respond_to(:unknown_scope)
-          expect(SimpleMongoidMultiple).to respond_to(:another_unknown_scope)
-
-          expect(SimpleMongoidMultiple.unknown_scope.class).to eq(Mongoid::Criteria)
-          expect(SimpleMongoidMultiple.another_unknown_scope.class).to eq(Mongoid::Criteria)
+          expect(SimpleNoBrainerMultiple.unknown_scope.class).to eq(NoBrainer::Criteria)
+          expect(SimpleNoBrainerMultiple.another_unknown_scope.class).to eq(NoBrainer::Criteria)
         end
       end
 
-      context "Already respond_to? the scope name" do
-        it "should not add a scope" do
-          expect(SimpleMongoidMultiple).to respond_to(:new)
-          expect(SimpleMongoidMultiple.new.class).to eq(SimpleMongoidMultiple)
+      context 'Already respond_to? the scope name' do
+        it 'should not add a scope' do
+          expect(SimpleNoBrainerMultiple).to respond_to(:new)
+          expect(SimpleNoBrainerMultiple.new.class).to eq(SimpleNoBrainerMultiple)
         end
       end
 
     end
 
-    describe "named scopes with the new DSL" do
-      context "Does not already respond_to? the scope name" do
-        it "should add a scope" do
-          expect(SimpleNewDslMongoidMultiple).to respond_to(:unknown_scope)
-          expect(SimpleNewDslMongoidMultiple.unknown_scope.class).to eq(Mongoid::Criteria)
+    describe 'named scopes with the new DSL' do
+      context 'Does not already respond_to? the scope name' do
+        it 'should add a scope' do
+          expect(SimpleNewDslNoBrainerMultiple).to respond_to(:unknown_scope)
+          expect(SimpleNewDslNoBrainerMultiple.unknown_scope.class).to eq(NoBrainer::Criteria)
         end
       end
 
-      context "Already respond_to? the scope name" do
-        it "should not add a scope" do
-          expect(SimpleNewDslMongoidMultiple).to respond_to(:new)
-          expect(SimpleNewDslMongoidMultiple.new.class).to eq(SimpleNewDslMongoidMultiple)
+      context 'Already respond_to? the scope name' do
+        it 'should not add a scope' do
+          expect(SimpleNewDslNoBrainerMultiple).to respond_to(:new)
+          expect(SimpleNewDslNoBrainerMultiple.new.class).to eq(SimpleNewDslNoBrainerMultiple)
         end
       end
 
-      it "does not create scopes if requested" do
-        expect(NoScopeMongoidMultiple).not_to respond_to(:ignored_scope)
+      it 'does not create scopes if requested' do
+        expect(NoScopeNoBrainerMultiple).not_to respond_to(:ignored_scope)
       end
     end
 
-    describe "instance methods" do
-      let(:simple) {SimpleNewDslMongoidMultiple.new}
+    describe 'instance methods' do
+      let(:simple) { SimpleNewDslNoBrainerMultiple.new }
 
-      it "should initialize the aasm state on instantiation" do
-        expect(SimpleNewDslMongoidMultiple.new.status).to eql 'unknown_scope'
-        expect(SimpleNewDslMongoidMultiple.new.aasm(:left).current_state).to eql :unknown_scope
+      it 'should initialize the aasm state on instantiation' do
+        expect(SimpleNewDslNoBrainerMultiple.new.status).to eql 'unknown_scope'
+        expect(SimpleNewDslNoBrainerMultiple.new.aasm(:left).current_state).to eql :unknown_scope
       end
-
     end
 
     describe 'transitions with persistence' do
-
-      it "should work for valid models" do
-        valid_object = MultipleValidatorMongoid.create(:name => 'name')
+      it 'should work for valid models' do
+        valid_object = MultipleValidatorNoBrainer.create(name: 'name')
         expect(valid_object).to be_sleeping
         valid_object.status = :running
         expect(valid_object).to be_running
       end
 
       it 'should not store states for invalid models' do
-        validator = MultipleValidatorMongoid.create(:name => 'name')
+        validator = MultipleValidatorNoBrainer.create(name: 'name')
         expect(validator).to be_valid
         expect(validator).to be_sleeping
 
         validator.name = nil
         expect(validator).not_to be_valid
-        expect { validator.run! }.to raise_error(Mongoid::Errors::Validations)
+        expect { validator.run! }.to raise_error(NoBrainer::Error::DocumentInvalid)
         expect(validator).to be_sleeping
 
         validator.reload
@@ -101,7 +100,7 @@ if defined?(Mongoid::Document)
       end
 
       it 'should not store states for invalid models silently if configured' do
-        validator = MultipleSilentPersistorMongoid.create(:name => 'name')
+        validator = MultipleSilentPersistorNoBrainer.create(name: 'name')
         expect(validator).to be_valid
         expect(validator).to be_sleeping
 
@@ -125,7 +124,7 @@ if defined?(Mongoid::Document)
       end
 
       it 'should store states for invalid models if configured' do
-        persistor = MultipleInvalidPersistorMongoid.create(:name => 'name')
+        persistor = MultipleInvalidPersistorNoBrainer.create(name: 'name')
         expect(persistor).to be_valid
         expect(persistor).to be_sleeping
 
@@ -134,7 +133,7 @@ if defined?(Mongoid::Document)
         expect(persistor.run!).to be_truthy
         expect(persistor).to be_running
 
-        persistor = MultipleInvalidPersistorMongoid.find(persistor.id)
+        persistor = MultipleInvalidPersistorNoBrainer.find(persistor.id)
         persistor.valid?
         expect(persistor).to be_valid
         expect(persistor).to be_running
@@ -146,9 +145,9 @@ if defined?(Mongoid::Document)
       end
     end
 
-    describe "complex example" do
-      it "works" do
-        record = ComplexMongoidExample.new
+    describe 'complex example' do
+      it 'works' do
+        record = ComplexNoBrainerExample.new
         expect_aasm_states record, :one, :alpha
 
         record.save!
@@ -195,6 +194,5 @@ if defined?(Mongoid::Document)
         expect(record.right).to eql right_state.to_s
       end
     end
-
   end
 end

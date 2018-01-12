@@ -34,8 +34,8 @@ begin
   })
 
   Dynamoid.configure do |config|
-    config.namespace = "dynamoid_tests"
-    config.endpoint = 'http://127.0.0.1:30180'
+    config.namespace = 'dynamoid_tests'
+    config.endpoint = "http://#{ENV['DYNAMODB_HOST'] || '127.0.0.1'}:30180"
     config.warn_on_scan = false
   end
 

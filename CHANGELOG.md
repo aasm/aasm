@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## unreleased
+
+* Add support for Nobrainer (RethinkDB)
+
 ## 4.12.3
 
 * Add to AASM fire(event) and fire!(event) methods [#494](https://github.com/aasm/aasm/pull/494), thanks to [slayer](https://github.com/slayer)

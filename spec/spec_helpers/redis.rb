@@ -1,9 +1,12 @@
 # encoding: utf-8
+
 begin
   require 'redis-objects'
+  require 'redis/objects/version'
   puts "redis-objects gem found, running Redis specs \e[32m#{'✔'}\e[0m"
 
-  Redis.current = Redis.new(host: '127.0.0.1', port: 6379)
+  Redis.current = Redis.new(host: (ENV['REDIS_HOST'] || '127.0.0.1'),
+                            port: (ENV['REDIS_PORT'] || 6379))
 
   RSpec.configure do |c|
     c.before(:each) do
