@@ -24,6 +24,7 @@
   - [Sequel](#sequel)
   - [Dynamoid](#dynamoid)
   - [Mongoid](#mongoid)
+  - [Nobrainer](#nobrainer)
   - [Redis](#redis)
   - [Automatic Scopes](#automatic-scopes)
   - [Transaction support](#transaction-support)
@@ -52,10 +53,8 @@
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
-that no longer targets only ActiveRecord models. It currently provides adapters for
-[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html),
-and [Mongoid](http://mongoid.org/) but it can be used for any Ruby class, no matter what
-parent class it has (if any).
+that no longer targets only ActiveRecord models. It currently provides adapters for many
+ORMs but it can be used for any Ruby class, no matter what parent class it has (if any).
 
 ## Upgrade from version 3 to 4
 
@@ -817,6 +816,23 @@ to include Mongoid::Document before you include AASM.
 ```ruby
 class Job
   include Mongoid::Document
+  include AASM
+  field :aasm_state
+  aasm do
+    ...
+  end
+end
+```
+
+### NoBrainer
+
+AASM also supports persistence to [RethinkDB](https://www.rethinkdb.com/)
+if you're using [Nobrainer](http://nobrainer.io/).
+Make sure to include NoBrainer::Document before you include AASM.
+
+```ruby
+class Job
+  include NoBrainer::Document
   include AASM
   field :aasm_state
   aasm do

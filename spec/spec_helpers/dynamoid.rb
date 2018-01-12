@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 begin
   require 'dynamoid'
   require 'aws-sdk-resources'
@@ -7,14 +8,15 @@ begin
   ENV['ACCESS_KEY'] ||= 'abcd'
   ENV['SECRET_KEY'] ||= '1234'
 
-  Aws.config.update({
+  Aws.config.update(
     region: 'us-west-2',
     credentials: Aws::Credentials.new(ENV['ACCESS_KEY'], ENV['SECRET_KEY'])
-  })
+  )
 
   Dynamoid.configure do |config|
-    config.namespace = "dynamoid_tests"
-    config.endpoint = 'http://127.0.0.1:30180'
+    config.namespace = 'dynamoid_tests'
+    config.endpoint = "http://#{ENV['DYNAMODB_HOST'] || '127.0.0.1'}:" \
+                      "#{ENV['DYNAMODB_PORT'] || 30180}"
     config.warn_on_scan = false
   end
 

@@ -10,10 +10,6 @@ if defined?(Mongoid::Document)
     before(:all) do
       # if you want to see the statements while running the spec enable the following line
       # Mongoid.logger = Logger.new(STDERR)
-
-      Mongoid.configure do |config|
-        config.connect_to "mongoid_#{Process.pid}"
-      end
     end
 
     after do
