@@ -2,7 +2,7 @@
 
 begin
   require 'mongoid'
-  puts "mongoid gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
+  puts "mongoid #{Mongoid::VERSION} gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
 
   if Mongoid::VERSION.to_f <= 5
     Mongoid::Config.sessions = {
