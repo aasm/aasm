@@ -33,7 +33,6 @@ end
 appraise 'rails_4.2_nobrainer' do
   gem 'rails', '4.2.5'
   gem 'nobrainer', '~> 0.33.0'
-  gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
 end
 
 appraise 'rails_4.2_mongoid_5' do
