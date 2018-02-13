@@ -3,14 +3,14 @@ Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| requir
 
 shared_examples 'an implemented callback that accepts error' do
   context 'with callback defined' do
-    it "should run error_callback if an exception is raised" do
+    it "should run error_callback if an exception is raised and always return false" do
       aasm_model.class.send(:define_method, callback_name) do |e|
         @data = [e]
       end
 
       allow(aasm_model).to receive(:before_enter).and_raise(e = StandardError.new)
 
-      aasm_model.safe_close!
+      expect(aasm_model.safe_close!).to be false
       expect(aasm_model.data).to eql [e]
     end
 

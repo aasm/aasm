@@ -11,5 +11,7 @@ class SimpleExample
     event :authorise do
       transitions :from => :filled_out, :to => :authorised
     end
+
   end
+
 end

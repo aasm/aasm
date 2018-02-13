@@ -15,7 +15,6 @@ module AASM
         end
 
         def before_create
-          aasm_ensure_initial_state
           super
         end
 

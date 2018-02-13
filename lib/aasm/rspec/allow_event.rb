@@ -1,11 +1,15 @@
 RSpec::Matchers.define :allow_event do |event|
   match do |obj|
     @state_machine_name ||= :default
-    obj.aasm(@state_machine_name).may_fire_event?(event)
+    obj.aasm(@state_machine_name).may_fire_event?(event, *@args)
   end
 
   chain :on do |state_machine_name|
     @state_machine_name = state_machine_name
+  end
+
+  chain :with do |*args|
+    @args = args
   end
 
   description do

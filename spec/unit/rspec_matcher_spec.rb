@@ -63,6 +63,12 @@ describe 'state machine' do
       expect(simple).to allow_event :authorise
     end
 
+    it "works with custom arguments" do
+      example = SimpleExampleWithGuardArgs.new
+      expect(example).to allow_event(:fill_out_with_args).with(true)
+      expect(example).to_not allow_event(:fill_out_with_args).with(false)
+    end
+
     it "works for multiple state machines" do
       expect(multiple).to allow_event(:walk).on(:move)
       expect(multiple).to_not allow_event(:hold).on(:move)

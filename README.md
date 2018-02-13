@@ -24,6 +24,7 @@
   - [Sequel](#sequel)
   - [Dynamoid](#dynamoid)
   - [Mongoid](#mongoid)
+  - [Nobrainer](#nobrainer)
   - [Redis](#redis)
   - [Automatic Scopes](#automatic-scopes)
   - [Transaction support](#transaction-support)
@@ -42,6 +43,7 @@
    - [Bundler](#or-if-you-are-using-bundler)
    - [Building your own gems](#building-your-own-gems)
   - [Generators](#generators)
+  - [Test suite with Docker](#docker)
   - [Latest changes](#latest-changes)
   - [Questions?](#questions)
   - [Maintainers](#maintainers)
@@ -52,10 +54,8 @@
 This package contains AASM, a library for adding finite state machines to Ruby classes.
 
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
-that no longer targets only ActiveRecord models. It currently provides adapters for
-[ActiveRecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html),
-and [Mongoid](http://mongoid.org/) but it can be used for any Ruby class, no matter what
-parent class it has (if any).
+that no longer targets only ActiveRecord models. It currently provides adapters for many
+ORMs but it can be used for any Ruby class, no matter what parent class it has (if any).
 
 ## Upgrade from version 3 to 4
 
@@ -630,7 +630,7 @@ class CustomAASMBase < AASM::Base
 end
 ```
 
-When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with` key to our own class.
+When we declare our model that has an AASM state machine, we simply declare the AASM block with a `:with_klass` key to our own class.
 
 ```ruby
 class SimpleCustomExample
@@ -691,8 +691,8 @@ job.run   # not saved
 job.run!  # saved
 
 # or
-job.fire(:run) # not saved
-job.fire!(:run) # saved
+job.aasm.fire(:run) # not saved
+job.aasm.fire!(:run) # saved
 ```
 
 Saving includes running all validations on the `Job` class. If
@@ -817,6 +817,23 @@ to include Mongoid::Document before you include AASM.
 ```ruby
 class Job
   include Mongoid::Document
+  include AASM
+  field :aasm_state
+  aasm do
+    ...
+  end
+end
+```
+
+### NoBrainer
+
+AASM also supports persistence to [RethinkDB](https://www.rethinkdb.com/)
+if you're using [Nobrainer](http://nobrainer.io/).
+Make sure to include NoBrainer::Document before you include AASM.
+
+```ruby
+class Job
+  include NoBrainer::Document
   include AASM
   field :aasm_state
   aasm do
@@ -1193,6 +1210,9 @@ expect(multiple).to allow_event(:start).on(:move)
 expect(multiple).to_not allow_event(:stop).on(:move)
 expect(multiple).to allow_transition_to(:processing).on(:move)
 expect(multiple).to_not allow_transition_to(:sleeping).on(:move)
+# allow_event also accepts arguments
+expect(job).to allow_event(:run).with(:defragmentation)
+
 ```
 
 #### Minitest
@@ -1311,6 +1331,14 @@ After installing AASM you can run generator:
 Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state').
 This will create a model (if one does not exist) and configure it with aasm block.
 For Active record orm a migration file is added to add aasm state column to table.
+
+### Docker
+
+Run test suite easily on docker
+```
+1. docker-compose build aasm
+2. docker-compose run --rm aasm
+```
 
 ## Latest changes ##
 
