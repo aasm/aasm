@@ -22,6 +22,7 @@ gemfile:
   - gemfiles/rails_4.2_nobrainer.gemfile
   - gemfiles/rails_5.0.gemfile
   - gemfiles/rails_5.0_nobrainer.gemfile
+  - gemfiles/rails_5.1.gemfile
 
 before_script:
   - mkdir /tmp/dynamodb
@@ -41,6 +42,8 @@ matrix:
       gemfile: gemfiles/rails_3.2.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: jruby-9.1.12.0
+      gemfile: gemfiles/rails_5.1.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/rails_4.2_nobrainer.gemfile
     - rvm: jruby-9.1.12.0
