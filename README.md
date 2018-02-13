@@ -43,6 +43,7 @@
    - [Bundler](#or-if-you-are-using-bundler)
    - [Building your own gems](#building-your-own-gems)
   - [Generators](#generators)
+  - [Test suite with Docker](#docker)
   - [Latest changes](#latest-changes)
   - [Questions?](#questions)
   - [Maintainers](#maintainers)
@@ -1330,6 +1331,14 @@ After installing AASM you can run generator:
 Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state').
 This will create a model (if one does not exist) and configure it with aasm block.
 For Active record orm a migration file is added to add aasm state column to table.
+
+### Docker
+
+Run test suite easily on docker
+```
+1. docker-compose build aasm
+2. docker-compose run --rm aasm
+```
 
 ## Latest changes ##
 
