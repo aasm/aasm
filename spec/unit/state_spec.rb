@@ -64,7 +64,7 @@ describe AASM::Core::State do
     expect(record).to receive(:c)
     expect(record).to receive(:foobar)
 
-    state.fire_callbacks(:entering, record)
+    state.fire_callbacks(:entering, record, record)
   end
 
   it "should stop calling actions if one of them raises :halt_aasm_chain" do
@@ -84,6 +84,6 @@ describe AASM::Core::State do
     record = double('record')
     expect(record).to receive(:foobar)
 
-    state.fire_callbacks(:entering, record)
+    state.fire_callbacks(:entering, record, record)
   end
 end
