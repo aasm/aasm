@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AASM::Core
   class State
     attr_reader :name, :state_machine, :options
@@ -13,7 +15,13 @@ module AASM::Core
     def initialize_copy(orig)
       super
       @options = {}
-      orig.options.each_pair { |name, setting| @options[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
+      orig.options.each_pair do |name, setting|
+        @options[name] = if setting.is_a?(Hash) || setting.is_a?(Array)
+                           setting.dup
+                         else
+                           setting
+                         end
+      end
     end
 
     def ==(state)
@@ -75,14 +83,7 @@ module AASM::Core
     end
 
     def _fire_callbacks(action, record, args)
-      case action
-        when Symbol, String
-          arity = record.__send__(:method, action.to_sym).arity
-          record.__send__(action, *(arity < 0 ? args : args[0...arity]))
-        when Proc
-          arity = action.arity
-          action.call(record, *(arity < 0 ? args : args[0...arity]))
-      end
+      Invoker.new(action, record, args).invoke
     end
 
   end
