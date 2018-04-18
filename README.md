@@ -1223,7 +1223,7 @@ AASM provides assertions and rspec-like expectations for [Minitest](https://gith
 
 List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
 
-Add `require 'aasm/minitest' to your `test_helper.rb` file and use them like this:
+Add `require 'aasm/minitest'` to your `test_helper.rb` file and use them like this:
 
 ```ruby
 # classes with only the default state machine
