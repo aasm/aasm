@@ -1140,6 +1140,11 @@ Job.aasm.states_for_select
 
 # show permitted states with guard parameter
 job.aasm.states({:permitted => true}, guard_parameter).map(&:name)
+
+# show the failed guards (failed_callbacks) for non permitted events
+job.aasm.events(:permitted => false).map { |event| event.failed_callbacks }
+#=> [:cleaning_needed?]
+
 ```
 
 
