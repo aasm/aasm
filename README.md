@@ -523,7 +523,7 @@ All _AASM_ class- and instance-level `aasm` methods accept a state machine selec
 So, for example, to use inspection on a class level, you have to use
 
 ```ruby
-SimpleMultipleExample.aasm(:work).states
+SimpleMultipleExample.aasm(:move).states.map(&:name)
 # => [:standing, :walking, :running]
 ```
 
