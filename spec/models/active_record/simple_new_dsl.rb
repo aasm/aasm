@@ -15,3 +15,18 @@ class MultipleSimpleNewDsl < ActiveRecord::Base
     state :new
   end
 end
+
+class AbstractClassDsl < ActiveRecord::Base
+  include AASM
+
+  self.abstract_class = true
+
+  aasm :column => :status
+  aasm do
+    state :unknown_scope, :another_unknown_scope
+    state :new
+  end
+end
+
+class ImplementedAbstractClassDsl < AbstractClassDsl
+end

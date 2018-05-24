@@ -333,6 +333,22 @@ if defined?(ActiveRecord)
       end
     end
 
+    # Scopes on abstract classes didn't work until Rails 5.
+    #
+    # Reference:
+    # https://github.com/rails/rails/issues/10658
+    if ActiveRecord::VERSION::MAJOR >= 5
+      context "For a descendant of an abstract model" do
+        it "should add the scope without the table_name" do
+          expect(ImplementedAbstractClassDsl).to respond_to(:unknown_scope)
+          expect(ImplementedAbstractClassDsl).to respond_to(:another_unknown_scope)
+
+          expect(ImplementedAbstractClassDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+          expect(ImplementedAbstractClassDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+        end
+      end
+    end
+
     it "does not create scopes if requested" do
       expect(NoScope).not_to respond_to(:pending)
     end

@@ -11,6 +11,9 @@ ActiveRecord::Migration.suppress_messages do
   ActiveRecord::Migration.create_table "multiple_simple_new_dsls", :force => true do |t|
     t.string "status"
   end
+  ActiveRecord::Migration.create_table "implemented_abstract_class_dsls", :force => true do |t|
+    t.string "status"
+  end
 
   ActiveRecord::Migration.create_table "complex_active_record_examples", :force => true do |t|
     t.string "left"

@@ -2,6 +2,7 @@
 
 ## unreleased
 
+* Enable AASM scopes to be defined on abstract classes.
 * Add support for Nobrainer (RethinkDB)
 
 ## 4.12.3
