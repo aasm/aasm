@@ -131,7 +131,7 @@ the transition succeeds :
 ### Callbacks
 
 You can define a number of callbacks for your transitions. These methods will be
-called, when certain criteria are met, like entering a particular state:
+called when certain criteria are met, like entering a particular state:
 
 ```ruby
 class Job
