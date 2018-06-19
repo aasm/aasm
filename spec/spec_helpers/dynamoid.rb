@@ -3,7 +3,7 @@
 begin
   require 'dynamoid'
   require 'aws-sdk-resources'
-  puts "dynamoid gem found, running Dynamoid specs \e[32m#{'✔'}\e[0m"
+  puts "dynamoid #{Dynamoid::VERSION} gem found, running Dynamoid specs \e[32m#{'✔'}\e[0m"
 
   ENV['ACCESS_KEY'] ||= 'abcd'
   ENV['SECRET_KEY'] ||= '1234'
