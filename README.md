@@ -130,16 +130,26 @@ the transition succeeds :
 
 ### Callbacks
 
-You can define a number of callbacks for your transitions. These methods will be
-called, when certain criteria are met, like entering a particular state:
+You can define a number of callbacks for your events, transitions and states. These methods, Procs or classes will be
+called, when certain criteria are met, like entering a particular state (note that class must respond to `call` method):
 
 ```ruby
+class LogRunTime
+  def initialize(resource)
+    @resource = resource
+  end
+  
+  def call
+    # Do whatever you want with @resource
+  end
+end
+
 class Job
   include AASM
 
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
-    state :running
+    state :running, before_enter: Proc.new { do_something && notify_somebody }
     state :finished
 
     after_all_transitions :log_status_change
@@ -194,6 +204,8 @@ while `notify_somebody` is called after the transition `run` (from `sleeping` to
 is finished.
 
 AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
+
+Note that Procs are executed in the context of a record, it means that you don't need to expect the record as an argument, just call the methods you need.
 
 ```ruby
 class LogRunTime
