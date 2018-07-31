@@ -134,16 +134,6 @@ You can define a number of callbacks for your events, transitions and states. Th
 called when certain criteria are met, like entering a particular state:
 
 ```ruby
-class LogRunTime
-  def initialize(resource)
-    @resource = resource
-  end
-  
-  def call
-    # Do whatever you want with @resource
-  end
-end
-
 class Job
   include AASM
 
