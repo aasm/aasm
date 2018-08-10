@@ -1,12 +1,14 @@
 # CHANGELOG
 
+## unreleased
+* Enable AASM scopes to be defined on abstract classes.
+
 ## 5.0.0
 
 * Chore(invokers): Refactor callback invokers, add class-callbacks support [#541](https://github.com/aasm/aasm/pull/541), thanks to [pandomic](https://github.com/pandomic)
 * Add docker setup to readme
 * Add support for Nobrainer (RethinkDB) [#522](https://github.com/aasm/aasm/pull/522), thanks to [zedtux](https://github.com/zedtux)
 * Patch `allow_event` to accept event with custom arguments [#419](https://github.com/aasm/aasm/pull/419), thanks to [czhc](https://github.com/czhc)
-
 
 ## 4.12.3
 
