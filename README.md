@@ -130,8 +130,8 @@ the transition succeeds :
 
 ### Callbacks
 
-You can define a number of callbacks for your transitions. These methods will be
-called, when certain criteria are met, like entering a particular state:
+You can define a number of callbacks for your events, transitions and states. These methods, Procs or classes will be
+called when certain criteria are met, like entering a particular state:
 
 ```ruby
 class Job
@@ -139,7 +139,7 @@ class Job
 
   aasm do
     state :sleeping, :initial => true, :before_enter => :do_something
-    state :running
+    state :running, before_enter: Proc.new { do_something && notify_somebody }
     state :finished
 
     after_all_transitions :log_status_change
@@ -195,6 +195,8 @@ is finished.
 
 AASM will also initialize `LogRunTime` and run the `call` method for you after the transition from `running` to `finished` in the example above. You can pass arguments to the class by defining an initialize method on it, like this:
 
+Note that Procs are executed in the context of a record, it means that you don't need to expect the record as an argument, just call the methods you need.
+
 ```ruby
 class LogRunTime
   # optional args parameter can be omitted, but if you define initialize
@@ -225,7 +227,7 @@ callback, which can handle it or re-raise it for further propagation.
 
 Also, you can define a method that will be called if any event fails:
 
-```
+```ruby
 def aasm_event_failed(event_name, old_state_name)
   # use custom exception/messages, report metrics, etc
 end
@@ -523,7 +525,7 @@ All _AASM_ class- and instance-level `aasm` methods accept a state machine selec
 So, for example, to use inspection on a class level, you have to use
 
 ```ruby
-SimpleMultipleExample.aasm(:work).states
+SimpleMultipleExample.aasm(:move).states.map(&:name)
 # => [:standing, :walking, :running]
 ```
 
@@ -1223,7 +1225,7 @@ AASM provides assertions and rspec-like expectations for [Minitest](https://gith
 
 List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
 
-Add `require 'aasm/minitest' to your `test_helper.rb` file and use them like this:
+Add `require 'aasm/minitest'` to your `test_helper.rb` file and use them like this:
 
 ```ruby
 # classes with only the default state machine
