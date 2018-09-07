@@ -49,7 +49,7 @@ describe 'callbacks for the new DSL' do
 
     expect {
       callback.left_close!
-    }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard].")
+    }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:event_guard].")
 
   end
 
@@ -88,7 +88,7 @@ describe 'callbacks for the new DSL' do
 
       expect {
         callback.left_close!
-      }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard, :transition_guard].")
+      }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
@@ -287,7 +287,7 @@ describe 'event callbacks' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
       expect{
         @foo.null
-      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false, :always_false].")
+      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false].")
     end
 
     it 'should not call it if persist fails for bang fire' do
