@@ -1,12 +1,14 @@
 # CHANGELOG
 
+## unreleased
+* Enable AASM scopes to be defined on abstract classes.
+
 ## 5.0.0
 
 * Chore(invokers): Refactor callback invokers, add class-callbacks support [#541](https://github.com/aasm/aasm/pull/541), thanks to [pandomic](https://github.com/pandomic)
 * Add docker setup to readme
-* Add support for Nobrainer (RethinkDB) [#522](https://github.com/aasm/aasm/pull/522), thanks to [zedtux] (https://github.com/zedtux)
+* Add support for Nobrainer (RethinkDB) [#522](https://github.com/aasm/aasm/pull/522), thanks to [zedtux](https://github.com/zedtux)
 * Patch `allow_event` to accept event with custom arguments [#419](https://github.com/aasm/aasm/pull/419), thanks to [czhc](https://github.com/czhc)
-
 
 ## 4.12.3
 
@@ -21,9 +23,9 @@
 
 ## 4.12.1
 
-* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking [#475](https://github.com/aasm/aasm/pull/475), thanks to [@Aryk] (https://github.com/Aryk)
-* Add aliases for event methods [#476](https://github.com/aasm/aasm/pull/476), thanks to [@Aryk] (https://github.com/Aryk)
-* Support Minitest spec expectations [#387](https://github.com/aasm/aasm/pull/387), thanks to [@faragorn] (https://github.com/faragorn)
+* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking [#475](https://github.com/aasm/aasm/pull/475), thanks to [@Aryk](https://github.com/Aryk)
+* Add aliases for event methods [#476](https://github.com/aasm/aasm/pull/476), thanks to [@Aryk](https://github.com/Aryk)
+* Support Minitest spec expectations [#387](https://github.com/aasm/aasm/pull/387), thanks to [@faragorn](https://github.com/faragorn)
 ## 4.12.0
 
  * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
