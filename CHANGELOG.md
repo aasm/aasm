@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## unreleased
+
+## 5.0.1
+
+* Fix failures array in transition not being reset [#383](https://github.com/aasm/aasm/issues/383)
 * Enable AASM scopes to be defined on abstract classes.
 
 ## 5.0.0
