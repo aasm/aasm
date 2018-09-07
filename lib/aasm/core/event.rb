@@ -139,6 +139,7 @@ module AASM::Core
       end
 
       transitions.each do |transition|
+        transition.failures.clear #https://github.com/aasm/aasm/issues/383
         next if to_state and !Array(transition.to).include?(to_state)
         if (options.key?(:may_fire) && transition.eql?(options[:may_fire])) ||
            (!options.key?(:may_fire) && transition.allowed?(obj, *args))
