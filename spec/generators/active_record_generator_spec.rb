@@ -43,5 +43,11 @@ if defined?(ActiveRecord)
       assert_migration "db/migrate/add_state_to_jobs.rb"
     end
 
+    it "dont add column if column is already exists" do
+      require 'models/active_record/job.rb'
+      load_schema
+      run_generator %w(job state)
+      assert_no_migration "db/migrate/add_state_to_jobs.rb"
+    end
   end
 end

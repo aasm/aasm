@@ -22,6 +22,12 @@ RUBY
 
       private
 
+      def column_exists?
+        table_name.singularize.humanize.constantize.column_names.include?(column_name.to_s)
+      rescue NameError
+        false
+      end
+
       def model_exists?
         File.exists?(File.join(destination_root, model_path))
       end
