@@ -11,7 +11,9 @@ module ActiveRecord
       source_root File.expand_path("../templates", __FILE__)
 
       def copy_aasm_migration
-        if model_exists?
+        if column_exists?
+          puts "Both model and column exists"
+        elsif model_exists?
           migration_template "migration_existing.rb", "db/migrate/add_#{column_name}_to_#{table_name}.rb"
         else
           migration_template "migration.rb", "db/migrate/aasm_create_#{table_name}.rb"

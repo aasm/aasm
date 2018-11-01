@@ -20,6 +20,10 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
+  ActiveRecord::Migration.create_table "jobs", :force => true do |t|
+    t.string "state"
+  end
+
   %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
