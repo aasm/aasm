@@ -23,11 +23,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', ">= 3"
   s.add_development_dependency 'generator_spec'
   s.add_development_dependency 'appraisal'
-  
+
   # debugging
   # s.add_development_dependency 'debugger'
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'pry-nav'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
