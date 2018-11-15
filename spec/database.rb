@@ -20,8 +20,7 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
-  ActiveRecord::Migration.create_table "jobs", :force => true do |t|
-    t.string "state"
+  ActiveRecord::Migration.create_table "works", :force => true do |t|
     t.string "status"
   end
 
