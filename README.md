@@ -2,7 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/aasm.svg)](http://badge.fury.io/rb/aasm)
 [![Build Status](https://travis-ci.org/aasm/aasm.svg?branch=master)](https://travis-ci.org/aasm/aasm)
-[![Dependency Status](https://gemnasium.com/aasm/aasm.svg)](https://gemnasium.com/aasm/aasm)
 [![Code Climate](https://codeclimate.com/github/aasm/aasm/badges/gpa.svg)](https://codeclimate.com/github/aasm/aasm)
 
 ## Index
