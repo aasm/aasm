@@ -385,6 +385,21 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
   end
 ```
 
+You can invoke a Class instead a method since this Class responds to `call` 
+
+```ruby
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :guards => Dog
+    end
+```
+```ruby
+  class Dog
+    def call
+      cleaning_needed? && walked?
+    end
+    ...
+  end
+```
 
 ### Transitions
 
