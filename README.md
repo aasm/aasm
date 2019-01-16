@@ -1178,7 +1178,15 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 
 #### RSpec
 
-AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this:
+AASM provides some matchers for [RSpec](http://rspec.info): 
+*`transition_from`, 
+* `have_state`, `allow_event`
+* and `allow_transition_to`. 
+
+##### Installation Instructions: 
+* Add `require 'aasm/rspec'` to your `spec_helper.rb` file.
+
+##### Examples Of Usage in Rspec:
 
 ```ruby
 # classes with only the default state machine
@@ -1224,6 +1232,9 @@ AASM provides assertions and rspec-like expectations for [Minitest](https://gith
 ##### Assertions
 
 List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
+
+
+##### Examples Of Usage (Minitest):
 
 Add `require 'aasm/minitest'` to your `test_helper.rb` file and use them like this:
 
