@@ -21,7 +21,7 @@ end
 appraise 'rails_4.2' do
   gem 'nokogiri', '1.6.8.1', platforms: %i[ruby_19]
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
-  gem 'rails', '4.2.5'
+  gem 'rails', '4.2.10'
   gem 'mongoid', '~> 4.0'
   gem 'sequel'
   gem 'dynamoid', '~> 1', platforms: :ruby
@@ -31,13 +31,13 @@ appraise 'rails_4.2' do
 end
 
 appraise 'rails_4.2_nobrainer' do
-  gem 'rails', '4.2.5'
+  gem 'rails', '4.2.10'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_4.2_mongoid_5' do
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
-  gem 'rails', '4.2.5'
+  gem 'rails', '4.2.10'
   gem 'mongoid', '~> 5.0'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
 end
