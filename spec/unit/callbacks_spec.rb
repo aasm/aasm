@@ -203,6 +203,32 @@ describe 'callbacks for the new DSL' do
       }.to raise_error(AASM::InvalidTransition)
     end
 
+    it "does not propagate failures to next attempt of same transition" do
+      callback = Callbacks::Basic.new(:log => false, :fail_transition_guard => true)
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+    end
+
+    it "does not propagate failures to next attempt of same event when no transition is applicable" do
+      callback = Callbacks::Basic.new(:log => false, :fail_transition_guard => true)
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+
+      callback.aasm.current_state = :closed
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'closed'.")
+    end
+
     it "does not run transition_guard twice for multiple permitted transitions" do
       show_debug_log = false
       callback = Callbacks::MultipleTransitionsTransitionGuard.new(:log => show_debug_log, :fail_transition_guard => true)

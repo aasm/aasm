@@ -125,6 +125,7 @@ module AASM::Core
 
     def _fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       result = options[:test_only] ? false : nil
+      clear_failed_callbacks
       transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state || t.from == nil}
       return result if transitions.size == 0
 
@@ -139,7 +140,6 @@ module AASM::Core
       end
 
       transitions.each do |transition|
-        transition.failures.clear #https://github.com/aasm/aasm/issues/383
         next if to_state and !Array(transition.to).include?(to_state)
         if (options.key?(:may_fire) && transition.eql?(options[:may_fire])) ||
            (!options.key?(:may_fire) && transition.allowed?(obj, *args))
@@ -156,6 +156,11 @@ module AASM::Core
         end
       end
       result
+    end
+
+    def clear_failed_callbacks
+      # https://github.com/aasm/aasm/issues/383, https://github.com/aasm/aasm/issues/599
+      transitions.each { |transition| transition.failures.clear }
     end
 
     def invoke_callbacks(code, record, args)
