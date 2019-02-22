@@ -1,9 +1,10 @@
 sudo: false
 language: ruby
+cache: bundler
 
 rvm:
-  - 2.2.6
-  - 2.3.3
+  - 2.4.0
+  - 2.5.0
   - jruby-9.1.12.0
 
 services:
@@ -35,10 +36,6 @@ script:
 
 matrix:
   exclude:
-    - rvm: 2.2.6
-      gemfile: gemfiles/rails_3.2.gemfile
-    - rvm: 2.3.3
-      gemfile: gemfiles/rails_3.2.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/rails_5.0.gemfile
     - rvm: jruby-9.1.12.0
