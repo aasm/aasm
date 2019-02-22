@@ -2,7 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/aasm.svg)](http://badge.fury.io/rb/aasm)
 [![Build Status](https://travis-ci.org/aasm/aasm.svg?branch=master)](https://travis-ci.org/aasm/aasm)
-[![Dependency Status](https://gemnasium.com/aasm/aasm.svg)](https://gemnasium.com/aasm/aasm)
 [![Code Climate](https://codeclimate.com/github/aasm/aasm/badges/gpa.svg)](https://codeclimate.com/github/aasm/aasm)
 
 ## Index
@@ -385,6 +384,21 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
   end
 ```
 
+You can invoke a Class instead a method since this Class responds to `call` 
+
+```ruby
+    event :sleep do
+      transitions :from => :running, :to => :sleeping, :guards => Dog
+    end
+```
+```ruby
+  class Dog
+    def call
+      cleaning_needed? && walked?
+    end
+    ...
+  end
+```
 
 ### Transitions
 
@@ -1178,7 +1192,15 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 
 #### RSpec
 
-AASM provides some matchers for [RSpec](http://rspec.info): `transition_from`, `have_state`, `allow_event` and `allow_transition_to`. Add `require 'aasm/rspec'` to your `spec_helper.rb` file and use them like this:
+AASM provides some matchers for [RSpec](http://rspec.info): 
+*`transition_from`, 
+* `have_state`, `allow_event`
+* and `allow_transition_to`. 
+
+##### Installation Instructions: 
+* Add `require 'aasm/rspec'` to your `spec_helper.rb` file.
+
+##### Examples Of Usage in Rspec:
 
 ```ruby
 # classes with only the default state machine
@@ -1191,7 +1213,7 @@ expect(job).to allow_event :run
 expect(job).to_not allow_event :clean
 expect(job).to allow_transition_to(:running)
 expect(job).to_not allow_transition_to(:cleaning)
-# on_event also accept arguments
+# on_event also accept multiple arguments
 expect(job).to transition_from(:sleeping).to(:running).on_event(:run, :defragmentation)
 
 # classes with multiple state machine
@@ -1224,6 +1246,9 @@ AASM provides assertions and rspec-like expectations for [Minitest](https://gith
 ##### Assertions
 
 List of supported assertions: `assert_have_state`, `refute_have_state`, `assert_transitions_from`, `refute_transitions_from`, `assert_event_allowed`, `refute_event_allowed`, `assert_transition_to_allowed`, `refute_transition_to_allowed`.
+
+
+##### Examples Of Usage (Minitest):
 
 Add `require 'aasm/minitest'` to your `test_helper.rb` file and use them like this:
 
