@@ -1,5 +1,5 @@
 appraise 'rails_3.2' do
-  gem 'bundler', '~> 1.0'
+  gem 'bundler', '~> 1.0', platforms: :jruby
   gem 'rails', '~> 3.2.22'
   gem 'mongoid', '~> 3.1'
   gem 'sequel'
@@ -10,7 +10,7 @@ appraise 'rails_3.2' do
 end
 
 appraise 'rails_4.2' do
-  gem 'bundler', '~> 1.0'
+  gem 'bundler', '~> 1.0', platforms: :jruby
   gem 'nokogiri', '1.6.8.1', platforms: %i[ruby_19]
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
   gem 'rails', '4.2.5'
@@ -23,13 +23,13 @@ appraise 'rails_4.2' do
 end
 
 appraise 'rails_4.2_nobrainer' do
-  gem 'bundler', '~> 1.0'
+  gem 'bundler', '~> 1.0', platforms: :jruby
   gem 'rails', '4.2.5'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_4.2_mongoid_5' do
-  gem 'bundler', '~> 1.0'
+  gem 'bundler', '~> 1.0', platforms: :jruby
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
   gem 'rails', '4.2.5'
   gem 'mongoid', '~> 5.0'

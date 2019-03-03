@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gem "sqlite3", "~> 1.3.5", platforms: :ruby
 gem "rails", "4.2.5"
-gem "bundler", "~> 1.0"
+gem "bundler", "~> 1.0", platforms: :jruby
 gem "nobrainer", "~> 0.33.0"
 
 gemspec path: "../"
