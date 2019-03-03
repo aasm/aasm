@@ -4,17 +4,7 @@ appraise 'rails_3.2' do
   gem 'sequel'
   gem 'bson_ext', platforms: :ruby
   gem 'test-unit', '~> 3.0'
-  gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
-end
-
-appraise 'rails_4.0' do
-  gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
-  gem 'rails', '4.0.13'
-  gem 'mongoid', '~> 4.0'
-  gem 'sequel'
-  gem 'dynamoid', '~> 1', platforms: :ruby
-  gem 'aws-sdk', '~> 2', platforms: :ruby
-  gem 'redis-objects'
+  gem 'minitest'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
 end
 

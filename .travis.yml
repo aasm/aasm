@@ -2,8 +2,14 @@ sudo: false
 language: ruby
 cache: bundler
 
+before_install:
+  - rvm list
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '1.16.1'
+  - bundle _1.16.1_ install
+
 rvm:
-  - 2.4.0
+  - 2.3.0
   - 2.5.0
   - jruby-9.1.12.0
 
@@ -16,7 +22,6 @@ addons:
 
 gemfile:
   - gemfiles/rails_3.2.gemfile
-  - gemfiles/rails_4.0.gemfile
   - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_4.2_mongoid_5.gemfile
   - gemfiles/rails_4.2_nobrainer.gemfile
@@ -36,6 +41,20 @@ script:
 
 matrix:
   exclude:
+    - rvm: 2.3.0
+      gemfile: gemfiles/rails_5.0.gemfile
+    - rvm: 2.3.0
+      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
+    - rvm: 2.3.0
+      gemfile: gemfiles/rails_5.1.gemfile
+    - rvm: 2.5.0
+      gemfile: gemfiles/rails_3.2.gemfile
+    - rvm: 2.5.0
+      gemfile: gemfiles/rails_4.2.gemfile
+    - rvm: 2.5.0
+      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
+    - rvm: 2.5.0
+      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/rails_5.0.gemfile
     - rvm: jruby-9.1.12.0
