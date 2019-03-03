@@ -4,6 +4,7 @@ appraise 'rails_3.2' do
   gem 'sequel'
   gem 'bson_ext', platforms: :ruby
   gem 'test-unit', '~> 3.0'
+  gem 'minitest'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
 end
 
