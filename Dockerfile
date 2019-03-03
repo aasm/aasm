@@ -1,4 +1,9 @@
-FROM ruby:2.3.4-slim
+ARG RVM_RUBY_VERSIONS="2.4.0 2.5.0"
+ARG RVM_RUBY_DEFAULT="2.4.0"
+FROM msati/docker-rvm
+
+# After Ruby versions are installed we continue as non-root rvm user
+USER ${RVM_USER}
 
 LABEL maintainer="AASM"
 
