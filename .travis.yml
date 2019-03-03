@@ -1,10 +1,11 @@
 sudo: false
 language: ruby
-#cache: bundler
+cache: bundler
 
 before_install:
+  - rvm list
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
-  - gem install bundler -v '< 2'
+  - gem install bundler -v '1.0'
 
 rvm:
   - 2.3.0
