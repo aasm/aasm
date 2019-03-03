@@ -4,7 +4,7 @@ cache: bundler
 
 before_install:
   - rvm list
-  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem uninstall bundler
   - gem install bundler -v '1.0'
 
 rvm:
