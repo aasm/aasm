@@ -70,19 +70,19 @@ class Job
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :running, :cleaning
 
     event :run do
-      transitions :from => :sleeping, :to => :running
+      transitions from: :sleeping, to: :running
     end
 
     event :clean do
-      transitions :from => :running, :to => :cleaning
+      transitions from: :running, to: :cleaning
     end
 
     event :sleep do
-      transitions :from => [:running, :cleaning], :to => :sleeping
+      transitions from: [:running, :cleaning], to: :sleeping
     end
   end
 
@@ -108,7 +108,7 @@ AASM not to be *whiny*:
 ```ruby
 class Job
   ...
-  aasm :whiny_transitions => false do
+  aasm whiny_transitions: false do
     ...
   end
 end
@@ -137,19 +137,19 @@ class Job
   include AASM
 
   aasm do
-    state :sleeping, :initial => true, :before_enter => :do_something
+    state :sleeping, initial: true, before_enter: :do_something
     state :running, before_enter: Proc.new { do_something && notify_somebody }
     state :finished
 
     after_all_transitions :log_status_change
 
-    event :run, :after => :notify_somebody do
+    event :run, after: :notify_somebody do
       before do
         log('Preparing to run')
       end
 
-      transitions :from => :sleeping, :to => :running, :after => Proc.new {|*args| set_process(*args) }
-      transitions :from => :running, :to => :finished, :after => LogRunTime
+      transitions from: :sleeping, to: :running, after: Proc.new {|*args| set_process(*args) }
+      transitions from: :running, to: :finished, after: LogRunTime
     end
 
     event :sleep do
@@ -159,7 +159,7 @@ class Job
       error do |e|
         ...
       end
-      transitions :from => :running, :to => :sleeping
+      transitions from: :running, to: :sleeping
     end
   end
 
@@ -312,24 +312,24 @@ class Cleaner
   include AASM
 
   aasm do
-    state :idle, :initial => true
+    state :idle, initial: true
     state :cleaning
 
     event :clean do
-      transitions :from => :idle, :to => :cleaning, :guard => :cleaning_needed?
+      transitions from: :idle, to: :cleaning, guard: :cleaning_needed?
     end
 
     event :clean_if_needed do
-      transitions :from => :idle, :to => :cleaning do
+      transitions from: :idle, to: :cleaning do
         guard do
           cleaning_needed?
         end
       end
-      transitions :from => :idle, :to => :idle
+      transitions from: :idle, to: :idle
     end
 
     event :clean_if_dirty do
-      transitions :from => :idle, :to => :cleaning, :guard => :if_dirty?
+      transitions from: :idle, to: :cleaning, guard: :if_dirty?
     end
   end
 
@@ -358,16 +358,16 @@ You can even provide a number of guards, which all have to succeed to proceed
     def walked_the_dog?; ...; end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?, :walked_the_dog?]
+      transitions from: :running, to: :sleeping, guards: [:cleaning_needed?, :walked_the_dog?]
     end
 ```
 
 If you want to provide guards for all transitions within an event, you can use event guards
 
 ```ruby
-    event :sleep, :guards => [:walked_the_dog?] do
-      transitions :from => :running, :to => :sleeping, :guards => [:cleaning_needed?]
-      transitions :from => :cleaning, :to => :sleeping
+    event :sleep, guards: [:walked_the_dog?] do
+      transitions from: :running, to: :sleeping, guards: [:cleaning_needed?]
+      transitions from: :cleaning, to: :sleeping
     end
 ```
 
@@ -375,20 +375,20 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
 
 ```ruby
     event :clean do
-      transitions :from => :running, :to => :cleaning, :if => :cleaning_needed?
+      transitions from: :running, to: :cleaning, if: :cleaning_needed?
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :unless => :cleaning_needed?
+      transitions from: :running, to: :sleeping, unless: :cleaning_needed?
     end
   end
 ```
 
-You can invoke a Class instead a method since this Class responds to `call` 
+You can invoke a Class instead a method since this Class responds to `call`
 
 ```ruby
     event :sleep do
-      transitions :from => :running, :to => :sleeping, :guards => Dog
+      transitions from: :running, to: :sleeping, guards: Dog
     end
 ```
 ```ruby
@@ -411,7 +411,7 @@ class Job
   include AASM
 
   aasm do
-    state :stage1, :initial => true
+    state :stage1, initial: true
     state :stage2
     state :stage3
     state :completed
@@ -442,30 +442,30 @@ built with one state machine per class in mind. Nonetheless, here's how to do it
 class SimpleMultipleExample
   include AASM
   aasm(:move) do
-    state :standing, :initial => true
+    state :standing, initial: true
     state :walking
     state :running
 
     event :walk do
-      transitions :from => :standing, :to => :walking
+      transitions from: :standing, to: :walking
     end
     event :run do
-      transitions :from => [:standing, :walking], :to => :running
+      transitions from: [:standing, :walking], to: :running
     end
     event :hold do
-      transitions :from => [:walking, :running], :to => :standing
+      transitions from: [:walking, :running], to: :standing
     end
   end
 
   aasm(:work) do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :processing
 
     event :start do
-      transitions :from => :sleeping, :to => :processing
+      transitions from: :sleeping, to: :processing
     end
     event :stop do
-      transitions :from => :processing, :to => :sleeping
+      transitions from: :processing, to: :sleeping
     end
   end
 end
@@ -498,28 +498,28 @@ Alternatively, you can provide a namespace for each state machine:
 class NamespacedMultipleExample
   include AASM
   aasm(:status) do
-    state :unapproved, :initial => true
+    state :unapproved, initial: true
     state :approved
 
     event :approve do
-      transitions :from => :unapproved, :to => :approved
+      transitions from: :unapproved, to: :approved
     end
 
     event :unapprove do
-      transitions :from => :approved, :to => :unapproved
+      transitions from: :approved, to: :unapproved
     end
   end
 
   aasm(:review_status, namespace: :review) do
-    state :unapproved, :initial => true
+    state :unapproved, initial: true
     state :approved
 
     event :approve do
-      transitions :from => :unapproved, :to => :approved
+      transitions from: :unapproved, to: :approved
     end
 
     event :unapprove do
-      transitions :from => :approved, :to => :unapproved
+      transitions from: :approved, to: :unapproved
     end
   end
 end
@@ -551,26 +551,26 @@ class Example
   include AASM
 
   aasm(:work) do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :processing
 
     event :start do
-      transitions :from => :sleeping, :to => :processing
+      transitions from: :sleeping, to: :processing
     end
     event :stop do
-      transitions :from => :processing, :to => :sleeping
+      transitions from: :processing, to: :sleeping
     end
   end
 
   aasm(:question) do
-    state :answered, :initial => true
+    state :answered, initial: true
     state :asked
 
-    event :ask, :binding_event => :start do
-      transitions :from => :answered, :to => :asked
+    event :ask, binding_event: :start do
+      transitions from: :answered, to: :asked
     end
-    event :answer, :binding_event => :stop do
-      transitions :from => :asked, :to => :answered
+    event :answer, binding_event: :stop do
+      transitions from: :asked, to: :answered
     end
   end
 end
@@ -616,7 +616,7 @@ class CustomAASMBase < AASM::Base
   # A custom transiton that we want available across many AASM models.
   def count_transitions!
     klass.class_eval do
-      aasm :with_klass => CustomAASMBase do
+      aasm with_klass: CustomAASMBase do
         after_all_transitions :increment_transition_count
       end
     end
@@ -653,19 +653,19 @@ class SimpleCustomExample
   include AASM
 
   # Let's build an AASM state machine with our custom class.
-  aasm :with_klass => CustomAASMBase do
+  aasm with_klass: CustomAASMBase do
     requires_guards!
     count_transitions!
 
-    state :initialised, :initial => true
+    state :initialised, initial: true
     state :filled_out
     state :authorised
 
     event :fill_out do
-      transitions :from => :initialised, :to => :filled_out, :guard => :fillable?
+      transitions from: :initialised, to: :filled_out, guard: :fillable?
     end
     event :authorise do
-      transitions :from => :filled_out, :to => :authorised, :guard => :authorizable?
+      transitions from: :filled_out, to: :authorised, guard: :authorizable?
     end
   end
 end
@@ -682,15 +682,15 @@ class Job < ActiveRecord::Base
   include AASM
 
   aasm do # default column: aasm_state
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :running
 
     event :run do
-      transitions :from => :sleeping, :to => :running
+      transitions from: :sleeping, to: :running
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping
+      transitions from: :running, to: :sleeping
     end
   end
 
@@ -725,16 +725,16 @@ be updated in the database (just like ActiveRecord `update_column` is working).
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :skip_validation_on_save => true do
-    state :sleeping, :initial => true
+  aasm skip_validation_on_save: true do
+    state :sleeping, initial: true
     state :running
 
     event :run do
-      transitions :from => :sleeping, :to => :running
+      transitions from: :sleeping, to: :running
     end
 
     event :sleep do
-      transitions :from => :running, :to => :sleeping
+      transitions from: :running, to: :sleeping
     end
   end
 
@@ -748,12 +748,12 @@ configure _AASM_ to not allow direct assignment, like this:
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :no_direct_assignment => true do
-    state :sleeping, :initial => true
+  aasm no_direct_assignment: true do
+    state :sleeping, initial: true
     state :running
 
     event :run do
-      transitions :from => :sleeping, :to => :running
+      transitions from: :sleeping, to: :running
     end
   end
 
@@ -784,8 +784,8 @@ class Job < ActiveRecord::Base
     running: 99
   }
 
-  aasm :column => :state, :enum => true do
-    state :sleeping, :initial => true
+  aasm column: :state, enum: true do
+    state :sleeping, initial: true
     state :running
   end
 end
@@ -884,7 +884,7 @@ class Job < ActiveRecord::Base
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :running
     state :cleaning
   end
@@ -913,8 +913,8 @@ defining the `AASM` states, like this:
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :create_scopes => false do
-    state :sleeping, :initial => true
+  aasm create_scopes: false do
+    state :sleeping, initial: true
     state :running
     state :cleaning
   end
@@ -947,11 +947,11 @@ class Job < ActiveRecord::Base
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :running
 
-    event :run, :after_commit => :notify_about_running_job do
-      transitions :from => :sleeping, :to => :running
+    event :run, after_commit: :notify_about_running_job do
+      transitions from: :sleeping, to: :running
     end
   end
 
@@ -977,14 +977,14 @@ If you want to encapsulate state changes within an own transaction, the behavior
 of this nested transaction might be confusing. Take a look at
 [ActiveRecord Nested Transactions](http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html)
 if you want to know more about this. Nevertheless, AASM by default requires a new transaction
-`transaction(:requires_new => true)`. You can override this behavior by changing
+`transaction(requires_new: true)`. You can override this behavior by changing
 the configuration
 
 ```ruby
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :requires_new_transaction => false do
+  aasm requires_new_transaction: false do
     ...
   end
 
@@ -992,7 +992,7 @@ class Job < ActiveRecord::Base
 end
 ```
 
-which then leads to `transaction(:requires_new => false)`, the Rails default.
+which then leads to `transaction(requires_new: false)`, the Rails default.
 
 Additionally, if you do not want any of your active record actions to be
 wrapped in a transaction, you can specify the `use_transactions` flag. This can
@@ -1004,7 +1004,7 @@ result of a transaction or callback, even when some error occurs. The
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :use_transactions => false do
+  aasm use_transactions: false do
     ...
   end
 
@@ -1027,7 +1027,7 @@ AASM supports [Active Record pessimistic locking via `with_lock`](http://api.rub
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :requires_lock => true do
+  aasm requires_lock: true do
     ...
   end
 
@@ -1039,7 +1039,7 @@ end
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :requires_lock => 'FOR UPDATE NOWAIT' do
+  aasm requires_lock: 'FOR UPDATE NOWAIT' do
     ...
   end
 
@@ -1057,7 +1057,7 @@ this by defining your favorite column name, using `:column` like this:
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm :column => 'my_state' do
+  aasm column: 'my_state' do
     ...
   end
 
@@ -1093,19 +1093,19 @@ class Job
   include AASM
 
   aasm do
-    state :sleeping, :initial => true
+    state :sleeping, initial: true
     state :running, :cleaning
 
     event :run do
-      transitions :from => :sleeping, :to => :running
+      transitions from: :sleeping, to: :running
     end
 
     event :clean do
-      transitions :from => :running, :to => :cleaning, :guard => :cleaning_needed?
+      transitions from: :running, to: :cleaning, guard: :cleaning_needed?
     end
 
     event :sleep do
-      transitions :from => [:running, :cleaning], :to => :sleeping
+      transitions from: [:running, :cleaning], to: :sleeping
     end
   end
 
@@ -1123,15 +1123,15 @@ Job.aasm.states.map(&:name)
 job = Job.new
 
 # show all permitted states (from initial state)
-job.aasm.states(:permitted => true).map(&:name)
+job.aasm.states(permitted: true).map(&:name)
 #=> [:running]
 
 job.run
-job.aasm.states(:permitted => true).map(&:name)
+job.aasm.states(permitted: true).map(&:name)
 #=> [:sleeping]
 
 # show all non permitted states
-job.aasm.states(:permitted => false).map(&:name)
+job.aasm.states(permitted: false).map(&:name)
 #=> [:cleaning]
 
 # show all possible (triggerable) events from the current state
@@ -1139,23 +1139,23 @@ job.aasm.events.map(&:name)
 #=> [:clean, :sleep]
 
 # show all permitted events
-job.aasm.events(:permitted => true).map(&:name)
+job.aasm.events(permitted: true).map(&:name)
 #=> [:sleep]
 
 # show all non permitted events
-job.aasm.events(:permitted => false).map(&:name)
+job.aasm.events(permitted: false).map(&:name)
 #=> [:clean]
 
 # show all possible events except a specific one
-job.aasm.events(:reject => :sleep).map(&:name)
+job.aasm.events(reject: :sleep).map(&:name)
 #=> [:clean]
 
 # list states for select
 Job.aasm.states_for_select
-=> [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
+#=> [["Sleeping", "sleeping"], ["Running", "running"], ["Cleaning", "cleaning"]]
 
 # show permitted states with guard parameter
-job.aasm.states({:permitted => true}, guard_parameter).map(&:name)
+job.aasm.states({permitted: true}, guard_parameter).map(&:name)
 ```
 
 
@@ -1168,7 +1168,7 @@ use
 class Job
   include AASM
 
-  aasm :logger => Rails.logger do
+  aasm logger: Rails.logger do
     ...
   end
 end
@@ -1192,12 +1192,12 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 
 #### RSpec
 
-AASM provides some matchers for [RSpec](http://rspec.info): 
-*`transition_from`, 
+AASM provides some matchers for [RSpec](http://rspec.info):
+*`transition_from`,
 * `have_state`, `allow_event`
-* and `allow_transition_to`. 
+* and `allow_transition_to`.
 
-##### Installation Instructions: 
+##### Installation Instructions:
 * Add `require 'aasm/rspec'` to your `spec_helper.rb` file.
 
 ##### Examples Of Usage in Rspec:
