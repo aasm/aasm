@@ -2,6 +2,17 @@
 
 ## unreleased
 
+## 5.0.2
+
+* Clear failed callbacks, [#600](https://github.com/aasm/aasm/pull/600), thanks to
+[nedgar](https://github.com/nedgar)
+* README improvements, [#594](https://github.com/aasm/aasm/pull/594),
+[#589](https://github.com/aasm/aasm/pull/589), [#587](https://github.com/aasm/aasm/pull/587),
+[#597](https://github.com/aasm/aasm/pull/597), thanks to [jackscotti](https://github.com/jackscotti), [krmbzds](https://github.com/krmbzds),
+[zegomesjf](https://github.com/zegomesjf), [BKSpurgeon](https://github.com/BKSpurgeon)
+* Update InvalidTransition to include state_machine_name [#592](https://github.com/aasm/aasm/pull/592), thanks to [a14m](https://github.com/a14m)
+* Do not add migration if model and column already exists [#586](https://github.com/aasm/aasm/pull/586), thanks to [KiranJosh](https://github.com/KiranJosh)
+
 ## 5.0.1
 
 * Fix failures array in transition not being reset [#383](https://github.com/aasm/aasm/issues/383)
