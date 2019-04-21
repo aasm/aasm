@@ -2,6 +2,10 @@
 
 ## unreleased
 
+## 5.0.3
+
+* Fix Abstract class issue, [#619](https://github.com/aasm/aasm/pull/619)
+
 ## 5.0.2
 
 * Clear failed callbacks, [#600](https://github.com/aasm/aasm/pull/600), thanks to
