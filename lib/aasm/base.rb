@@ -54,18 +54,23 @@ module AASM
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
       aasm_name = @name
-      if !(klass.superclass.methods.include?(:abstract_class) &&
-        klass.superclass.abstract_class)
-        klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
-          if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
-            raise AASM::NoDirectAssignmentError.new(
-              'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
-            )
-          else
-            super(state_name)
-          end
+      return true if should_not_define_method(klass)
+      klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
+          raise AASM::NoDirectAssignmentError.new(
+            'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
+          )
+        else
+          super(state_name)
         end
       end
+    end
+
+    def should_not_define_method(klass)
+      (klass.methods.include?(:abstract_class) &&
+        klass.abstract_class) ||
+      (klass.superclass.methods.include?(:abstract_class) &&
+        klass.superclass.abstract_class)
     end
 
     # This method is both a getter and a setter
