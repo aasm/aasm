@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class Base < ActiveRecord::Base
   self.abstract_class = true
   self.table_name = 'users'
 
@@ -19,5 +19,5 @@ class User < ActiveRecord::Base
 end
 
 
-class Person < User
+class Person < Base
 end

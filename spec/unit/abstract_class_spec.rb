@@ -7,13 +7,13 @@ if defined?(ActiveRecord)
 
     it 'should have the parent states' do
       Person.aasm.states.each do |state|
-        expect(User.aasm.states).to include(state)
+        expect(Base.aasm.states).to include(state)
       end
-      expect(Person.aasm.states).to eq(User.aasm.states)
+      expect(Person.aasm.states).to eq(Base.aasm.states)
     end
 
     it 'should have the same events as its parent' do
-      expect(User.aasm.events).to eq(Person.aasm.events)
+      expect(Base.aasm.events).to eq(Person.aasm.events)
     end
 
     it 'should not break aasm methods when super class is abstract_class' do
