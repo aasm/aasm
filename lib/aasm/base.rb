@@ -97,7 +97,8 @@ module AASM
     # [1] options (or nil)
     # or
     # [0] state
-    # [1..] state
+    # [1..N-2] state
+    # [..N-1] options hash (or nil)
     def state(*args)
       names, options = interpret_state_args(args)
       names.each do |name|
@@ -248,8 +249,9 @@ module AASM
     end
 
     def interpret_state_args(args)
-      if args.last.is_a?(Hash) && args.size == 2
-        [[args.first], args.last]
+      if args.last.is_a?(Hash)
+        return [args[0..-2], args.last] if args.size > 1
+        raise "invalid states: #{args}"
       elsif args.size > 0
         [args, {}]
       else
