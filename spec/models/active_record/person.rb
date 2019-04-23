@@ -1,7 +1,4 @@
 class Base < ActiveRecord::Base
-  self.abstract_class = true
-  self.table_name = 'users'
-
   include AASM
 
   aasm column: 'status' do
@@ -16,6 +13,9 @@ class Base < ActiveRecord::Base
       transitions from: :active, to: :inactive
     end
   end
+
+  self.abstract_class = true
+  self.table_name = 'users'
 end
 
 
