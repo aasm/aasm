@@ -59,7 +59,7 @@ appraise 'rails_5.2' do
   gem 'rails', '5.2'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
-  gem 'dynamoid', '~> 1', platforms: :ruby
+  gem 'dynamoid', '~>2.2', platforms: :ruby
   gem 'aws-sdk', '~>2', platforms: :ruby
   gem 'redis-objects'
 end
