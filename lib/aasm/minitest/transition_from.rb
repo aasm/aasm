@@ -17,5 +17,7 @@ module Minitest::Assertions
     state_machine_name = options[:on]
     object.aasm(state_machine_name).current_state = from_state.to_sym
     object.send(options[:on_event], *args) && options[:to].to_sym == object.aasm(state_machine_name).current_state
+  rescue AASM::InvalidTransition
+    false
   end
 end
