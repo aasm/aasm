@@ -2,6 +2,15 @@
 
 ## unreleased
 
+## 5.0.4
+
+* Specify dynamoid version for Rails > 5, [#625](https://github.com/aasm/aasm/pull/625),
+thanks to [waghanza](https://github.com/waghanza)
+* Add travis runner for Rails 5.2, [#624](https://github.com/aasm/aasm/pull/624), thanks
+to [waghanza](https://github.com/waghanza)
+* Cleanup Abstract class issue, [#620](https://github.com/aasm/aasm/pull/620), thanks to
+[dennym](https://github.com/dennym)
+
 ## 5.0.3
 
 * Fix Abstract class issue, [#619](https://github.com/aasm/aasm/pull/619)
