@@ -106,7 +106,7 @@ module AASM
             # mongoid has_many relationship does not load child object attributes when
             # only ids are loaded, for example parent.child_ids will not load child object attributes.
             # This feature is introduced in mongoid > 4.
-            if attribute_names.include?(attribute_name) && attributes[attribute_name].blank?
+            if attribute_names.include?(attribute_name) && !attributes[attribute_name] || attributes[attribute_name].empty?
               # attribute_missing? is defined in mongoid > 4
               return if Mongoid::VERSION.to_f >= 4 && attribute_missing?(attribute_name)
               send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s)
