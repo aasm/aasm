@@ -141,7 +141,8 @@ module AASM
 
         def aasm_column_is_blank?(state_machine_name)
           attribute_name = self.class.aasm(state_machine_name).attribute_name
-          attribute_names.include?(attribute_name.to_s) && send(attribute_name).blank?
+          attribute_names.include?(attribute_name.to_s) &&
+            (send(attribute_name).respond_to?(:empty?) ? !!send(attribute_name).empty? : !send(attribute_name))
         end
 
         def aasm_validate_states
