@@ -96,7 +96,7 @@ module AASM
         def aasm_ensure_initial_state
           AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |name|
             aasm_column = self.class.aasm(name).attribute_name
-            aasm(name).enter_initial_state if read_attribute(aasm_column).blank?
+            aasm(name).enter_initial_state if !read_attribute(aasm_column) || read_attribute(aasm_column).empty?
           end
         end
       end # InstanceMethods

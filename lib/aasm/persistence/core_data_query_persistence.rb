@@ -77,7 +77,8 @@ module AASM
         #
         def aasm_ensure_initial_state
           AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |state_machine_name|
-            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s) if send(self.class.aasm(state_machine_name).attribute_name).blank?
+            next if !send(self.class.aasm(state_machine_name).attribute_name) || send(self.class.aasm(state_machine_name).attribute_name).empty?
+            send("#{self.class.aasm(state_machine_name).attribute_name}=", aasm(state_machine_name).enter_initial_state.to_s)
           end
         end
       end # InstanceMethods
