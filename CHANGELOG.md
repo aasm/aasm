@@ -2,6 +2,11 @@
 
 ## unreleased
 
+## 5.0.5
+
+* Independent of ActiveSupport methods, [#627](https://github.com/aasm/aasm/pull/627),
+thanks to [tristandruyen](https://github.com/tristandruyen). Fixes [#508](https://github.com/aasm/aasm/issues/508)
+
 ## 5.0.4
 
 * Specify dynamoid version for Rails > 5, [#625](https://github.com/aasm/aasm/pull/625),
