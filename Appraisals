@@ -63,3 +63,9 @@ appraise 'rails_5.2' do
   gem 'aws-sdk', '~>2', platforms: :ruby
   gem 'redis-objects'
 end
+
+appraise 'norails' do
+  gem 'rails', install_if: false
+  gem 'sequel'
+  gem 'redis-objects'
+end
