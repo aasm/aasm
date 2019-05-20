@@ -154,6 +154,8 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
     expect(cb).to receive(:transition_method2).with(:arg1).once.ordered
+    expect(cb).to receive(:before_success_method).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method).with(:arg1).once.ordered
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:out_to_lunch, :arg1)
 
@@ -161,6 +163,8 @@ describe 'callbacks for the new DSL' do
     some_object = double('some object')
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method2).with(some_object).once.ordered
+    expect(cb).to receive(:before_success_method).with(some_object).once.ordered
+    expect(cb).to receive(:success_method).with(some_object).once.ordered
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(:out_to_lunch, some_object)
   end

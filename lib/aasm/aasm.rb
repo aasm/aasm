@@ -141,21 +141,20 @@ private
     persist = options[:persist]
 
     new_state = aasm(state_machine_name).state_object_for_name(new_state_name)
+    callback_args = process_args(event, aasm(state_machine_name).current_state, *args)
 
-    new_state.fire_callbacks(:before_enter, self,
-      *process_args(event, aasm(state_machine_name).current_state, *args))
+    new_state.fire_callbacks(:before_enter, self, *callback_args)
 
-    new_state.fire_callbacks(:enter, self,
-      *process_args(event, aasm(state_machine_name).current_state, *args)) # TODO: remove for AASM 4?
+    new_state.fire_callbacks(:enter, self, *callback_args) # TODO: remove for AASM 4?
 
     persist_successful = true
     if persist
       persist_successful = aasm(state_machine_name).set_current_state_with_persistence(new_state_name)
       if persist_successful
         yield if block_given?
-        event.fire_callbacks(:before_success, self)
+        event.fire_callbacks(:before_success, self, *callback_args)
         event.fire_transition_callbacks(self, *process_args(event, old_state.name, *args))
-        event.fire_callbacks(:success, self)
+        event.fire_callbacks(:success, self, *callback_args)
       end
     else
       aasm(state_machine_name).current_state = new_state_name
@@ -168,10 +167,8 @@ private
     end
 
     if persist_successful
-      old_state.fire_callbacks(:after_exit, self,
-        *process_args(event, aasm(state_machine_name).current_state, *args))
-      new_state.fire_callbacks(:after_enter, self,
-        *process_args(event, aasm(state_machine_name).current_state, *args))
+      old_state.fire_callbacks(:after_exit, self, *callback_args)
+      new_state.fire_callbacks(:after_enter, self, *callback_args)
       event.fire_callbacks(
         :after,
         self,

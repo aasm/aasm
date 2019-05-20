@@ -315,7 +315,9 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:before_success_method).with(:arg1).once.ordered
     expect(cb).to receive(:success_method).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method3).with(:arg1).once.ordered
     expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:arg1)
@@ -325,7 +327,9 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:before_success_method).with(some_object).once.ordered
     expect(cb).to receive(:success_method).with(some_object).once.ordered
+    expect(cb).to receive(:success_method3).with(some_object).once.ordered
     expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(some_object)
