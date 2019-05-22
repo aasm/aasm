@@ -4,7 +4,7 @@ if defined?(ActiveRecord)
   require 'generator_spec'
   require 'generators/active_record/aasm_generator'
 
-  describe ActiveRecord::Generators::AASMGenerator, type: :generator do
+  describe ActiveRecord::Generators::AASMActiveRecordGenerator, type: :generator do
     destination File.expand_path("../../../tmp", __FILE__)
 
     before(:all) do

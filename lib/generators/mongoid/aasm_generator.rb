@@ -3,7 +3,7 @@ require 'generators/aasm/orm_helpers'
 
 module Mongoid
   module Generators
-    class AASMGenerator < Rails::Generators::NamedBase
+    class AASMMongoidGenerator < Rails::Generators::NamedBase
       include AASM::Generators::OrmHelpers
       namespace "mongoid:aasm"
       argument :column_name, type: :string, default: 'aasm_state'

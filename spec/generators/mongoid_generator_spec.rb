@@ -4,7 +4,7 @@ if defined?(Mongoid::Document)
   require 'generator_spec'
   require 'generators/mongoid/aasm_generator'
 
-  describe Mongoid::Generators::AASMGenerator, type: :generator do
+  describe Mongoid::Generators::AASMMongoidGenerator, type: :generator do
     destination File.expand_path("../../../tmp", __FILE__)
 
     before(:all) do

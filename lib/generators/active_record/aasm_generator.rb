@@ -3,7 +3,7 @@ require 'generators/aasm/orm_helpers'
 
 module ActiveRecord
   module Generators
-    class AASMGenerator < ActiveRecord::Generators::Base
+    class AASMActiveRecordGenerator < ActiveRecord::Generators::Base
       include AASM::Generators::OrmHelpers
       namespace "active_record:aasm"
       argument :column_name, type: :string, default: 'aasm_state'

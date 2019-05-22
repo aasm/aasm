@@ -3,7 +3,7 @@ require 'generators/aasm/orm_helpers'
 
 module NoBrainer
   module Generators
-    class AASMGenerator < Rails::Generators::NamedBase
+    class AASMNoBrainerGenerator < Rails::Generators::NamedBase
       include AASM::Generators::OrmHelpers
       namespace 'nobrainer:aasm'
       argument :column_name, type: :string, default: 'aasm_state'

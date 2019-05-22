@@ -4,7 +4,7 @@ if defined?(NoBrainer::Document)
   require 'generator_spec'
   require 'generators/nobrainer/aasm_generator'
 
-  describe NoBrainer::Generators::AASMGenerator, type: :generator do
+  describe NoBrainer::Generators::AASMNoBrainerGenerator, type: :generator do
     destination File.expand_path('../../../tmp', __FILE__)
 
     before(:all) do
