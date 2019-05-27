@@ -131,13 +131,13 @@ module AASM::Core
 
       if to_state == ::AASM::NO_VALUE
         to_state = nil
-      elsif to_state.respond_to?(:to_sym) && transitions.map(&:to).flatten.include?(to_state.to_sym)
-        # nop, to_state is a valid to-state
-      else
+      elsif !(to_state.respond_to?(:to_sym) && transitions.map(&:to).flatten.include?(to_state.to_sym))
         # to_state is an argument
         args.unshift(to_state)
         to_state = nil
       end
+      
+      # nop, to_state is a valid to-state
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
