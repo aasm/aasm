@@ -99,25 +99,10 @@ private
     begin
       old_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
 
-      event.fire_global_callbacks(
-        :before_all_events,
-        self,
-        *process_args(event, aasm(state_machine_name).current_state, *args)
-      )
-
-      # new event before callback
-      event.fire_callbacks(
-        :before,
-        self,
-        *process_args(event, aasm(state_machine_name).current_state, *args)
-      )
+      fire_default_callbacks(event, *process_args(event, aasm(state_machine_name).current_state, *args))
 
       if may_fire_to = event.may_fire?(self, *args)
-        old_state.fire_callbacks(:before_exit, self,
-          *process_args(event, aasm(state_machine_name).current_state, *args))
-        old_state.fire_callbacks(:exit, self,
-          *process_args(event, aasm(state_machine_name).current_state, *args))
-
+        fire_exit_callbacks(old_state, *process_args(event, aasm(state_machine_name).current_state, *args))
         if new_state_name = event.fire(self, {:may_fire => may_fire_to}, *args)
           aasm_fired(state_machine_name, event, old_state, new_state_name, options, *args, &block)
         else
@@ -135,6 +120,26 @@ private
       event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
+  end
+
+  def fire_default_callbacks(event, *processed_args)
+    event.fire_global_callbacks(
+      :before_all_events,
+      self,
+      *processed_args
+    )
+
+    # new event before callback
+    event.fire_callbacks(
+      :before,
+      self,
+      *processed_args
+    )
+  end
+
+  def fire_exit_callbacks(old_state, *processed_args)
+    old_state.fire_callbacks(:before_exit, self, *processed_args)
+    old_state.fire_callbacks(:exit, self, *processed_args)
   end
 
   def aasm_fired(state_machine_name, event, old_state, new_state_name, options, *args)
