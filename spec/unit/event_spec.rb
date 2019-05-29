@@ -285,13 +285,23 @@ describe 'current event' do
     expect(pe.aasm.current_event).to be_nil
   end
 
-  it 'if a event has been triggered' do
+  it 'if a event has been triggered with event_name' do
     pe.wakeup
     expect(pe.aasm.current_event).to eql :wakeup
   end
 
-  it 'if no event has been triggered' do
+  it 'if a event has been triggered using fire(:event_name)' do
+    pe.aasm.fire(:wakeup)
+    expect(pe.aasm.current_event).to eql :wakeup
+  end
+
+  it 'if event has been triggered with a event_name!' do
     pe.wakeup!
+    expect(pe.aasm.current_event).to eql :wakeup!
+  end
+
+  it 'if event has been triggered with a fire!(:event_name)' do
+    pe.aasm.fire!(:wakeup)
     expect(pe.aasm.current_event).to eql :wakeup!
   end
 end

@@ -104,10 +104,14 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
+      aasm_name = @name.to_sym
+      @instance.aasm(aasm_name).current_event = :"#{event_name}"
       @instance.send(:aasm_fire_event, @name, event_name, {persist: false}, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
+      aasm_name = @name.to_sym
+      @instance.aasm(aasm_name).current_event = :"#{event_name}!"
       @instance.send(:aasm_fire_event, @name, event_name, {persist: true}, *args, &block)
     end
 
