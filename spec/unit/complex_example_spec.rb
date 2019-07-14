@@ -91,4 +91,15 @@ describe 'when being unsuspended' do
     expect(auth.aasm.may_fire_event?(:unknown)).to be false
   end
 
+  context "when calling events with fire/fire!" do
+    let(:example) { ComplexExample.new }
+    it "fire should populate aasm.current_event" do
+      example.aasm.fire(:activate)
+      expect(example.aasm.current_event).to eq :activate
+    end
+    it "fire! should populate aasm.current_event" do
+      example.aasm.fire!(:activate)
+      expect(example.aasm.current_event).to eq :activate!
+    end
+  end
 end
