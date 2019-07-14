@@ -104,11 +104,12 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
-      @instance.send(:aasm_fire_event, @name, event_name, {persist: false}, *args, &block)
+      @instance.send(event_name, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
-      @instance.send(:aasm_fire_event, @name, event_name, {persist: true}, *args, &block)
+      event_name = event_name.to_s.+("!").to_sym
+      @instance.send(event_name, *args, &block)
     end
 
     def set_current_state_with_persistence(state)
