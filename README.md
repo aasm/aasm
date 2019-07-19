@@ -1200,7 +1200,7 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 #### RSpec
 
 AASM provides some matchers for [RSpec](http://rspec.info):
-*`transition_from`,
+* `transition_from`,
 * `have_state`, `allow_event`
 * and `allow_transition_to`.
 
