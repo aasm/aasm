@@ -748,4 +748,26 @@ if defined?(ActiveRecord)
       expect { job.run }.to raise_error(AASM::InvalidTransition)
     end
   end
+
+  describe 'testing the instance_level skip validation with _without_validation method' do
+    let(:example) do
+      obj = InstanceLevelSkipValidationExample.new(state: 'new')
+      obj.save(validate: false)
+      obj
+    end
+
+    it 'should be able to change the state with invalid record' do
+      expect(example.valid?).to be_falsey
+      expect(example.complete!).to be_falsey
+      expect(example.complete_without_validation!).to be_truthy
+      expect(example.state).to eq('complete')
+    end
+
+    it 'shouldn\'t affect the behaviour of existing method after calling _without_validation! method' do
+      expect(example.set_draft!).to be_falsey
+      expect(example.set_draft_without_validation!).to be_truthy
+      expect(example.state).to eq('draft')
+      expect(example.complete!).to be_falsey
+    end
+  end
 end

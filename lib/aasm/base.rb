@@ -133,6 +133,8 @@ module AASM
         aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
 
+      skip_instance_level_validation(event, name, aasm_name, klass)
+
       # Create aliases for the event methods. Keep the old names to maintain backwards compatibility.
       if namespace?
         klass.send(:alias_method, "may_#{name}_#{namespace}?", "may_#{name}?")
@@ -245,6 +247,21 @@ module AASM
         [args, {}]
       else
         raise "count not parse states: #{args}"
+      end
+    end
+
+    def skip_instance_level_validation(event, name, aasm_name, klass)
+      # Overrides the skip_validation config for an instance (If skip validation is set to false in original config) and
+      # restores it back to the original value after the event is fired.
+      safely_define_method klass, "#{name}_without_validation!", ->(*args, &block) do
+        original_config = AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save
+        begin
+          AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = true unless original_config
+          aasm(aasm_name).current_event = :"#{name}!"
+          aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
+        ensure
+          AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = original_config
+        end
       end
     end
 
