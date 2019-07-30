@@ -51,4 +51,9 @@ ActiveRecord::Migration.suppress_messages do
     t.string "search"
     t.string "sync"
   end
+
+  ActiveRecord::Migration.create_table "instance_level_skip_validation_examples", :force => true do |t|
+    t.string "state"
+    t.string "some_string"
+  end
 end

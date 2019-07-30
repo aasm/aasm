@@ -740,6 +740,14 @@ class Job < ActiveRecord::Base
 end
 ```
 
+Also You can skip the validation at instance level with `some_event_name_without_validation!` method.
+With this you have the flexibility of having validation for all your transitions by default and then skip it wherever required.
+Please note that only state column will be updated as mentioned in the above example.
+
+```ruby
+job.run_without_validation!
+```
+
 If you want to make sure that the _AASM_ column for storing the state is not directly assigned,
 configure _AASM_ to not allow direct assignment, like this:
 
