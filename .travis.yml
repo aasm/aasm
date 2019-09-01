@@ -60,8 +60,8 @@ matrix:
       gemfile: gemfiles/rails_3.2.gemfile
     - rvm: 2.5.0
       gemfile: gemfiles/rails_4.2.gemfile
-#    - rvm: 2.5.0
-#      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
+    - rvm: 2.5.0
+      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
 #    - rvm: 2.5.0
 #      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
     - rvm: jruby-9.1.12.0
