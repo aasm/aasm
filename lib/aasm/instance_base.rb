@@ -91,7 +91,7 @@ module AASM
         when Proc
           state.call(@instance)
         else
-          raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+          raise NotImplementedError, "Unrecognized state-type given. Expected Symbol, String, or Proc."
       end
     end
 
