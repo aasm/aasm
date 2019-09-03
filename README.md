@@ -30,6 +30,7 @@
   - [Transaction support](#transaction-support)
   - [Pessimistic Locking](#pessimistic-locking)
   - [Column name & migration](#column-name--migration)
+  - [Log State Changes](#log-state-changes)
   - [Inspection](#inspection)
   - [Warning output](#warning-output)
   - [RubyMotion support](#rubymotion-support)
@@ -1088,6 +1089,13 @@ class AddJobState < ActiveRecord::Migration
   end
 end
 ```
+
+### Log State Changes
+
+Logging state change can be done using [paper_trail](https://github.com/paper-trail-gem/paper_trail) gem 
+
+Example of implementation can be found here [https://github.com/nitsujri/aasm-papertrail-example](https://github.com/nitsujri/aasm-papertrail-example)
+
 
 ### Inspection
 
