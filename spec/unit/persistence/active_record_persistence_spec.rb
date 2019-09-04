@@ -393,13 +393,13 @@ if defined?(ActiveRecord)
 
       # allow it temporarily
       NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = false
-      obj.aasm_state = :pending
-      expect(obj.aasm_state.to_sym).to eql :pending
+      obj.aasm_state = :running
+      expect(obj.aasm_state.to_sym).to eql :running
 
       # and forbid it again
       NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = true
-      expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
-      expect(obj.aasm_state.to_sym).to eql :pending
+      expect {obj.aasm_state = :pending}.to raise_error(AASM::NoDirectAssignmentError)
+      expect(obj.aasm_state.to_sym).to eql :running
     end
   end # direct assignment
 
