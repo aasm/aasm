@@ -2,6 +2,14 @@
 
 ## unreleased
 
+## 5.0.6
+
+* Fix no_direct_assignment, couldn't be turned off pragmatically [#636](https://github.com/aasm/aasm/issues/636)
+* Add instance level validation skip option [#644](https://github.com/aasm/aasm/pull/644), thanks to [Nitin-Salunke](https://github.com/Nitin-Salunke)
+* Fixed aasm.current_event incorrectly yields nil when calling aasm.fire!(:event) [#551](https://github.com/aasm/aasm/issues/551) in [#638](https://github.com/aasm/aasm/pull/638), thanks to [DoubleJarvis](https://github.com/DoubleJarvis)
+* Code Refactor [#634](https://github.com/aasm/aasm/pull/634) , thanks to [rahulknojha](https://github.com/rahulknojha)
+* Fixed callback argument for :before_success & :success callback, [#630](https://github.com/aasm/aasm/pull/630)
+
 ## 5.0.5
 
 * Independent of ActiveSupport methods, [#627](https://github.com/aasm/aasm/pull/627),
