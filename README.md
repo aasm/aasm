@@ -436,12 +436,12 @@ job.aasm.current_state # stage3
 ### Multiple state machines per class
 
 Multiple state machines per class are supported. Be aware though that _AASM_ has been
-built with one state machine per class in mind. Nonetheless, here's how to do it:
+built with one state machine per class in mind. Nonetheless, here's how to do it (see below). Please note that you will need to specify database columns for where your pertinent states will be stored - we have specified two columns `move_state` and `work_state` in the example below. See the [Column name & migration](https://github.com/aasm/aasm#column-name--migration) section for further info. 
 
 ```ruby
 class SimpleMultipleExample
   include AASM
-  aasm(:move) do
+  aasm(:move, column: 'move_state') do
     state :standing, initial: true
     state :walking
     state :running
@@ -457,7 +457,7 @@ class SimpleMultipleExample
     end
   end
 
-  aasm(:work) do
+  aasm(:work, column: 'work_state') do
     state :sleeping, initial: true
     state :processing
 
