@@ -14,6 +14,8 @@ before_install:
 rvm:
   - 2.3.0
   - 2.5.0
+  - 2.6.5
+  - 2.7.0
   - jruby-9.1.12.0
 
 services:
@@ -55,6 +57,10 @@ matrix:
     - rvm: 2.3.0
       gemfile: gemfiles/rails_5.1.gemfile
     - rvm: 2.3.0
+      gemfile: gemfiles/rails_5.2.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/rails_5.2.gemfile
+    - rvm: 2.6.5
       gemfile: gemfiles/rails_5.2.gemfile
     - rvm: 2.5.0
       gemfile: gemfiles/rails_3.2.gemfile
