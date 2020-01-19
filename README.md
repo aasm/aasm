@@ -1065,11 +1065,11 @@ this by defining your favorite column name, using `:column` like this:
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm column: 'my_state' do
+  aasm column: :my_state do
     ...
   end
 
-  aasm :another_state_machine, column: 'second_state' do
+  aasm :another_state_machine, column: :second_state do
     ...
   end
 end
