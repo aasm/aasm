@@ -1141,6 +1141,10 @@ job = Job.new
 job.aasm.states(permitted: true).map(&:name)
 #=> [:running]
 
+# List all the permitted transitions(event and state pairs) from initial state
+job.aasm.permitted_transitions
+#=> [{ :event => :run, :state => :running }]
+
 job.run
 job.aasm.states(permitted: true).map(&:name)
 #=> [:sleeping]

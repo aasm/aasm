@@ -78,6 +78,17 @@ module AASM
       events
     end
 
+    def permitted_transitions
+      events(permitted: true).flat_map do |event|
+        available_transitions = event.transitions_from_state(current_state)
+        allowed_transitions = available_transitions.select { |t| t.allowed?(@instance) }
+
+        allowed_transitions.map do |transition|
+          { event: event.name, state: transition.to }
+        end
+      end
+    end
+
     def state_object_for_name(name)
       obj = @instance.class.aasm(@name).states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
