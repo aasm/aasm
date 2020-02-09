@@ -936,13 +936,15 @@ Since version *3.0.13* AASM supports ActiveRecord transactions. So whenever a tr
 callback or the state update fails, all changes to any database record are rolled back.
 Mongodb does not support transactions.
 
-There are currently 3 transactional callbacks that can be handled on the event, and 2 transactional callbacks for all events.
+There are currently 3 transactional callbacks that can be handled on the event, and 3 transactional callbacks for all events, and 1 transaction callback for states.
 
 ```ruby
   event           before_all_transactions
   event           before_transaction
   event           aasm_fire_event (within transaction)
+  new_state       after_commit (if event successful)
   event           after_commit (if event successful)
+  event           after_all_commits (if event successful)
   event           after_transaction
   event           after_all_transactions
 ```

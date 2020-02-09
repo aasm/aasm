@@ -590,6 +590,10 @@ if defined?(ActiveRecord)
           validator.sleep!("sleeper")
           expect(validator).to be_sleeping
           expect(validator.name).to eq("sleeper")
+
+          validator.eat!
+          expect(validator).to be_eating
+          expect(validator.name).to eq("eater")
         end
 
         it "should not fire :after_commit if transaction failed" do
@@ -645,6 +649,27 @@ if defined?(ActiveRecord)
               expect(validator.name).to eq("name")
             end
           end
+        end
+      end
+
+      describe 'after all commits callback' do
+        it "should fire :after_all_commits if transaction was successful" do
+          validator = Validator.create(:name => 'name')
+          expect(validator).to be_sleeping
+
+          expect { validator.run! }.to change { validator.after_all_commits_performed }.from(nil).to(true)
+          expect(validator).to be_running
+        end
+
+        it "should not fire :after_all_commits if transaction failed" do
+          validator = Validator.create(:name => 'name')
+          expect do
+            begin
+              validator.fail!
+            rescue => ignored
+            end
+          end.to_not change { validator.after_all_commits_performed }
+          expect(validator).to_not be_running
         end
       end
 

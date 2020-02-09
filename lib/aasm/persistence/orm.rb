@@ -131,6 +131,9 @@ module AASM
             end
 
             if success
+              new_state = self.class.aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
+              new_state.fire_callbacks(:after_commit, self, *args)
+
               event.fire_callbacks(:after_commit, self, *args)
               event.fire_global_callbacks(:after_all_commits, self, *args)
             end

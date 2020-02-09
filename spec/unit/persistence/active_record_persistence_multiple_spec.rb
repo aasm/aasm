@@ -508,6 +508,10 @@ if defined?(ActiveRecord)
           validator.sleep!("sleeper")
           expect(validator).to be_sleeping
           expect(validator.name).to eq("sleeper")
+
+          validator.eat!
+          expect(validator).to be_eating
+          expect(validator.name).to eq("eater")
         end
 
         it "should not fire :after_commit if transaction failed" do

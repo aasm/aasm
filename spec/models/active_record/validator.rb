@@ -1,5 +1,6 @@
 class Validator < ActiveRecord::Base
-  attr_accessor :after_all_transactions_performed,
+  attr_accessor :after_all_commits_performed,
+    :after_all_transactions_performed,
     :after_transaction_performed_on_fail,
     :after_transaction_performed_on_run,
     :before_all_transactions_performed,
@@ -15,11 +16,13 @@ class Validator < ActiveRecord::Base
 
   aasm :column => :status, :whiny_persistence => true do
     before_all_transactions :before_all_transactions
+    after_all_commits  :after_all_commits
     after_all_transactions  :after_all_transactions
 
     state :sleeping, :initial => true
     state :running
     state :failed, :after_enter => :fail
+    state :eating, after_commit: proc { self.name = 'eater' }
 
     event :run, :after_commit => :change_name! do
       after_transaction do
@@ -38,6 +41,10 @@ class Validator < ActiveRecord::Base
         change_name_on_sleep name
       end
       transitions :to => :sleeping, :from => :running
+    end
+
+    event :eat do
+      transitions :to => :eating, :from => :sleeping
     end
 
     event :fail do
@@ -69,6 +76,10 @@ class Validator < ActiveRecord::Base
     raise StandardError.new('failed on purpose')
   end
 
+  def after_all_commits
+    @after_all_commits_performed = true
+  end
+
   def after_all_transactions
     @after_all_transactions_performed = true
   end
@@ -85,6 +96,7 @@ class MultipleValidator < ActiveRecord::Base
     state :sleeping, :initial => true
     state :running
     state :failed, :after_enter => :fail
+    state :eating, after_commit: proc { self.name = 'eater' }
 
     event :run, :after_commit => :change_name! do
       transitions :to => :running, :from => :sleeping
@@ -94,6 +106,9 @@ class MultipleValidator < ActiveRecord::Base
         change_name_on_sleep name
       end
       transitions :to => :sleeping, :from => :running
+    end
+    event :eat do
+      transitions :to => :eating, :from => :sleeping
     end
     event :fail do
       transitions :to => :failed, :from => [:sleeping, :running]

@@ -150,6 +150,10 @@ module AASM
       @state_machine.add_global_callbacks(:after_all_transitions, *callbacks, &block)
     end
 
+    def after_all_commits(*callbacks, &block)
+      @state_machine.add_global_callbacks(:after_all_commits, *callbacks, &block)
+    end
+
     def after_all_transactions(*callbacks, &block)
       @state_machine.add_global_callbacks(:after_all_transactions, *callbacks, &block)
     end
