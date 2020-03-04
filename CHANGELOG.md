@@ -2,6 +2,10 @@
 
 ## unreleased
 
+## 5.0.8
+
+* Revert Fix for :after_commit within nested transaction because it adds after_commit_action dependency which is dependent on many gems.
+
 ## 5.0.7
 
 * Fix :after_commit within nested transaction [#666](https://github.com/aasm/aasm/pull/666), thanks to [stokarenko](https://github.com/stokarenko)
