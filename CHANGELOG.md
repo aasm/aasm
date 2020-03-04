@@ -2,6 +2,13 @@
 
 ## unreleased
 
+## 5.0.7
+
+* Fix :after_commit within nested transaction [#666](https://github.com/aasm/aasm/pull/666), thanks to [stokarenko](https://github.com/stokarenko)
+* Add permitted_transitions to group permitted event with state [#664](https://github.com/aasm/aasm/pull/664), thanks to [dnamsons](https://github.com/dnamsons)
+* Add Ruby 2.7.0 & 2.6.5 to Travis CI Test Matrix [#661](https://github.com/aasm/aasm/pull/661), thanks to [the-spectator](https://github.com/the-spectator)
+* Handle InvalidTransition in transition_from matcher [#653](https://github.com/aasm/aasm/pull/653), thanks to [ryanwood](https://github.com/ryanwood)
+
 ## 5.0.6
 
 * Fix no_direct_assignment, couldn't be turned off pragmatically [#636](https://github.com/aasm/aasm/issues/636)
