@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
 
   s.add_dependency 'concurrent-ruby', '~> 1.0'
-  s.add_dependency 'after_commit_action', '~> 1.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
