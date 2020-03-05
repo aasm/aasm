@@ -55,7 +55,9 @@ appraise 'rails_5.2' do
 end
 
 appraise 'norails' do
+  gem 'sqlite3', '~> 1.3', '>= 1.3.5', platforms: :ruby
   gem 'rails', install_if: false
+  gem 'after_commit_action', install_if: false
   gem 'sequel'
   gem 'redis-objects'
 end

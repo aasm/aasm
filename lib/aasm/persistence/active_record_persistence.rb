@@ -1,4 +1,3 @@
-require 'after_commit_action'
 require 'aasm/persistence/orm'
 module AASM
   module Persistence
@@ -29,7 +28,17 @@ module AASM
       #   end
       #
       def self.included(base)
-        base.send(:include, ::AfterCommitAction) unless base.include?(::AfterCommitAction)
+        begin
+          require 'after_commit_action'
+          base.send(:include, ::AfterCommitAction) unless base.include?(::AfterCommitAction)
+          base.send(:alias_method, :aasm_execute_after_commit, :execute_after_commit)
+        rescue LoadError
+          warn <<-MSG
+[DEPRECATION] :after_commit AASM callback is not safe in terms of race conditions and redundant calls.
+              Please add `gem 'after_commit_action', '~> 1.0'` to your Gemfile in order to fix that.
+          MSG
+        end
+
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::ORM)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
@@ -86,12 +95,6 @@ module AASM
         def aasm_transaction(requires_new, requires_lock)
           self.class.transaction(:requires_new => requires_new) do
             lock!(requires_lock) if requires_lock
-            yield
-          end
-        end
-
-        def aasm_execute_after_commit
-          execute_after_commit do
             yield
           end
         end
