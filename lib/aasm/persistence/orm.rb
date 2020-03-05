@@ -81,6 +81,10 @@ module AASM
         true
       end
 
+      def aasm_execute_after_commit
+        yield
+      end
+
       def aasm_write_state_attribute(state, name=:default)
         aasm_write_attribute(self.class.aasm(name).attribute_name, aasm_raw_attribute_value(state, name))
       end
@@ -116,32 +120,32 @@ module AASM
 
       # Returns true if event was fired successfully and transaction completed.
       def aasm_fire_event(state_machine_name, name, options, *args, &block)
-        if aasm_supports_transactions? && options[:persist]
-          event = self.class.aasm(state_machine_name).state_machine.events[name]
-          event.fire_callbacks(:before_transaction, self, *args)
-          event.fire_global_callbacks(:before_all_transactions, self, *args)
+        return super unless aasm_supports_transactions? && options[:persist]
 
-          begin
-            success = if options[:persist] && use_transactions?(state_machine_name)
-              aasm_transaction(requires_new?(state_machine_name), requires_lock?(state_machine_name)) do
-                super
-              end
-            else
+        event = self.class.aasm(state_machine_name).state_machine.events[name]
+        event.fire_callbacks(:before_transaction, self, *args)
+        event.fire_global_callbacks(:before_all_transactions, self, *args)
+
+        begin
+          success = if options[:persist] && use_transactions?(state_machine_name)
+            aasm_transaction(requires_new?(state_machine_name), requires_lock?(state_machine_name)) do
               super
             end
+          else
+            super
+          end
 
-            if success
+          if success
+            aasm_execute_after_commit do
               event.fire_callbacks(:after_commit, self, *args)
               event.fire_global_callbacks(:after_all_commits, self, *args)
             end
-
-            success
-          ensure
-            event.fire_callbacks(:after_transaction, self, *args)
-            event.fire_global_callbacks(:after_all_transactions, self, *args)
           end
-        else
-          super
+
+          success
+        ensure
+          event.fire_callbacks(:after_transaction, self, *args)
+          event.fire_global_callbacks(:after_all_transactions, self, *args)
         end
       end
 
