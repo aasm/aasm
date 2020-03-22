@@ -628,22 +628,22 @@ if defined?(ActiveRecord)
             expect(validator.name).to eq("name changed")
             expect(validator.reload).to be_running
           end
-        end
 
-        it "should not fire :after_commit if root transaction failed" do
-          validator = Validator.create(:name => 'name')
-          expect(validator).to be_sleeping
+          it "should not fire :after_commit if root transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
 
-          validator.transaction do
-            validator.run!
+            validator.transaction do
+              validator.run!
+              expect(validator.name).to eq("name")
+              expect(validator).to be_running
+
+              raise ActiveRecord::Rollback, "failed on purpose"
+            end
+
             expect(validator.name).to eq("name")
-            expect(validator).to be_running
-
-            raise ActiveRecord::Rollback, "failed on purpose"
+            expect(validator.reload).to be_sleeping
           end
-
-          expect(validator.name).to eq("name")
-          expect(validator.reload).to be_sleeping
         end
       end
 

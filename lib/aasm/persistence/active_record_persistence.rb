@@ -29,13 +29,13 @@ module AASM
       #
       def self.included(base)
         begin
-          require 'after_commit_action'
-          base.send(:include, ::AfterCommitAction) unless base.include?(::AfterCommitAction)
-          base.send(:alias_method, :aasm_execute_after_commit, :execute_after_commit)
+          require 'after_commit_everywhere'
+          base.send(:include, ::AfterCommitEverywhere) unless base.include?(::AfterCommitEverywhere)
+          base.send(:alias_method, :aasm_execute_after_commit, :after_commit)
         rescue LoadError
           warn <<-MSG
 [DEPRECATION] :after_commit AASM callback is not safe in terms of race conditions and redundant calls.
-              Please add `gem 'after_commit_action', '~> 1.0'` to your Gemfile in order to fix that.
+              Please add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile in order to fix that.
           MSG
         end
 

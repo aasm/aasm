@@ -436,7 +436,7 @@ job.aasm.current_state # stage3
 ### Multiple state machines per class
 
 Multiple state machines per class are supported. Be aware though that _AASM_ has been
-built with one state machine per class in mind. Nonetheless, here's how to do it (see below). Please note that you will need to specify database columns for where your pertinent states will be stored - we have specified two columns `move_state` and `work_state` in the example below. See the [Column name & migration](https://github.com/aasm/aasm#column-name--migration) section for further info. 
+built with one state machine per class in mind. Nonetheless, here's how to do it (see below). Please note that you will need to specify database columns for where your pertinent states will be stored - we have specified two columns `move_state` and `work_state` in the example below. See the [Column name & migration](https://github.com/aasm/aasm#column-name--migration) section for further info.
 
 ```ruby
 class SimpleMultipleExample
@@ -984,8 +984,8 @@ job.save! #notify_about_running_job is not run
 Please note that `:after_commit` AASM callbacks behaves around custom implementation
 of transaction pattern rather than a real-life DB transaction. This fact still causes
 the race conditions and redundant callback calls within nested transaction. In order
-to fix that it's highly recommended to add `gem 'after_commit_action', '~> 1.0'` to your
-`Gemfile`.
+to fix that it's highly recommended to add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'`
+to your `Gemfile`.
 
 If you want to encapsulate state changes within an own transaction, the behavior
 of this nested transaction might be confusing. Take a look at
@@ -1098,7 +1098,7 @@ end
 
 ### Log State Changes
 
-Logging state change can be done using [paper_trail](https://github.com/paper-trail-gem/paper_trail) gem 
+Logging state change can be done using [paper_trail](https://github.com/paper-trail-gem/paper_trail) gem
 
 Example of implementation can be found here [https://github.com/nitsujri/aasm-papertrail-example](https://github.com/nitsujri/aasm-papertrail-example)
 
