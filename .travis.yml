@@ -1,9 +1,6 @@
 language: ruby
 cache: bundler
 
-jdk:
-  - openjdk8
-
 before_install:
   - rvm list
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
@@ -15,7 +12,6 @@ rvm:
   - 2.5.0
   - 2.6.5
   - 2.7.0
-  - jruby-9.1.17.0
 
 services:
   - mongodb
@@ -46,6 +42,15 @@ script:
   - bundle exec rake test
 
 matrix:
+  include:
+    - &jruby_9_1_job
+      rvm: jruby-9.1.17.0
+      jdk: openjdk8
+      gemfile: gemfiles/rails_3.2.gemfile
+    - <<: *jruby_9_1_job
+      gemfile: gemfiles/rails_4.2.gemfile
+    - <<: *jruby_9_1_job
+      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
   exclude:
     - rvm: 2.3.0
       gemfile: gemfiles/norails.gemfile
@@ -81,18 +86,6 @@ matrix:
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
 #    - rvm: 2.5.0
 #      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/norails.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5.1.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5.2.gemfile
-#    - rvm: jruby-9.1.17.0
-#      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
-#    - rvm: jruby-9.1.17.0
-#      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
 
 notifications:
   slack:
