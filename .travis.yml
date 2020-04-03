@@ -1,4 +1,3 @@
-sudo: false
 language: ruby
 cache: bundler
 
@@ -16,7 +15,7 @@ rvm:
   - 2.5.0
   - 2.6.5
   - 2.7.0
-  - jruby-9.1.12.0
+  - jruby-9.1.17.0
 
 services:
   - mongodb
@@ -82,17 +81,17 @@ matrix:
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
 #    - rvm: 2.5.0
 #      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.1.17.0
       gemfile: gemfiles/norails.gemfile
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.1.17.0
       gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.1.17.0
       gemfile: gemfiles/rails_5.1.gemfile
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.1.17.0
       gemfile: gemfiles/rails_5.2.gemfile
-#    - rvm: jruby-9.1.12.0
+#    - rvm: jruby-9.1.17.0
 #      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
-#    - rvm: jruby-9.1.12.0
+#    - rvm: jruby-9.1.17.0
 #      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
 
 notifications:
