@@ -161,5 +161,17 @@ if defined?(Mongoid::Document)
       end
     end
 
+    describe 'testing the timestamps option' do
+      let(:example) { TimestampExampleMongoid.create }
+
+      it 'should update existing timestamp fields' do
+        expect { example.open! }.to change { example.reload.opened_at }.from(nil).to(instance_of(::Time))
+      end
+
+      it 'should not fail if there is no corresponding timestamp field' do
+        expect { example.close! }.to change { example.reload.status }
+      end
+    end
+
   end
 end

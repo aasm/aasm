@@ -24,6 +24,9 @@ module AASM
     # for ActiveRecord: use pessimistic locking
     attr_accessor :requires_lock
 
+    # automatically set `"#{state_name}_at" = ::Time.now` on state changes
+    attr_accessor :timestamps
+
     # forbid direct assignment in aasm_state column (in ActiveRecord)
     attr_accessor :no_direct_assignment
 

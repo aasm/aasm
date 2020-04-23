@@ -20,6 +20,7 @@
   - [Extending AASM](#extending-aasm)
   - [ActiveRecord](#activerecord)
   - [Bang events](#bang-events)
+  - [Timestamps](#timestamps)
   - [ActiveRecord enums](#activerecord-enums)
   - [Sequel](#sequel)
   - [Dynamoid](#dynamoid)
@@ -776,6 +777,37 @@ job.aasm_state # => 'sleeping'
 job.aasm_state = :running # => raises AASM::NoDirectAssignmentError
 job.aasm_state # => 'sleeping'
 ```
+
+### Timestamps
+
+You can tell _AASM_ to try to write a timestamp whenever a new state is entered.
+If `timestamps: true` is set, _AASM_ will look for a field named like the new state plus `_at` and try to fill it:
+
+```ruby
+class Job < ActiveRecord::Base
+  include AASM
+
+  aasm timestamps: true do
+    state :sleeping, initial: true
+    state :running
+
+    event :run do
+      transitions from: :sleeping, to: :running
+    end
+  end
+end
+```
+
+resulting in this:
+
+```ruby
+job = Job.create
+job.running_at # => nil
+job.run!
+job.running_at # => 2020-02-20 20:00:00
+```
+
+Missing timestamp fields are silently ignored, so it is not necessary to have setters (such as ActiveRecord columns) for *all* states when using this option.
 
 #### ActiveRecord enums
 

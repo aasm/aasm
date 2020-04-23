@@ -56,4 +56,9 @@ ActiveRecord::Migration.suppress_messages do
     t.string "state"
     t.string "some_string"
   end
+
+  ActiveRecord::Migration.create_table "timestamp_examples", :force => true do |t|
+    t.string "aasm_state"
+    t.datetime "opened_at"
+  end
 end
