@@ -837,4 +837,16 @@ if defined?(ActiveRecord)
       expect(example.complete!).to be_falsey
     end
   end
+
+  describe 'testing the timestamps option' do
+    let(:example) { TimestampExample.create! }
+
+    it 'should update existing timestamp columns' do
+      expect { example.open! }.to change { example.reload.opened_at }.from(nil).to(instance_of(::Time))
+    end
+
+    it 'should not fail if there is no corresponding timestamp column' do
+      expect { example.close! }.to change { example.reload.aasm_state }
+    end
+  end
 end

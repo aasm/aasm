@@ -37,6 +37,9 @@ module AASM
       # string for a specific lock type i.e. FOR UPDATE NOWAIT
       configure :requires_lock, false
 
+      # automatically set `"#{state_name}_at" = ::Time.now` on state changes
+      configure :timestamps, false
+
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
 
@@ -51,19 +54,12 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      # setup timestamp-setting callback if enabled
+      setup_timestamps(@name)
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
-      aasm_name = @name
-
-      if @state_machine.config.no_direct_assignment
-        @klass.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
-          if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
-            raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
-          else
-            super(state_name)
-          end
-        end
-      end
+      setup_no_direct_assignment(@name)
     end
 
     # This method is both a getter and a setter
@@ -263,6 +259,29 @@ module AASM
           aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
         ensure
           AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = original_config
+        end
+      end
+    end
+
+    def setup_timestamps(aasm_name)
+      return unless @state_machine.config.timestamps
+
+      after_all_transitions do
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.timestamps
+          ts_setter = "#{aasm.to_state}_at="
+          respond_to?(ts_setter) && send(ts_setter, ::Time.now)
+        end
+      end
+    end
+
+    def setup_no_direct_assignment(aasm_name)
+      return unless @state_machine.config.no_direct_assignment
+
+      @klass.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
+          raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
+        else
+          super(state_name)
         end
       end
     end
