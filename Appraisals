@@ -1,13 +1,3 @@
-appraise 'rails_3.2' do
-  gem 'rails', '~> 3.2.22'
-  gem 'mongoid', '~> 3.1'
-  gem 'sequel'
-  gem 'bson_ext', platforms: :ruby
-  gem 'test-unit', '~> 3.0'
-  gem 'minitest'
-  gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
-end
-
 appraise 'rails_4.2' do
   gem 'nokogiri', '1.6.8.1', platforms: %i[ruby_19]
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
