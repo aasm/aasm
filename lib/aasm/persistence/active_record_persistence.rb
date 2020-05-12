@@ -30,6 +30,8 @@ module AASM
       def self.included(base)
         begin
           require 'after_commit_everywhere'
+          raise LoadError unless Gem::Version.new(::AfterCommitEverywhere::VERSION) >= Gem::Version.new('0.1.5')
+
           base.send(:include, ::AfterCommitEverywhere) unless base.include?(::AfterCommitEverywhere)
           base.send(:alias_method, :aasm_execute_after_commit, :after_commit)
         rescue LoadError
