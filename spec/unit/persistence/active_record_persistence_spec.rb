@@ -613,6 +613,38 @@ if defined?(ActiveRecord)
           expect(validator).to be_running
           expect(validator.name).to eq("name")
         end
+
+        context "nested transaction" do
+          it "should fire :after_commit if root transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            validator.transaction do
+              validator.run!
+              expect(validator.name).to eq("name")
+              expect(validator).to be_running
+            end
+
+            expect(validator.name).to eq("name changed")
+            expect(validator.reload).to be_running
+          end
+
+          it "should not fire :after_commit if root transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            validator.transaction do
+              validator.run!
+              expect(validator.name).to eq("name")
+              expect(validator).to be_running
+
+              raise ActiveRecord::Rollback, "failed on purpose"
+            end
+
+            expect(validator.name).to eq("name")
+            expect(validator.reload).to be_sleeping
+          end
+        end
       end
 
       describe 'before and after transaction callbacks' do
