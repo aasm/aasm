@@ -677,6 +677,8 @@ end
 AASM comes with support for ActiveRecord and allows automatic persisting of the object's
 state in the database.
 
+Add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile 
+
 ```ruby
 class Job < ActiveRecord::Base
   include AASM
