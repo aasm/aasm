@@ -1084,7 +1084,10 @@ end
 ```
 
 Whatever column name is used, make sure to add a migration to provide this column
-(of type `string`):
+(of type `string`).
+Do not add default value for column at the database level. If you add default
+value in database then AASM callbacks on the initial state will not be fired upon 
+instantiation of the model.
 
 ```ruby
 class AddJobState < ActiveRecord::Migration
