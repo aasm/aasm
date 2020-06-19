@@ -260,8 +260,8 @@ begin
   new_state       enter
   ...update state...
   event           before_success      # if persist successful
-  transition      success             # if persist successful
-  event           success             # if persist successful
+  transition      success             # if persist successful, database update not guaranteed
+  event           success             # if persist successful, database update not guaranteed
   old_state       after_exit
   new_state       after_enter
   event           after
@@ -274,6 +274,8 @@ ensure
   event           ensure_on_all_events
 end
 ```
+
+Use event's `after_commit` callback if it should be fired after database update.
 
 #### The current event triggered
 

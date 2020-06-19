@@ -647,6 +647,41 @@ if defined?(ActiveRecord)
         end
       end
 
+      describe 'callbacks for the new DSL' do
+
+        it "be called in order" do
+          show_debug_log = false
+
+          callback = ActiveRecordCallback.create
+          callback.aasm.current_state
+
+          unless show_debug_log
+            expect(callback).to receive(:before_all_events).once.ordered
+            expect(callback).to receive(:before_event).once.ordered
+            expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
+            expect(callback).to receive(:exit_open).once.ordered
+            # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+            # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:after_all_transitions).once.ordered
+            expect(callback).to receive(:after_transition).once.ordered
+            expect(callback).to receive(:before_enter_closed).once.ordered
+            expect(callback).to receive(:enter_closed).once.ordered
+            expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+            expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
+            expect(callback).to receive(:after_enter_closed).once.ordered
+            expect(callback).to receive(:after_event).once.ordered
+            expect(callback).to receive(:after_all_events).once.ordered
+            expect(callback).to receive(:ensure_event).once.ordered
+            expect(callback).to receive(:ensure_on_all_events).once.ordered
+            expect(callback).to receive(:event_after_commit).once.ordered
+          end
+
+          callback.close!
+        end
+      end
+
       describe 'before and after transaction callbacks' do
         [:after, :before].each do |event_type|
           describe "#{event_type}_transaction callback" do
