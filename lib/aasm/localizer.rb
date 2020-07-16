@@ -46,8 +46,10 @@ module AASM
     end
 
     def ancestors_list(klass)
+      has_active_record_base = defined?(::ActiveRecord::Base)
       klass.ancestors.select do |ancestor|
-        ancestor.respond_to?(:model_name) unless ancestor.name == 'ActiveRecord::Base'
+        not_active_record_base = has_active_record_base ? (ancestor != ::ActiveRecord::Base) : true
+        ancestor.respond_to?(:model_name) && not_active_record_base
       end
     end
   end
