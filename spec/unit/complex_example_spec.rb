@@ -95,4 +95,5 @@ describe 'when being unsuspended' do
     expect { auth.aasm.fire(:unknown) }.to raise_error(AASM::UndefinedState, "State :unknown doesn't exist")
     expect(auth.aasm.current_state).to eq(:pending)
   end
+
 end

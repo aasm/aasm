@@ -2,6 +2,9 @@ sudo: false
 language: ruby
 cache: bundler
 
+jdk:
+  - openjdk8
+
 before_install:
   - rvm list
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
@@ -11,23 +14,24 @@ before_install:
 rvm:
   - 2.3.0
   - 2.5.0
+  - 2.6.5
+  - 2.7.0
   - jruby-9.1.12.0
 
 services:
   - mongodb
   - redis-server
 
-addons:
-  rethinkdb: '2.3.6'
+#addons:
+#  rethinkdb: '2.3.4'
 
 gemfile:
   - gemfiles/norails.gemfile
-  - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_4.2_mongoid_5.gemfile
-  - gemfiles/rails_4.2_nobrainer.gemfile
+#  - gemfiles/rails_4.2_nobrainer.gemfile
   - gemfiles/rails_5.0.gemfile
-  - gemfiles/rails_5.0_nobrainer.gemfile
+#  - gemfiles/rails_5.0_nobrainer.gemfile
   - gemfiles/rails_5.1.gemfile
   - gemfiles/rails_5.2.gemfile
 
@@ -47,20 +51,30 @@ matrix:
       gemfile: gemfiles/norails.gemfile
     - rvm: 2.3.0
       gemfile: gemfiles/rails_5.0.gemfile
-    - rvm: 2.3.0
-      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
+#    - rvm: 2.3.0
+#      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
     - rvm: 2.3.0
       gemfile: gemfiles/rails_5.1.gemfile
     - rvm: 2.3.0
       gemfile: gemfiles/rails_5.2.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/rails_5.2.gemfile
+    - rvm: 2.6.5
+      gemfile: gemfiles/rails_5.2.gemfile
     - rvm: 2.5.0
-      gemfile: gemfiles/rails_3.2.gemfile
-    - rvm: 2.5.0
+      gemfile: gemfiles/rails_4.2.gemfile
+    - rvm: 2.6.5
+      gemfile: gemfiles/rails_4.2.gemfile
+    - rvm: 2.7.0
       gemfile: gemfiles/rails_4.2.gemfile
     - rvm: 2.5.0
       gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
-    - rvm: 2.5.0
-      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
+    - rvm: 2.6.5
+      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/rails_4.2_mongoid_5.gemfile
+#    - rvm: 2.5.0
+#      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/norails.gemfile
     - rvm: jruby-9.1.12.0
@@ -69,10 +83,10 @@ matrix:
       gemfile: gemfiles/rails_5.1.gemfile
     - rvm: jruby-9.1.12.0
       gemfile: gemfiles/rails_5.2.gemfile
-    - rvm: jruby-9.1.12.0
-      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
-    - rvm: jruby-9.1.12.0
-      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
+#    - rvm: jruby-9.1.12.0
+#      gemfile: gemfiles/rails_4.2_nobrainer.gemfile
+#    - rvm: jruby-9.1.12.0
+#      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
 
 notifications:
   slack:

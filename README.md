@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/aasm.svg)](http://badge.fury.io/rb/aasm)
 [![Build Status](https://travis-ci.org/aasm/aasm.svg?branch=master)](https://travis-ci.org/aasm/aasm)
 [![Code Climate](https://codeclimate.com/github/aasm/aasm/badges/gpa.svg)](https://codeclimate.com/github/aasm/aasm)
+[![codecov](https://codecov.io/gh/aasm/aasm/branch/master/graph/badge.svg)](https://codecov.io/gh/aasm/aasm)
 
 ## Index
 - [Upgrade from version 3 to 4](#upgrade-from-version-3-to-4)
@@ -29,6 +30,7 @@
   - [Transaction support](#transaction-support)
   - [Pessimistic Locking](#pessimistic-locking)
   - [Column name & migration](#column-name--migration)
+  - [Log State Changes](#log-state-changes)
   - [Inspection](#inspection)
   - [Warning output](#warning-output)
   - [RubyMotion support](#rubymotion-support)
@@ -258,8 +260,8 @@ begin
   new_state       enter
   ...update state...
   event           before_success      # if persist successful
-  transition      success             # if persist successful
-  event           success             # if persist successful
+  transition      success             # if persist successful, database update not guaranteed
+  event           success             # if persist successful, database update not guaranteed
   old_state       after_exit
   new_state       after_enter
   event           after
@@ -272,6 +274,8 @@ ensure
   event           ensure_on_all_events
 end
 ```
+
+Use event's `after_commit` callback if it should be fired after database update.
 
 #### The current event triggered
 
@@ -434,12 +438,12 @@ job.aasm.current_state # stage3
 ### Multiple state machines per class
 
 Multiple state machines per class are supported. Be aware though that _AASM_ has been
-built with one state machine per class in mind. Nonetheless, here's how to do it:
+built with one state machine per class in mind. Nonetheless, here's how to do it (see below). Please note that you will need to specify database columns for where your pertinent states will be stored - we have specified two columns `move_state` and `work_state` in the example below. See the [Column name & migration](https://github.com/aasm/aasm#column-name--migration) section for further info.
 
 ```ruby
 class SimpleMultipleExample
   include AASM
-  aasm(:move) do
+  aasm(:move, column: 'move_state') do
     state :standing, initial: true
     state :walking
     state :running
@@ -455,7 +459,7 @@ class SimpleMultipleExample
     end
   end
 
-  aasm(:work) do
+  aasm(:work, column: 'work_state') do
     state :sleeping, initial: true
     state :processing
 
@@ -675,6 +679,8 @@ end
 AASM comes with support for ActiveRecord and allows automatic persisting of the object's
 state in the database.
 
+Add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile 
+
 ```ruby
 class Job < ActiveRecord::Base
   include AASM
@@ -737,6 +743,14 @@ class Job < ActiveRecord::Base
   end
 
 end
+```
+
+Also You can skip the validation at instance level with `some_event_name_without_validation!` method.
+With this you have the flexibility of having validation for all your transitions by default and then skip it wherever required.
+Please note that only state column will be updated as mentioned in the above example.
+
+```ruby
+job.run_without_validation!
 ```
 
 If you want to make sure that the _AASM_ column for storing the state is not directly assigned,
@@ -971,6 +985,12 @@ job.run
 job.save! #notify_about_running_job is not run
 ```
 
+Please note that `:after_commit` AASM callbacks behaves around custom implementation
+of transaction pattern rather than a real-life DB transaction. This fact still causes
+the race conditions and redundant callback calls within nested transaction. In order
+to fix that it's highly recommended to add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'`
+to your `Gemfile`.
+
 If you want to encapsulate state changes within an own transaction, the behavior
 of this nested transaction might be confusing. Take a look at
 [ActiveRecord Nested Transactions](http://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html)
@@ -1055,18 +1075,21 @@ this by defining your favorite column name, using `:column` like this:
 class Job < ActiveRecord::Base
   include AASM
 
-  aasm column: 'my_state' do
+  aasm column: :my_state do
     ...
   end
 
-  aasm :another_state_machine, column: 'second_state' do
+  aasm :another_state_machine, column: :second_state do
     ...
   end
 end
 ```
 
 Whatever column name is used, make sure to add a migration to provide this column
-(of type `string`):
+(of type `string`).
+Do not add default value for column at the database level. If you add default
+value in database then AASM callbacks on the initial state will not be fired upon 
+instantiation of the model.
 
 ```ruby
 class AddJobState < ActiveRecord::Migration
@@ -1079,6 +1102,13 @@ class AddJobState < ActiveRecord::Migration
   end
 end
 ```
+
+### Log State Changes
+
+Logging state change can be done using [paper_trail](https://github.com/paper-trail-gem/paper_trail) gem
+
+Example of implementation can be found here [https://github.com/nitsujri/aasm-papertrail-example](https://github.com/nitsujri/aasm-papertrail-example)
+
 
 ### Inspection
 
@@ -1123,6 +1153,10 @@ job = Job.new
 # show all permitted states (from initial state)
 job.aasm.states(permitted: true).map(&:name)
 #=> [:running]
+
+# List all the permitted transitions(event and state pairs) from initial state
+job.aasm.permitted_transitions
+#=> [{ :event => :run, :state => :running }]
 
 job.run
 job.aasm.states(permitted: true).map(&:name)
@@ -1191,7 +1225,7 @@ the 'instance method symbol / string' way whenever possible when defining guardi
 #### RSpec
 
 AASM provides some matchers for [RSpec](http://rspec.info):
-*`transition_from`,
+* `transition_from`,
 * `have_state`, `allow_event`
 * and `allow_transition_to`.
 

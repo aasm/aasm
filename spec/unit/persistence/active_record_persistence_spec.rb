@@ -393,13 +393,13 @@ if defined?(ActiveRecord)
 
       # allow it temporarily
       NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = false
-      obj.aasm_state = :pending
-      expect(obj.aasm_state.to_sym).to eql :pending
+      obj.aasm_state = :running
+      expect(obj.aasm_state.to_sym).to eql :running
 
       # and forbid it again
       NoDirectAssignment.aasm.state_machine.config.no_direct_assignment = true
-      expect {obj.aasm_state = :running}.to raise_error(AASM::NoDirectAssignmentError)
-      expect(obj.aasm_state.to_sym).to eql :pending
+      expect {obj.aasm_state = :pending}.to raise_error(AASM::NoDirectAssignmentError)
+      expect(obj.aasm_state.to_sym).to eql :running
     end
   end # direct assignment
 
@@ -613,6 +613,73 @@ if defined?(ActiveRecord)
           expect(validator).to be_running
           expect(validator.name).to eq("name")
         end
+
+        context "nested transaction" do
+          it "should fire :after_commit if root transaction was successful" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            validator.transaction do
+              validator.run!
+              expect(validator.name).to eq("name")
+              expect(validator).to be_running
+            end
+
+            expect(validator.name).to eq("name changed")
+            expect(validator.reload).to be_running
+          end
+
+          it "should not fire :after_commit if root transaction failed" do
+            validator = Validator.create(:name => 'name')
+            expect(validator).to be_sleeping
+
+            validator.transaction do
+              validator.run!
+              expect(validator.name).to eq("name")
+              expect(validator).to be_running
+
+              raise ActiveRecord::Rollback, "failed on purpose"
+            end
+
+            expect(validator.name).to eq("name")
+            expect(validator.reload).to be_sleeping
+          end
+        end
+      end
+
+      describe 'callbacks for the new DSL' do
+
+        it "be called in order" do
+          show_debug_log = false
+
+          callback = ActiveRecordCallback.create
+          callback.aasm.current_state
+
+          unless show_debug_log
+            expect(callback).to receive(:before_all_events).once.ordered
+            expect(callback).to receive(:before_event).once.ordered
+            expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:before_exit_open).once.ordered                   # these should be before the state changes
+            expect(callback).to receive(:exit_open).once.ordered
+            # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
+            # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
+            expect(callback).to receive(:after_all_transitions).once.ordered
+            expect(callback).to receive(:after_transition).once.ordered
+            expect(callback).to receive(:before_enter_closed).once.ordered
+            expect(callback).to receive(:enter_closed).once.ordered
+            expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
+            expect(callback).to receive(:after_exit_open).once.ordered                    # these should be after the state changes
+            expect(callback).to receive(:after_enter_closed).once.ordered
+            expect(callback).to receive(:after_event).once.ordered
+            expect(callback).to receive(:after_all_events).once.ordered
+            expect(callback).to receive(:ensure_event).once.ordered
+            expect(callback).to receive(:ensure_on_all_events).once.ordered
+            expect(callback).to receive(:event_after_commit).once.ordered
+          end
+
+          callback.close!
+        end
       end
 
       describe 'before and after transaction callbacks' do
@@ -746,6 +813,28 @@ if defined?(ActiveRecord)
       expect(job.may_run?).to eql false
 
       expect { job.run }.to raise_error(AASM::InvalidTransition)
+    end
+  end
+
+  describe 'testing the instance_level skip validation with _without_validation method' do
+    let(:example) do
+      obj = InstanceLevelSkipValidationExample.new(state: 'new')
+      obj.save(validate: false)
+      obj
+    end
+
+    it 'should be able to change the state with invalid record' do
+      expect(example.valid?).to be_falsey
+      expect(example.complete!).to be_falsey
+      expect(example.complete_without_validation!).to be_truthy
+      expect(example.state).to eq('complete')
+    end
+
+    it 'shouldn\'t affect the behaviour of existing method after calling _without_validation! method' do
+      expect(example.set_draft!).to be_falsey
+      expect(example.set_draft_without_validation!).to be_truthy
+      expect(example.state).to eq('draft')
+      expect(example.complete!).to be_falsey
     end
   end
 end

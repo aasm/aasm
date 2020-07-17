@@ -78,6 +78,17 @@ module AASM
       events
     end
 
+    def permitted_transitions
+      events(permitted: true).flat_map do |event|
+        available_transitions = event.transitions_from_state(current_state)
+        allowed_transitions = available_transitions.select { |t| t.allowed?(@instance) }
+
+        allowed_transitions.map do |transition|
+          { event: event.name, state: transition.to }
+        end
+      end
+    end
+
     def state_object_for_name(name)
       obj = @instance.class.aasm(@name).states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
@@ -91,7 +102,7 @@ module AASM
         when Proc
           state.call(@instance)
         else
-          raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+          raise NotImplementedError, "Unrecognized state-type given. Expected Symbol, String, or Proc."
       end
     end
 
@@ -104,11 +115,12 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
-      @instance.send(:aasm_fire_event, @name, event_name, {persist: false}, *args, &block)
+      @instance.send(event_name, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
-      @instance.send(:aasm_fire_event, @name, event_name, {persist: true}, *args, &block)
+      event_name = event_name.to_s.+("!").to_sym
+      @instance.send(event_name, *args, &block)
     end
 
     def set_current_state_with_persistence(state)

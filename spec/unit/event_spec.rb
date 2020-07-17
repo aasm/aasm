@@ -294,6 +294,19 @@ describe 'current event' do
     pe.wakeup!
     expect(pe.aasm.current_event).to eql :wakeup!
   end
+
+  describe "when calling events with fire/fire!" do
+    it "fire should populate aasm.current_event and transition (sleeping to showering)" do
+      pe.aasm.fire(:wakeup)
+      expect(pe.aasm.current_event).to eq :wakeup
+      expect(pe.aasm.current_state).to eq :showering
+    end
+    it "fire! should populate aasm.current_event and transition (sleeping to showering)" do
+      pe.aasm.fire!(:wakeup)
+      expect(pe.aasm.current_event).to eq :wakeup!
+      expect(pe.aasm.current_state).to eq :showering
+    end
+  end
 end
 
 describe 'parametrised events' do

@@ -27,7 +27,7 @@ ActiveRecord::Migration.suppress_messages do
     t.string "status"
   end
 
-  %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors).each do |table_name|
+  %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors active_record_callbacks).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
       t.string "status"
@@ -50,5 +50,10 @@ ActiveRecord::Migration.suppress_messages do
   ActiveRecord::Migration.create_table "basic_active_record_two_state_machines_examples", :force => true do |t|
     t.string "search"
     t.string "sync"
+  end
+
+  ActiveRecord::Migration.create_table "instance_level_skip_validation_examples", :force => true do |t|
+    t.string "state"
+    t.string "some_string"
   end
 end

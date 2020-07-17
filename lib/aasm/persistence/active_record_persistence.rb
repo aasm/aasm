@@ -28,6 +28,19 @@ module AASM
       #   end
       #
       def self.included(base)
+        begin
+          require 'after_commit_everywhere'
+          raise LoadError unless Gem::Version.new(::AfterCommitEverywhere::VERSION) >= Gem::Version.new('0.1.5')
+
+          base.send(:include, ::AfterCommitEverywhere) unless base.include?(::AfterCommitEverywhere)
+          base.send(:alias_method, :aasm_execute_after_commit, :after_commit)
+        rescue LoadError
+          warn <<-MSG
+[DEPRECATION] :after_commit AASM callback is not safe in terms of race conditions and redundant calls.
+              Please add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile in order to fix that.
+          MSG
+        end
+
         base.send(:include, AASM::Persistence::Base)
         base.send(:include, AASM::Persistence::ORM)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
