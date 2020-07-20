@@ -11,13 +11,13 @@ end
 
 describe 'localized state names' do
   before(:all) do
-    I18n.load_path << 'spec/en.yml'
-    I18n.default_locale = :en
+    I18n.load_path << 'spec/localizer_test_model_new_style.yml'
     I18n.reload!
   end
 
   after(:all) do
-    I18n.load_path.clear
+    I18n.load_path.delete('spec/localizer_test_model_new_style.yml')
+    I18n.backend.load_translations
   end
 
   it 'should localize' do

@@ -2,5 +2,4 @@ en:
   activerecord:
     attributes:
       localizer_test_model:
-        aasm_state:
-          opened: "It's open now!"
+        aasm_state/opened: "It's open now!"
