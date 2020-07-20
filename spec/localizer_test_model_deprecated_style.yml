@@ -1,9 +1,5 @@
 en:
   activerecord:
-    events:
-      localizer_test_model:
-        close: "Let's close it!"
-
     attributes:
       localizer_test_model:
         aasm_state:
