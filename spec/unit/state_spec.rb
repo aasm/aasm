@@ -17,12 +17,28 @@ describe AASM::Core::State do
     expect(state.name).to eq(:astate)
   end
 
-  it 'should set the display_name from name' do
-    expect(new_state.display_name).to eq('Astate')
-  end
+  describe '#display_name' do
+    subject(:display_name) { new_state(options).display_name }
 
-  it 'should set the display_name from options' do
-    expect(new_state(:display => "A State").display_name).to eq('A State')
+    context 'without options' do
+      let(:options) { {} }
+
+      context 'without I18n' do
+        before { allow(Module).to receive(:const_defined?).with(:I18n).and_return(nil) }
+
+        it 'should set the display_name from name' do
+          expect(display_name).to eq('Astate')
+        end
+      end
+    end
+
+    context 'with :display option' do
+      let(:options) { { display: "A State" } }
+
+      it 'should set the display_name from options' do
+        expect(display_name).to eq('A State')
+      end
+    end
   end
 
   it 'should set the options and expose them as options' do

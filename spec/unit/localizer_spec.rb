@@ -41,7 +41,7 @@ if defined?(ActiveRecord)
 
   describe AASM::Localizer, "deprecated style" do
     before(:all) do
-      I18n.load_path << 'spec/en_deprecated_style.yml'
+      I18n.load_path << 'spec/localizer_test_model_deprecated_style.yml'
       I18n.reload!
       I18n.backend.load_translations
     end
