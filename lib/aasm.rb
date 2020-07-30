@@ -1,5 +1,3 @@
-require 'ostruct'
-
 require 'aasm/version'
 require 'aasm/errors'
 require 'aasm/configuration'
