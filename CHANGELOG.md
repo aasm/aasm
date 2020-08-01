@@ -2,6 +2,11 @@
 
 ## unreleased
 
+## 5.1.0
+
+* Fix after_commit in nested transactions [#536](https://github.com/aasm/aasm/issues/536) without explicit AR dependency in PR [#668](https://github.com/aasm/aasm/pull/668), thanks to [stokarenko](https://github.com/stokarenko)
+* Remove support for Rails 3.2
+
 ## 5.0.8
 
 * Revert Fix for :after_commit within nested transaction because it adds after_commit_action dependency which is dependent on many gems.
