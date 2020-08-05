@@ -13,6 +13,7 @@ $LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib
 require 'aasm'
 require 'rspec'
 require 'aasm/rspec'
+require 'i18n'
 require 'pry'
 
 # require 'ruby-debug'; Debugger.settings[:autoeval] = true; debugger; rubys_debugger = 'annoying'
@@ -34,3 +35,7 @@ Dir[File.dirname(__FILE__) + "/spec_helpers/**/*.rb"].sort.each { |f| require Fi
 
 # example model classes
 Dir[File.dirname(__FILE__) + "/models/*.rb"].sort.each { |f| require File.expand_path(f) }
+
+I18n.load_path << 'spec/en.yml'
+I18n.enforce_available_locales = false
+I18n.default_locale = :en

@@ -1,20 +1,18 @@
 require 'spec_helper'
 
-if defined?(ActiceRecord)
-  require 'i18n'
-
-  I18n.enforce_available_locales = false
+if defined?(ActiveRecord)
+  require 'models/active_record/localizer_test_model'
   load_schema
 
   describe AASM::Localizer, "new style" do
     before(:all) do
-      I18n.load_path << 'spec/en.yml'
-      I18n.default_locale = :en
+      I18n.load_path << 'spec/localizer_test_model_new_style.yml'
       I18n.reload!
     end
 
     after(:all) do
-      I18n.load_path.clear
+      I18n.load_path.delete('spec/localizer_test_model_new_style.yml')
+      I18n.backend.load_translations
     end
 
     let (:foo_opened) { LocalizerTestModel.new }
@@ -43,13 +41,14 @@ if defined?(ActiceRecord)
 
   describe AASM::Localizer, "deprecated style" do
     before(:all) do
-      I18n.load_path << 'spec/en_deprecated_style.yml'
-      I18n.default_locale = :en
+      I18n.load_path << 'spec/localizer_test_model_deprecated_style.yml'
       I18n.reload!
+      I18n.backend.load_translations
     end
 
     after(:all) do
-      I18n.load_path.clear
+      I18n.load_path.delete('spec/localizer_test_model_deprecated_style.yml')
+      I18n.backend.load_translations
     end
 
     let (:foo_opened) { LocalizerTestModel.new }
