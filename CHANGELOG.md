@@ -4,6 +4,12 @@
 
 ## 5.1.0
 
+* Fix Depreciation message for after_commit_everywhere [#695](https://github.com/aasm/aasm/issues/695) in PR [#696](https://github.com/aasm/aasm/pull/696)
+* Fix human_state to use display option [#684](https://github.com/aasm/aasm/issues/684) in PR [#697](https://github.com/aasm/aasm/pull/697)
+* Remove support for ruby 2.3
+
+## 5.1.0
+
 * Fix after_commit in nested transactions [#536](https://github.com/aasm/aasm/issues/536) without explicit AR dependency in PR [#668](https://github.com/aasm/aasm/pull/668), thanks to [stokarenko](https://github.com/stokarenko)
 * Remove support for Rails 3.2
 
