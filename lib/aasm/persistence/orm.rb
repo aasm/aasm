@@ -135,7 +135,7 @@ module AASM
             super
           end
 
-          if success && (event.options.keys & [:after_commit, :after_all_commits]).present?
+          if success && !(event.options.keys & [:after_commit, :after_all_commits]).empty?
             aasm_execute_after_commit do
               event.fire_callbacks(:after_commit, self, *args)
               event.fire_global_callbacks(:after_all_commits, self, *args)
