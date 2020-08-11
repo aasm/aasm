@@ -2,7 +2,7 @@
 
 ## unreleased
 
-## 5.1.0
+## 5.1.1
 
 * Fix Depreciation message for after_commit_everywhere [#695](https://github.com/aasm/aasm/issues/695) in PR [#696](https://github.com/aasm/aasm/pull/696)
 * Fix human_state to use display option [#684](https://github.com/aasm/aasm/issues/684) in PR [#697](https://github.com/aasm/aasm/pull/697)
