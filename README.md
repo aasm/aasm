@@ -434,6 +434,25 @@ job.stage1_completed
 job.aasm.current_state # stage3
 ```
 
+### Display name for state
+
+You can define display name for state using :display option
+
+```ruby
+class Job
+  include AASM
+
+  aasm do
+    state :stage1, initial: true, display: 'First Stage'
+    state :stage2
+    state :stage3
+  end
+end
+
+job = Job.new
+job.aasm.human_state
+
+```
 
 ### Multiple state machines per class
 

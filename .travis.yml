@@ -12,7 +12,6 @@ before_install:
   - bundle _1.16.1_ install
 
 rvm:
-  - 2.3.0
   - 2.5.0
   - 2.6.5
   - 2.7.0
@@ -47,16 +46,6 @@ script:
 
 matrix:
   exclude:
-    - rvm: 2.3.0
-      gemfile: gemfiles/norails.gemfile
-    - rvm: 2.3.0
-      gemfile: gemfiles/rails_5.0.gemfile
-#    - rvm: 2.3.0
-#      gemfile: gemfiles/rails_5.0_nobrainer.gemfile
-    - rvm: 2.3.0
-      gemfile: gemfiles/rails_5.1.gemfile
-    - rvm: 2.3.0
-      gemfile: gemfiles/rails_5.2.gemfile
     - rvm: 2.7.0
       gemfile: gemfiles/rails_5.2.gemfile
     - rvm: 2.6.5

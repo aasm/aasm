@@ -13,6 +13,10 @@ if defined?(ActiveRecord)
       expect(DefaultState.new.aasm.current_state).to eql :alpha
     end
 
+    it "uses display option" do
+      expect(DefaultState.new.aasm.human_state).to eql "ALPHA"
+    end
+
     it "uses the provided method" do
       expect(ProvidedState.new.aasm.current_state).to eql :beta
     end
