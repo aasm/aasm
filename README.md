@@ -434,6 +434,14 @@ job.stage1_completed
 job.aasm.current_state # stage3
 ```
 
+You can define transition from any defined state by omitting `from`:
+
+```ruby
+event :abort do
+  transitions to: :aborted
+end
+```
+
 ### Display name for state
 
 You can define display name for state using :display option
