@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'generator_spec'
   s.add_development_dependency 'appraisal'
   s.add_development_dependency "simplecov"
-  s.add_development_dependency "codecov", ">= 0.1.17", '< 0.1.20'
+  s.add_development_dependency "codecov", ">= 0.1.17", '<= 0.2.10'
 
   # debugging
   # s.add_development_dependency 'debugger'
