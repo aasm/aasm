@@ -2,7 +2,7 @@
 
 module AASM::Core
   class Transition
-    include DslHelper
+    include AASM::DslHelper
 
     attr_reader :from, :to, :event, :opts, :failures
     alias_method :options, :opts
