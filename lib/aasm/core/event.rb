@@ -2,7 +2,7 @@
 
 module AASM::Core
   class Event
-    include DslHelper
+    include AASM::DslHelper
 
     attr_reader :name, :state_machine, :options
 
