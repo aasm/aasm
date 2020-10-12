@@ -54,8 +54,10 @@ module AASM::Core
     end
 
     def display_name
-      @display_name ||= begin
-        if Module.const_defined?(:I18n)
+      @display_name = begin
+        if @fixed_display_name
+          @fixed_display_name
+        elsif Module.const_defined?(:I18n)
           localized_name
         else
           name.to_s.gsub(/_/, ' ').capitalize
@@ -75,8 +77,8 @@ module AASM::Core
   private
 
     def update(options = {})
-      if options.key?(:display) then
-        @display_name = options.delete(:display)
+      if options.key?(:display)
+        @fixed_display_name = options.delete(:display)
       end
       @options = options
       self
