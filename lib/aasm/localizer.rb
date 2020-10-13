@@ -5,7 +5,7 @@ module AASM
         list << :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
         list
       end
-      translate_queue(checklist) || I18n.translate(checklist.shift, :default => event.to_s.humanize)
+      translate_queue(checklist) || I18n.translate(checklist.shift, :default => event.to_s.gsub(/_/, ' ').capitalize)
     end
 
     def human_state_name(klass, state)
@@ -14,7 +14,7 @@ module AASM
         list << item_for(klass, state, ancestor, :old_style => true)
         list
       end
-      translate_queue(checklist) || I18n.translate(checklist.shift, :default => state.to_s.humanize)
+      translate_queue(checklist) || I18n.translate(checklist.shift, :default => state.to_s.gsub(/_/, ' ').capitalize)
     end
 
   private
