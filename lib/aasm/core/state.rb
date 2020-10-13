@@ -8,6 +8,7 @@ module AASM::Core
       @name = name
       @klass = klass
       @state_machine = state_machine
+      @default_display_name = name.to_s.gsub(/_/, ' ').capitalize
       update(options)
     end
 
@@ -55,12 +56,10 @@ module AASM::Core
 
     def display_name
       @display_name = begin
-        if @fixed_display_name
-          @fixed_display_name
-        elsif Module.const_defined?(:I18n)
+        if Module.const_defined?(:I18n)
           localized_name
         else
-          name.to_s.gsub(/_/, ' ').capitalize
+          @default_display_name
         end
       end
     end
@@ -78,7 +77,7 @@ module AASM::Core
 
     def update(options = {})
       if options.key?(:display)
-        @fixed_display_name = options.delete(:display)
+        @default_display_name = options.delete(:display)
       end
       @options = options
       self
