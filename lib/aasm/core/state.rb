@@ -2,7 +2,7 @@
 
 module AASM::Core
   class State
-    attr_reader :name, :state_machine, :options
+    attr_reader :name, :state_machine, :options, :default_display_name
 
     def initialize(name, klass, state_machine, options={})
       @name = name

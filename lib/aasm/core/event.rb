@@ -4,7 +4,7 @@ module AASM::Core
   class Event
     include AASM::DslHelper
 
-    attr_reader :name, :state_machine, :options
+    attr_reader :name, :state_machine, :options, :default_display_name
 
     def initialize(name, state_machine, options = {}, &block)
       @name = name
@@ -13,6 +13,7 @@ module AASM::Core
       @valid_transitions = {}
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
+      @default_display_name = name.to_s.gsub(/_/, ' ').capitalize
 
       # from aasm4
       @options = options # QUESTION: .dup ?
