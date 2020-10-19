@@ -1,4 +1,4 @@
-class AASMCreate<%= table_name.camelize %> < ActiveRecord::Migration[<%=  ActiveRecord::VERSION::STRING.to_f %>]
+class AasmCreate<%= table_name.camelize %> < ActiveRecord::Migration[<%=  ActiveRecord::VERSION::STRING.to_f %>]
   def change
     create_table(:<%= table_name %>) do |t|
       t.string :<%= column_name %>
