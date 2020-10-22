@@ -212,15 +212,26 @@ class LogRunTime
 end
 ```
 
-Also, you can pass parameters to events:
+#### Parameters
+You can pass parameters to events:
 
 ```ruby
   job = Job.new
   job.run(:defragmentation)
 ```
 
-In this case the `set_process` would be called with `:defragmentation` argument.
+All guards and after callbacks will receive these parameters. In this case `set_process` would be called with 
+`:defragmentation` argument.
 
+If the first argument to the event is a state (e.g. `:running` or `:finished`), the argument is consumed and 
+the statemachine will attempt to transition to that state. To avoid any ambiguity use keyword args.
+
+```ruby
+  job = Job.new
+  job.run(process: :defragmentation)
+```
+
+#### Error Handeling
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
