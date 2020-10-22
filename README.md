@@ -224,12 +224,14 @@ All guards and after callbacks will receive these parameters. In this case `set_
 `:defragmentation` argument.
 
 If the first argument to the event is a state (e.g. `:running` or `:finished`), the argument is consumed and 
-the statemachine will attempt to transition to that state. To avoid any ambiguity use keyword args.
+the state machine will attempt to transition to that state. To avoid any ambiguity, we recommend using keyword
+args like so:
 
 ```ruby
   job = Job.new
   job.run(process: :defragmentation)
 ```
+In this case `set_process` would be called with the argument `{process: :defragmentation}`
 
 #### Error Handeling
 In case of an error during the event processing the error is rescued and passed to `:error`
