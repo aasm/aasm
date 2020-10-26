@@ -29,12 +29,28 @@ if defined?(ActiveRecord)
     end
 
     context 'aasm.human_event_name' do
-      it 'should return translated event name' do
-        expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
+      context 'with event name' do
+        it 'should return translated event name' do
+          expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
+        end
+
+        it 'should return humanized event name' do
+          expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
+        end
       end
 
-      it 'should return humanized event name' do
-        expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
+      context 'with event object' do
+        it 'should return translated event name' do
+          event = LocalizerTestModel.aasm.events.detect { |e| e.name == :close }
+
+          expect(LocalizerTestModel.aasm.human_event_name(event)).to eq("Let's close it!")
+        end
+
+        it 'should return humanized event name' do
+          event = LocalizerTestModel.aasm.events.detect { |e| e.name == :open }
+
+          expect(LocalizerTestModel.aasm.human_event_name(event)).to eq("Open")
+        end
       end
     end
   end
@@ -65,12 +81,28 @@ if defined?(ActiveRecord)
     end
 
     context 'aasm.human_event_name' do
-      it 'should return translated event name' do
-        expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
+      context 'with event name' do
+        it 'should return translated event name' do
+          expect(LocalizerTestModel.aasm.human_event_name(:close)).to eq("Let's close it!")
+        end
+
+        it 'should return humanized event name' do
+          expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
+        end
       end
 
-      it 'should return humanized event name' do
-        expect(LocalizerTestModel.aasm.human_event_name(:open)).to eq("Open")
+      context 'with event object' do
+        it 'should return translated event name' do
+          event = LocalizerTestModel.aasm.events.detect { |e| e.name == :close }
+
+          expect(LocalizerTestModel.aasm.human_event_name(event)).to eq("Let's close it!")
+        end
+
+        it 'should return humanized event name' do
+          event = LocalizerTestModel.aasm.events.detect { |e| e.name == :open }
+
+          expect(LocalizerTestModel.aasm.human_event_name(event)).to eq("Open")
+        end
       end
     end
   end
