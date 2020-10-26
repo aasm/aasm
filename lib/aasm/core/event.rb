@@ -110,6 +110,10 @@ module AASM::Core
       transitions.flat_map(&:failures)
     end
 
+    def to_s
+      name.to_s
+    end
+
   private
 
     def attach_event_guards(definitions)
