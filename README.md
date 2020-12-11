@@ -233,7 +233,7 @@ args like so:
 ```
 In this case `set_process` would be called with the argument `{process: :defragmentation}`
 
-#### Error Handeling
+#### Error Handling
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
