@@ -73,7 +73,7 @@ module AASM
           rescue LoadError
             warn <<-MSG
   [DEPRECATION] :after_commit AASM callback is not safe in terms of race conditions and redundant calls.
-                Please add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile in order to fix that.
+                Please add `gem 'after_commit_everywhere', '~> 1.0'` to your Gemfile in order to fix that.
             MSG
             yield
           end
