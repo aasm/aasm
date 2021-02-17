@@ -719,7 +719,7 @@ end
 AASM comes with support for ActiveRecord and allows automatic persisting of the object's
 state in the database.
 
-Add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'` to your Gemfile 
+Add `gem 'after_commit_everywhere', '~> 1.0'` to your Gemfile.
 
 ```ruby
 class Job < ActiveRecord::Base
@@ -1028,7 +1028,7 @@ job.save! #notify_about_running_job is not run
 Please note that `:after_commit` AASM callbacks behaves around custom implementation
 of transaction pattern rather than a real-life DB transaction. This fact still causes
 the race conditions and redundant callback calls within nested transaction. In order
-to fix that it's highly recommended to add `gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'`
+to fix that it's highly recommended to add `gem 'after_commit_everywhere', '~> 1.0'`
 to your `Gemfile`.
 
 If you want to encapsulate state changes within an own transaction, the behavior

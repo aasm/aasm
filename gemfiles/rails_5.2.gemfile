@@ -9,6 +9,6 @@ gem "sequel"
 gem "dynamoid", "~>2.2", platforms: :ruby
 gem "aws-sdk", "~>2", platforms: :ruby
 gem "redis-objects"
-gem "after_commit_everywhere", "~> 0.1", ">= 0.1.5"
+gem "after_commit_everywhere", "~> 1.0"
 
 gemspec path: "../"
