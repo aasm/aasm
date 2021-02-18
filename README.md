@@ -516,13 +516,13 @@ simple = SimpleMultipleExample.new
 
 simple.aasm(:move).current_state
 # => :standing
-simple.aasm(:work).current
+simple.aasm(:work).current_state
 # => :sleeping
 
 simple.start
 simple.aasm(:move).current_state
 # => :standing
-simple.aasm(:work).current
+simple.aasm(:work).current_state
 # => :processing
 
 ```
