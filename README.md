@@ -224,15 +224,15 @@ You can pass parameters to events:
 All guards and after callbacks will receive these parameters. In this case `set_process` would be called with 
 `:defragmentation` argument.
 
-If the first argument to the event is a state (e.g. `:running` or `:finished`), the argument is consumed and 
-the state machine will attempt to transition to that state. To avoid any ambiguity, we recommend using keyword
-args like so:
+If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and 
+the state machine will attempt to transition to that state. Add comma separated parameter for gaurds and callbacks
 
 ```ruby
   job = Job.new
-  job.run(process: :defragmentation)
+  job.run(:running, :defragmentation)
 ```
-In this case `set_process` would be called with the argument `{process: :defragmentation}`
+In this case `set_process` won't be called, job will transition to running state and callback will receive 
+:defragmentation as parameter
 
 #### Error Handeling
 In case of an error during the event processing the error is rescued and passed to `:error`
