@@ -234,7 +234,7 @@ the state machine will attempt to transition to that state. Add comma separated 
 In this case `set_process` won't be called, job will transition to running state and callback will receive 
 :defragmentation as parameter
 
-#### Error Handeling
+#### Error Handling
 In case of an error during the event processing the error is rescued and passed to `:error`
 callback, which can handle it or re-raise it for further propagation.
 
