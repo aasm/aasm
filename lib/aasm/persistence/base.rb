@@ -59,7 +59,14 @@ module AASM
     # make sure to create a (named) scope for each state
     def state_with_scope(*args)
       names = state_without_scope(*args)
-      names.each { |name| create_scope(name) if create_scope?(name) }
+      names.each do |name|
+        if namespace?
+          # Create default scopes even when namespace? for backward compatibility
+          namepaced_name = "#{namespace}_#{name}"
+          create_scope(namepaced_name) if create_scope?(namepaced_name)
+        end
+        create_scope(name) if create_scope?(name)
+      end
     end
     alias_method :state_without_scope, :state
     alias_method :state, :state_with_scope
