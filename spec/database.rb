@@ -5,17 +5,10 @@ ActiveRecord::Migration.suppress_messages do
     end
   end
 
-  ActiveRecord::Migration.create_table "simple_new_dsls", :force => true do |t|
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "multiple_simple_new_dsls", :force => true do |t|
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "implemented_abstract_class_dsls", :force => true do |t|
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "users", :force => true do |t|
-    t.string "status"
+  %w(simple_new_dsls multiple_simple_new_dsls implemented_abstract_class_dsls users multiple_namespaceds).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "status"
+    end
   end
 
   ActiveRecord::Migration.create_table "complex_active_record_examples", :force => true do |t|

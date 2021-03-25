@@ -331,6 +331,23 @@ if defined?(ActiveRecord)
         expect(MultipleSimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
       end
     end
+
+    context "when namespeced" do
+      it "add namespaced scopes" do
+        expect(MultipleNamespaced).to respond_to(:car_unsold)
+        expect(MultipleNamespaced).to respond_to(:car_sold)
+
+        expect(MultipleNamespaced.car_unsold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.car_sold.is_a?(ActiveRecord::Relation)).to be_truthy
+      end
+      it "add unnamespaced scopes" do
+        expect(MultipleNamespaced).to respond_to(:unsold)
+        expect(MultipleNamespaced).to respond_to(:sold)
+
+        expect(MultipleNamespaced.unsold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.sold.is_a?(ActiveRecord::Relation)).to be_truthy
+      end
+    end
   end # scopes
 
   describe "direct assignment" do
