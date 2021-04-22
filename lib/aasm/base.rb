@@ -268,7 +268,7 @@ module AASM
 
       after_all_transitions do
         if self.class.aasm(:"#{aasm_name}").state_machine.config.timestamps
-          ts_setter = "#{aasm.to_state}_at="
+          ts_setter = "#{aasm(aasm_name).to_state}_at="
           respond_to?(ts_setter) && send(ts_setter, ::Time.now)
         end
       end
