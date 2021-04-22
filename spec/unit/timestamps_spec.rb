@@ -24,4 +24,9 @@ describe 'timestamps option' do
     object.class.aasm.state_machine.config.timestamps = true
     expect { object.open }.to change { object.opened_at }
   end
+
+  it 'calls a timestamp setter when using a named state machine' do
+    object = TimestampsWithNamedMachineExample.new
+    expect { object.open }.to change { object.opened_at }.from(nil).to(instance_of(::Time))
+  end
 end
