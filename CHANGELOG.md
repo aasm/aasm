@@ -1,7 +1,18 @@
 # CHANGELOG
 
 ## unreleased
+## 5.2.0
 
+* fix: timestamp will work with named machine [#739](https://github.com/aasm/aasm/pull/739), thanks to [RolandStuder](https://github.com/RolandStuder)
+* Create namespaced scopes in PR [#735](https://github.com/aasm/aasm/pull/735), thanks to [caiohsramos](https://github.com/caiohsramos)
+* Fix multiple state machines example per class on README in PR [#732](https://github.com/aasm/aasm/pull/732), thanks to [RodrigoVitiello](https://github.com/RodrigoVitiello)
+* Update version in recommendation to add after_commit_everywhere in PR [#729](https://github.com/aasm/aasm/pull/729), thanks to [Envek](https://github.com/Envek)
+* Fix i18n Event translations failing [#721](https://github.com/aasm/aasm/issues/721) in PR [#723](https://github.com/aasm/aasm/pull/723), thanks to [the-spectator](https://github.com/the-spectator)
+* Add documentation to the Readme about how parameters are handled in AASM events in PR [#722](https://github.com/aasm/aasm/pull/722), thanks to [dstuebe](https://github.com/dstuebe)
+* Fix human_state cached across locales [#709](https://github.com/aasm/aasm/issues/709) in PR [716](https://github.com/aasm/aasm/pull/716), thanks to [the-spectator](https://github.com/the-spectator)
+* Relocate DslHelper from root namespace to under AASM namespace in PR [#711](https://github.com/aasm/aasm/pull/711) thank to [yujideveloper ](https://github.com/yujideveloper )
+* Document how to define transitions from any state in in PR [#699](https://github.com/aasm/aasm/pull/699) thanks to [hedgesky](https://github.com/hedgesky)
+* Add simple option for auto-generated timestamps in PR [#677](https://github.com/aasm/aasm/pull/677), thanks to [jaynetics](https://github.com/jaynetics)
 ## 5.1.1
 
 * Fix Depreciation message for after_commit_everywhere [#695](https://github.com/aasm/aasm/issues/695) in PR [#696](https://github.com/aasm/aasm/pull/696)
