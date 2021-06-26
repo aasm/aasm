@@ -2,8 +2,12 @@
 
 begin
   require 'dynamoid'
-  require 'aws-sdk-resources'
   puts "dynamoid #{Dynamoid::VERSION} gem found, running Dynamoid specs \e[32m#{'✔'}\e[0m"
+  if Gem::Version.new(Dynamoid::VERSION) >= Gem::Version.new('3.0.0')
+    require 'aws-sdk-dynamodb'
+  else
+    require 'aws-sdk-resources'
+  end
 
   ENV['ACCESS_KEY'] ||= 'abcd'
   ENV['SECRET_KEY'] ||= '1234'
