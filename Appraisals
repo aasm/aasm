@@ -64,4 +64,5 @@ appraise 'norails' do
   gem 'rails', install_if: false
   gem 'sequel'
   gem 'redis-objects'
+  gem "after_commit_everywhere", install_if: false
 end
