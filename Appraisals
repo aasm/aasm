@@ -1,6 +1,7 @@
 appraise 'rails_4.2' do
   gem 'nokogiri', '1.6.8.1', platforms: %i[ruby_19]
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '4.2.5'
   gem 'mongoid', '~> 4.0'
   gem 'sequel'
@@ -12,11 +13,13 @@ appraise 'rails_4.2' do
 end
 
 appraise 'rails_4.2_nobrainer' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '4.2.5'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_4.2_mongoid_5' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
   gem 'rails', '4.2.5'
   gem 'mongoid', '~> 5.0'
@@ -25,6 +28,7 @@ appraise 'rails_4.2_mongoid_5' do
 end
 
 appraise 'rails_5.0' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '5.0.0'
   gem 'mongoid', '~> 6.0'
   gem 'sequel'
@@ -35,11 +39,13 @@ appraise 'rails_5.0' do
 end
 
 appraise 'rails_5.0_nobrainer' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '5.0.0'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_5.1' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '5.1'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
@@ -50,11 +56,22 @@ appraise 'rails_5.1' do
 end
 
 appraise 'rails_5.2' do
+  gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'rails', '5.2'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
   gem 'dynamoid', '~>2.2', platforms: :ruby
   gem 'aws-sdk', '~>2', platforms: :ruby
+  gem 'redis-objects'
+  gem "after_commit_everywhere", "~> 1.0"
+end
+
+appraise 'rails_6.0' do
+  gem 'rails', '6.0'
+  gem 'mongoid', '~>7.0', '>= 7.0.5'
+  gem 'sequel'
+  gem 'dynamoid', '~>3.3', platforms: :ruby
+  gem 'aws-sdk-dynamodb', '~> 1'
   gem 'redis-objects'
   gem "after_commit_everywhere", "~> 1.0"
 end
