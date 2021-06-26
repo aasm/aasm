@@ -2,7 +2,7 @@ appraise 'rails_4.2' do
   gem 'nokogiri', '1.6.8.1', platforms: %i[ruby_19]
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '4.2.5'
+  gem 'rails', '~> 4.2.11'
   gem 'mongoid', '~> 4.0'
   gem 'sequel'
   gem 'dynamoid', '~> 1', platforms: :ruby
@@ -14,14 +14,14 @@ end
 
 appraise 'rails_4.2_nobrainer' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '4.2.5'
+  gem 'rails', '~> 4.2.11'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_4.2_mongoid_5' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
   gem 'mime-types', '~> 2', platforms: %i[ruby_19 jruby]
-  gem 'rails', '4.2.5'
+  gem 'rails', '~> 4.2.11'
   gem 'mongoid', '~> 5.0'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
   gem "after_commit_everywhere", "~> 1.0"
@@ -29,7 +29,7 @@ end
 
 appraise 'rails_5.0' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '5.0.0'
+  gem 'rails', '~> 5.0.7'
   gem 'mongoid', '~> 6.0'
   gem 'sequel'
   gem 'dynamoid', '~> 1.3', platforms: :ruby
@@ -40,13 +40,13 @@ end
 
 appraise 'rails_5.0_nobrainer' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '5.0.0'
+  gem 'rails', '~> 5.0.7'
   gem 'nobrainer', '~> 0.33.0'
 end
 
 appraise 'rails_5.1' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '5.1'
+  gem 'rails', '~> 5.1.7'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
   gem 'dynamoid', '~> 1.3', platforms: :ruby
@@ -57,7 +57,7 @@ end
 
 appraise 'rails_5.2' do
   gem 'sqlite3', '~> 1.3.5', platforms: :ruby
-  gem 'rails', '5.2'
+  gem 'rails', '~> 5.2.4'
   gem 'mongoid', '~>6.0'
   gem 'sequel'
   gem 'dynamoid', '~>2.2', platforms: :ruby
@@ -67,7 +67,7 @@ appraise 'rails_5.2' do
 end
 
 appraise 'rails_6.0' do
-  gem 'rails', '6.0'
+  gem 'rails', '~> 6.0.3'
   gem 'mongoid', '~>7.0', '>= 7.0.5'
   gem 'sequel'
   gem 'dynamoid', '~>3.3', platforms: :ruby
