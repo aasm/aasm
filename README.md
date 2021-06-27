@@ -1084,7 +1084,7 @@ end
 
 which then leads to `transaction(requires_new: false)`, the Rails default.
 
-Additionally, if you do not want any of your active record actions to be
+Additionally, if you do not want any of your ActiveRecord actions to be
 wrapped in a transaction, you can specify the `use_transactions` flag. This can
 be useful if you want want to persist things to the database that happen as a
 result of a transaction or callback, even when some error occurs. The
@@ -1104,7 +1104,7 @@ end
 
 ### Pessimistic Locking
 
-AASM supports [Active Record pessimistic locking via `with_lock`](http://api.rubyonrails.org/classes/ActiveRecord/Locking/Pessimistic.html#method-i-with_lock) for database persistence layers.
+AASM supports [ActiveRecord pessimistic locking via `with_lock`](http://api.rubyonrails.org/classes/ActiveRecord/Locking/Pessimistic.html#method-i-with_lock) for database persistence layers.
 
 | Option | Purpose |
 | ------ | ------- |
@@ -1461,7 +1461,7 @@ After installing AASM you can run generator:
 ```
 Replace NAME with the Model name, COLUMN_NAME is optional(default is 'aasm_state').
 This will create a model (if one does not exist) and configure it with aasm block.
-For Active record orm a migration file is added to add aasm state column to table.
+For ActiveRecord orm a migration file is added to add aasm state column to table.
 
 ### Docker
 
