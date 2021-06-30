@@ -96,6 +96,7 @@ private
 
   def aasm_fire_event(state_machine_name, event_name, options, *args, &block)
     event = self.class.aasm(state_machine_name).state_machine.events[event_name]
+    raise AASM::UndefinedState, "State :#{event_name} doesn't exist" if event.nil?
     begin
       old_state = aasm(state_machine_name).state_object_for_name(aasm(state_machine_name).current_state)
 
@@ -117,6 +118,7 @@ private
       raise(e)
       false
     ensure
+      return if event.nil?
       event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
