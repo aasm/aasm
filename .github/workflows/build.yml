@@ -18,6 +18,7 @@ jobs:
           - 2.7
           - 2.6
           - jruby-9.1.17.0
+          - truffleruby
         gemfile:
           - norails
           - rails_4.2
@@ -47,6 +48,10 @@ jobs:
           gemfile: rails_5.2
         - ruby: jruby-9.1.17.0
           gemfile: rails_6.1
+        - ruby: truffleruby
+          gemfile: rails_4.2
+        - ruby: truffleruby
+          gemfile: rails_4.2_mongoid_5
         redis-version: [6]
         mongodb-version: [5]
         allow_failures:
