@@ -4,8 +4,8 @@ SimpleCov.start do
 end
 
 if ENV['CI'] == 'true'
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+  #require 'codecov'
+  #SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
