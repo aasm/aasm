@@ -90,4 +90,10 @@ describe 'when being unsuspended' do
   it "should not be able to fire unknown events" do
     expect(auth.aasm.may_fire_event?(:unknown)).to be false
   end
+
+  it "should raise AASM::UndefinedState when fire unknown events" do
+    expect { auth.aasm.fire(:unknown) }.to raise_error(AASM::UndefinedState, "State :unknown doesn't exist")
+    expect(auth.aasm.current_state).to eq(:pending)
+  end
+
 end
