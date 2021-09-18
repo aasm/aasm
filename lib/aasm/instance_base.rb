@@ -92,6 +92,7 @@ module AASM
     def state_object_for_name(name)
       obj = @instance.class.aasm(@name).states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
+
       obj
     end
 
@@ -115,12 +116,19 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
+      event = @instance.class.aasm(@name).state_machine.events[event_name]
+      raise AASM::UndefinedState, "State :#{event_name} doesn't exist" if event.nil?
+
       @instance.send(event_name, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
-      event_name = event_name.to_s.+("!").to_sym
-      @instance.send(event_name, *args, &block)
+      bang_event_name = "#{event_name}!".to_sym
+      event = @instance.class.aasm(@name).state_machine.events[event_name]
+
+      raise AASM::UndefinedState, "State :#{bang_event_name} doesn't exist" if event.nil?
+
+      @instance.send(bang_event_name, *args, &block)
     end
 
     def set_current_state_with_persistence(state)
@@ -128,6 +136,5 @@ module AASM
       self.current_state = state if save_success
       save_success
     end
-
   end
 end
