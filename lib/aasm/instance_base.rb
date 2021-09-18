@@ -1,6 +1,5 @@
 module AASM
   class InstanceBase
-
     attr_accessor :from_state, :to_state, :current_event
 
     def initialize(instance, name=:default) # instance of the class including AASM, name of the state machine
