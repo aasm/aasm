@@ -29,4 +29,9 @@ describe 'timestamps option' do
     object = TimestampsWithNamedMachineExample.new
     expect { object.open }.to change { object.opened_at }.from(nil).to(instance_of(::Time))
   end
+
+  it 'calls a timestamp setter based on the state name and namespace when entering a new state using a namespace state machine' do
+    object = TimestampsWithNamespaceMachineExample.new
+    expect { object.open }.to change { object.new_opened_at }.from(nil).to(instance_of(::Time))
+  end
 end
