@@ -55,7 +55,7 @@ module AASM
       configure :logger, Logger.new(STDERR)
 
       # setup timestamp-setting callback if enabled
-      setup_timestamps(@name, namespace)
+      setup_timestamps(@name)
 
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
@@ -263,11 +263,12 @@ module AASM
       end
     end
 
-    def setup_timestamps(aasm_name, namespace)
+    def setup_timestamps(aasm_name)
       return unless @state_machine.config.timestamps
 
       after_all_transitions do
         if self.class.aasm(:"#{aasm_name}").state_machine.config.timestamps
+          namespace = self.class.aasm(:"#{aasm_name}").state_machine.config.namespace
           base_setter = "#{aasm(aasm_name).to_state}_at="
           ts_setter = !!namespace ? "#{namespace}_#{base_setter}" : base_setter
           respond_to?(ts_setter) && send(ts_setter, ::Time.now)
