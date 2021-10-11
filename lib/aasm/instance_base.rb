@@ -91,7 +91,6 @@ module AASM
     def state_object_for_name(name)
       obj = @instance.class.aasm(@name).states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
-
       obj
     end
 
@@ -115,18 +114,14 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
-      event = @instance.class.aasm(@name).state_machine.events[event_name]
-      raise AASM::UndefinedState, "State :#{event_name} doesn't exist" if event.nil?
+      event_exists?(event_name)
 
       @instance.send(event_name, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
+      event_exists?(event_name, true)
       bang_event_name = "#{event_name}!".to_sym
-      event = @instance.class.aasm(@name).state_machine.events[event_name]
-
-      raise AASM::UndefinedState, "State :#{bang_event_name} doesn't exist" if event.nil?
-
       @instance.send(bang_event_name, *args, &block)
     end
 
@@ -134,6 +129,15 @@ module AASM
       save_success = @instance.aasm_write_state(state, @name)
       self.current_state = state if save_success
       save_success
+    end
+
+    private
+
+    def event_exists?(event_name, bang = false)
+      event = @instance.class.aasm(@name).state_machine.events[event_name]
+      event_error = bang ? "#{event_name}!" : event_name
+
+      raise AASM::UndefinedState, "State :#{event_error} doesn't exist" if event.nil?
     end
   end
 end

@@ -90,10 +90,8 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:ensure_on_all_events).once.ordered
     end
 
-    # puts "------- close!"
     callback.close!
   end
-
 
   it "works fine after reload" do
     show_debug_log = false
@@ -125,8 +123,41 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:after_event).once.ordered
     end
 
-    # puts "------- close!"
     callback.close!
+  end
+
+  it 'does not run callbacks if firing an unknown event' do
+    show_debug_log = false
+
+    callback = Callbacks::Basic.new(:log => show_debug_log)
+
+    expect(callback).to_not receive(:before_all_events).ordered
+    expect(callback).to_not receive(:before_event).ordered
+    expect(callback).to_not receive(:event_guard).ordered
+    expect(callback).to_not receive(:transition_guard)
+    expect(callback).to_not receive(:before_exit_open)
+    expect(callback).to_not receive(:exit_open)
+    expect(callback).to_not receive(:after_all_transitions)
+    expect(callback).to_not receive(:after_transition)
+    expect(callback).to_not receive(:before_enter_closed)
+    expect(callback).to_not receive(:enter_closed)
+    expect(callback).to_not receive(:aasm_write_state)
+    expect(callback).to_not receive(:event_before_success)
+    expect(callback).to_not receive(:success_transition)
+    expect(callback).to_not receive(:after_exit_open)
+    expect(callback).to_not receive(:after_enter_closed)
+    expect(callback).to_not receive(:after_event)
+    expect(callback).to_not receive(:after_all_events)
+    expect(callback).to_not receive(:ensure_event).ordered
+    expect(callback).to_not receive(:ensure_on_all_events).ordered
+
+    expect {
+      callback.aasm.fire(:unknown)
+    }.to raise_error(AASM::UndefinedState, "State :unknown doesn't exist")
+
+    expect {
+      callback.aasm.fire!(:unknown)
+    }.to raise_error(AASM::UndefinedState, "State :unknown! doesn't exist")
   end
 
   it "does not run any state callback if the event guard fails" do
@@ -164,7 +195,6 @@ describe 'callbacks for the new DSL' do
     callback = Callbacks::PrivateMethod.new(:log => show_debug_log)
     callback.aasm.current_state
 
-    # puts "------- close!"
     expect {
       callback.close!
     }.to_not raise_error
