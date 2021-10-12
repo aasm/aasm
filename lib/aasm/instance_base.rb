@@ -1,6 +1,5 @@
 module AASM
   class InstanceBase
-
     attr_accessor :from_state, :to_state, :current_event
 
     def initialize(instance, name=:default) # instance of the class including AASM, name of the state machine
@@ -115,12 +114,15 @@ module AASM
     end
 
     def fire(event_name, *args, &block)
+      event_exists?(event_name)
+
       @instance.send(event_name, *args, &block)
     end
 
     def fire!(event_name, *args, &block)
-      event_name = event_name.to_s.+("!").to_sym
-      @instance.send(event_name, *args, &block)
+      event_exists?(event_name, true)
+      bang_event_name = "#{event_name}!".to_sym
+      @instance.send(bang_event_name, *args, &block)
     end
 
     def set_current_state_with_persistence(state)
@@ -129,5 +131,13 @@ module AASM
       save_success
     end
 
+    private
+
+    def event_exists?(event_name, bang = false)
+      event = @instance.class.aasm(@name).state_machine.events[event_name]
+      event_error = bang ? "#{event_name}!" : event_name
+
+      raise AASM::UndefinedState, "State :#{event_error} doesn't exist" if event.nil?
+    end
   end
 end
