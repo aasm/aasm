@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         ruby: [3.0, 2.7, 2.6, jruby-9.1.17.0, truffleruby]
-        gemfile: [norails, rails_4.2, rails_4.2_mongoid_5, rails_5.2, rails_6.1]
+        gemfile: [norails, rails_4.2, rails_4.2_mongoid_5, rails_5.2, rails_5.2_nobrainer, rails_6.1, rails_6.1_nobrainer]
         exclude:
         - ruby: 3.0
           gemfile: rails_5.2
