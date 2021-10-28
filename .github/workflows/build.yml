@@ -37,10 +37,14 @@ jobs:
           gemfile: rails_5.2
         - ruby: jruby-9.1.17.0
           gemfile: rails_6.1
+        - ruby: jruby-9.1.17.0
+          gemfile: [rails_5.2_nobrainer, rails_6.1_nobrainer]
         - ruby: truffleruby
           gemfile: rails_4.2
         - ruby: truffleruby
           gemfile: rails_4.2_mongoid_5
+        - ruby: truffleruby
+          gemfile: [rails_5.2_nobrainer, rails_6.1_nobrainer]
         redis-version: [6]
         mongodb-version: [5]
         allow_failures:
@@ -64,6 +68,16 @@ jobs:
           bundler-cache: true
       - name: Setup project
         run: bundle install
+      - name: Setup Rethink db
+        run: |
+               mkdir /tmp/rethinkdb
+               cd /tmp/rethinkdb
+               source /etc/lsb-release && echo "deb https://download.rethinkdb.com/repository/ubuntu-$DISTRIB_CODENAME $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+               wget -qO- https://download.rethinkdb.com/repository/raw/pubkey.gpg | sudo apt-key add -
+               sudo apt-get update
+               sudo apt-get install rethinkdb
+               sudo cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/instance1.conf
+               sudo /etc/init.d/rethinkdb restart
       - name: Start Redis
         uses: supercharge/redis-github-action@1.2.0
         with:
