@@ -1490,6 +1490,12 @@ Feel free to
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
+  
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/aasm/aasm.svg)](https://starchart.cc/aasm/aasm)
+
 
 ## [Contributing](CONTRIBUTING.md)
 
