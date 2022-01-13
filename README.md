@@ -758,7 +758,7 @@ job.aasm.fire!(:run) # saved
 
 Saving includes running all validations on the `Job` class. If
 `whiny_persistence` flag is set to `true`, exception is raised in case of
-failure. If `whiny_persistence` flag is set to false, methods with a bang return
+failure. If `whiny_persistence` flag is set to `false` (default), methods with a bang return
 `true` if the state transition is successful or `false` if an error occurs.
 
 If you want make sure the state gets saved without running validations (and
