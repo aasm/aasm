@@ -244,7 +244,7 @@ module AASM
       elsif args.size > 0
         [args, {}]
       else
-        raise "count not parse states: #{args}"
+        raise ArgumentError, "could not parse states: #{args}"
       end
     end
 
