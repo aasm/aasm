@@ -221,17 +221,17 @@ You can pass parameters to events:
   job.run(:defragmentation)
 ```
 
-All guards and after callbacks will receive these parameters. In this case `set_process` would be called with 
+All guards and after callbacks will receive these parameters. In this case `set_process` would be called with
 `:defragmentation` argument.
 
-If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and 
+If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and
 the state machine will attempt to transition to that state. Add comma separated parameter for gaurds and callbacks
 
 ```ruby
   job = Job.new
   job.run(:running, :defragmentation)
 ```
-In this case `set_process` won't be called, job will transition to running state and callback will receive 
+In this case `set_process` won't be called, job will transition to running state and callback will receive
 :defragmentation as parameter
 
 #### Error Handling
@@ -400,7 +400,7 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
   end
 ```
 
-You can invoke a Class instead a method since this Class responds to `call`
+You can invoke a Class instead of a method if the Class responds to `call`
 
 ```ruby
     event :sleep do
@@ -1160,7 +1160,7 @@ end
 Whatever column name is used, make sure to add a migration to provide this column
 (of type `string`).
 Do not add default value for column at the database level. If you add default
-value in database then AASM callbacks on the initial state will not be fired upon 
+value in database then AASM callbacks on the initial state will not be fired upon
 instantiation of the model.
 
 ```ruby
@@ -1490,7 +1490,7 @@ Feel free to
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
 
-  
+
 
 ## Stargazers over time
 
