@@ -54,4 +54,8 @@ ActiveRecord::Migration.suppress_messages do
     t.string "aasm_state"
     t.datetime "opened_at"
   end
+
+  ActiveRecord::Migration.create_table "with_aliases", :force => true do |t|
+    t.string "aasm_state"
+  end
 end
