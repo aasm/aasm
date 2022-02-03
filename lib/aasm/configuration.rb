@@ -41,6 +41,9 @@ module AASM
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
 
+    # Add possibility to skip state's constant creation
+    attr_accessor :create_constants
+
     class << self
       attr_accessor :hide_warnings
     end
