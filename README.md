@@ -321,7 +321,7 @@ and then
 Let's assume you want to allow particular transitions only if a defined condition is
 given. For this you can set up a guard per transition, which will run before actually
 running the transition. If the guard returns `false` the transition will be
-denied (raising `AASM::InvalidTransition` or returning `false` itself):
+denied (raising `AASM::InvalidTransition`):
 
 ```ruby
 class Cleaner
@@ -364,7 +364,7 @@ job.clean                 # => raises AASM::InvalidTransition
 job.may_clean_if_needed?  # => true
 job.clean_if_needed!      # idle
 
-job.clean_if_dirty(:clean) # => false
+job.clean_if_dirty(:clean) # => raises AASM::InvalidTransition
 job.clean_if_dirty(:dirty) # => true
 ```
 
