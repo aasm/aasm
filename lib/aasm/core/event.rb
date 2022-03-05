@@ -10,7 +10,7 @@ module AASM::Core
       @name = name
       @state_machine = state_machine
       @transitions = []
-      @valid_transitions = {}
+      @valid_transitions = Hash.new { |h, k| h[k] = {} }
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
       @default_display_name = name.to_s.gsub(/_/, ' ').capitalize
@@ -79,8 +79,9 @@ module AASM::Core
 
     def fire_transition_callbacks(obj, *args)
       from_state = obj.aasm(state_machine.name).current_state
-      transition = @valid_transitions[from_state]
-      @valid_transitions[from_state].invoke_success_callbacks(obj, *args) if transition
+      transition = @valid_transitions[obj.object_id][from_state]
+      transition.invoke_success_callbacks(obj, *args) if transition
+      @valid_transitions.delete(obj.object_id)
     end
 
     def ==(event)
@@ -153,7 +154,7 @@ module AASM::Core
             result = transition
           else
             result = to_state || Array(transition.to).first
-            Array(transition.to).each {|to| @valid_transitions[to] = transition }
+            Array(transition.to).each {|to| @valid_transitions[obj.object_id][to] = transition }
             transition.execute(obj, *args)
           end
 
