@@ -232,7 +232,7 @@ the state machine will attempt to transition to that state. Add comma separated 
   job.run(:running, :defragmentation)
 ```
 In this case `set_process` won't be called, job will transition to running state and callback will receive
-:defragmentation as parameter
+`:defragmentation` as parameter
 
 #### Error Handling
 In case of an error during the event processing the error is rescued and passed to `:error`
@@ -758,7 +758,7 @@ job.aasm.fire!(:run) # saved
 
 Saving includes running all validations on the `Job` class. If
 `whiny_persistence` flag is set to `true`, exception is raised in case of
-failure. If `whiny_persistence` flag is set to false, methods with a bang return
+failure. If `whiny_persistence` flag is set to `false`, methods with a bang return
 `true` if the state transition is successful or `false` if an error occurs.
 
 If you want make sure the state gets saved without running validations (and
@@ -786,7 +786,7 @@ class Job < ActiveRecord::Base
 end
 ```
 
-Also You can skip the validation at instance level with `some_event_name_without_validation!` method.
+Also, you can skip the validation at instance level with `some_event_name_without_validation!` method.
 With this you have the flexibility of having validation for all your transitions by default and then skip it wherever required.
 Please note that only state column will be updated as mentioned in the above example.
 
