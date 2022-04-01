@@ -225,7 +225,7 @@ All guards and after callbacks will receive these parameters. In this case `set_
 `:defragmentation` argument.
 
 If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and
-the state machine will attempt to transition to that state. Add comma separated parameter for gaurds and callbacks
+the state machine will attempt to transition to that state. Add comma separated parameter for guards and callbacks
 
 ```ruby
   job = Job.new
