@@ -223,7 +223,20 @@ module AASM
         end
       end
 
-      klass.send(:define_method, method_name, method_definition)
+      klass.send(:define_method, method_name, method_definition).tap do |sym|
+        apply_ruby2_keyword(klass, sym)
+      end
+    end
+
+    def apply_ruby2_keyword(klass, sym)
+      if RUBY_VERSION >= '2.7.1'
+        if klass.instance_method(sym).parameters.find { |type, _| type.to_s.start_with?('rest') }
+          # If there is a place where you are receiving in *args, do ruby2_keywords.
+          klass.module_eval do
+            ruby2_keywords sym
+          end
+        end
+      end
     end
 
     def namespace?
