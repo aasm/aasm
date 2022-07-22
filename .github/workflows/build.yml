@@ -56,6 +56,8 @@ jobs:
           gemfile: rails_4.2_mongoid_5
         - ruby: truffleruby
           gemfile: rails_5.2
+        - ruby: truffleruby
+          gemfile: rails_6.1
         allow_failures:
           - false
     env:
