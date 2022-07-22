@@ -2,6 +2,7 @@
 
 begin
   require 'mongoid'
+  require 'rails'
   puts "mongoid #{Mongoid::VERSION} gem found, running mongoid specs \e[32m#{'✔'}\e[0m"
 
   if Mongoid::VERSION.to_f <= 5
