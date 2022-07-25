@@ -138,7 +138,7 @@ module AASM
       return true if event
 
       event_error = bang ? "#{event_name}!" : event_name
-      raise AASM::UndefinedState, "Event :#{event_error} doesn't exist" if event.nil?
+      raise AASM::UndefinedEvent, "Event :#{event_error} doesn't exist" if event.nil?
     end
   end
 end
