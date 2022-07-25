@@ -153,11 +153,11 @@ describe 'callbacks for the new DSL' do
 
     expect {
       callback.aasm.fire(:unknown)
-    }.to raise_error(AASM::UndefinedState, "State :unknown doesn't exist")
+    }.to raise_error(AASM::UndefinedState, "Event :unknown doesn't exist")
 
     expect {
       callback.aasm.fire!(:unknown)
-    }.to raise_error(AASM::UndefinedState, "State :unknown! doesn't exist")
+    }.to raise_error(AASM::UndefinedState, "Event :unknown! doesn't exist")
   end
 
   it "does not run any state callback if the event guard fails" do
