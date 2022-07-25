@@ -135,8 +135,9 @@ module AASM
 
     def event_exists?(event_name, bang = false)
       event = @instance.class.aasm(@name).state_machine.events[event_name.to_sym]
-      event_error = bang ? "#{event_name}!" : event_name
+      return true if event
 
+      event_error = bang ? "#{event_name}!" : event_name
       raise AASM::UndefinedState, "State :#{event_error} doesn't exist" if event.nil?
     end
   end
