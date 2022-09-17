@@ -17,5 +17,6 @@ module AASM
   end
 
   class UndefinedState < RuntimeError; end
+  class UndefinedEvent < UndefinedState; end
   class NoDirectAssignmentError < RuntimeError; end
 end

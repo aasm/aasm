@@ -4,6 +4,9 @@
 ## 5.3.1
 * Fix fire! with string argument [#787](https://github.com/aasm/aasm/issues/787), in PR[#788](https://github.com/aasm/aasm/pull/788) thanks to [norman](https://github.com/norman)
 
+* Allow `fire` and `fire!` to accept a String or Symbol for the event name, and raise AASM::UndefinedEvent rather than AASM::UndefinedState
+  when an event can not be found, thanks to [norman](https://github.com/norman).
+
 ## 5.3.0
 
 * Add Ruby 3.1 and Rails 7 to the CI matrix [#775](https://github.com/aasm/aasm/pull/775), thanks to [petergoldstein](https://github.com/petergoldstein)
