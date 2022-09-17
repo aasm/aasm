@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## unreleased
+## 5.3.1
+* Fix fire! with string argument [#787](https://github.com/aasm/aasm/issues/787), in PR[#788](https://github.com/aasm/aasm/pull/788) thanks to [norman](https://github.com/norman)
 
 ## 5.3.0
 
