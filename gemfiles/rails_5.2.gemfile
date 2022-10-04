@@ -9,6 +9,6 @@ gem "mongoid", "~>6.0"
 gem "sequel"
 gem "dynamoid", "~>2.2", platforms: :ruby
 gem "aws-sdk", "~>2", platforms: :ruby
-gem "redis-objects"
+gem "redis-objects", "1.6.0"
 
 gemspec path: "../"
