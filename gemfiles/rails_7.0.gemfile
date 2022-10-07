@@ -2,13 +2,13 @@
 
 source "https://rubygems.org"
 
-gem "sqlite3", "~> 1.3.5", platforms: :ruby
-gem "rails", "~> 5.2.4"
+gem "sqlite3", "~> 1.4", platforms: :ruby
+gem "rails", "~> 7.0.1"
 gem "after_commit_everywhere", "~> 1.0"
-gem "mongoid", "~>6.0"
+gem "mongoid", "~>7.0", ">= 7.0.5"
 gem "sequel"
-gem "dynamoid", "~>2.2", platforms: :ruby
-gem "aws-sdk", "~>2", platforms: :ruby
+gem "dynamoid", "~>3.3", platforms: :ruby
+gem "aws-sdk-dynamodb", "~> 1"
 gem "redis-objects", "1.6.0"
 
 gemspec path: "../"

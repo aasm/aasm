@@ -1,6 +1,25 @@
 # CHANGELOG
 
 ## unreleased
+## 5.4.0
+* Shrink gem size and export only needed files to work [#742](https://github.com/aasm/aasm/pull/742), thanks to [brunoarueira](https://github.com/brunoarueira)
+* Lock redis-objects to 1.6.0 as 1.7.0 has breaking changes [#796](https://github.com/aasm/aasm/pull/796)
+## 5.3.1
+* Fix fire! with string argument [#787](https://github.com/aasm/aasm/issues/787), in PR[#788](https://github.com/aasm/aasm/pull/788) thanks to [norman](https://github.com/norman)
+
+* Allow `fire` and `fire!` to accept a String or Symbol for the event name, and raise AASM::UndefinedEvent rather than AASM::UndefinedState
+  when an event can not be found, thanks to [norman](https://github.com/norman).
+
+## 5.3.0
+
+* Add Ruby 3.1 and Rails 7 to the CI matrix [#775](https://github.com/aasm/aasm/pull/775), thanks to [petergoldstein](https://github.com/petergoldstein)
+* Fixed an error in Ruby 3 when specifying a method that takes keyword arguments, such as event's before hook [#777](https://github.com/aasm/aasm/pull/777), thanks to [pocari](https://github.com/pocari)
+* Fix multi-threading bug not firing success callbacks [#778](https://github.com/aasm/aasm/pull/778), thanks to [guewen](https://github.com/guewen)
+* Raise AASM::UndefinedState when calling fire or fire! with undefined event names [#753](https://github.com/aasm/aasm/pull/753), thanks to [danielvdao](https://github.com/danielvdao)
+* Fixing Readme typos [#745](https://github.com/aasm/aasm/pull/745) [#772](https://github.com/aasm/aasm/pull/772) [#774](https://github.com/aasm/aasm/pull/774) [#781](https://github.com/aasm/aasm/pull/781), thanks to [jaredsmithse](https://github.com/jaredsmithse) [jcat4](https://github.com/jcat4) [ChandanChainani](https://github.com/ChandanChainani) [TessHuelskamp](https://github.com/TessHuelskamp)
+* Add github actions config [#750](https://github.com/aasm/aasm/pull/750), thanks to [aka47](https://github.com/aka47)
+* Test against for Rails 6.0 and improve ci [#719](https://github.com/aasm/aasm/pull/719), thanks to [yujideveloper](https://github.com/yujideveloper)
+* Fix migration class name to work with zeitwerk [#720](https://github.com/aasm/aasm/pull/720), thanks to [rwegrzyniak](https://github.com/rwegrzyniak)
 ## 5.2.0
 
 * fix: timestamp will work with named machine [#739](https://github.com/aasm/aasm/pull/739), thanks to [RolandStuder](https://github.com/RolandStuder)

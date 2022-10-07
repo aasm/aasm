@@ -221,18 +221,18 @@ You can pass parameters to events:
   job.run(:defragmentation)
 ```
 
-All guards and after callbacks will receive these parameters. In this case `set_process` would be called with 
+All guards and after callbacks will receive these parameters. In this case `set_process` would be called with
 `:defragmentation` argument.
 
-If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and 
-the state machine will attempt to transition to that state. Add comma separated parameter for gaurds and callbacks
+If the first argument to the event is a state (e.g. `:running` or `:finished`), the first argument is consumed and
+the state machine will attempt to transition to that state. Add comma separated parameter for guards and callbacks
 
 ```ruby
   job = Job.new
   job.run(:running, :defragmentation)
 ```
-In this case `set_process` won't be called, job will transition to running state and callback will receive 
-:defragmentation as parameter
+In this case `set_process` won't be called, job will transition to running state and callback will receive
+`:defragmentation` as parameter
 
 #### Error Handling
 In case of an error during the event processing the error is rescued and passed to `:error`
@@ -321,7 +321,7 @@ and then
 Let's assume you want to allow particular transitions only if a defined condition is
 given. For this you can set up a guard per transition, which will run before actually
 running the transition. If the guard returns `false` the transition will be
-denied (raising `AASM::InvalidTransition` or returning `false` itself):
+denied (raising `AASM::InvalidTransition`):
 
 ```ruby
 class Cleaner
@@ -364,7 +364,7 @@ job.clean                 # => raises AASM::InvalidTransition
 job.may_clean_if_needed?  # => true
 job.clean_if_needed!      # idle
 
-job.clean_if_dirty(:clean) # => false
+job.clean_if_dirty(:clean) # => raises AASM::InvalidTransition
 job.clean_if_dirty(:dirty) # => true
 ```
 
@@ -400,7 +400,7 @@ If you prefer a more Ruby-like guard syntax, you can use `if` and `unless` as we
   end
 ```
 
-You can invoke a Class instead a method since this Class responds to `call`
+You can invoke a Class instead of a method if the Class responds to `call`
 
 ```ruby
     event :sleep do
@@ -758,7 +758,7 @@ job.aasm.fire!(:run) # saved
 
 Saving includes running all validations on the `Job` class. If
 `whiny_persistence` flag is set to `true`, exception is raised in case of
-failure. If `whiny_persistence` flag is set to false, methods with a bang return
+failure. If `whiny_persistence` flag is set to `false`, methods with a bang return
 `true` if the state transition is successful or `false` if an error occurs.
 
 If you want make sure the state gets saved without running validations (and
@@ -786,7 +786,7 @@ class Job < ActiveRecord::Base
 end
 ```
 
-Also You can skip the validation at instance level with `some_event_name_without_validation!` method.
+Also, you can skip the validation at instance level with `some_event_name_without_validation!` method.
 With this you have the flexibility of having validation for all your transitions by default and then skip it wherever required.
 Please note that only state column will be updated as mentioned in the above example.
 
@@ -1160,7 +1160,7 @@ end
 Whatever column name is used, make sure to add a migration to provide this column
 (of type `string`).
 Do not add default value for column at the database level. If you add default
-value in database then AASM callbacks on the initial state will not be fired upon 
+value in database then AASM callbacks on the initial state will not be fired upon
 instantiation of the model.
 
 ```ruby
@@ -1489,6 +1489,12 @@ Feel free to
 * [Travis Tilley](https://github.com/ttilley) (2009–2011)
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
+
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/aasm/aasm.svg)](https://starchart.cc/aasm/aasm)
 
 
 ## [Contributing](CONTRIBUTING.md)

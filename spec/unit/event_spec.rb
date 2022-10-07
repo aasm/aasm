@@ -296,15 +296,32 @@ describe 'current event' do
   end
 
   describe "when calling events with fire/fire!" do
-    it "fire should populate aasm.current_event and transition (sleeping to showering)" do
-      pe.aasm.fire(:wakeup)
-      expect(pe.aasm.current_event).to eq :wakeup
-      expect(pe.aasm.current_state).to eq :showering
+    context "fire" do
+      it "should populate aasm.current_event and transition (sleeping to showering)" do
+        pe.aasm.fire(:wakeup)
+        expect(pe.aasm.current_event).to eq :wakeup
+        expect(pe.aasm.current_state).to eq :showering
+      end
+
+      it "should allow event names as strings" do
+        pe.aasm.fire("wakeup")
+        expect(pe.aasm.current_event).to eq :wakeup
+        expect(pe.aasm.current_state).to eq :showering
+      end
     end
-    it "fire! should populate aasm.current_event and transition (sleeping to showering)" do
-      pe.aasm.fire!(:wakeup)
-      expect(pe.aasm.current_event).to eq :wakeup!
-      expect(pe.aasm.current_state).to eq :showering
+
+    context "fire!" do
+      it "should populate aasm.current_event and transition (sleeping to showering)" do
+        pe.aasm.fire!(:wakeup)
+        expect(pe.aasm.current_event).to eq :wakeup!
+        expect(pe.aasm.current_state).to eq :showering
+      end
+
+      it "should allow event names as strings" do
+        pe.aasm.fire!("wakeup")
+        expect(pe.aasm.current_event).to eq :wakeup!
+        expect(pe.aasm.current_state).to eq :showering
+      end
     end
   end
 end

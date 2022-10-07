@@ -12,14 +12,27 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        ruby: [3.0, 2.7, 2.6, jruby-9.1.17.0, truffleruby]
-        gemfile: [norails, rails_4.2, rails_4.2_mongoid_5, rails_5.2, rails_5.2_nobrainer, rails_6.1, rails_6.1_nobrainer]
+        ruby: ['3.0', 2.7, 2.6, jruby-9.1.17.0, truffleruby]
+        gemfile: [norails, rails_4.2, rails_4.2_mongoid_5, rails_5.2, rails_6.1]
+        redis-version: [6]
+        mongodb-version: [5]
+        include:
+          - ruby: '3.0'
+            gemfile: rails_6.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.1
+            gemfile: rails_7.0
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
         exclude:
-        - ruby: 3.0
+        - ruby: '3.0'
           gemfile: rails_5.2
-        - ruby: 3.0
+        - ruby: '3.0'
           gemfile: rails_4.2
-        - ruby: 3.0
+        - ruby: '3.0'
           gemfile: rails_4.2_mongoid_5
         - ruby: 2.7
           gemfile: rails_5.2
@@ -44,9 +57,9 @@ jobs:
         - ruby: truffleruby
           gemfile: rails_4.2_mongoid_5
         - ruby: truffleruby
-          gemfile: [rails_5.2_nobrainer, rails_6.1_nobrainer]
-        redis-version: [6]
-        mongodb-version: [5]
+          gemfile: rails_5.2
+        - ruby: truffleruby
+          gemfile: rails_6.1
         allow_failures:
           - false
     env:
