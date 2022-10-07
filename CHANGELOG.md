@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## unreleased
+## 5.4.0
+* Shrink gem size and export only needed files to work [#742](https://github.com/aasm/aasm/pull/742), thanks to [brunoarueira](https://github.com/brunoarueira)
+* Lock redis-objects to 1.6.0 as 1.7.0 has breaking changes [#796](https://github.com/aasm/aasm/pull/796)
 ## 5.3.1
 * Fix fire! with string argument [#787](https://github.com/aasm/aasm/issues/787), in PR[#788](https://github.com/aasm/aasm/pull/788) thanks to [norman](https://github.com/norman)
 
