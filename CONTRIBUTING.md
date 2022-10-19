@@ -3,7 +3,7 @@
 While not required to contribute, we recommend [RVM](https://rvm.io/) to manage your rubies.
 
 1. Read the [Contributor Code of Conduct](https://github.com/aasm/aasm/blob/master/CODE_OF_CONDUCT.md)
-2. [Fork it](https://help.github.com/articles/about-forks/)
+2. [Fork](https://help.github.com/articles/about-forks/) the [repository](https://github.com/aasm/aasm)
 3. Clone the project `git clone git@github.com:[YOUR GITHUB USERNAME]/aasm.git`
 4. `cd aasm`
 5. Create your feature branch `git checkout -b my-new-feature`
@@ -13,7 +13,7 @@ While not required to contribute, we recommend [RVM](https://rvm.io/) to manage 
 9. Run the tests `appraisal rspec`
 10. Commit your changes `git commit -am 'Added some feature'`
 11. Push to the branch `git push origin my-new-feature`
-12. Create new [Pull Request](https://help.github.com/articles/creating-a-pull-request/)
+12. Create a new [Pull Request](https://help.github.com/articles/creating-a-pull-request/)
 
 There are some option dependencies as well.
 
