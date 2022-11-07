@@ -656,7 +656,7 @@ Let's suppose we have common logic across many AASM models. We can embody this l
 
 ```ruby
 class CustomAASMBase < AASM::Base
-  # A custom transiton that we want available across many AASM models.
+  # A custom transition that we want available across many AASM models.
   def count_transitions!
     klass.class_eval do
       aasm with_klass: CustomAASMBase do
