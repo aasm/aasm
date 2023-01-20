@@ -17,7 +17,7 @@ module AASM
         end
 
         def invoke_subject
-          @result = retrieve_instance.call
+          @result = instance.call
         end
 
         private
