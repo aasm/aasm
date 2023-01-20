@@ -52,6 +52,18 @@ describe AASM::Core::Invokers::ClassInvoker do
 
         expect(subject.failures.first).to be_a(Method)
       end
+
+      context 'when a failure occurs' do
+        let(:target) { Class.new { def initialize(_r, *_a); end; def call; end } }
+
+        it 'only instantiates subject class one time' do
+          target_instance = target.new(record, *args)
+
+          expect(target).to receive(:new).with(record, *args).and_return(target_instance).once
+
+          expect { subject.invoke }.not_to raise_error
+        end
+      end
     end
   end
 
