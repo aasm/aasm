@@ -68,10 +68,10 @@ if defined?(NoBrainer::Document)
 
     describe 'relations object' do
       it 'should load relations object ids' do
-        parent  = Parent.create
-        child_1 = Child.create(parent_id: parent.id)
-        child_2 = Child.create(parent_id: parent.id)
-        expect(parent.childs.pluck(:id, :status).map(&:id)).to eql [child_1.id, child_2.id]
+        parent_object  = Parent.create
+        child_1 = Child.create(parent_id: parent_object.id)
+        child_2 = Child.create(parent_id: parent_object.id)
+        expect(parent_object.childs.pluck(:id, :status).map(&:id)).to eql [child_1.id, child_2.id]
       end
     end
 
