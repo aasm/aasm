@@ -51,6 +51,9 @@ module AASM
       # Set to true to namespace reader methods and constants
       configure :namespace, false
 
+      # Set to true to prefix reader constants
+      configure :prefix_constants, true
+
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
@@ -100,7 +103,9 @@ module AASM
           aasm(aasm_name).current_state == state
         end
 
-        const_name = namespace? ? "STATE_#{namespace.upcase}_#{name.upcase}" : "STATE_#{name.upcase}"
+        const_name = namespace? ? "#{namespace.upcase}_#{name.upcase}" : "#{name.upcase}"
+        const_name = prefix_constants? ? "STATE_#{const_name}" : const_name
+
         unless klass.const_defined?(const_name)
           klass.const_set(const_name, name)
         end
@@ -237,6 +242,10 @@ module AASM
           end
         end
       end
+    end
+
+    def prefix_constants?
+      !!@state_machine.config.prefix_constants
     end
 
     def namespace?
