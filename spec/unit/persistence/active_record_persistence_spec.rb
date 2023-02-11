@@ -324,6 +324,13 @@ if defined?(ActiveRecord)
         expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
         expect(SimpleNewDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
       end
+      it "should add negative scopes for each state" do
+        expect(SimpleNewDsl).to respond_to(:not_unknown_scope)
+        expect(SimpleNewDsl).to respond_to(:not_another_unknown_scope)
+
+        expect(SimpleNewDsl.not_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(SimpleNewDsl.not_another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+      end
     end
 
     context "Already respond_to? the scope name" do
