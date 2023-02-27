@@ -8,7 +8,7 @@ module AASM::Core
     alias_method :options, :opts
 
     def initialize(event, opts, &block)
-      add_options_from_dsl(opts, [:on_transition, :guard, :after, :success], &block) if block
+      add_options_from_dsl(opts, dsl_option_keys, &block) if block
 
       @event = event
       @from = opts[:from]
@@ -79,5 +79,8 @@ module AASM::Core
       Invoker.new(code, record, args).invoke
     end
 
+    def dsl_option_keys
+      [:on_transition, :guard, :after, :success]
+    end
   end
 end # AASM

@@ -17,17 +17,7 @@ module AASM::Core
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [
-        :after,
-        :after_commit,
-        :after_transaction,
-        :before,
-        :before_transaction,
-        :ensure,
-        :error,
-        :before_success,
-        :success,
-      ], &block) if block
+      add_options_from_dsl(@options, dsl_option_keys, &block) if block
     end
 
     # called internally by Ruby 1.9 after clone()
@@ -95,13 +85,16 @@ module AASM::Core
     ## DSL interface
     def transitions(definitions=nil, &block)
       if definitions # define new transitions
+        transition_class = state_machine.implementation.aasm_transition_class
+        raise ArgumentError, "The class #{transition_class} must inherit from AASM::Core::Transition!" unless transition_class.ancestors.include?(AASM::Core::Transition)
+
         # Create a separate transition for each from-state to the given state
         Array(definitions[:from]).each do |s|
-          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
+          @transitions << transition_class.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
         if !definitions[:from] && definitions[:to]
-          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions), &block)
+          @transitions << transition_class.new(self, attach_event_guards(definitions), &block)
         end
       end
       @transitions
@@ -142,7 +135,7 @@ module AASM::Core
         args.unshift(to_state)
         to_state = nil
       end
-      
+
       # nop, to_state is a valid to-state
 
       transitions.each do |transition|
@@ -173,6 +166,20 @@ module AASM::Core
       Invoker.new(code, record, args)
              .with_default_return_value(false)
              .invoke
+    end
+
+    def dsl_option_keys
+      [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :before_success,
+        :success,
+      ]
     end
   end
 end # AASM
