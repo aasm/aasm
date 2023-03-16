@@ -3,6 +3,7 @@
 module AASM::Core
   class Event
     include AASM::DslHelper
+    include AASM::TransitionBuilder
 
     attr_reader :name, :state_machine, :options, :default_display_name
 
@@ -86,12 +87,12 @@ module AASM::Core
     def transitions(definitions=nil, &block)
       if definitions # define new transitions
         # Create a separate transition for each from-state to the given state
-        Array(definitions[:from]).each do |s|
-          build_transition(attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
+        Array(definitions[:from]).each do |from|
+          build_transition(definitions, from, &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
         if !definitions[:from] && definitions[:to]
-          build_transition(attach_event_guards(definitions), &block)
+          build_transition(definitions, &block)
         end
       end
       @transitions
@@ -106,25 +107,6 @@ module AASM::Core
     end
 
   private
-
-    def build_transition(definitions=nil, &block)
-      transition_class = state_machine.implementation.aasm_transition_class
-      raise ArgumentError, "The class #{transition_class} must inherit from AASM::Core::Transition!" unless transition_class.ancestors.include?(AASM::Core::Transition)
-
-      @transitions << transition_class.new(self, definitions, &block)
-    end
-
-    def attach_event_guards(definitions)
-      unless @guards.empty?
-        given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards) || definitions.delete(:if))
-        definitions[:guards] = @guards + given_guards # from aasm4
-      end
-      unless @unless.empty?
-        given_unless = Array(definitions.delete(:unless))
-        definitions[:unless] = given_unless + @unless
-      end
-      definitions
-    end
 
     def _fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       result = options[:test_only] ? false : nil
