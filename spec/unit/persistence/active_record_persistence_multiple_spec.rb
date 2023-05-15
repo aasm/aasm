@@ -332,7 +332,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    context "when namespeced" do
+    context "when namespaced" do
       it "add namespaced scopes" do
         expect(MultipleNamespaced).to respond_to(:car_unsold)
         expect(MultipleNamespaced).to respond_to(:car_sold)
@@ -346,6 +346,10 @@ if defined?(ActiveRecord)
 
         expect(MultipleNamespaced.unsold.is_a?(ActiveRecord::Relation)).to be_truthy
         expect(MultipleNamespaced.sold.is_a?(ActiveRecord::Relation)).to be_truthy
+      end
+      it "creates identical queries" do
+        expect(MultipleNamespaced.car_unsold.all.to_sql == MultipleNamespaced.unsold.all.to_sql).to be_truthy
+        expect(MultipleNamespaced.car_sold.all.to_sql == MultipleNamespaced.sold.all.to_sql).to be_truthy
       end
     end
   end # scopes
