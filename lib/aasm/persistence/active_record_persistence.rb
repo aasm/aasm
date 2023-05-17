@@ -88,7 +88,7 @@ module AASM
         end
 
         def aasm_update_column(attribute_name, value)
-          self.class.unscoped.where(self.class.primary_key => self.id).update_all(attribute_name => value) == 1
+          self.persisted? && self.update_column(attribute_name, value)
         end
 
         def aasm_read_attribute(name)
@@ -99,6 +99,7 @@ module AASM
           write_attribute(name, value)
         end
 
+        
         def aasm_transaction(requires_new, requires_lock)
           self.class.transaction(:requires_new => requires_new) do
             lock!(requires_lock) if requires_lock
