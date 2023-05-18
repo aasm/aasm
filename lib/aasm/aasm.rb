@@ -185,6 +185,7 @@ private
         *process_args(event, old_state.name, *args)
       )
 
+      aasm(state_machine_name).from_state = old_state
       self.aasm_event_fired(event.name, old_state.name, aasm(state_machine_name).current_state) if self.respond_to?(:aasm_event_fired)
     else
       self.aasm_event_failed(event.name, old_state.name) if self.respond_to?(:aasm_event_failed)

@@ -276,6 +276,23 @@ describe 'should fire callbacks' do
     expect(model).to receive(:do_something_after).once.ordered
     model.in_right_order!
   end
+
+  context 'with a transition from any state' do
+    it 'sets from_state' do
+      ThisNameBetterNotBeInUse.instance_eval do
+        aasm do
+          event :some_event do
+            transitions :to => :proc
+          end
+        end
+      end
+
+      model = ThisNameBetterNotBeInUse.new
+      model.some_event
+      expect(model.aasm.from_state).to eq(:initial)
+    end
+  end
+
 end
 
 describe 'current event' do
