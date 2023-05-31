@@ -1,7 +1,7 @@
 # AASM - Ruby state machines
 
 [![Gem Version](https://badge.fury.io/rb/aasm.svg)](http://badge.fury.io/rb/aasm)
-[![Build Status](https://travis-ci.org/aasm/aasm.svg?branch=master)](https://travis-ci.org/aasm/aasm)
+[![Build Status](https://github.com/aasm/aasm/actions/workflows/build.yml/badge.svg)](https://github.com/aasm/aasm/actions/workflows/build.yml)
 [![Code Climate](https://codeclimate.com/github/aasm/aasm/badges/gpa.svg)](https://codeclimate.com/github/aasm/aasm)
 [![codecov](https://codecov.io/gh/aasm/aasm/branch/master/graph/badge.svg)](https://codecov.io/gh/aasm/aasm)
 
