@@ -31,7 +31,7 @@ module AASM
           return record.__send__(subject) if subject_arity.zero?
           return record.__send__(subject, *args) if subject_arity < 0
           req_args = args[0..(subject_arity - 1)]
-          return record.__send__(subject, **req_args[0]) if req_args[0].is_a?(Hash)
+          return record.__send__(subject, **req_args[0]) if req_args[0].is_a?(Hash) && !req_args[0].empty?
           record.__send__(subject, *req_args)
         end
         # rubocop:enable Metrics/AbcSize
