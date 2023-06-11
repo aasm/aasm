@@ -72,6 +72,11 @@ describe 'state machine' do
       expect(example).to_not allow_event(:fill_out_with_args).with(false)
     end
 
+    it "works with empty hash argument" do
+      pe = ParametrisedEvent.new
+      expect(pe).to transition_from(:sleeping).to(:showering).on_event(:shower, {})
+    end
+
     it "works for multiple state machines" do
       expect(multiple).to allow_event(:walk).on(:move)
       expect(multiple).to_not allow_event(:hold).on(:move)
