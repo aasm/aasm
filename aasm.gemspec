@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   # s.add_development_dependency 'debugger'
   s.add_development_dependency 'pry'
 
-  s.files         = Dir['lib/**/*', 'README.md', 'LICENSE']
+  s.files         = Dir['lib/**/*', 'CHANGELOG.md', 'README.md', 'LICENSE']
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 end
