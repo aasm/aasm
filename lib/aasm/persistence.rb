@@ -26,6 +26,9 @@ module AASM
           include_persistence base, :redis
         elsif hierarchy.include?("CDQManagedObject")
           include_persistence base, :core_data_query
+        elsif hierarchy.include?("Neo4j::ActiveNode")
+          require_persistence :neo4j
+          include_persistence base, :neo4j
         else
           include_persistence base, :plain
         end
