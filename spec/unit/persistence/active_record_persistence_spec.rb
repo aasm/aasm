@@ -122,8 +122,12 @@ if defined?(ActiveRecord)
 
           let(:with_enum_without_column) {WithEnumWithoutColumn.new}
 
-          it "should raise NoMethodError for transitions" do
-            expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, /undefined method .status./)
+          it "should raise an error for transitions" do
+            if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
+              expect{with_enum_without_column.send(:view)}.to raise_error(RuntimeError, /Unknown enum attribute 'status'/)
+            else
+              expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, /undefined method .status./)
+            end
           end
         end
 
