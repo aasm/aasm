@@ -32,6 +32,16 @@ jobs:
             os: ubuntu-20.04
             redis-version: 6
             mongodb-version: 5
+          - ruby: 3.1
+            gemfile: rails_7.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.2
+            gemfile: rails_7.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
         exclude:
         - ruby: '3.0'
           gemfile: rails_5.2
