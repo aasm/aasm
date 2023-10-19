@@ -9,7 +9,7 @@ appraise 'rails_4.2' do
   gem 'aws-sdk', '~> 2', platforms: :ruby
   gem 'redis-objects', '1.6.0'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
-  gem "after_commit_everywhere", "~> 1.0"
+  gem 'after_commit_everywhere', '~> 1.0'
 end
 
 appraise 'rails_4.2_mongoid_5' do
@@ -18,7 +18,7 @@ appraise 'rails_4.2_mongoid_5' do
   gem 'rails', '~> 4.2.11'
   gem 'mongoid', '~> 5.0'
   gem 'activerecord-jdbcsqlite3-adapter', '1.3.24', platforms: :jruby
-  gem "after_commit_everywhere", "~> 1.0"
+  gem 'after_commit_everywhere', '~> 1.0'
 end
 
 appraise 'rails_5.2' do
@@ -29,7 +29,17 @@ appraise 'rails_5.2' do
   gem 'dynamoid', '~>2.2', platforms: :ruby
   gem 'aws-sdk', '~>2', platforms: :ruby
   gem 'redis-objects', '1.6.0'
-  gem "after_commit_everywhere", "~> 1.0"
+  gem 'after_commit_everywhere', '~> 1.0'
+end
+
+appraise 'rails_6.0' do
+  gem 'rails', '~> 6.0.6.1'
+  gem 'mongoid', '~>7.0', '>= 7.0.5'
+  gem 'sequel'
+  gem 'dynamoid', '~>3.3', platforms: :ruby
+  gem 'aws-sdk-dynamodb', '~> 1'
+  gem 'redis-objects', '1.6.0'
+  gem 'after_commit_everywhere', '~> 1.0'
 end
 
 appraise 'rails_6.1' do
@@ -39,7 +49,7 @@ appraise 'rails_6.1' do
   gem 'dynamoid', '~>3.3', platforms: :ruby
   gem 'aws-sdk-dynamodb', '~> 1'
   gem 'redis-objects', '1.6.0'
-  gem "after_commit_everywhere", "~> 1.0"
+  gem 'after_commit_everywhere', '~> 1.0'
 end
 
 appraise 'norails' do
@@ -47,5 +57,5 @@ appraise 'norails' do
   gem 'rails', install_if: false
   gem 'sequel'
   gem 'redis-objects', '1.6.0'
-  gem "after_commit_everywhere", install_if: false
+  gem 'after_commit_everywhere', install_if: false
 end
