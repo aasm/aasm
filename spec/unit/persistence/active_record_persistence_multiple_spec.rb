@@ -124,7 +124,7 @@ if defined?(ActiveRecord)
 
           it "should raise an error for transitions" do
             if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
-              expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(RuntimeError, /Unknown enum attribute 'status'/)
+              expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(RuntimeError, /Undeclared attribute type for enum 'status'/)
             else
               expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, /undefined method .status./)
             end
