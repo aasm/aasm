@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'adding an event' do
-  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:state_machine) { AASM::StateMachine.new(:name).tap { |sm| AASM::Base.new(nil, :name, sm) } }
   let(:event) do
     AASM::Core::Event.new(:close_order, state_machine, {:success => :success_callback}) do
       before :before_callback
@@ -36,7 +36,7 @@ describe 'adding an event' do
 end
 
 describe 'transition inspection' do
-  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:state_machine) { AASM::StateMachine.new(:name).tap { |sm| AASM::Base.new(nil, :name, sm) } }
   let(:event) do
     AASM::Core::Event.new(:run, state_machine) do
       transitions :to => :running, :from => :sleeping
@@ -61,7 +61,7 @@ describe 'transition inspection' do
 end
 
 describe 'transition inspection without from' do
-  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:state_machine) { AASM::StateMachine.new(:name).tap { |sm| AASM::Base.new(nil, :name, sm) } }
   let(:event) do
     AASM::Core::Event.new(:run, state_machine) do
       transitions :to => :running
@@ -79,7 +79,7 @@ describe 'transition inspection without from' do
 end
 
 describe 'firing an event' do
-  let(:state_machine) { AASM::StateMachine.new(:name) }
+  let(:state_machine) { AASM::StateMachine.new(:name).tap { |sm| AASM::Base.new(nil, :name, sm) } }
 
   it 'should return nil if the transitions are empty' do
     obj = double('object', :aasm => double('aasm', :current_state => 'open'))
