@@ -16,11 +16,11 @@ module AASM
       def aasm_write_state(state, name=:default)
         attribute_name = self.class.aasm(name).attribute_name
         old_value = aasm_read_attribute(attribute_name)
-        aasm_write_state_attribute state, name
 
         success = if aasm_skipping_validations(name)
           aasm_update_column(attribute_name, aasm_raw_attribute_value(state, name))
         else
+          aasm_write_state_attribute state, name
           aasm_save
         end
 
