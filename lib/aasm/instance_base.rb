@@ -57,6 +57,10 @@ module AASM
       end
     end
 
+    def state_names
+      self.states.map(&:name)
+    end
+
     def events(options={}, *args)
       state = options[:state] || current_state
       events = @instance.class.aasm(@name).events.select {|e| e.transitions_from_state?(state) }
