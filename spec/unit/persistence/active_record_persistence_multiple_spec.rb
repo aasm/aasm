@@ -342,14 +342,18 @@ if defined?(ActiveRecord)
         expect(MultipleNamespaced).to respond_to(:car_sold)
 
         expect(MultipleNamespaced.car_unsold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.car_unsold.where_values_hash.stringify_keys).to eq({ "status" => "unsold" })
         expect(MultipleNamespaced.car_sold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.car_sold.where_values_hash.stringify_keys).to eq({ "status" => "sold" })
       end
       it "add unnamespaced scopes" do
         expect(MultipleNamespaced).to respond_to(:unsold)
         expect(MultipleNamespaced).to respond_to(:sold)
 
         expect(MultipleNamespaced.unsold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.unsold.where_values_hash.stringify_keys).to eq({ "status" => "unsold" })
         expect(MultipleNamespaced.sold.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(MultipleNamespaced.sold.where_values_hash.stringify_keys).to eq({ "status" => "sold" })
       end
     end
   end # scopes
