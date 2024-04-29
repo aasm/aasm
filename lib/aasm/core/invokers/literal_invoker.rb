@@ -30,6 +30,11 @@ module AASM
           raise(*record_error) unless record.respond_to?(subject, true)
           return record.__send__(subject) if subject_arity.zero?
           return record.__send__(subject, *args) if subject_arity < 0
+          handle_args
+        end
+        # rubocop:enable Metrics/AbcSize
+
+        def handle_args
           req_args = args[0..(subject_arity - 1)]
           if req_args[-1].is_a?(Hash)
             positional_args = req_args[0..-2]
@@ -39,7 +44,6 @@ module AASM
             record.__send__(subject, *req_args)
           end
         end
-        # rubocop:enable Metrics/AbcSize
 
         def record_error
           [
