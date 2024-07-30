@@ -3,14 +3,14 @@ module Minitest::Assertions
     options = args.first
     options[:on] ||= :default
     assert _transitions_from?(object, from_state, args, options),
-          "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, (on :#{options[:on]})"
+          "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, but got :#{object.aasm(options[:on]).current_state} (on :#{options[:on]})"
   end
 
   def refute_transitions_from(object, from_state, *args)
     options = args.first
     options[:on] ||= :default
     refute _transitions_from?(object, from_state, args, options),
-          "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, (on :#{options[:on]})"
+          "Expected transition state to :#{options[:to]} from :#{from_state} on event :#{options[:on_event]}, but got :#{object.aasm(options[:on]).current_state} (on :#{options[:on]})"
   end
 
   def _transitions_from?(object, from_state, args, options)
