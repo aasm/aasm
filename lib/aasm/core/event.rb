@@ -1,16 +1,19 @@
+# frozen_string_literal: true
+
 module AASM::Core
   class Event
-    include DslHelper
+    include AASM::DslHelper
 
-    attr_reader :name, :state_machine, :options
+    attr_reader :name, :state_machine, :options, :default_display_name
 
     def initialize(name, state_machine, options = {}, &block)
       @name = name
       @state_machine = state_machine
       @transitions = []
-      @valid_transitions = {}
+      @valid_transitions = Hash.new { |h, k| h[k] = {} }
       @guards = Array(options[:guard] || options[:guards] || options[:if])
       @unless = Array(options[:unless]) #TODO: This could use a better name
+      @default_display_name = name.to_s.gsub(/_/, ' ').capitalize
 
       # from aasm4
       @options = options # QUESTION: .dup ?
@@ -22,18 +25,29 @@ module AASM::Core
         :before_transaction,
         :ensure,
         :error,
+        :before_success,
         :success,
       ], &block) if block
+    end
+
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @transitions = @transitions.collect { |transition| transition.clone }
+      @guards      = @guards.dup
+      @unless      = @unless.dup
+      @options     = {}
+      orig.options.each_pair { |name, setting| @options[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
     end
 
     # a neutered version of fire - it doesn't actually fire the event, it just
     # executes the transition guards to determine if a transition is even
     # an option given current conditions.
-    def may_fire?(obj, to_state=nil, *args)
+    def may_fire?(obj, to_state=::AASM::NO_VALUE, *args)
       _fire(obj, {:test_only => true}, to_state, *args) # true indicates test firing
     end
 
-    def fire(obj, options={}, to_state=nil, *args)
+    def fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       _fire(obj, options, to_state, *args) # false indicates this is not a test (fire!)
     end
 
@@ -65,8 +79,9 @@ module AASM::Core
 
     def fire_transition_callbacks(obj, *args)
       from_state = obj.aasm(state_machine.name).current_state
-      transition = @valid_transitions[from_state]
-      @valid_transitions[from_state].invoke_success_callbacks(obj, *args) if transition
+      transition = @valid_transitions[obj.object_id][from_state]
+      transition.invoke_success_callbacks(obj, *args) if transition
+      @valid_transitions.delete(obj.object_id)
     end
 
     def ==(event)
@@ -85,7 +100,7 @@ module AASM::Core
           @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
-        if @transitions.empty? && definitions[:to]
+        if !definitions[:from] && definitions[:to]
           @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions), &block)
         end
       end
@@ -94,6 +109,10 @@ module AASM::Core
 
     def failed_callbacks
       transitions.flat_map(&:failures)
+    end
+
+    def to_s
+      name.to_s
     end
 
   private
@@ -110,33 +129,32 @@ module AASM::Core
       definitions
     end
 
-    def _fire(obj, options={}, to_state=nil, *args)
+    def _fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       result = options[:test_only] ? false : nil
-      if @transitions.map(&:from).any?
-        transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state }
-        return result if transitions.size == 0
-      else
-        transitions = @transitions
-      end
+      clear_failed_callbacks
+      transitions = @transitions.select { |t| t.from == obj.aasm(state_machine.name).current_state || t.from == nil}
+      return result if transitions.size == 0
 
-      # If to_state is not nil it either contains a potential
-      # to_state or an arg
-      unless to_state == nil
-        if !to_state.respond_to?(:to_sym) || !transitions.map(&:to).flatten.include?(to_state.to_sym)
-          args.unshift(to_state)
-          to_state = nil
-        end
+      if to_state == ::AASM::NO_VALUE
+        to_state = nil
+      elsif !(to_state.respond_to?(:to_sym) && transitions.map(&:to).flatten.include?(to_state.to_sym))
+        # to_state is an argument
+        args.unshift(to_state)
+        to_state = nil
       end
+      
+      # nop, to_state is a valid to-state
 
       transitions.each do |transition|
         next if to_state and !Array(transition.to).include?(to_state)
-        if (options.key?(:may_fire) && Array(transition.to).include?(options[:may_fire])) ||
+        if (options.key?(:may_fire) && transition.eql?(options[:may_fire])) ||
            (!options.key?(:may_fire) && transition.allowed?(obj, *args))
-          result = to_state || Array(transition.to).first
+
           if options[:test_only]
-            # result = true
+            result = transition
           else
-            Array(transition.to).each {|to| @valid_transitions[to] = transition }
+            result = to_state || Array(transition.to).first
+            Array(transition.to).each {|to| @valid_transitions[obj.object_id][to] = transition }
             transition.execute(obj, *args)
           end
 
@@ -146,28 +164,15 @@ module AASM::Core
       result
     end
 
+    def clear_failed_callbacks
+      # https://github.com/aasm/aasm/issues/383, https://github.com/aasm/aasm/issues/599
+      transitions.each { |transition| transition.failures.clear }
+    end
+
     def invoke_callbacks(code, record, args)
-      case code
-        when Symbol, String
-          unless record.respond_to?(code, true)
-            raise NoMethodError.new("NoMethodError: undefined method `#{code}' for #{record.inspect}:#{record.class}")
-          end
-          arity = record.__send__(:method, code.to_sym).arity
-          record.__send__(code, *(arity < 0 ? args : args[0...arity]))
-          true
-
-        when Proc
-          arity = code.arity
-          record.instance_exec(*(arity < 0 ? args : args[0...arity]), &code)
-          true
-
-        when Array
-          code.each {|a| invoke_callbacks(a, record, args)}
-          true
-
-        else
-          false
-      end
+      Invoker.new(code, record, args)
+             .with_default_return_value(false)
+             .invoke
     end
   end
 end # AASM

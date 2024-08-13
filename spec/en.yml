@@ -4,6 +4,6 @@ en:
       localizer_test_model:
         close: "Let's close it!"
 
-    attributes:
-      localizer_test_model:
-        aasm_state/opened: "It's open now!"
+    errors:
+      messages:
+        record_invalid: "Invalid record"

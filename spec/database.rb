@@ -5,11 +5,10 @@ ActiveRecord::Migration.suppress_messages do
     end
   end
 
-  ActiveRecord::Migration.create_table "simple_new_dsls", :force => true do |t|
-    t.string "status"
-  end
-  ActiveRecord::Migration.create_table "multiple_simple_new_dsls", :force => true do |t|
-    t.string "status"
+  %w(simple_new_dsls multiple_simple_new_dsls implemented_abstract_class_dsls users multiple_namespaceds).each do |table_name|
+    ActiveRecord::Migration.create_table table_name, :force => true do |t|
+      t.string "status"
+    end
   end
 
   ActiveRecord::Migration.create_table "complex_active_record_examples", :force => true do |t|
@@ -17,14 +16,18 @@ ActiveRecord::Migration.suppress_messages do
     t.string "right"
   end
 
-  %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors).each do |table_name|
+  ActiveRecord::Migration.create_table "works", :force => true do |t|
+    t.string "status"
+  end
+
+  %w(validators multiple_validators workers invalid_persistors multiple_invalid_persistors silent_persistors multiple_silent_persistors active_record_callbacks).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
       t.string "status"
     end
   end
 
-  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors multiple_transactors).each do |table_name|
+  %w(transactors no_lock_transactors lock_transactors lock_no_wait_transactors no_transactors multiple_transactors).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "name"
       t.string "status"
@@ -40,5 +43,15 @@ ActiveRecord::Migration.suppress_messages do
   ActiveRecord::Migration.create_table "basic_active_record_two_state_machines_examples", :force => true do |t|
     t.string "search"
     t.string "sync"
+  end
+
+  ActiveRecord::Migration.create_table "instance_level_skip_validation_examples", :force => true do |t|
+    t.string "state"
+    t.string "some_string"
+  end
+
+  ActiveRecord::Migration.create_table "timestamp_examples", :force => true do |t|
+    t.string "aasm_state"
+    t.datetime "opened_at"
   end
 end

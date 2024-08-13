@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    attributes:
+      localizer_test_model:
+        aasm_state/opened: "It's open now!"
+
+fr:
+  activerecord:
+    attributes:
+      localizer_test_model:
+        aasm_state/opened: "C'est ouvert maintenant!"

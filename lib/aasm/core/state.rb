@@ -1,12 +1,28 @@
+# frozen_string_literal: true
+
 module AASM::Core
   class State
-    attr_reader :name, :state_machine, :options
+    attr_reader :name, :state_machine, :options, :default_display_name
 
     def initialize(name, klass, state_machine, options={})
       @name = name
       @klass = klass
       @state_machine = state_machine
+      @default_display_name = name.to_s.gsub(/_/, ' ').capitalize
       update(options)
+    end
+
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @options = {}
+      orig.options.each_pair do |name, setting|
+        @options[name] = if setting.is_a?(Hash) || setting.is_a?(Array)
+                           setting.dup
+                         else
+                           setting
+                         end
+      end
     end
 
     def ==(state)
@@ -39,11 +55,11 @@ module AASM::Core
     end
 
     def display_name
-      @display_name ||= begin
+      @display_name = begin
         if Module.const_defined?(:I18n)
           localized_name
         else
-          name.to_s.gsub(/_/, ' ').capitalize
+          @default_display_name
         end
       end
     end
@@ -60,22 +76,15 @@ module AASM::Core
   private
 
     def update(options = {})
-      if options.key?(:display) then
-        @display_name = options.delete(:display)
+      if options.key?(:display)
+        @default_display_name = options.delete(:display)
       end
       @options = options
       self
     end
 
     def _fire_callbacks(action, record, args)
-      case action
-        when Symbol, String
-          arity = record.__send__(:method, action.to_sym).arity
-          record.__send__(action, *(arity < 0 ? args : args[0...arity]))
-        when Proc
-          arity = action.arity
-          action.call(record, *(arity < 0 ? args : args[0...arity]))
-      end
+      Invoker.new(action, record, args).invoke
     end
 
   end

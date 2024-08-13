@@ -8,13 +8,12 @@ module AASM
       end
 
       module InstanceMethods
-        # Add the inital value to intiializer
+        # Initialize with default values
         #
-        # redis-objects removed the key from redis when set to nil
+        # Redis::Objects removes the key from Redis when set to `nil`
         def initialize(*args)
           super
-          state = send(self.class.aasm.attribute_name)
-          state.value = aasm.determine_state_name(self.class.aasm.initial_state)
+          aasm_ensure_initial_state
         end
         # Returns the value of the aasm.attribute_name - called from <tt>aasm.current_state</tt>
         #
@@ -68,8 +67,10 @@ module AASM
         #   foo.aasm_state # => nil
         #
         def aasm_ensure_initial_state
-          aasm.enter_initial_state if
-          send(self.class.aasm.attribute_name).to_s.strip.empty?
+          AASM::StateMachineStore.fetch(self.class, true).machine_names.each do |name|
+            aasm_column = self.class.aasm(name).attribute_name
+            aasm(name).enter_initial_state if !send(aasm_column).value || send(aasm_column).value.empty?
+          end
         end
 
         # Writes <tt>state</tt> to the state column and persists it to the database
@@ -81,12 +82,16 @@ module AASM
         #   Foo[1].aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state(state)
-          aasm_column = self.class.aasm.attribute_name
-          self.send("#{aasm_column}=", state)
+        def aasm_write_state(state, name=:default)
+          aasm_column = self.class.aasm(name).attribute_name
+          send("#{aasm_column}").value = state
         end
 
         # Writes <tt>state</tt> to the state column, but does not persist it to the database
+        # (but actually it still does)
+        #
+        # With Redis::Objects it's not possible to skip persisting - it's not an ORM,
+        # it does not operate like an AR model and does not know how to postpone changes.
         #
         #   foo = Foo[1]
         #   foo.aasm.current_state # => :opened
@@ -98,8 +103,8 @@ module AASM
         #   Foo[1].aasm.current_state # => :closed
         #
         # NOTE: intended to be called from an event
-        def aasm_write_state_without_persistence(state)
-          send("#{self.class.aasm.attribute_name}=", state)
+        def aasm_write_state_without_persistence(state, name=:default)
+          aasm_write_state(state, name)
         end
       end
     end

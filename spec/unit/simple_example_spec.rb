@@ -23,6 +23,21 @@ describe 'state machine' do
     expect(simple).to be_authorised
   end
 
+  it 'shows the permitted transitions' do
+    expect(simple.aasm.permitted_transitions).to eq(
+      [
+        { event: :fill_out, state: :filled_out },
+        { event: :deny, state: :denied }
+      ]
+    )
+
+    simple.fill_out!
+    expect(simple.aasm.permitted_transitions).to eq([{ event: :authorise, state: :authorised }])
+
+    simple.authorise
+    expect(simple.aasm.permitted_transitions).to eq([])
+  end
+
   it 'denies transitions to other states' do
     expect {simple.authorise}.to raise_error(AASM::InvalidTransition)
     expect {simple.authorise!}.to raise_error(AASM::InvalidTransition)

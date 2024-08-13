@@ -23,4 +23,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :default => :spec
+if ENV["APPRAISAL_INITIALIZED"] || ENV["TRAVIS"]
+  task :default => :spec
+else
+  require 'appraisal'
+  task :default => :appraisal
+end

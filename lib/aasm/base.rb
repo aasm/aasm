@@ -26,6 +26,9 @@ module AASM
       # raise if the model is invalid (in ActiveRecord)
       configure :whiny_persistence, false
 
+      # Use transactions (in ActiveRecord)
+      configure :use_transactions, true
+
       # use requires_new for nested transactions (in ActiveRecord)
       configure :requires_new_transaction, true
 
@@ -33,6 +36,9 @@ module AASM
       # true for FOR UPDATE lock
       # string for a specific lock type i.e. FOR UPDATE NOWAIT
       configure :requires_lock, false
+
+      # automatically set `"#{state_name}_at" = ::Time.now` on state changes
+      configure :timestamps, false
 
       # set to true to forbid direct assignment of aasm_state column (in ActiveRecord)
       configure :no_direct_assignment, false
@@ -48,18 +54,12 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      # setup timestamp-setting callback if enabled
+      setup_timestamps(@name)
+
       # make sure to raise an error if no_direct_assignment is enabled
       # and attribute is directly assigned though
-      aasm_name = @name
-      klass.send :define_method, "#{@state_machine.config.column}=", ->(state_name) do
-        if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
-          raise AASM::NoDirectAssignmentError.new(
-            'direct assignment of AASM column has been disabled (see AASM configuration for this class)'
-          )
-        else
-          super(state_name)
-        end
-      end
+      setup_no_direct_assignment(@name)
     end
 
     # This method is both a getter and a setter
@@ -130,6 +130,16 @@ module AASM
         aasm(aasm_name).current_event = event
         aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
+
+      skip_instance_level_validation(event, name, aasm_name, klass)
+
+      # Create aliases for the event methods. Keep the old names to maintain backwards compatibility.
+      if namespace?
+        klass.send(:alias_method, "may_#{name}_#{namespace}?", "may_#{name}?")
+        klass.send(:alias_method, "#{name}_#{namespace}!", "#{name}!")
+        klass.send(:alias_method, "#{name}_#{namespace}", name)
+      end
+
     end
 
     def after_all_transitions(*callbacks, &block)
@@ -208,10 +218,25 @@ module AASM
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
              })
-         @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
+        unless AASM::Configuration.hide_warnings
+          @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
+        end
       end
 
-      klass.send(:define_method, method_name, method_definition)
+      klass.send(:define_method, method_name, method_definition).tap do |sym|
+        apply_ruby2_keyword(klass, sym)
+      end
+    end
+
+    def apply_ruby2_keyword(klass, sym)
+      if RUBY_VERSION >= '2.7.1'
+        if klass.instance_method(sym).parameters.find { |type, _| type.to_s.start_with?('rest') }
+          # If there is a place where you are receiving in *args, do ruby2_keywords.
+          klass.module_eval do
+            ruby2_keywords sym
+          end
+        end
+      end
     end
 
     def namespace?
@@ -233,6 +258,44 @@ module AASM
         [args, {}]
       else
         raise "count not parse states: #{args}"
+      end
+    end
+
+    def skip_instance_level_validation(event, name, aasm_name, klass)
+      # Overrides the skip_validation config for an instance (If skip validation is set to false in original config) and
+      # restores it back to the original value after the event is fired.
+      safely_define_method klass, "#{name}_without_validation!", ->(*args, &block) do
+        original_config = AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save
+        begin
+          AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = true unless original_config
+          aasm(aasm_name).current_event = :"#{name}!"
+          aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
+        ensure
+          AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = original_config
+        end
+      end
+    end
+
+    def setup_timestamps(aasm_name)
+      return unless @state_machine.config.timestamps
+
+      after_all_transitions do
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.timestamps
+          ts_setter = "#{aasm(aasm_name).to_state}_at="
+          respond_to?(ts_setter) && send(ts_setter, ::Time.now)
+        end
+      end
+    end
+
+    def setup_no_direct_assignment(aasm_name)
+      return unless @state_machine.config.no_direct_assignment
+
+      @klass.send(:define_method, "#{@state_machine.config.column}=") do |state_name|
+        if self.class.aasm(:"#{aasm_name}").state_machine.config.no_direct_assignment
+          raise AASM::NoDirectAssignmentError.new('direct assignment of AASM column has been disabled (see AASM configuration for this class)')
+        else
+          super(state_name)
+        end
       end
     end
 

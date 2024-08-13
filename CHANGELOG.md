@@ -1,5 +1,150 @@
 # CHANGELOG
 
+## unreleased
+## 5.5.0
+* Fix ClassInvoker instantiating class twice, thanks to [danielnolan](https://github.com/danielnolan)
+* Replace File.exists? with File.exist?, thanks to [kyoshidajp](https://github.com/kyoshidajp)
+
+## 5.4.0
+* Shrink gem size and export only needed files to work [#742](https://github.com/aasm/aasm/pull/742), thanks to [brunoarueira](https://github.com/brunoarueira)
+* Lock redis-objects to 1.6.0 as 1.7.0 has breaking changes [#796](https://github.com/aasm/aasm/pull/796)
+## 5.3.1
+* Fix fire! with string argument [#787](https://github.com/aasm/aasm/issues/787), in PR[#788](https://github.com/aasm/aasm/pull/788) thanks to [norman](https://github.com/norman)
+
+* Allow `fire` and `fire!` to accept a String or Symbol for the event name, and raise AASM::UndefinedEvent rather than AASM::UndefinedState
+  when an event can not be found, thanks to [norman](https://github.com/norman).
+
+## 5.3.0
+
+* Add Ruby 3.1 and Rails 7 to the CI matrix [#775](https://github.com/aasm/aasm/pull/775), thanks to [petergoldstein](https://github.com/petergoldstein)
+* Fixed an error in Ruby 3 when specifying a method that takes keyword arguments, such as event's before hook [#777](https://github.com/aasm/aasm/pull/777), thanks to [pocari](https://github.com/pocari)
+* Fix multi-threading bug not firing success callbacks [#778](https://github.com/aasm/aasm/pull/778), thanks to [guewen](https://github.com/guewen)
+* Raise AASM::UndefinedState when calling fire or fire! with undefined event names [#753](https://github.com/aasm/aasm/pull/753), thanks to [danielvdao](https://github.com/danielvdao)
+* Fixing Readme typos [#745](https://github.com/aasm/aasm/pull/745) [#772](https://github.com/aasm/aasm/pull/772) [#774](https://github.com/aasm/aasm/pull/774) [#781](https://github.com/aasm/aasm/pull/781), thanks to [jaredsmithse](https://github.com/jaredsmithse) [jcat4](https://github.com/jcat4) [ChandanChainani](https://github.com/ChandanChainani) [TessHuelskamp](https://github.com/TessHuelskamp)
+* Add github actions config [#750](https://github.com/aasm/aasm/pull/750), thanks to [aka47](https://github.com/aka47)
+* Test against for Rails 6.0 and improve ci [#719](https://github.com/aasm/aasm/pull/719), thanks to [yujideveloper](https://github.com/yujideveloper)
+* Fix migration class name to work with zeitwerk [#720](https://github.com/aasm/aasm/pull/720), thanks to [rwegrzyniak](https://github.com/rwegrzyniak)
+## 5.2.0
+
+* fix: timestamp will work with named machine [#739](https://github.com/aasm/aasm/pull/739), thanks to [RolandStuder](https://github.com/RolandStuder)
+* Create namespaced scopes in PR [#735](https://github.com/aasm/aasm/pull/735), thanks to [caiohsramos](https://github.com/caiohsramos)
+* Fix multiple state machines example per class on README in PR [#732](https://github.com/aasm/aasm/pull/732), thanks to [RodrigoVitiello](https://github.com/RodrigoVitiello)
+* Update version in recommendation to add after_commit_everywhere in PR [#729](https://github.com/aasm/aasm/pull/729), thanks to [Envek](https://github.com/Envek)
+* Fix i18n Event translations failing [#721](https://github.com/aasm/aasm/issues/721) in PR [#723](https://github.com/aasm/aasm/pull/723), thanks to [the-spectator](https://github.com/the-spectator)
+* Add documentation to the Readme about how parameters are handled in AASM events in PR [#722](https://github.com/aasm/aasm/pull/722), thanks to [dstuebe](https://github.com/dstuebe)
+* Fix human_state cached across locales [#709](https://github.com/aasm/aasm/issues/709) in PR [716](https://github.com/aasm/aasm/pull/716), thanks to [the-spectator](https://github.com/the-spectator)
+* Relocate DslHelper from root namespace to under AASM namespace in PR [#711](https://github.com/aasm/aasm/pull/711) thank to [yujideveloper ](https://github.com/yujideveloper )
+* Document how to define transitions from any state in in PR [#699](https://github.com/aasm/aasm/pull/699) thanks to [hedgesky](https://github.com/hedgesky)
+* Add simple option for auto-generated timestamps in PR [#677](https://github.com/aasm/aasm/pull/677), thanks to [jaynetics](https://github.com/jaynetics)
+## 5.1.1
+
+* Fix Depreciation message for after_commit_everywhere [#695](https://github.com/aasm/aasm/issues/695) in PR [#696](https://github.com/aasm/aasm/pull/696)
+* Fix human_state to use display option [#684](https://github.com/aasm/aasm/issues/684) in PR [#697](https://github.com/aasm/aasm/pull/697)
+* Remove support for ruby 2.3
+
+## 5.1.0
+
+* Fix after_commit in nested transactions [#536](https://github.com/aasm/aasm/issues/536) without explicit AR dependency in PR [#668](https://github.com/aasm/aasm/pull/668), thanks to [stokarenko](https://github.com/stokarenko)
+* Remove support for Rails 3.2
+
+## 5.0.8
+
+* Revert Fix for :after_commit within nested transaction because it adds after_commit_action dependency which is dependent on many gems.
+
+## 5.0.7
+
+* Fix :after_commit within nested transaction [#666](https://github.com/aasm/aasm/pull/666), thanks to [stokarenko](https://github.com/stokarenko)
+* Add permitted_transitions to group permitted event with state [#664](https://github.com/aasm/aasm/pull/664), thanks to [dnamsons](https://github.com/dnamsons)
+* Add Ruby 2.7.0 & 2.6.5 to Travis CI Test Matrix [#661](https://github.com/aasm/aasm/pull/661), thanks to [the-spectator](https://github.com/the-spectator)
+* Handle InvalidTransition in transition_from matcher [#653](https://github.com/aasm/aasm/pull/653), thanks to [ryanwood](https://github.com/ryanwood)
+
+## 5.0.6
+
+* Fix no_direct_assignment, couldn't be turned off pragmatically [#636](https://github.com/aasm/aasm/issues/636)
+* Add instance level validation skip option [#644](https://github.com/aasm/aasm/pull/644), thanks to [Nitin-Salunke](https://github.com/Nitin-Salunke)
+* Fixed aasm.current_event incorrectly yields nil when calling aasm.fire!(:event) [#551](https://github.com/aasm/aasm/issues/551) in [#638](https://github.com/aasm/aasm/pull/638), thanks to [DoubleJarvis](https://github.com/DoubleJarvis)
+* Code Refactor [#634](https://github.com/aasm/aasm/pull/634) , thanks to [rahulknojha](https://github.com/rahulknojha)
+* Fixed callback argument for :before_success & :success callback, [#630](https://github.com/aasm/aasm/pull/630)
+
+## 5.0.5
+
+* Independent of ActiveSupport methods, [#627](https://github.com/aasm/aasm/pull/627),
+thanks to [tristandruyen](https://github.com/tristandruyen). Fixes [#508](https://github.com/aasm/aasm/issues/508)
+
+## 5.0.4
+
+* Specify dynamoid version for Rails > 5, [#625](https://github.com/aasm/aasm/pull/625),
+thanks to [waghanza](https://github.com/waghanza)
+* Add travis runner for Rails 5.2, [#624](https://github.com/aasm/aasm/pull/624), thanks
+to [waghanza](https://github.com/waghanza)
+* Cleanup Abstract class issue, [#620](https://github.com/aasm/aasm/pull/620), thanks to
+[dennym](https://github.com/dennym)
+
+## 5.0.3
+
+* Fix Abstract class issue, [#619](https://github.com/aasm/aasm/pull/619)
+
+## 5.0.2
+
+* Clear failed callbacks, [#600](https://github.com/aasm/aasm/pull/600), thanks to
+[nedgar](https://github.com/nedgar)
+* README improvements, [#594](https://github.com/aasm/aasm/pull/594),
+[#589](https://github.com/aasm/aasm/pull/589), [#587](https://github.com/aasm/aasm/pull/587),
+[#597](https://github.com/aasm/aasm/pull/597), thanks to [jackscotti](https://github.com/jackscotti), [krmbzds](https://github.com/krmbzds),
+[zegomesjf](https://github.com/zegomesjf), [BKSpurgeon](https://github.com/BKSpurgeon)
+* Update InvalidTransition to include state_machine_name [#592](https://github.com/aasm/aasm/pull/592), thanks to [a14m](https://github.com/a14m)
+* Do not add migration if model and column already exists [#586](https://github.com/aasm/aasm/pull/586), thanks to [KiranJosh](https://github.com/KiranJosh)
+
+## 5.0.1
+
+* Fix failures array in transition not being reset [#383](https://github.com/aasm/aasm/issues/383)
+* Enable AASM scopes to be defined on abstract classes.
+
+## 5.0.0
+
+* Chore(invokers): Refactor callback invokers, add class-callbacks support [#541](https://github.com/aasm/aasm/pull/541), thanks to [pandomic](https://github.com/pandomic)
+* Add docker setup to readme
+* Add support for Nobrainer (RethinkDB) [#522](https://github.com/aasm/aasm/pull/522), thanks to [zedtux](https://github.com/zedtux)
+* Patch `allow_event` to accept event with custom arguments [#419](https://github.com/aasm/aasm/pull/419), thanks to [czhc](https://github.com/czhc)
+
+## 4.12.3
+
+* Add to AASM fire(event) and fire!(event) methods [#494](https://github.com/aasm/aasm/pull/494), thanks to [slayer](https://github.com/slayer)
+* Add `use_transactions` flag to persist changes to the database even when some error occurs. [#493](https://github.com/aasm/aasm/pull/493), thanks to Peter Lampesberger.
+
+## 4.12.2
+
+* Fix guards parameter [#484](https://github.com/aasm/aasm/pull/484), thanks to [teohm](https://github.com/teohm)
+* Make errors more inspectable [#452](https://github.com/aasm/aasm/pull/452), thanks to [flexoid](https://github.com/flexoid)
+* Enable Dynamoid for Rails 5 [#483](https://github.com/aasm/aasm/pull/483), thanks to [focusshifter](https://github.com/focusshifter)
+
+## 4.12.1
+
+* DRY-up Mongoid and ActiveRecord Persistence, Add Sequel transactions and locking [#475](https://github.com/aasm/aasm/pull/475), thanks to [@Aryk](https://github.com/Aryk)
+* Add aliases for event methods [#476](https://github.com/aasm/aasm/pull/476), thanks to [@Aryk](https://github.com/Aryk)
+* Support Minitest spec expectations [#387](https://github.com/aasm/aasm/pull/387), thanks to [@faragorn](https://github.com/faragorn)
+## 4.12.0
+
+ * Fix thread safe issue with concurrent-ruby gem [see [pull-request #422](https://github.com/aasm/aasm/pull/442), thanks to [@reidmorrison](https://github.com/reidmorrison)
+ * Drop Support for Mongo Mapper [see [pull-request #439](https://github.com/aasm/aasm/pull/439)], thanks to [@reidmorrison](https://github.com/reidmorrison)
+ * add :binding_event option to event [see [pull-request #438](https://github.com/aasm/aasm/pull/438)], thanks to [@leanhdaovn](https://github.com/leanhdaovn)
+ * fix: `skip_validation_on_save: true` for default_scope records, [see [pull-request #433](https://github.com/aasm/aasm/pull/433)], thanks to [@larissa](https://github.com/larissa)
+ * Deep clone state machine during inheritance so that state machines in child classes can be modified (see [pull-request #429](https://github.com/aasm/aasm/pull/429)), thanks to [@reidmorrison](https://github.com/reidmorrison) and [@Tybot204](https://github.com/Tybot204)
+ * add before_success callback for event (see [pull-request #422](https://github.com/aasm/aasm/pull/422)), thanks to [@timsly ](https://github.com/timsly)
+ * fix: multiple transitions in a single event with the same to and from states (see [issue #372](https://github.com/aasm/aasm/issues/372) and [issue #362](https://github.com/aasm/aasm/issues/362) for details, fixed with [pull-request #408](https://github.com/aasm/aasm/pull/408), thanks to [@dathanb](https://github.com/dathanb))
+ * fix: passing nil as a argument to callbacks (see [issue #404](https://github.com/aasm/aasm/issues/404) for details, fixed with [pull-request #406](https://github.com/aasm/aasm/pull/406), thanks to [@yogeshjain999](https://github.com/yogeshjain999))
+
+
+## 4.11.1
+
+ * fix: generator file name when using custom column name instead of
+  aasm_state (see [issue #398](https://github.com/aasm/aasm/pull/398) for details,
+  thanks to [@bastianwegge](https://github.com/bastianwegge))
+ * fix: Scopes when states are defined as a series of symbols (see [issue #397](https://github.com/aasm/aasm/pull/397) for details, thanks to [@evheny0](https://github.com/evheny0))
+ * fix: Multiple transition behavior when one of the transitions does not
+ have a "from" parameter (see [issue #392](https://github.com/aasm/aasm/issues/392) for details)
+ * fix: permissible states not respecting guard parameters (see [issue #388](https://github.com/aasm/aasm/issues/388)) with [pull-request #389](https://github.com/aasm/aasm/pull/389)
+
 ## 4.11.0
 
  * support `logger` configuration (see [issue #370](https://github.com/aasm/aasm/pull/370) for details, thanks to [@HoyaBoya](https://github.com/HoyaBoya))
@@ -329,4 +474,3 @@
 
  * supporting i18n
  * supporting regular expressions for hash values and strings
-

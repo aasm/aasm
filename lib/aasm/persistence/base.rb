@@ -34,11 +34,15 @@ module AASM
       # This allows for nil aasm states - be sure to add validation to your model
       def aasm_read_state(name=:default)
         state = send(self.class.aasm(name).attribute_name)
-        if new_record?
-          state.blank? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : state.to_sym
+        if !state || state.empty?
+          aasm_new_record? ? aasm(name).determine_state_name(self.class.aasm(name).initial_state) : nil
         else
-          state.blank? ? nil : state.to_sym
+          state.to_sym
         end
+      end
+
+      def aasm_new_record?
+        new_record?
       end
 
       module ClassMethods
@@ -53,9 +57,11 @@ module AASM
 
   class Base
     # make sure to create a (named) scope for each state
-    def state_with_scope(name, *args)
-      state_without_scope(name, *args)
-      create_scope(name) if create_scope?(name)
+    def state_with_scope(*args)
+      names = state_without_scope(*args)
+      names.each do |name|
+        create_scopes(name)
+      end
     end
     alias_method :state_without_scope, :state
     alias_method :state, :state_with_scope
@@ -67,7 +73,16 @@ module AASM
     end
 
     def create_scope(name)
-      @klass.aasm_create_scope(@name, name)
+      @klass.aasm_create_scope(@name, name) if create_scope?(name)
+    end
+
+    def create_scopes(name)
+      if namespace?
+        # Create default scopes even when namespace? for backward compatibility
+        namepaced_name = "#{namespace}_#{name}"
+        create_scope(namepaced_name)
+      end
+      create_scope(name)
     end
   end # Base
 

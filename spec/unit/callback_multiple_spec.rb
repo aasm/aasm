@@ -49,7 +49,7 @@ describe 'callbacks for the new DSL' do
 
     expect {
       callback.left_close!
-    }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard].")
+    }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:event_guard].")
 
   end
 
@@ -88,7 +88,7 @@ describe 'callbacks for the new DSL' do
 
       expect {
         callback.left_close!
-      }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:after_transition, :event_guard, :transition_guard].")
+      }.to raise_error(AASM::InvalidTransition, "Event 'left_close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
@@ -154,6 +154,8 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
     expect(cb).to receive(:transition_method2).with(:arg1).once.ordered
+    expect(cb).to receive(:before_success_method).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method).with(:arg1).once.ordered
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:out_to_lunch, :arg1)
 
@@ -161,6 +163,8 @@ describe 'callbacks for the new DSL' do
     some_object = double('some object')
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method2).with(some_object).once.ordered
+    expect(cb).to receive(:before_success_method).with(some_object).once.ordered
+    expect(cb).to receive(:success_method).with(some_object).once.ordered
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(:out_to_lunch, some_object)
   end
@@ -287,7 +291,7 @@ describe 'event callbacks' do
       expect(@foo).to receive(:aasm_event_failed).with(:null, :open)
       expect{
         @foo.null
-      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false, :always_false].")
+      }.to raise_error(AASM::InvalidTransition, "Event 'null' cannot transition from 'open'. Failed callback(s): [:always_false].")
     end
 
     it 'should not call it if persist fails for bang fire' do

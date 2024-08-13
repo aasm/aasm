@@ -1,0 +1,130 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    if: "contains(github.event.commits[0].message, '[ci skip]') == false"
+    continue-on-error: ${{ matrix.allow_failure || false }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        ruby: ['3.0', 2.7, 2.6, jruby-9.1.17.0, truffleruby]
+        gemfile:
+          [
+            norails,
+            rails_4.2,
+            rails_4.2_mongoid_5,
+            rails_5.2,
+            rails_6.0,
+            rails_6.1,
+          ]
+        redis-version: [6]
+        mongodb-version: [5]
+        include:
+          - ruby: '3.0'
+            gemfile: rails_6.0
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: '3.0'
+            gemfile: rails_6.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.1
+            gemfile: rails_7.0
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.2
+            gemfile: rails_7.0
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.1
+            gemfile: rails_7.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+          - ruby: 3.2
+            gemfile: rails_7.1
+            os: ubuntu-20.04
+            redis-version: 6
+            mongodb-version: 5
+        exclude:
+        - ruby: '3.0'
+          gemfile: rails_5.2
+        - ruby: '3.0'
+          gemfile: rails_4.2
+        - ruby: '3.0'
+          gemfile: rails_4.2_mongoid_5
+        - ruby: 2.7
+          gemfile: rails_5.2
+        - ruby: 2.7
+          gemfile: rails_4.2
+        - ruby: 2.7
+          gemfile: rails_4.2_mongoid_5
+        - ruby: 2.6
+          gemfile: rails_4.2_mongoid_5
+        - ruby: 2.6
+          gemfile: rails_4.2
+        - ruby: jruby-9.1.17.0
+          gemfile: norails
+        - ruby: jruby-9.1.17.0
+          gemfile: rails_5.2
+        - ruby: jruby-9.1.17.0
+          gemfile: rails_6.1
+        - ruby: truffleruby
+          gemfile: rails_4.2
+        - ruby: truffleruby
+          gemfile: rails_4.2_mongoid_5
+        - ruby: truffleruby
+          gemfile: rails_5.2
+        - ruby: truffleruby
+          gemfile: rails_6.1
+        allow_failures:
+          - false
+    env:
+      BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+      ALLOW_FAILURES: "${{ matrix.allow_failures }}"
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          mkdir /tmp/dynamodb
+          wget -O - https://s3-ap-southeast-1.amazonaws.com/dynamodb-local-singapore/dynamodb_local_latest.tar.gz | tar xz --directory /tmp/dynamodb
+          java -Djava.library.path=/tmp/dynamodb/DynamoDBLocal_lib -jar /tmp/dynamodb/DynamoDBLocal.jar -inMemory -delayTransientStatuses -port 30180 &
+          mongod --version
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Setup project
+        run: bundle install
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+      #  - name: Setup DynamoDB Local
+      #    uses: rrainn/dynamodb-action@v2.0.0
+      #    with:
+      #      port: 8000
+      #      cors: '*'
+      - name: Run specs
+        run: bundle exec rspec spec
+      - name: Run test
+        run: bundle exec rake test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: false

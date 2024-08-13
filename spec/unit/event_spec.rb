@@ -106,7 +106,7 @@ describe 'firing an event' do
     obj = double('object', :aasm => double('aasm', :current_state => :open))
     expect(obj).to receive(:guard_fn).with('arg1', 'arg2').and_return(true)
 
-    expect(event.fire(obj, {}, nil, 'arg1', 'arg2')).to eq(:closed)
+    expect(event.fire(obj, {}, 'arg1', 'arg2')).to eq(:closed)
   end
 
   context 'when given a gaurd proc' do
@@ -118,7 +118,7 @@ describe 'firing an event' do
       line_number = __LINE__ - 2
       obj = double('object', :aasm => double('aasm', :current_state => :student))
 
-      event.fire(obj, {}, nil)
+      event.fire(obj, {})
       expect(event.failed_callbacks).to eq ["#{__FILE__}##{line_number}"]
     end
   end
@@ -133,7 +133,7 @@ describe 'firing an event' do
       obj = double('object', :aasm => double('aasm', :current_state => :student))
       allow(obj).to receive(:paid_tuition?).and_return(false)
 
-      event.fire(obj, {}, nil)
+      event.fire(obj, {})
       expect(event.failed_callbacks).to eq [:paid_tuition?]
     end
   end
@@ -294,6 +294,36 @@ describe 'current event' do
     pe.wakeup!
     expect(pe.aasm.current_event).to eql :wakeup!
   end
+
+  describe "when calling events with fire/fire!" do
+    context "fire" do
+      it "should populate aasm.current_event and transition (sleeping to showering)" do
+        pe.aasm.fire(:wakeup)
+        expect(pe.aasm.current_event).to eq :wakeup
+        expect(pe.aasm.current_state).to eq :showering
+      end
+
+      it "should allow event names as strings" do
+        pe.aasm.fire("wakeup")
+        expect(pe.aasm.current_event).to eq :wakeup
+        expect(pe.aasm.current_state).to eq :showering
+      end
+    end
+
+    context "fire!" do
+      it "should populate aasm.current_event and transition (sleeping to showering)" do
+        pe.aasm.fire!(:wakeup)
+        expect(pe.aasm.current_event).to eq :wakeup!
+        expect(pe.aasm.current_state).to eq :showering
+      end
+
+      it "should allow event names as strings" do
+        pe.aasm.fire!("wakeup")
+        expect(pe.aasm.current_event).to eq :wakeup!
+        expect(pe.aasm.current_state).to eq :showering
+      end
+    end
+  end
 end
 
 describe 'parametrised events' do
@@ -315,7 +345,7 @@ describe 'parametrised events' do
   end
 
   it 'should transition to default state when :after transition invoked' do
-    pe.dress!(nil, 'purple', 'dressy')
+    pe.dress!('purple', 'dressy')
     expect(pe.aasm.current_state).to eq(:working)
   end
 
@@ -323,6 +353,12 @@ describe 'parametrised events' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:wear_clothes).with('blue', 'jeans')
     pe.dress!(:working, 'blue', 'jeans')
+  end
+
+  it 'should call :after transition method if arg is nil' do
+    dryer = nil
+    expect(pe).to receive(:wet_hair).with(dryer)
+    pe.shower!(dryer)
   end
 
   it 'should call :after transition proc' do
@@ -342,6 +378,12 @@ describe 'parametrised events' do
     pe.wakeup!(:showering)
     expect(pe).to receive(:wear_makeup).with('foundation', 'SPF')
     pe.dress!(:working, 'foundation', 'SPF')
+  end
+
+  it 'should call :success transition method if arg is nil' do
+    shirt_color = nil
+    expect(pe).to receive(:wear_clothes).with(shirt_color)
+    pe.shower!(shirt_color)
   end
 
   it 'should call :success transition proc' do
