@@ -28,11 +28,32 @@ module AASM
         # rubocop:disable Metrics/AbcSize
         def exec_subject
           raise(*record_error) unless record.respond_to?(subject, true)
-          return record.__send__(subject) if subject_arity.zero?
-          return record.__send__(subject, *args) if subject_arity < 0
+          
+          invoke_with_args
+        end
+
+        private
+
+        def invoke_with_args
+          case
+          when subject_arity.zero?
+            record.__send__(subject)
+          when subject_arity < 0 
+            record.__send__(subject, *args)
+          when args[1].is_a?(Hash)
+            record.__send__(subject, **args[1])
+          else
+            invoke_with_req_args
+          end
+        end
+
+        def invoke_with_req_args
           req_args = args[0..(subject_arity - 1)]
-          return record.__send__(subject, **req_args[0]) if req_args[0].is_a?(Hash)
-          record.__send__(subject, *req_args)
+          if req_args[0].is_a?(Hash)
+            record.__send__(subject, **req_args[0])
+          else
+            record.__send__(subject, *req_args)
+          end
         end
         # rubocop:enable Metrics/AbcSize
 
