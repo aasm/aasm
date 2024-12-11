@@ -34,14 +34,38 @@ module AASM
           @instance ||= retrieve_instance
         end
 
-        # rubocop:disable Metrics/AbcSize
         def retrieve_instance
           return subject.new if subject_arity.zero?
           return subject.new(record) if subject_arity == 1
-          return subject.new(record, *args) if subject_arity < 0
+          
+          if keyword_arguments?
+            instance_with_keyword_args
+          elsif subject_arity < 0
+            subject.new(record, *args)
+          else
+            instance_with_fixed_arity
+          end
+        end
+
+        def keyword_arguments?
+          params = subject.instance_method(:initialize).parameters
+          params.any? { |type, _| [:key, :keyreq].include?(type) }
+        end
+
+        def instance_with_keyword_args
+          new_args = args[0..-2]
+          keyword_args = args.last
+
+          if keyword_args.nil?
+            subject.new(record, *new_args)
+          else
+            subject.new(record, *new_args, **keyword_args)
+          end
+        end
+
+        def instance_with_fixed_arity
           subject.new(record, *args[0..(subject_arity - 2)])
         end
-        # rubocop:enable Metrics/AbcSize
 
         def subject_arity
           @arity ||= subject.instance_method(:initialize).arity

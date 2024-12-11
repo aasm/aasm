@@ -25,16 +25,36 @@ module AASM
           @arity ||= record.__send__(:method, subject.to_sym).arity
         end
 
-        # rubocop:disable Metrics/AbcSize
         def exec_subject
           raise(*record_error) unless record.respond_to?(subject, true)
-          return record.__send__(subject) if subject_arity.zero?
-          return record.__send__(subject, *args) if subject_arity < 0
-          req_args = args[0..(subject_arity - 1)]
-          return record.__send__(subject, **req_args[0]) if req_args[0].is_a?(Hash)
-          record.__send__(subject, *req_args)
+          
+          if subject_arity.zero?
+            record.__send__(subject)
+          elsif subject_arity < 0
+            invoke_with_variable_arity
+          else
+            invoke_with_fixed_arity
+          end
         end
-        # rubocop:enable Metrics/AbcSize
+
+        def invoke_with_variable_arity
+          if args.last.is_a?(Hash)
+            new_args = args[0..-2]
+            keyword_args = args.last
+            record.__send__(subject, *new_args, **keyword_args)
+          else
+            record.__send__(subject, *args)
+          end
+        end
+
+        def invoke_with_fixed_arity
+          req_args = args[0..(subject_arity - 1)]
+          if req_args[0].is_a?(Hash)
+            record.__send__(subject, **req_args[0])
+          else
+            record.__send__(subject, *req_args)
+          end
+        end
 
         def record_error
           [
