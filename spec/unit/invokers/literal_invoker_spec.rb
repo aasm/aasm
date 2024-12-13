@@ -82,5 +82,25 @@ describe AASM::Core::Invokers::LiteralInvoker do
         expect { subject.invoke_subject }.to raise_error(NoMethodError)
       end
     end
+
+    context 'when using optional keyword arguments' do
+      let(:args) { [1] }
+      let(:record) { Class.new { def my_method(_a, key: 3); end; }.new }
+      let(:target) { :my_method}
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end
+
+    context 'when using required keyword arguments' do
+      let(:args) { [1, key: 2] }
+      let(:record) { Class.new { def my_method(_a, key:); end; }.new }
+      let(:target) { :my_method}
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end 
   end
 end

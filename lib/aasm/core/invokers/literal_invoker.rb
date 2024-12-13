@@ -27,9 +27,10 @@ module AASM
 
         def exec_subject
           raise(*record_error) unless record.respond_to?(subject, true)
-          
-          if subject_arity.zero?
-            record.__send__(subject)
+          return record.__send__(subject) if subject_arity.zero?
+
+          if keyword_arguments?
+            instance_with_keyword_args
           elsif subject_arity < 0
             invoke_with_variable_arity
           else
@@ -37,14 +38,29 @@ module AASM
           end
         end
 
-        def invoke_with_variable_arity
+        def keyword_arguments?
+          params = record.method(subject).parameters
+          params.any? { |type, _| [:key, :keyreq].include?(type) }
+        end
+
+        def instance_with_keyword_args
           if args.last.is_a?(Hash)
             new_args = args[0..-2]
             keyword_args = args.last
-            record.__send__(subject, *new_args, **keyword_args)
           else
-            record.__send__(subject, *args)
+            new_args = args
+            keyword_args = nil
           end
+
+          if keyword_args.nil?
+            record.send(subject, *new_args)
+          else
+            record.send(subject, *new_args, **keyword_args)
+          end
+        end
+
+        def invoke_with_variable_arity
+          record.__send__(subject, *args)
         end
 
         def invoke_with_fixed_arity

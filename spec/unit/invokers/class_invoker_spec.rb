@@ -122,5 +122,14 @@ describe AASM::Core::Invokers::ClassInvoker do
         expect { subject.invoke_subject }.not_to raise_error
       end
     end
+
+    context 'when passing empty optional keyword arguments' do
+      let(:args) { [1] }
+      let(:target) { Class.new { def initialize(record, a, key: nil); end; def call; end } }
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end
   end
 end
