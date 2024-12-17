@@ -53,18 +53,12 @@ module AASM
         end
 
         def instance_with_keyword_args
-          if args.last.is_a?(Hash)
-            new_args = args[0..-2]
-            keyword_args = args.last
-          else
-            new_args = args
-            keyword_args = nil
-          end
+          positional_args, keyword_args = parse_arguments
 
           if keyword_args.nil?
-            subject.new(record, *new_args)
+            subject.new(record, *positional_args)
           else
-            subject.new(record, *new_args, **keyword_args)
+            subject.new(record, *positional_args, **keyword_args)
           end
         end
 

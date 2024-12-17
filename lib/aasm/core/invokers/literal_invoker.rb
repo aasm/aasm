@@ -26,9 +26,20 @@ module AASM
         end
 
         def exec_subject
-          raise(*record_error) unless record.respond_to?(subject, true)
-          return record.__send__(subject) if subject_arity.zero?
+          ensure_method_exists
+          return simple_invoke if subject_arity.zero?
+          invoke_with_arguments
+        end
 
+        def ensure_method_exists
+          raise(*record_error) unless record.respond_to?(subject, true)
+        end
+
+        def simple_invoke
+          record.__send__(subject)
+        end
+
+        def invoke_with_arguments
           if keyword_arguments?
             instance_with_keyword_args
           elsif subject_arity < 0
@@ -44,18 +55,12 @@ module AASM
         end
 
         def instance_with_keyword_args
-          if args.last.is_a?(Hash)
-            new_args = args[0..-2]
-            keyword_args = args.last
-          else
-            new_args = args
-            keyword_args = nil
-          end
+          positional_args, keyword_args = parse_arguments
 
           if keyword_args.nil?
-            record.send(subject, *new_args)
+            record.send(subject, *positional_args)
           else
-            record.send(subject, *new_args, **keyword_args)
+            record.send(subject, *positional_args, **keyword_args)
           end
         end
 
