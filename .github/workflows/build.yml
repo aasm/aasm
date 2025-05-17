@@ -111,10 +111,10 @@ jobs:
         uses: supercharge/redis-github-action@1.2.0
         with:
           redis-version: ${{ matrix.redis-version }}
-      - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.6.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
+      # - name: Start MongoDB
+      #   uses: supercharge/mongodb-github-action@1.6.0
+      #   with:
+      #     mongodb-version: ${{ matrix.mongodb-version }}
       #  - name: Setup DynamoDB Local
       #    uses: rrainn/dynamodb-action@v2.0.0
       #    with:
