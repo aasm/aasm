@@ -1481,7 +1481,6 @@ Feel free to
 
 * [create an issue on GitHub](https://github.com/aasm/aasm/issues)
 * [ask a question on StackOverflow](http://stackoverflow.com) (tag with `aasm`)
-* send us a tweet [@aasm](http://twitter.com/aasm)
 
 ## Maintainers ##
 
@@ -1489,8 +1488,6 @@ Feel free to
 * [Travis Tilley](https://github.com/ttilley) (2009–2011)
 * [Thorsten Böttger](http://github.com/alto) (since 2011)
 * [Anil Maurya](http://github.com/anilmaurya) (since 2016)
-
-
 
 ## Stargazers over time
 
