@@ -24,8 +24,8 @@ jobs:
             rails_6.1,
           ]
         redis-version: [6]
-        # mongodb-version: ['6.0', '7.0', '8.0']
-        mongodb-version: ['6.0']
+        mongodb-version: ['6.0', '7.0', '8.0']
+        # mongodb-version: ['6.0']
         include:
           # - ruby: '3.0'
           #   gemfile: rails_6.0
