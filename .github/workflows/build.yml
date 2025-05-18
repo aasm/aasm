@@ -16,9 +16,6 @@ jobs:
         gemfile:
           [
             norails,
-            rails_4.2,
-            rails_4.2_mongoid_5,
-            rails_5.2,
             rails_6.0,
             rails_6.1,
           ]
@@ -57,34 +54,10 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
-        - ruby: '3.0'
-          gemfile: rails_5.2
-        - ruby: '3.0'
-          gemfile: rails_4.2
-        - ruby: '3.0'
-          gemfile: rails_4.2_mongoid_5
-        - ruby: 2.7
-          gemfile: rails_5.2
-        - ruby: 2.7
-          gemfile: rails_4.2
-        - ruby: 2.7
-          gemfile: rails_4.2_mongoid_5
-        - ruby: 2.6
-          gemfile: rails_4.2_mongoid_5
-        - ruby: 2.6
-          gemfile: rails_4.2
         - ruby: jruby
           gemfile: norails
         - ruby: jruby
-          gemfile: rails_5.2
-        - ruby: jruby
           gemfile: rails_6.1
-        - ruby: truffleruby
-          gemfile: rails_4.2
-        - ruby: truffleruby
-          gemfile: rails_4.2_mongoid_5
-        - ruby: truffleruby
-          gemfile: rails_5.2
         - ruby: truffleruby
           gemfile: rails_6.1
         allow_failures:
