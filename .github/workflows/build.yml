@@ -101,7 +101,7 @@ jobs:
           mkdir /tmp/dynamodb
           wget -O - https://s3-ap-southeast-1.amazonaws.com/dynamodb-local-singapore/dynamodb_local_latest.tar.gz | tar xz --directory /tmp/dynamodb
           java -Djava.library.path=/tmp/dynamodb/DynamoDBLocal_lib -jar /tmp/dynamodb/DynamoDBLocal.jar -inMemory -delayTransientStatuses -port 30180 &
-          mongod --version
+          # mongod --version
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
