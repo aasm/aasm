@@ -5,7 +5,7 @@ source "https://rubygems.org"
 gem "sqlite3", "~> 1.4", platforms: :ruby
 gem "rails", "~> 7.0.1"
 gem "after_commit_everywhere", "~> 1.0"
-gem "mongoid", "~>7.0", ">= 7.0.5"
+# gem "mongoid", "~>7.0", ">= 7.0.5"
 gem "sequel"
 gem "dynamoid", "~>3.3", platforms: :ruby
 gem "aws-sdk-dynamodb", "~> 1"
