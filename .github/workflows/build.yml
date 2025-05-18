@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['3.0', 2.7, 2.6, jruby-9.1.17.0, truffleruby]
+        ruby: ['3.0', 2.7, 2.6, jruby, truffleruby]
         gemfile:
           [
             norails,
@@ -73,11 +73,11 @@ jobs:
           gemfile: rails_4.2_mongoid_5
         - ruby: 2.6
           gemfile: rails_4.2
-        - ruby: jruby-9.1.17.0
+        - ruby: jruby
           gemfile: norails
-        - ruby: jruby-9.1.17.0
+        - ruby: jruby
           gemfile: rails_5.2
-        - ruby: jruby-9.1.17.0
+        - ruby: jruby
           gemfile: rails_6.1
         - ruby: truffleruby
           gemfile: rails_4.2
