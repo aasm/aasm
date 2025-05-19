@@ -39,11 +39,11 @@ module AASM
       end
 
       module ClassMethods
-        def aasm_create_scope(state_machine_name, scope_name)
+        def aasm_create_scope(state_machine_name, scope_name, state_name)
           scope_options = lambda {
             send(
               :where,
-              { aasm(state_machine_name).attribute_name.to_sym => scope_name.to_s }
+              { aasm(state_machine_name).attribute_name.to_sym => state_name.to_s }
             )
           }
           send(:scope, scope_name, scope_options)

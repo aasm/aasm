@@ -20,8 +20,8 @@ module AASM
       end
 
       module ClassMethods
-        def aasm_create_scope(state_machine_name, scope_name)
-          scope(scope_name.to_sym, lambda { where(aasm(state_machine_name).attribute_name.to_sym).eq(scope_name.to_s) })
+        def aasm_create_scope(state_machine_name, scope_name, state_name)
+          scope(scope_name.to_sym, lambda { where(aasm(state_machine_name).attribute_name.to_sym).eq(state_name.to_s) })
         end
       end
 
