@@ -6,5 +6,9 @@ describe EventWithKeywordArguments do
     it 'should be executed correctly that method registered by "before hooks" for events with keyword arguments.' do
       expect(example.close(key: 1)).to be_truthy
     end
+
+    it 'should be executed correctly that method registered by "before hooks" for events with positional and keyword arguments.' do
+      expect(example.close(1, key: 1)).to be_truthy
+    end
   end
 end
