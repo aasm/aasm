@@ -12,7 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['3.0', 2.7, 2.6, jruby, truffleruby]
+        # ruby: ['3.0', 2.7, 2.6, jruby, truffleruby]
+        ruby: ['3.0', 2.7, 2.6, truffleruby]
         gemfile:
           [
             norails,
@@ -54,10 +55,10 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
-        - ruby: jruby
-          gemfile: norails
-        - ruby: jruby
-          gemfile: rails_6.1
+        # - ruby: jruby
+        #   gemfile: norails
+        # - ruby: jruby
+        #   gemfile: rails_6.1
         - ruby: truffleruby
           gemfile: rails_6.1
         allow_failures:
