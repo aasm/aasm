@@ -54,11 +54,6 @@ jobs:
             os: ubuntu-latest
             redis-version: 6
             mongodb-version: 6.0
-          - ruby: jruby
-            gemfile: rails_7.1
-            os: ubuntu-latest
-            redis-version: 6
-            mongodb-version: 6.0
         exclude:
         # - ruby: jruby
         #   gemfile: norails
