@@ -2,7 +2,6 @@ name: Tests
 
 on:
   push:
-  # pull_request:
 
 jobs:
   build:
@@ -12,7 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        # ruby: ['3.0', 2.7, 2.6, jruby, truffleruby]
         ruby: ['3.0', 2.7, 2.6, truffleruby]
         gemfile:
           [
@@ -21,7 +19,6 @@ jobs:
             rails_6.1,
           ]
         redis-version: [6]
-        # mongodb-version: ['6.0', '7.0', '8.0']
         mongodb-version: ['6.0']
         include:
           - ruby: '3.0'
@@ -55,10 +52,6 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
-        # - ruby: jruby
-        #   gemfile: norails
-        # - ruby: jruby
-        #   gemfile: rails_6.1
         - ruby: truffleruby
           gemfile: rails_6.1
         allow_failures:
@@ -75,7 +68,6 @@ jobs:
           mkdir /tmp/dynamodb
           wget -O - https://s3-ap-southeast-1.amazonaws.com/dynamodb-local-singapore/dynamodb_local_latest.tar.gz | tar xz --directory /tmp/dynamodb
           java -Djava.library.path=/tmp/dynamodb/DynamoDBLocal_lib -jar /tmp/dynamodb/DynamoDBLocal.jar -inMemory -delayTransientStatuses -port 30180 &
-          # mongod --version
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
