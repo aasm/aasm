@@ -156,17 +156,10 @@ if defined?(ActiveRecord)
           end
 
           it "passes state code instead of state symbol to update_all" do
-            # stub_chain does not allow us to give expectations on call
-            # parameters in the middle of the chain, so we need to use
-            # intermediate object instead.
-            obj = double(Object, update_all: 1)
-            allow(MultipleGate).to receive_message_chain(:unscoped, :where)
-              .and_return(obj)
-
+            allow(gate).to receive(:update_column).and_return(true)
+            allow(gate).to receive(:persisted?).and_return(true)
             gate.aasm_write_state state_sym, :left
-
-            expect(obj).to have_received(:update_all)
-              .with(Hash[gate.class.aasm(:left).attribute_name, state_code])
+            expect(gate).to have_received(:update_column).with(gate.class.aasm(:left).attribute_name, state_code)
           end
         end
 
