@@ -17,6 +17,8 @@ jobs:
             norails,
             rails_6.0,
             rails_6.1,
+            rails_7.0,
+            rails_7.1,
           ]
         redis-version: [6]
         mongodb-version: ['6.0']
@@ -52,8 +54,12 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
-        - ruby: truffleruby
-          gemfile: rails_6.1
+          - ruby: truffleruby
+            gemfile: rails_6.1
+          - ruby: truffleruby
+            gemfile: rails_7.0
+          - ruby: truffleruby
+            gemfile: rails_7.1
         allow_failures:
           - false
     env:
