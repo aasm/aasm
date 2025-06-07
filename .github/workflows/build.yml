@@ -70,6 +70,8 @@ jobs:
             gemfile: rails_6.1
           - ruby: 3.4
             gemfile: rails_6.1
+          - ruby: 3.4
+            gemfile: rails_7.0
           - ruby: truffleruby
             gemfile: rails_6.1
           - ruby: truffleruby
