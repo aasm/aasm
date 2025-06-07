@@ -116,23 +116,18 @@ if defined?(ActiveRecord)
         end
       end
 
-      if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
-        # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
-        context "when AASM enum setting is not enabled and aasm column not present" do
+      context "when AASM enum setting is not enabled and aasm column not present" do
 
-          let(:with_enum_without_column) {WithEnumWithoutColumn.new}
+        let(:with_enum_without_column) {WithEnumWithoutColumn.new}
 
-          it "should raise an error for transitions" do
-            if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
-              expect{with_enum_without_column.send(:view)}.to raise_error(RuntimeError, /Undeclared attribute type for enum 'status'/)
-            else
-              expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, /undefined method .status./)
-            end
+        it "should raise an error for transitions" do
+          if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
+            expect{with_enum_without_column.send(:view)}.to raise_error(RuntimeError, /Undeclared attribute type for enum 'status'/)
+          else
+            expect{with_enum_without_column.send(:view)}.to raise_error(NoMethodError, /undefined method .status./)
           end
         end
-
       end
-
     end
 
     context "when AASM is configured to use enum" do
@@ -292,18 +287,6 @@ if defined?(ActiveRecord)
 
   end
 
-  if ActiveRecord::VERSION::MAJOR < 4 && ActiveRecord::VERSION::MINOR < 2 # won't work with Rails >= 4.2
-  describe "direct state column access" do
-    it "accepts false states" do
-      f = FalseState.create!
-      expect(f.aasm_state).to eql false
-      expect {
-        f.aasm.events.map(&:name)
-      }.to_not raise_error
-    end
-  end
-  end
-
   describe 'subclasses' do
     it "should have the same states as its parent class" do
       expect(DerivateNewDsl.aasm.states).to eq(SimpleNewDsl.aasm.states)
@@ -337,19 +320,13 @@ if defined?(ActiveRecord)
       end
     end
 
-    # Scopes on abstract classes didn't work until Rails 5.
-    #
-    # Reference:
-    # https://github.com/rails/rails/issues/10658
-    if ActiveRecord::VERSION::MAJOR >= 5
-      context "For a descendant of an abstract model" do
-        it "should add the scope without the table_name" do
-          expect(ImplementedAbstractClassDsl).to respond_to(:unknown_scope)
-          expect(ImplementedAbstractClassDsl).to respond_to(:another_unknown_scope)
+    context "For a descendant of an abstract model" do
+      it "should add the scope without the table_name" do
+        expect(ImplementedAbstractClassDsl).to respond_to(:unknown_scope)
+        expect(ImplementedAbstractClassDsl).to respond_to(:another_unknown_scope)
 
-          expect(ImplementedAbstractClassDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
-          expect(ImplementedAbstractClassDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
-        end
+        expect(ImplementedAbstractClassDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(ImplementedAbstractClassDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
       end
     end
 
