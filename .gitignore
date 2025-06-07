@@ -9,6 +9,7 @@ Gemfile.lock
 gemfiles/*.lock
 spec/debug.log
 spec/*.db
+spec/*.db*
 TODO
 .rvmrc
 .ruby-version
