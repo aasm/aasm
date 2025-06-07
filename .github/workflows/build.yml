@@ -54,6 +54,10 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
+          - ruby: 2.6
+            gemfile: rails_7.0
+          - ruby: 2.6
+            gemfile: rails_7.1
           - ruby: truffleruby
             gemfile: rails_6.1
           - ruby: truffleruby
