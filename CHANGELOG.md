@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## unreleased
+* Fix broken tests on Rails 7.1, thanks @y-yago [#842](https://github.com/aasm/aasm/pull/842)
+
 ## 5.5.0
 * Fix ClassInvoker instantiating class twice, thanks to [danielnolan](https://github.com/danielnolan)
 * Replace File.exists? with File.exist?, thanks to [kyoshidajp](https://github.com/kyoshidajp)
