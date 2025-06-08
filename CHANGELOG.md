@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## unreleased
+* Fix broken for pull requests, thanks @y-yago [#868](https://github.com/aasm/aasm/pull/868)
 * Fix broken tests on Rails 7.1, thanks @y-yago [#842](https://github.com/aasm/aasm/pull/842)
 
 ## 5.5.0
