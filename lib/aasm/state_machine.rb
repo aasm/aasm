@@ -2,7 +2,7 @@ module AASM
   class StateMachine
     # the following four methods provide the storage of all state machines
 
-    attr_accessor :states, :events, :initial_state, :config, :name, :global_callbacks
+    attr_accessor :states, :events, :initial_state, :config, :name, :implementation, :global_callbacks
 
     def initialize(name)
       @initial_state = nil
@@ -28,11 +28,15 @@ module AASM
       # allow reloading, extending or redefining a state
       @states.delete(state_name) if @states.include?(state_name)
 
-      @states << AASM::Core::State.new(state_name, klass, self, options)
+      state_class = implementation.aasm_state_class
+      raise ArgumentError, "The class #{state_class} must inherit from AASM::Core::State!" unless state_class.ancestors.include?(AASM::Core::State)
+      @states << state_class.new(state_name, klass, self, options)
     end
 
     def add_event(name, options, &block)
-      @events[name] = AASM::Core::Event.new(name, self, options, &block)
+      event_class = implementation.aasm_event_class
+      raise ArgumentError, "The class #{event_class} must inherit from AASM::Core::Event!" unless event_class.ancestors.include?(AASM::Core::Event)
+      @events[name] = event_class.new(name, self, options, &block)
     end
 
     def add_global_callbacks(name, *callbacks, &block)

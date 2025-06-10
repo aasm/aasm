@@ -10,6 +10,7 @@ module AASM
       @name = name
       # @state_machine = klass.aasm(@name).state_machine
       @state_machine = state_machine
+      @state_machine.implementation = self
       @state_machine.config.column ||= (options[:column] || default_column).to_sym
       # @state_machine.config.column = options[:column].to_sym if options[:column] # master
       @options = options
@@ -194,6 +195,18 @@ module AASM
 
         events.map {|e| e.transitions_to_state(state)}.flatten.map(&:from).flatten
       end
+    end
+
+    def aasm_state_class
+      AASM::Core::State
+    end
+
+    def aasm_event_class
+      AASM::Core::Event
+    end
+
+    def aasm_transition_class
+      AASM::Core::Transition
     end
 
     private
