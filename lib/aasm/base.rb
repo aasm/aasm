@@ -187,11 +187,18 @@ module AASM
       states.map { |state| state.for_select }
     end
 
+    def from_states_for_event(event)
+      @state_machine.events[event].transitions.map { |t| t.from }.flatten.uniq
+    end
+
+    def to_states_for_event(event)
+      @state_machine.events[event].transitions.map { |t| t.to }.flatten.uniq
+    end
+
     def from_states_for_state(state, options={})
       if options[:transition]
         @state_machine.events[options[:transition]].transitions_to_state(state).flatten.map(&:from).flatten
       else
-
         events.map {|e| e.transitions_to_state(state)}.flatten.map(&:from).flatten
       end
     end
