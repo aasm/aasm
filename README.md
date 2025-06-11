@@ -106,7 +106,7 @@ job.run       # => raises AASM::InvalidTransition
 ```
 
 If you don't like exceptions and prefer a simple `true` or `false` as response, tell
-AASM not to be *whiny*:
+AASM not to not be *whiny*:
 
 ```ruby
 class Job
