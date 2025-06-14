@@ -1,7 +1,7 @@
 class WithEnumWithoutColumn < ActiveRecord::Base
   include AASM
 
-  if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+  if ActiveRecord.gem_version >= Gem::Version.new('7') && ActiveRecord.gem_version < Gem::Version.new('8')
     enum status: {
       opened: 0,
       closed: 1
@@ -20,7 +20,8 @@ end
 
 class MultipleWithEnumWithoutColumn < ActiveRecord::Base
   include AASM
-  if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
+
+  if ActiveRecord.gem_version >= Gem::Version.new('7') && ActiveRecord.gem_version < Gem::Version.new('8')
     enum status: {
       opened: 0,
       closed: 1
