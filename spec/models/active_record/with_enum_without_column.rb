@@ -1,10 +1,12 @@
 class WithEnumWithoutColumn < ActiveRecord::Base
   include AASM
 
-  enum status: {
-    opened: 0,
-    closed: 1
-  }
+  if ActiveRecord.gem_version >= Gem::Version.new('7') && ActiveRecord.gem_version < Gem::Version.new('8')
+    enum status: {
+      opened: 0,
+      closed: 1
+    }
+  end
 
   aasm :column => :status do
     state :closed, initial: true
@@ -19,10 +21,12 @@ end
 class MultipleWithEnumWithoutColumn < ActiveRecord::Base
   include AASM
 
-  enum status: {
-    opened: 0,
-    closed: 1
-  }
+  if ActiveRecord.gem_version >= Gem::Version.new('7') && ActiveRecord.gem_version < Gem::Version.new('8')
+    enum status: {
+      opened: 0,
+      closed: 1
+    }
+  end
 
   aasm :left, :column => :status do
     state :closed, initial: true
