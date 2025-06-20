@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## unreleased
+* Add changelog-uri, thanks @kzkn [#759](https://github.com/aasm/aasm/pull/759)
 
 ## 5.5.1 (14 June 2025)
 * Fix broken for pull requests, thanks @y-yago [#868](https://github.com/aasm/aasm/pull/868)
