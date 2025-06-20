@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## unreleased
+
+## 5.5.1 (14 June 2025)
 * Fix broken for pull requests, thanks @y-yago [#868](https://github.com/aasm/aasm/pull/868)
 * Add build for Rails 8.0, thanks @y-yago [#860](https://github.com/aasm/aasm/pull/860)
 * Fix issue around keyword arguments for Ruby 3.2, thanks @thiagofm [#857](https://github.com/aasm/aasm/pull/857)
