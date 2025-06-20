@@ -24,16 +24,6 @@ jobs:
         redis-version: [6]
         mongodb-version: ['6.0']
         include:
-          - ruby: '3.0'
-            gemfile: rails_6.0
-            os: ubuntu-latest
-            redis-version: 6
-            mongodb-version: 6.0
-          - ruby: '3.0'
-            gemfile: rails_6.1
-            os: ubuntu-latest
-            redis-version: 6
-            mongodb-version: 6.0
           - ruby: 3.1
             gemfile: rails_7.0
             os: ubuntu-latest
