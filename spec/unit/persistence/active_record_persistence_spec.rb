@@ -156,36 +156,12 @@ if defined?(ActiveRecord)
           end
 
           it "passes state code instead of state symbol to update_all" do
-            # stub_chain does not allow us to give expectations on call
-            # parameters in the middle of the chain, so we need to use
-            # intermediate object instead.
-            obj = double(Object, update_all: 1)
-            allow(Gate).to receive_message_chain(:unscoped, :where).and_return(obj)
-
+            allow(gate).to receive(:update_column).and_return(true)
+            allow(gate).to receive(:persisted?).and_return(true)
             gate.aasm_write_state state_sym
-
-            expect(obj).to have_received(:update_all)
-              .with(Hash[gate.class.aasm.attribute_name, state_code])
+            expect(gate).to have_received(:update_column).with(gate.class.aasm.attribute_name, state_code)
           end
 
-          it "searches model outside of default_scope when update_all" do
-            # stub_chain does not allow us to give expectations on call
-            # parameters in the middle of the chain, so we need to use
-            # intermediate object instead.
-            unscoped = double(Object, update_all: 1)
-            scoped = double(Object, update_all: 1)
-
-            allow(Gate).to receive(:unscoped).and_return(unscoped)
-            allow(Gate).to receive(:where).and_return(scoped)
-            allow(unscoped).to receive(:where).and_return(unscoped)
-
-            gate.aasm_write_state state_sym
-
-            expect(unscoped).to have_received(:update_all)
-              .with(Hash[gate.class.aasm.attribute_name, state_code])
-            expect(scoped).to_not have_received(:update_all)
-              .with(Hash[gate.class.aasm.attribute_name, state_code])
-          end
         end
 
         context "when AASM is not skipping validations" do
@@ -491,6 +467,14 @@ if defined?(ActiveRecord)
       persistor.reload
       expect(persistor).to be_running
       expect(persistor).not_to be_sleeping
+    end
+
+    it 'should restore DIRTY changes information when updating an attribute' do
+      object = InvalidPersistor.create(name: 'name')
+      expect(object).to be_sleeping
+      object.run!
+      expect(object).to be_running
+      expect(object.changes).not_to have_key(:status)
     end
 
     describe 'pessimistic locking' do
