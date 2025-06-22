@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## unreleased
+* Upgrade rails tests and move concurrent to load only necessary class, thanks @allcentury [#852](https://github.com/aasm/aasm/pull/852)
 * Add changelog-uri, thanks @kzkn [#759](https://github.com/aasm/aasm/pull/759)
 
 ## 5.5.1 (14 June 2025)
