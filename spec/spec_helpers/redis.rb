@@ -5,12 +5,12 @@ begin
   require 'redis/objects/version'
   puts "redis-objects #{Redis::Objects::VERSION} gem found, running Redis specs \e[32m#{'✔'}\e[0m"
 
-  Redis.current = Redis.new(host: (ENV['REDIS_HOST'] || '127.0.0.1'),
-                            port: (ENV['REDIS_PORT'] || 6379))
+  redis = Redis.new(host: (ENV['REDIS_HOST'] || '127.0.0.1'), port: (ENV['REDIS_PORT'] || 6379))
+  Redis::Objects.redis = redis
 
   RSpec.configure do |c|
     c.before(:each) do
-      Redis.current.keys('redis_*').each { |k| Redis.current.del k }
+      redis.keys('redis_*').each { |k| redis.del k }
     end
   end
 rescue LoadError

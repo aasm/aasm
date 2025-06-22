@@ -1,4 +1,5 @@
-require 'concurrent'
+require 'concurrent/map'
+
 module AASM
   class StateMachineStore
     @stores = Concurrent::Map.new
