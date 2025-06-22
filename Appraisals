@@ -1,5 +1,5 @@
 appraise 'rails_7.1' do
-  gem 'rails', '~> 7.1'
+  gem 'rails', '~> 7.1.0'
   gem "redis-objects"
   gem 'mongoid'
   gem 'sequel'
@@ -11,7 +11,7 @@ end
 
 
 appraise 'rails_7.2' do
-  gem 'rails', '~> 7.2'
+  gem 'rails', '~> 7.2.0'
   gem "redis-objects"
   gem 'mongoid'
   gem 'sequel'

@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "sqlite3", platforms: :ruby
-gem "rails", "~> 8.0"
+gem "rails", "~> 8.0.0"
 gem "after_commit_everywhere", "~> 1.0"
 gem "mongoid", github: "mongodb/mongoid"
 gem "sequel"
