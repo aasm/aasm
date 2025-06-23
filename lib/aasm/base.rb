@@ -281,7 +281,9 @@ module AASM
 
       after_all_transitions do
         if self.class.aasm(:"#{aasm_name}").state_machine.config.timestamps
-          ts_setter = "#{aasm(aasm_name).to_state}_at="
+          namespace = self.class.aasm(:"#{aasm_name}").state_machine.config.namespace
+          base_setter = "#{aasm(aasm_name).to_state}_at="
+          ts_setter = !!namespace ? "#{namespace}_#{base_setter}" : base_setter
           respond_to?(ts_setter) && send(ts_setter, ::Time.now)
         end
       end
