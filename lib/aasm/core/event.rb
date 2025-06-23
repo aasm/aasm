@@ -3,6 +3,7 @@
 module AASM::Core
   class Event
     include AASM::DslHelper
+    include AASM::TransitionBuilder
 
     attr_reader :name, :state_machine, :options, :default_display_name
 
@@ -17,17 +18,7 @@ module AASM::Core
 
       # from aasm4
       @options = options # QUESTION: .dup ?
-      add_options_from_dsl(@options, [
-        :after,
-        :after_commit,
-        :after_transaction,
-        :before,
-        :before_transaction,
-        :ensure,
-        :error,
-        :before_success,
-        :success,
-      ], &block) if block
+      add_options_from_dsl(@options, dsl_option_keys, &block) if block
     end
 
     # called internally by Ruby 1.9 after clone()
@@ -96,12 +87,12 @@ module AASM::Core
     def transitions(definitions=nil, &block)
       if definitions # define new transitions
         # Create a separate transition for each from-state to the given state
-        Array(definitions[:from]).each do |s|
-          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions.merge(:from => s.to_sym)), &block)
+        Array(definitions[:from]).each do |from|
+          build_transition(definitions, from, &block)
         end
         # Create a transition if :to is specified without :from (transitions from ANY state)
         if !definitions[:from] && definitions[:to]
-          @transitions << AASM::Core::Transition.new(self, attach_event_guards(definitions), &block)
+          build_transition(definitions, &block)
         end
       end
       @transitions
@@ -117,18 +108,6 @@ module AASM::Core
 
   private
 
-    def attach_event_guards(definitions)
-      unless @guards.empty?
-        given_guards = Array(definitions.delete(:guard) || definitions.delete(:guards) || definitions.delete(:if))
-        definitions[:guards] = @guards + given_guards # from aasm4
-      end
-      unless @unless.empty?
-        given_unless = Array(definitions.delete(:unless))
-        definitions[:unless] = given_unless + @unless
-      end
-      definitions
-    end
-
     def _fire(obj, options={}, to_state=::AASM::NO_VALUE, *args)
       result = options[:test_only] ? false : nil
       clear_failed_callbacks
@@ -142,7 +121,7 @@ module AASM::Core
         args.unshift(to_state)
         to_state = nil
       end
-      
+
       # nop, to_state is a valid to-state
 
       transitions.each do |transition|
@@ -173,6 +152,20 @@ module AASM::Core
       Invoker.new(code, record, args)
              .with_default_return_value(false)
              .invoke
+    end
+
+    def dsl_option_keys
+      [
+        :after,
+        :after_commit,
+        :after_transaction,
+        :before,
+        :before_transaction,
+        :ensure,
+        :error,
+        :before_success,
+        :success,
+      ]
     end
   end
 end # AASM
