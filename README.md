@@ -268,8 +268,8 @@ begin
   transition      guards
   old_state       before_exit
   old_state       exit
-                  after_all_transitions
   transition      after
+                  after_all_transitions
   new_state       before_enter
   new_state       enter
   ...update state...

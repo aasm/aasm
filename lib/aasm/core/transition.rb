@@ -45,8 +45,8 @@ module AASM::Core
     end
 
     def execute(obj, *args)
-      invoke_callbacks_compatible_with_guard(event.state_machine.global_callbacks[:after_all_transitions], obj, args)
       invoke_callbacks_compatible_with_guard(@after, obj, args)
+      invoke_callbacks_compatible_with_guard(event.state_machine.global_callbacks[:after_all_transitions], obj, args)
     end
 
     def ==(obj)
