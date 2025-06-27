@@ -72,17 +72,17 @@ module AASM
       @state_machine.config.create_scopes && !@klass.respond_to?(name) && @klass.respond_to?(:aasm_create_scope)
     end
 
-    def create_scope(name)
-      @klass.aasm_create_scope(@name, name) if create_scope?(name)
+    def create_scope(name, state)
+      @klass.aasm_create_scope(@name, name, state) if create_scope?(name)
     end
 
     def create_scopes(name)
       if namespace?
         # Create default scopes even when namespace? for backward compatibility
         namepaced_name = "#{namespace}_#{name}"
-        create_scope(namepaced_name)
+        create_scope(namepaced_name, name)
       end
-      create_scope(name)
+      create_scope(name, name)
     end
   end # Base
 
