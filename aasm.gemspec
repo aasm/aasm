@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.licenses    = ["MIT"]
 
   s.platform              = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 3'
 
   s.metadata = {
     'changelog_uri' => 'https://github.com/aasm/aasm/blob/master/CHANGELOG.md'
