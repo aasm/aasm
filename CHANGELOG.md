@@ -230,7 +230,7 @@ to [waghanza](https://github.com/waghanza)
 
 ## 4.4.0
 
- * add support global transation callbacks (see [issue #221](https://github.com/aasm/aasm/issues/221) and [issue #253](https://github.com/aasm/aasm/issues/253) for details)
+ * add support global transition callbacks (see [issue #221](https://github.com/aasm/aasm/issues/221) and [issue #253](https://github.com/aasm/aasm/issues/253) for details)
  * add support (bugfix) for Mongoid >= 5.0 (see [issue #277](https://github.com/aasm/aasm/issues/277) and [issue #278](https://github.com/aasm/aasm/issues/278) for details)
 
 ## 4.3.0
