@@ -109,7 +109,7 @@ describe 'firing an event' do
     expect(event.fire(obj, {}, 'arg1', 'arg2')).to eq(:closed)
   end
 
-  context 'when given a gaurd proc' do
+  context 'when given a guard proc' do
     it 'should have access to callback failures in the transitions' do
       event = AASM::Core::Event.new(:graduate, state_machine) do
         transitions :to => :alumni, :from => [:student, :applicant],

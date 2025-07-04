@@ -53,7 +53,7 @@ module AASM
       end
     end
 
-    def default_display_name(object) # Can use better arguement name
+    def default_display_name(object) # Can use better argument name
       if object.respond_to?(:default_display_name)
         object.default_display_name
       else
