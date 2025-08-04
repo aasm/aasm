@@ -25,15 +25,14 @@ if defined?(ActiveRecord)
       subject { lambda{ gate.send(:aasm_column_looks_like_enum, :left) } }
 
       let(:column_name) { "value" }
-      let(:columns_hash) { Hash[column_name, column] }
 
       before :each do
         allow(gate.class.aasm(:left)).to receive(:attribute_name).and_return(column_name.to_sym)
-        allow(gate.class).to receive(:columns_hash).and_return(columns_hash)
+        allow(gate.class).to receive(:type_for_attribute).with(column_name).and_return(OpenStruct.new(type: type))
       end
 
       context "when AASM column has integer type" do
-        let(:column) { double(Object, type: :integer) }
+        let(:type) { :integer }
 
         it "returns true" do
           expect(subject.call).to be_truthy
@@ -41,7 +40,7 @@ if defined?(ActiveRecord)
       end
 
       context "when AASM column has string type" do
-        let(:column) { double(Object, type: :string) }
+        let(:type) { :string }
 
         it "returns false" do
           expect(subject.call).to be_falsey
@@ -120,7 +119,7 @@ if defined?(ActiveRecord)
         # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
         context "when AASM enum setting is not enabled and aasm column not present" do
 
-          let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
+          let(:multiple_with_enum_without_column) { MultipleWithEnumWithoutColumn.new }
 
           it "should raise an error for transitions" do
             if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')

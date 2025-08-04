@@ -1,5 +1,5 @@
 ActiveRecord::Migration.suppress_messages do
-  %w{gates multiple_gates readers writers transients simples no_scopes multiple_no_scopes no_direct_assignments multiple_no_direct_assignments thieves multiple_thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_enum_without_columns multiple_with_enum_without_columns with_true_enums with_false_enums false_states multiple_with_enums multiple_with_true_enums multiple_with_false_enums multiple_false_states readme_jobs}.each do |table_name|
+  %w{gates multiple_gates readers writers transients simples no_scopes multiple_no_scopes no_direct_assignments multiple_no_direct_assignments thieves multiple_thieves localizer_test_models persisted_states provided_and_persisted_states with_enums with_enum_without_columns multiple_with_enum_without_columns with_true_enums with_false_enums false_states multiple_with_enums multiple_with_true_enums multiple_with_false_enums multiple_false_states readme_jobs with_aliases}.each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "aasm_state"
     end
@@ -53,5 +53,9 @@ ActiveRecord::Migration.suppress_messages do
   ActiveRecord::Migration.create_table "timestamp_examples", :force => true do |t|
     t.string "aasm_state"
     t.datetime "opened_at"
+  end
+
+  ActiveRecord::Migration.create_table "with_aliases", :force => true do |t|
+    t.string "aasm_state"
   end
 end

@@ -117,9 +117,15 @@ module AASM
 
         def aasm_column_looks_like_enum(name=:default)
           column_name = self.class.aasm(name).attribute_name.to_s
-          column = self.class.columns_hash[column_name]
-          raise NoMethodError.new("undefined method '#{column_name}' for #{self.class}") if column.nil?
-          column.type == :integer
+
+          # required for rails -v < 6
+          column_name = self.class.attribute_alias(column_name) if self.class.attribute_alias?(column_name)
+
+          attr_type = self.type_for_attribute(column_name)
+
+          raise NoMethodError.new("undefined method '#{column_name}' for #{self.class}") if attr_type.nil? || attr_type.type.nil?
+
+          attr_type.type == :integer
         end
 
         def aasm_guess_enum_method(name=:default)
