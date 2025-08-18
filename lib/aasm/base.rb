@@ -54,6 +54,9 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      # Add possibility to skip state's constant creation
+      configure :create_constants, true
+
       # setup timestamp-setting callback if enabled
       setup_timestamps(@name)
 
@@ -100,9 +103,11 @@ module AASM
           aasm(aasm_name).current_state == state
         end
 
-        const_name = namespace? ? "STATE_#{namespace.upcase}_#{name.upcase}" : "STATE_#{name.upcase}"
-        unless klass.const_defined?(const_name)
-          klass.const_set(const_name, name)
+        if @state_machine.config.create_constants
+          const_name = namespace? ? "STATE_#{namespace.upcase}_#{name.upcase}" : "STATE_#{name.upcase}"
+          unless klass.const_defined?(const_name)
+            klass.const_set(const_name, name)
+          end
         end
       end
     end
