@@ -54,6 +54,9 @@ module AASM
       # Configure a logger, with default being a Logger to STDERR
       configure :logger, Logger.new(STDERR)
 
+      # hide warnings
+      configure :hide_warnings, false
+
       # setup timestamp-setting callback if enabled
       setup_timestamps(@name)
 
@@ -218,7 +221,7 @@ module AASM
              klass.defined_enums.values.any?{ |methods|
                  methods.keys{| enum | enum + '?' == method_name }
              })
-        unless AASM::Configuration.hide_warnings
+        unless @state_machine.config.hide_warnings
           @state_machine.config.logger.warn "#{klass.name}: overriding method '#{method_name}'!"
         end
       end

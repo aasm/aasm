@@ -1278,7 +1278,7 @@ class Job
 end
 ```
 
-You can hide warnings by setting `AASM::Configuration.hide_warnings = true`
+For global disabling, use `AASM::Configuration.hide_warnings = true`. For per-instance disabling, use the `hide_warnings: true` option in the aasm method.
 
 ### RubyMotion support
 
