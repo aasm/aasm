@@ -1141,7 +1141,7 @@ end
 ### Column name & migration
 
 As a default AASM uses the column `aasm_state` to store the states. You can override
-this by defining your favorite column name, using `:column` like this:
+this by defining a custom column name, using `:column` like this:
 
 ```ruby
 class Job < ActiveRecord::Base
