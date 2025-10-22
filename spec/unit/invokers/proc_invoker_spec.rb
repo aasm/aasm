@@ -82,5 +82,54 @@ describe AASM::Core::Invokers::ProcInvoker do
         expect { subject.invoke_subject }.not_to raise_error
       end
     end
+
+    context 'when passing keyword arguments' do
+      let(:args) { [1, key: 2] }
+      let(:target) { ->(_a, key: nil) {} }
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end
+
+    context 'when passing optional keyword arguments' do
+      let(:args) { [1, foo: 1] }
+      let(:target) { ->(_a, key: nil, foo:) {} }
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end
+
+    context 'when passing required keyword arguments like the failing test' do
+      let(:args) { [reason: 'test_reason'] }
+      let(:target) { proc { |reason:, **| @reason = reason } }
+
+      it 'should pass the keyword arguments correctly' do
+        subject.invoke_subject
+        expect(record.instance_variable_get(:@reason)).to eq('test_reason')
+      end
+    end
+
+    context 'when passing empty optional keyword arguments' do
+      let(:args) { [1] }
+      let(:target) { ->(_a, key: nil) {} }
+
+      it 'then correctly uses passed keyword arguments' do
+        expect { subject.invoke_subject }.not_to raise_error
+      end
+    end
+
+    context 'when using splat args like existing tests' do
+      let(:args) { ['blue', 'jeans'] }
+      
+      it 'should pass all arguments to splat parameter' do
+        received_args = []
+        target = proc { |*args| received_args.push(*args) }
+        invoker = described_class.new(target, record, args)
+        invoker.invoke_subject
+        expect(received_args).to eq(['blue', 'jeans'])
+      end
+    end
   end
 end
