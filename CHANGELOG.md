@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## unreleased
+
+## 5.5.2 (22 October 2025)
+* Fix another issue around keyword arguments for Ruby >3.2, thanks @segiddins [#873](https://github.com/aasm/aasm/pull/873)
 * Upgrade rails tests and move concurrent to load only necessary class, thanks @allcentury [#852](https://github.com/aasm/aasm/pull/852)
 * Add changelog-uri, thanks @kzkn [#759](https://github.com/aasm/aasm/pull/759)
 
