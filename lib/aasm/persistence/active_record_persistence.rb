@@ -45,6 +45,7 @@ module AASM
             conditions = { aasm(state_machine_name).attribute_name => scope_name.to_s }
             class_eval do
               scope scope_name, lambda { where(table_name => conditions) }
+              scope "not_#{scope_name}", lambda { where.not(table_name => conditions) }
             end
           else
             conditions = {

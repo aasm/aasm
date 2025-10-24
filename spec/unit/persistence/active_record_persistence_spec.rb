@@ -328,6 +328,13 @@ if defined?(ActiveRecord)
         expect(SimpleNewDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
         expect(SimpleNewDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
       end
+      it "should add negative scopes for each state" do
+        expect(SimpleNewDsl).to respond_to(:not_unknown_scope)
+        expect(SimpleNewDsl).to respond_to(:not_another_unknown_scope)
+
+        expect(SimpleNewDsl.not_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+        expect(SimpleNewDsl.not_another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+      end
     end
 
     context "Already respond_to? the scope name" do
@@ -350,11 +357,21 @@ if defined?(ActiveRecord)
           expect(ImplementedAbstractClassDsl.unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
           expect(ImplementedAbstractClassDsl.another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
         end
+        it "should add negative scopes without the table_name" do
+          expect(ImplementedAbstractClassDsl).to respond_to(:not_unknown_scope)
+          expect(ImplementedAbstractClassDsl).to respond_to(:not_another_unknown_scope)
+
+          expect(ImplementedAbstractClassDsl.not_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+          expect(ImplementedAbstractClassDsl.not_another_unknown_scope.is_a?(ActiveRecord::Relation)).to be_truthy
+        end
       end
     end
 
     it "does not create scopes if requested" do
-      expect(NoScope).not_to respond_to(:pending)
+      aggregate_failures do
+        expect(NoScope).not_to respond_to(:pending)
+        expect(NoScope).not_to respond_to(:not_pending)
+      end
     end
 
     context "result of scope" do
@@ -367,6 +384,10 @@ if defined?(ActiveRecord)
 
       it "created scope works as where(name: :scope_name)" do
         expect(SimpleNewDsl.unknown_scope).to contain_exactly(dsl2)
+      end
+
+      it "created not scope works as where.not(name: :scope_name)" do
+        expect(SimpleNewDsl.not_unknown_scope).to contain_exactly(dsl1)
       end
     end
   end # scopes
