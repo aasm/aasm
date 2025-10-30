@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['3.0', 2.7, 2.6, truffleruby]
+        ruby: ['3.0', 3.3, 3.4, truffleruby]
         gemfile:
           [
             norails,
@@ -24,16 +24,6 @@ jobs:
         redis-version: [6]
         mongodb-version: ['6.0']
         include:
-          - ruby: '3.0'
-            gemfile: rails_6.0
-            os: ubuntu-latest
-            redis-version: 6
-            mongodb-version: 6.0
-          - ruby: '3.0'
-            gemfile: rails_6.1
-            os: ubuntu-latest
-            redis-version: 6
-            mongodb-version: 6.0
           - ruby: 3.1
             gemfile: rails_7.0
             os: ubuntu-latest
@@ -80,10 +70,14 @@ jobs:
             redis-version: 6
             mongodb-version: 6.0
         exclude:
-          - ruby: 2.6
+          - ruby: '3.0'
+            gemfile: rails_6.0
+          - ruby: 3.3
+            gemfile: rails_6.1
+          - ruby: 3.4
+            gemfile: rails_6.1
+          - ruby: 3.4
             gemfile: rails_7.0
-          - ruby: 2.6
-            gemfile: rails_7.1
           - ruby: truffleruby
             gemfile: rails_6.1
           - ruby: truffleruby
