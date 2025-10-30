@@ -91,4 +91,26 @@ describe 'warns when overrides a method' do
       end
     end
   end
+
+  context "when instance disables warnings" do
+    let(:base_klass) do
+      Class.new do
+        def save!; end
+      end
+    end
+
+    subject do
+      base_klass.instance_eval do
+        include AASM
+        aasm hide_warnings: true do
+          event(:save) { }
+        end
+      end
+    end
+
+    it "should not log to warn" do
+      expect_any_instance_of(Logger).to receive(:warn).never
+      subject
+    end
+  end
 end
