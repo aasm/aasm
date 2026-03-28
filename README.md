@@ -906,7 +906,7 @@ scopes defined yet. See [Automatic Scopes](#automatic-scopes).
 
 ### Dynamoid
 
-Since version `4.8.0` _AASM_ also supports [Dynamoid](http://joshsymonds.com/Dynamoid/) as
+Since version `4.8.0` _AASM_ also supports [Dynamoid](https://github.com/Dynamoid/dynamoid) as
 persistence ORM.
 
 ### Mongoid
