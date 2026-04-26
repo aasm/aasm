@@ -69,6 +69,16 @@ module AASM
         def invoke_subject
           raise NoMethodError, '"#invoke_subject" is not implemented'
         end
+
+        ##
+        # Parse arguments to separate keyword arguments from positional arguments
+        def parse_arguments
+          if args.last.is_a?(Hash)
+            [args[0..-2], args.last]
+          else
+            [args, nil]
+          end
+        end
       end
     end
   end

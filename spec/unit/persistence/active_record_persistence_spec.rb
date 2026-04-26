@@ -708,6 +708,18 @@ if defined?(ActiveRecord)
               expect(validator).to_not be_running
             end
 
+            it "should fire :#{event_type}_transaction if transaction failed w/ kwarg" do
+              validator = Validator.create(:name => 'name')
+              expect do
+                begin
+                  validator.fail_with_reason!(reason: 'reason')
+                rescue => ignored
+                  expect(ignored).not_to be_instance_of(ArgumentError)
+                end
+              end.to change { validator.send("#{event_type}_transaction_performed_on_fail_with_reason") }.from(nil).to('reason')
+              expect(validator).to_not be_running
+            end
+
             it "should not fire :#{event_type}_transaction if not saving" do
               validator = Validator.create(:name => 'name')
               expect(validator).to be_sleeping
