@@ -1,0 +1,40 @@
+version: "2"
+
+services:
+  aasm:
+    image: aasm/aasm
+    build: .
+    command: bash -c 'bundle exec appraisal install && bundle exec appraisal rspec'
+    environment:
+      - DYNAMODB_HOST=dynamodb
+      - DYNAMODB_PORT=8000
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+      - RAILS_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RETHINKDB_DB=rethinkdb_test
+      - RETHINKDB_HOST=rethinkdb
+      - RETHINKDB_PORT=28015
+    depends_on:
+      - dynamodb
+      - mongo
+      - redis
+      - rethinkdb
+    volumes:
+      - .:/application
+    volumes_from:
+      - bundle
+  bundle:
+    image: aasm/aasm
+    command: echo Bundler data container
+    volumes:
+      - /bundle
+  dynamodb:
+    image: cnadiminti/dynamodb-local:2017-02-16
+  mongo:
+    image: mongo:3.6.1
+  redis:
+    image: redis:4.0.6-alpine
+  rethinkdb:
+    image: rethinkdb:2.3.6

@@ -6,7 +6,7 @@ describe 'transitions' do
     process = ProcessWithNewDsl.new
     expect { process.stop! }.to raise_error do |err|
       expect(err.class).to eql(AASM::InvalidTransition)
-      expect(err.message).to eql("Event 'stop' cannot transition from 'sleeping'. ")
+      expect(err.message).to eql("Event 'stop' cannot transition from 'sleeping'.")
       expect(err.object).to eql(process)
       expect(err.event_name).to eql(:stop)
     end

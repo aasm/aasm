@@ -30,14 +30,14 @@ describe 'when being unsuspended' do
   it 'should be able to be unsuspended into active if polite' do
     auth.suspend!
     expect(auth.may_wait?(:waiting, :please)).to be true
-    auth.wait!(nil, :please)
+    auth.wait!(:please)
   end
 
   it 'should not be able to be unsuspended into active if not polite' do
     auth.suspend!
     expect(auth.may_wait?(:waiting)).not_to be true
     expect(auth.may_wait?(:waiting, :rude)).not_to be true
-    expect {auth.wait!(nil, :rude)}.to raise_error(AASM::InvalidTransition)
+    expect {auth.wait!(:rude)}.to raise_error(AASM::InvalidTransition)
     expect {auth.wait!}.to raise_error(AASM::InvalidTransition)
   end
 
@@ -77,8 +77,25 @@ describe 'when being unsuspended' do
     expect(auth.aasm.may_fire_event?(:activate)).to be true
   end
 
+  it "should be able to fire event by name" do
+    expect(auth.aasm.fire(:activate)).to be true
+    expect(auth.aasm.current_state).to eq(:active)
+  end
+
+  it "should be able to fire! event by name" do
+    expect(auth.aasm.fire!(:activate)).to be true
+    expect(auth.aasm.current_state).to eq(:active)
+  end
+
   it "should not be able to fire unknown events" do
     expect(auth.aasm.may_fire_event?(:unknown)).to be false
   end
 
+  it "should raise AASM::UndefinedState when firing unknown events" do
+    expect { auth.aasm.fire(:unknown) }.to raise_error(AASM::UndefinedEvent, "Event :unknown doesn't exist")
+  end
+
+  it "should raise AASM::UndefinedState when firing unknown bang events" do
+    expect { auth.aasm.fire!(:unknown) }.to raise_error(AASM::UndefinedEvent, "Event :unknown! doesn't exist")
+  end
 end

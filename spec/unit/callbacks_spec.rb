@@ -3,14 +3,14 @@ Dir[File.dirname(__FILE__) + "/../models/callbacks/*.rb"].sort.each { |f| requir
 
 shared_examples 'an implemented callback that accepts error' do
   context 'with callback defined' do
-    it "should run error_callback if an exception is raised" do
+    it "should run error_callback if an exception is raised and always return false" do
       aasm_model.class.send(:define_method, callback_name) do |e|
         @data = [e]
       end
 
       allow(aasm_model).to receive(:before_enter).and_raise(e = StandardError.new)
 
-      aasm_model.safe_close!
+      expect(aasm_model.safe_close!).to be false
       expect(aasm_model.data).to eql [e]
     end
 
@@ -90,10 +90,8 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:ensure_on_all_events).once.ordered
     end
 
-    # puts "------- close!"
     callback.close!
   end
-
 
   it "works fine after reload" do
     show_debug_log = false
@@ -118,14 +116,48 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:before_enter_closed).once.ordered
       expect(callback).to receive(:enter_closed).once.ordered
       expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)   # this is when the state changes
+      expect(callback).to receive(:event_before_success).once.ordered
       expect(callback).to receive(:success_transition).once.ordered.and_return(true) # these should be after the state changes
       expect(callback).to receive(:after_exit_open).once.ordered
       expect(callback).to receive(:after_enter_closed).once.ordered
       expect(callback).to receive(:after_event).once.ordered
     end
 
-    # puts "------- close!"
     callback.close!
+  end
+
+  it 'does not run callbacks if firing an unknown event' do
+    show_debug_log = false
+
+    callback = Callbacks::Basic.new(:log => show_debug_log)
+
+    expect(callback).to_not receive(:before_all_events).ordered
+    expect(callback).to_not receive(:before_event).ordered
+    expect(callback).to_not receive(:event_guard).ordered
+    expect(callback).to_not receive(:transition_guard)
+    expect(callback).to_not receive(:before_exit_open)
+    expect(callback).to_not receive(:exit_open)
+    expect(callback).to_not receive(:after_all_transitions)
+    expect(callback).to_not receive(:after_transition)
+    expect(callback).to_not receive(:before_enter_closed)
+    expect(callback).to_not receive(:enter_closed)
+    expect(callback).to_not receive(:aasm_write_state)
+    expect(callback).to_not receive(:event_before_success)
+    expect(callback).to_not receive(:success_transition)
+    expect(callback).to_not receive(:after_exit_open)
+    expect(callback).to_not receive(:after_enter_closed)
+    expect(callback).to_not receive(:after_event)
+    expect(callback).to_not receive(:after_all_events)
+    expect(callback).to_not receive(:ensure_event).ordered
+    expect(callback).to_not receive(:ensure_on_all_events).ordered
+
+    expect {
+      callback.aasm.fire(:unknown)
+    }.to raise_error(AASM::UndefinedEvent, "Event :unknown doesn't exist")
+
+    expect {
+      callback.aasm.fire!(:unknown)
+    }.to raise_error(AASM::UndefinedEvent, "Event :unknown! doesn't exist")
   end
 
   it "does not run any state callback if the event guard fails" do
@@ -143,6 +175,7 @@ describe 'callbacks for the new DSL' do
     expect(callback).to_not receive(:before_enter_closed)
     expect(callback).to_not receive(:enter_closed)
     expect(callback).to_not receive(:aasm_write_state)
+    expect(callback).to_not receive(:event_before_success)
     expect(callback).to_not receive(:success_transition)
     expect(callback).to_not receive(:after_exit_open)
     expect(callback).to_not receive(:after_enter_closed)
@@ -162,7 +195,6 @@ describe 'callbacks for the new DSL' do
     callback = Callbacks::PrivateMethod.new(:log => show_debug_log)
     callback.aasm.current_state
 
-    # puts "------- close!"
     expect {
       callback.close!
     }.to_not raise_error
@@ -186,6 +218,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
         expect(callback).to_not receive(:aasm_write_state)
+        expect(callback).to_not receive(:event_before_success)
         expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:after_exit_open)
         expect(callback).to_not receive(:after_enter_closed)
@@ -198,6 +231,32 @@ describe 'callbacks for the new DSL' do
       expect {
         callback.close!
       }.to raise_error(AASM::InvalidTransition)
+    end
+
+    it "does not propagate failures to next attempt of same transition" do
+      callback = Callbacks::Basic.new(:log => false, :fail_transition_guard => true)
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+    end
+
+    it "does not propagate failures to next attempt of same event when no transition is applicable" do
+      callback = Callbacks::Basic.new(:log => false, :fail_transition_guard => true)
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'open'. Failed callback(s): [:transition_guard].")
+
+      callback.aasm.current_state = :closed
+
+      expect {
+        callback.close!
+      }.to raise_error(AASM::InvalidTransition, "Event 'close' cannot transition from 'closed'.")
     end
 
     it "does not run transition_guard twice for multiple permitted transitions" do
@@ -217,6 +276,7 @@ describe 'callbacks for the new DSL' do
         expect(callback).to receive(:after).once.ordered
 
         expect(callback).to_not receive(:transitioning)
+        expect(callback).to_not receive(:event_before_success)
         expect(callback).to_not receive(:success_transition)
         expect(callback).to_not receive(:before_enter_closed)
         expect(callback).to_not receive(:enter_closed)
@@ -240,6 +300,7 @@ describe 'callbacks for the new DSL' do
       expect(callback).to_not receive(:before_enter_closed)
       expect(callback).to_not receive(:enter_closed)
       expect(callback).to_not receive(:aasm_write_state)
+      expect(callback).to_not receive(:event_before_success)
       expect(callback).to_not receive(:success_transition)
       expect(callback).to_not receive(:after_exit_open)
       expect(callback).to_not receive(:after_enter_closed)
@@ -284,7 +345,9 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).with(:arg1).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:before_success_method).with(:arg1).once.ordered
     expect(cb).to receive(:success_method).with(:arg1).once.ordered
+    expect(cb).to receive(:success_method3).with(:arg1).once.ordered
     expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(:arg1).once.ordered
     cb.close!(:arg1)
@@ -294,7 +357,9 @@ describe 'callbacks for the new DSL' do
     expect(cb).to receive(:before_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).with(some_object).once.ordered
     expect(cb).to receive(:transition_method).never
+    expect(cb).to receive(:before_success_method).with(some_object).once.ordered
     expect(cb).to receive(:success_method).with(some_object).once.ordered
+    expect(cb).to receive(:success_method3).with(some_object).once.ordered
     expect(cb).to receive(:success_method).never
     expect(cb).to receive(:after_method).with(some_object).once.ordered
     cb.close!(some_object)

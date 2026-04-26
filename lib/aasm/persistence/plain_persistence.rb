@@ -5,7 +5,8 @@ module AASM
       # may be overwritten by persistence mixins
       def aasm_read_state(name=:default)
         # all the following lines behave like @current_state ||= aasm(name).enter_initial_state
-        current = aasm(name).instance_variable_get("@current_state_#{name}")
+        current = aasm(name).instance_variable_defined?("@current_state_#{name}") &&
+                  aasm(name).instance_variable_get("@current_state_#{name}")
         return current if current
         aasm(name).instance_variable_set("@current_state_#{name}", aasm(name).enter_initial_state)
       end

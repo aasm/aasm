@@ -1,6 +1,5 @@
 module AASM
   class InstanceBase
-
     attr_accessor :from_state, :to_state, :current_event
 
     def initialize(instance, name=:default) # instance of the class including AASM, name of the state machine
@@ -14,7 +13,6 @@ module AASM
 
     def current_state=(state)
       @instance.aasm_write_state_without_persistence(state, @name)
-      # @current_state = state
     end
 
     def enter_initial_state
@@ -22,7 +20,6 @@ module AASM
       state_object = state_object_for_name(state_name)
 
       state_object.fire_callbacks(:before_enter, @instance)
-      # state_object.fire_callbacks(:enter, @instance)
       self.current_state = state_name
       state_object.fire_callbacks(:after_enter, @instance)
 
@@ -30,7 +27,7 @@ module AASM
     end
 
     def human_state
-      AASM::Localizer.new.human_state_name(@instance.class, state_object_for_name(current_state))
+      state_object_for_name(current_state).display_name
     end
 
     def states(options={}, *args)
@@ -80,6 +77,17 @@ module AASM
       events
     end
 
+    def permitted_transitions
+      events(permitted: true).flat_map do |event|
+        available_transitions = event.transitions_from_state(current_state)
+        allowed_transitions = available_transitions.select { |t| t.allowed?(@instance) }
+
+        allowed_transitions.map do |transition|
+          { event: event.name, state: transition.to }
+        end
+      end
+    end
+
     def state_object_for_name(name)
       obj = @instance.class.aasm(@name).states.find {|s| s.name == name}
       raise AASM::UndefinedState, "State :#{name} doesn't exist" if obj.nil?
@@ -93,7 +101,7 @@ module AASM
         when Proc
           state.call(@instance)
         else
-          raise NotImplementedError, "Unrecognized state-type given.  Expected Symbol, String, or Proc."
+          raise NotImplementedError, "Unrecognized state-type given. Expected Symbol, String, or Proc."
       end
     end
 
@@ -105,11 +113,32 @@ module AASM
       end
     end
 
+    def fire(event_name, *args, &block)
+      event_exists?(event_name)
+
+      @instance.send(event_name, *args, &block)
+    end
+
+    def fire!(event_name, *args, &block)
+      event_exists?(event_name, true)
+      bang_event_name = "#{event_name}!".to_sym
+      @instance.send(bang_event_name, *args, &block)
+    end
+
     def set_current_state_with_persistence(state)
       save_success = @instance.aasm_write_state(state, @name)
       self.current_state = state if save_success
       save_success
     end
 
+    private
+
+    def event_exists?(event_name, bang = false)
+      event = @instance.class.aasm(@name).state_machine.events[event_name.to_sym]
+      return true if event
+
+      event_error = bang ? "#{event_name}!" : event_name
+      raise AASM::UndefinedEvent, "Event :#{event_error} doesn't exist" if event.nil?
+    end
   end
 end

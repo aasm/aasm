@@ -1,4 +1,4 @@
-db = Sequel.connect(SEQUEL_DB)
+db = Sequel::DATABASES.first || Sequel.connect(SEQUEL_DB)
 
 # if you want to see the statements while running the spec enable the following line
 # db.loggers << Logger.new($stderr)
@@ -8,8 +8,8 @@ db.create_table(:complex_sequel_examples) do
   String :right
 end
 
-class ComplexSequelExample < Sequel::Model(db)
-  set_dataset(:complex_sequel_examples)
+module Sequel
+class ComplexExample < Sequel::Model(:complex_sequel_examples)
 
   include AASM
 
@@ -42,4 +42,5 @@ class ComplexSequelExample < Sequel::Model(db)
     end
   end
 
+end
 end

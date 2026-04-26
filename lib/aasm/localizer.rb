@@ -5,7 +5,7 @@ module AASM
         list << :"#{i18n_scope(klass)}.events.#{i18n_klass(ancestor)}.#{event}"
         list
       end
-      translate_queue(checklist) || I18n.translate(checklist.shift, :default => event.to_s.humanize)
+      translate_queue(checklist) || I18n.translate(checklist.shift, :default => default_display_name(event))
     end
 
     def human_state_name(klass, state)
@@ -14,7 +14,7 @@ module AASM
         list << item_for(klass, state, ancestor, :old_style => true)
         list
       end
-      translate_queue(checklist) || I18n.translate(checklist.shift, :default => state.to_s.humanize)
+      translate_queue(checklist) || I18n.translate(checklist.shift, :default => default_display_name(state))
     end
 
   private
@@ -46,8 +46,18 @@ module AASM
     end
 
     def ancestors_list(klass)
+      has_active_record_base = defined?(::ActiveRecord::Base)
       klass.ancestors.select do |ancestor|
-        ancestor.respond_to?(:model_name) unless ancestor.name == 'ActiveRecord::Base'
+        not_active_record_base = has_active_record_base ? (ancestor != ::ActiveRecord::Base) : true
+        ancestor.respond_to?(:model_name) && not_active_record_base
+      end
+    end
+
+    def default_display_name(object) # Can use better arguement name
+      if object.respond_to?(:default_display_name)
+        object.default_display_name
+      else
+        object.to_s.gsub(/_/, ' ').capitalize
       end
     end
   end

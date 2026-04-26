@@ -2,7 +2,11 @@ RSpec::Matchers.define :transition_from do |from_state|
   match do |obj|
     @state_machine_name ||= :default
     obj.aasm(@state_machine_name).current_state = from_state.to_sym
-    obj.send(@event, *@args) && obj.aasm(@state_machine_name).current_state == @to_state.to_sym
+    begin
+      obj.send(@event, *@args) && obj.aasm(@state_machine_name).current_state == @to_state.to_sym
+    rescue AASM::InvalidTransition
+      false
+    end
   end
 
   chain :on do |state_machine_name|

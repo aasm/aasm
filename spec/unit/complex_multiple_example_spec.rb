@@ -39,18 +39,18 @@ describe 'when being unsuspended' do
   it 'should be able to wait into waiting if polite' do
     auth.left_suspend!
     expect(auth.may_left_wait?(:waiting, :please)).to be true
-    auth.left_wait!(nil, :please)
+    auth.left_wait!(:please)
 
     auth.right_suspend!
     expect(auth.may_right_wait?(:waiting)).to be false
-    auth.right_wait!(nil, :please)
+    auth.right_wait!(:please)
   end
 
   it 'should not be able to be unsuspended into active if not polite' do
     auth.left_suspend!
     expect(auth.may_left_wait?(:waiting)).not_to be true
     expect(auth.may_left_wait?(:waiting, :rude)).not_to be true
-    expect {auth.left_wait!(nil, :rude)}.to raise_error(AASM::InvalidTransition)
+    expect {auth.left_wait!(:rude)}.to raise_error(AASM::InvalidTransition)
     expect {auth.left_wait!}.to raise_error(AASM::InvalidTransition)
   end
 
@@ -91,9 +91,25 @@ describe 'when being unsuspended' do
     expect(auth.aasm(:right).may_fire_event?(:right_activate)).to be true
   end
 
-  it "should not be able to fire unknown events" do
+  it 'should not be able to fire unknown events' do
     expect(auth.aasm(:left).may_fire_event?(:unknown)).to be false
     expect(auth.aasm(:right).may_fire_event?(:unknown)).to be false
+  end
+
+  it 'should be able to fire event by name' do
+    expect(auth.aasm(:left).fire(:left_activate)).to be true
+    expect(auth.aasm(:left).current_state).to eq(:active)
+
+    expect(auth.aasm(:right).fire(:right_activate)).to be true
+    expect(auth.aasm(:right).current_state).to eq(:active)
+  end
+
+  it 'should be able to fire! event by name' do
+    expect(auth.aasm(:left).fire!(:left_activate)).to be true
+    expect(auth.aasm(:left).current_state).to eq(:active)
+
+    expect(auth.aasm(:right).fire!(:right_activate)).to be true
+    expect(auth.aasm(:right).current_state).to eq(:active)
   end
 
 end

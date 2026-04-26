@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe 'warns when overrides a method' do
+  before do
+    AASM::Configuration.hide_warnings = false
+  end
+
+  after do
+    AASM::Configuration.hide_warnings = true
+  end
+
   module Clumsy
     def self.included base
       base.send :include, AASM

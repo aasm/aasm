@@ -70,3 +70,20 @@ describe "event guards" do
   end
 
 end
+
+if defined?(ActiveRecord)
+
+  Dir[File.dirname(__FILE__) + "/../models/active_record/*.rb"].sort.each do |f|
+    require File.expand_path(f)
+  end
+
+  load_schema
+
+  describe "ActiveRecord per-transition guards" do
+    let(:example) { ComplexActiveRecordExample.new }
+
+    it "should be able to increment" do
+      expect(example.may_increment?).to be true
+    end
+  end
+end

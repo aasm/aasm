@@ -37,7 +37,7 @@ describe 'parametrised events' do
   end
 
   it 'should transition to default state when :after transition invoked' do
-    pe.dress!(nil, 'purple', 'dressy')
+    pe.dress!('purple', 'dressy')
     expect(pe.aasm(:left).current_state).to eq(:working)
   end
 

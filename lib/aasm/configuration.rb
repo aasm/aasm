@@ -15,11 +15,17 @@ module AASM
     # for ActiveRecord: store the new state even if the model is invalid and return true
     attr_accessor :skip_validation_on_save
 
+    # for ActiveRecord: use transactions
+    attr_accessor :use_transactions
+
     # for ActiveRecord: use requires_new for nested transactions?
     attr_accessor :requires_new_transaction
 
     # for ActiveRecord: use pessimistic locking
     attr_accessor :requires_lock
+
+    # automatically set `"#{state_name}_at" = ::Time.now` on state changes
+    attr_accessor :timestamps
 
     # forbid direct assignment in aasm_state column (in ActiveRecord)
     attr_accessor :no_direct_assignment
@@ -34,5 +40,9 @@ module AASM
 
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
+
+    class << self
+      attr_accessor :hide_warnings
+    end
   end
 end

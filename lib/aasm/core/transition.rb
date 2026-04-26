@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module AASM::Core
   class Transition
-    include DslHelper
+    include AASM::DslHelper
 
     attr_reader :from, :to, :event, :opts, :failures
     alias_method :options, :opts
@@ -26,6 +28,15 @@ module AASM::Core
       @success = @success[0] if @success.size == 1
 
       @opts = opts
+    end
+
+    # called internally by Ruby 1.9 after clone()
+    def initialize_copy(orig)
+      super
+      @guards = @guards.dup
+      @unless = @unless.dup
+      @opts   = {}
+      orig.opts.each_pair { |name, setting| @opts[name] = setting.is_a?(Hash) || setting.is_a?(Array) ? setting.dup : setting }
     end
 
     def allowed?(obj, *args)
@@ -58,77 +69,14 @@ module AASM::Core
         record.aasm(event.state_machine.name).to_state = @to if record.aasm(event.state_machine.name).respond_to?(:to_state=)
       end
 
-      case code
-      when Symbol, String
-        result = (record.__send__(:method, code.to_sym).arity == 0 ? record.__send__(code) : record.__send__(code, *args))
-        failures << code unless result
-        result
-      when Proc
-        if code.respond_to?(:parameters)
-          # In Ruby's Proc, the 'arity' method is not a good condidate to know if
-          # we should pass the arguments or not, since it does return 0 even in
-          # presence of optional parameters.
-          result = (code.parameters.size == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
-
-          failures << code.source_location.join('#') unless result
-        else
-          # In RubyMotion's Proc, the 'parameter' method does not exists, however its
-          # 'arity' method works just like the one from Method, only returning 0 when
-          # there is no parameters whatsoever, optional or not.
-          result = (code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code))
-
-          # Sadly, RubyMotion's Proc does not define the method 'source_location' either.
-          failures << code unless result
-        end
-
-        result
-      when Class
-        arity = code.instance_method(:initialize).arity
-        if arity == 0
-          instance = code.new
-        elsif arity == 1
-          instance = code.new(record)
-        else
-          instance = code.new(record, *args)
-        end
-        result = instance.call
-
-        if Method.method_defined?(:source_location)
-          failures << instance.method(:call).source_location.join('#') unless result
-        else
-          # RubyMotion support ('source_location' not defined for Method)
-          failures << instance.method(:call) unless result
-        end
-
-        result
-      when Array
-        if options[:guard]
-          # invoke guard callbacks
-          code.all? {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
-        elsif options[:unless]
-          # invoke unless callbacks
-          code.all? {|a| !invoke_callbacks_compatible_with_guard(a, record, args)}
-        else
-          # invoke after callbacks
-          code.map {|a| invoke_callbacks_compatible_with_guard(a, record, args)}
-        end
-      else
-        true
-      end
+      Invoker.new(code, record, args)
+             .with_options(options)
+             .with_failures(failures)
+             .invoke
     end
 
     def _fire_callbacks(code, record, args)
-      case code
-        when Symbol, String
-          arity = record.send(:method, code.to_sym).arity
-          record.send(code, *(arity < 0 ? args : args[0...arity]))
-        when Proc
-          code.arity == 0 ? record.instance_exec(&code) : record.instance_exec(*args, &code)
-        when Array
-          code.map {|a| _fire_callbacks(a, record, args)}
-        else
-          true
-      end
+      Invoker.new(code, record, args).invoke
     end
 
   end

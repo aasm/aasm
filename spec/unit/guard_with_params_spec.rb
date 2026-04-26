@@ -7,4 +7,8 @@ describe "guards with params" do
   it "list permitted states" do
     expect(guard.aasm.states({:permitted => true}, user).map(&:name)).to eql [:reviewed]
   end
+
+  it "list no states if user is blank" do
+    expect(guard.aasm.states({:permitted => true}, nil).map(&:name)).to eql []
+  end
 end

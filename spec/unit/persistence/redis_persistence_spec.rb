@@ -1,35 +1,14 @@
+require 'spec_helper'
 
-describe 'redis' do
-  begin
-    require 'redis-objects'
-    require 'logger'
-    require 'spec_helper'
+if defined?(Redis::Objects)
+  describe 'redis' do
+
+    Dir[File.dirname(__FILE__) + "/../../models/redis/*.rb"].sort.each do |f|
+      require File.expand_path(f)
+    end
 
     before(:all) do
-      Redis.current = Redis.new(host: '127.0.0.1', port: 6379)
-
-      @model = Class.new do
-        attr_accessor :default
-
-        include Redis::Objects
-        include AASM
-
-        value :status
-
-        def id
-          1
-        end
-
-        aasm column: :status
-        aasm do
-          state :alpha, initial: true
-          state :beta
-          state :gamma
-          event :release do
-            transitions from: [:alpha, :beta, :gamma], to: :beta
-          end
-        end
-      end
+      @model = RedisSimple
     end
 
     describe "instance methods" do
@@ -70,8 +49,5 @@ describe 'redis' do
         expect(Class.new(@model).aasm.attribute_name).to eq(:status)
       end
     end
-
-  rescue LoadError
-    puts "Not running Redis specs because sequel gem is not installed!!!"
   end
 end

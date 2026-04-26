@@ -1,5 +1,5 @@
 class CustomAASMBase < AASM::Base
-  # A custom transiton that we want available across many AASM models.
+  # A custom transition that we want available across many AASM models.
   def count_transitions!
     klass.class_eval do
       aasm :with_klass => CustomAASMBase do

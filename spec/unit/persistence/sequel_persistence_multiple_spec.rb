@@ -1,15 +1,14 @@
-describe 'sequel' do
-  begin
-    require 'sequel'
-    require 'logger'
-    require 'spec_helper'
+require 'spec_helper'
+
+if defined?(Sequel)
+  describe 'sequel' do
 
     Dir[File.dirname(__FILE__) + "/../../models/sequel/*.rb"].sort.each do |f|
       require File.expand_path(f)
     end
 
     before(:all) do
-      @model = SequelMultiple
+      @model = Sequel::Multiple
     end
 
     describe "instance methods" do
@@ -94,7 +93,7 @@ describe 'sequel' do
 
     describe "complex example" do
       it "works" do
-        record = ComplexSequelExample.new
+        record = Sequel::ComplexExample.new
         expect(record.aasm(:left).current_state).to eql :one
         expect(record.left).to be_nil
         expect(record.aasm(:right).current_state).to eql :alpha
@@ -145,9 +144,5 @@ describe 'sequel' do
       end
     end
 
-  rescue LoadError
-    puts "------------------------------------------------------------------------"
-    puts "Not running Sequel multiple-specs because sequel gem is not installed!!!"
-    puts "------------------------------------------------------------------------"
   end
 end

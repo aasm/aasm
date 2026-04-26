@@ -16,17 +16,25 @@ Gem::Specification.new do |s|
   s.platform              = Gem::Platform::RUBY
   s.required_ruby_version = '>= 1.9.3'
 
+  s.metadata = {
+    'changelog_uri' => 'https://github.com/aasm/aasm/blob/master/CHANGELOG.md'
+  }
+
+  s.add_dependency 'concurrent-ruby', '~> 1.0'
+
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec', ">= 3"
   s.add_development_dependency 'generator_spec'
+  s.add_development_dependency 'appraisal'
+  s.add_development_dependency "simplecov-cobertura"
+  # s.add_development_dependency "codecov", ">= 0.1.21"
 
   # debugging
   # s.add_development_dependency 'debugger'
   s.add_development_dependency 'pry'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = Dir['lib/**/*', 'CHANGELOG.md', 'README.md', 'LICENSE']
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 end

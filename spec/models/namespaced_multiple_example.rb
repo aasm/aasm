@@ -25,4 +25,18 @@ class NamespacedMultipleExample
       transitions :from => :approved, :to => :unapproved
     end
   end
+
+  # Test namespace event methods with suffix (ie may_sell_car?, sell_car!)
+  aasm(:car, namespace: :car) do
+    state :unsold, :initial => true
+    state :sold
+
+    event :sell do
+      transitions :from => :unsold, :to => :sold
+    end
+
+    event :return do
+      transitions :from => :sold, :to => :unsold
+    end
+  end
 end

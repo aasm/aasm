@@ -27,4 +27,16 @@ class SimpleMultipleExample
       transitions :from => :processing, :to => :sleeping
     end
   end
+
+  aasm(:question) do
+    state :answered, :initial => true
+    state :asked
+
+    event :ask, :binding_event => :start do
+      transitions :from => :answered, :to => :asked
+    end
+    event :answer, :binding_event => :stop do
+      transitions :from => :asked, :to => :answered
+    end
+  end
 end

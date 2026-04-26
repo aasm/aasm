@@ -166,11 +166,15 @@ describe "special cases" do
 end
 
 describe 'aasm.states_for_select' do
-  it "should return a select friendly array of states" do
-    expect(FooMultiple.aasm(:left)).to respond_to(:states_for_select)
-    expect(FooMultiple.aasm(:left).states_for_select).to eq(
-      [['Open', 'open'], ['Closed', 'closed'], ['Final', 'final']]
-    )
+  context 'without I18n' do
+    before { allow(Module).to receive(:const_defined?).with(:I18n).and_return(nil) }
+
+    it "should return a select friendly array of states" do
+      expect(FooMultiple.aasm(:left)).to respond_to(:states_for_select)
+      expect(FooMultiple.aasm(:left).states_for_select).to eq(
+        [['Open', 'open'], ['Closed', 'closed'], ['Final', 'final']]
+      )
+    end
   end
 end
 

@@ -74,6 +74,11 @@ describe 'inspection for common cases' do
       expect(states).to include(:running)
       expect(states).to_not include(:dancing)
     end
+
+    it "transitions to correct state if from state is missing from one transitions" do
+      multi.sleep
+      expect(multi.aasm.current_state).to eq(:sleeping)
+    end
   end
 
   it 'should list states in the order they have been defined' do
@@ -97,9 +102,13 @@ describe "special cases" do
 end
 
 describe 'aasm.states_for_select' do
-  it "should return a select friendly array of states" do
-    expect(Foo.aasm).to respond_to(:states_for_select)
-    expect(Foo.aasm.states_for_select).to eq([['Open', 'open'], ['Closed', 'closed'], ['Final', 'final']])
+  context 'without I18n' do
+    before { allow(Module).to receive(:const_defined?).with(:I18n).and_return(nil) }
+
+    it "should return a select friendly array of states" do
+      expect(Foo.aasm).to respond_to(:states_for_select)
+      expect(Foo.aasm.states_for_select).to eq([['Open', 'open'], ['Closed', 'closed'], ['Final', 'final']])
+    end
   end
 end
 

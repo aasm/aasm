@@ -1,8 +1,12 @@
+require 'concurrent/map'
+
 module AASM
   class StateMachineStore
+    @stores = Concurrent::Map.new
+
     class << self
       def stores
-        @stores ||= {}
+        @stores
       end
 
       # do not overwrite existing state machines, which could have been created by
@@ -38,7 +42,7 @@ module AASM
     end
 
     def initialize
-      @machines = {}
+      @machines = Concurrent::Map.new
     end
 
     def clone
