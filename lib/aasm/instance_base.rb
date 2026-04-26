@@ -68,9 +68,9 @@ module AASM
         # filters the results of events_for_current_state so that only those that
         # are really currently possible (given transition guards) are shown.
         if options[:permitted]
-          events.select! { |e| @instance.send("may_#{e.name}?", *args) }
+          events.select! { |e| @instance.send("may_#{event_method_name(e.name)}?", *args) }
         else
-          events.select! { |e| !@instance.send("may_#{e.name}?", *args) }
+          events.select! { |e| !@instance.send("may_#{event_method_name(e.name)}?", *args) }
         end
       end
 
@@ -115,13 +115,12 @@ module AASM
 
     def fire(event_name, *args, &block)
       event_exists?(event_name)
-
-      @instance.send(event_name, *args, &block)
+      @instance.send(event_method_name(event_name), *args, &block)
     end
 
     def fire!(event_name, *args, &block)
       event_exists?(event_name, true)
-      bang_event_name = "#{event_name}!".to_sym
+      bang_event_name = "#{event_method_name(event_name)}!".to_sym
       @instance.send(bang_event_name, *args, &block)
     end
 
@@ -132,6 +131,16 @@ module AASM
     end
 
     private
+
+    def event_method_name(event_name)
+      config = @instance.class.aasm(@name).state_machine.config
+      if config.namespace
+        ns = (config.namespace == true) ? @name : config.namespace
+        "#{event_name}_#{ns}"
+      else
+        event_name.to_s
+      end
+    end
 
     def event_exists?(event_name, bang = false)
       event = @instance.class.aasm(@name).state_machine.events[event_name.to_sym]
