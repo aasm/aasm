@@ -818,16 +818,16 @@ if defined?(ActiveRecord)
 
     it 'should be able to change the state with invalid record' do
       expect(example.valid?).to be_falsey
-      expect(example.complete!).to be_falsey
+      expect { example.complete! }.to raise_error(ActiveRecord::RecordInvalid)
       expect(example.complete_without_validation!).to be_truthy
       expect(example.state).to eq('complete')
     end
 
     it 'shouldn\'t affect the behaviour of existing method after calling _without_validation! method' do
-      expect(example.set_draft!).to be_falsey
+      expect { example.set_draft! }.to raise_error(ActiveRecord::RecordInvalid)
       expect(example.set_draft_without_validation!).to be_truthy
       expect(example.state).to eq('draft')
-      expect(example.complete!).to be_falsey
+      expect { example.complete! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 
