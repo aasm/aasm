@@ -42,6 +42,16 @@ jobs:
             os: ubuntu-latest
             redis-version: 6
             mongodb-version: 6.0
+          - ruby: 3.3
+            gemfile: rails_7.1
+            os: ubuntu-latest
+            redis-version: 6
+            mongodb-version: 6.0
+          - ruby: 3.4
+            gemfile: rails_7.1
+            os: ubuntu-latest
+            redis-version: 6
+            mongodb-version: 6.0
           - ruby: 3.1
             gemfile: rails_7.2
             os: ubuntu-latest
@@ -79,7 +89,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: |
           mkdir /tmp/dynamodb

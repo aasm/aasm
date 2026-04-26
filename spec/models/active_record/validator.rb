@@ -1,9 +1,11 @@
 class Validator < ActiveRecord::Base
   attr_accessor :after_all_transactions_performed,
     :after_transaction_performed_on_fail,
+    :after_transaction_performed_on_fail_with_reason,
     :after_transaction_performed_on_run,
     :before_all_transactions_performed,
     :before_transaction_performed_on_fail,
+    :before_transaction_performed_on_fail_with_reason,
     :before_transaction_performed_on_run,
     :invalid
 
@@ -47,6 +49,18 @@ class Validator < ActiveRecord::Base
 
       before_transaction do
         @before_transaction_performed_on_fail = true
+      end
+
+      transitions :to => :failed, :from => [:sleeping, :running]
+    end
+
+    event :fail_with_reason do
+      after_transaction do |reason:, **|
+        @after_transaction_performed_on_fail_with_reason = reason
+      end
+
+      before_transaction do |reason:, **|
+        @before_transaction_performed_on_fail_with_reason = reason
       end
 
       transitions :to => :failed, :from => [:sleeping, :running]

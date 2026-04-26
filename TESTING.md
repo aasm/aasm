@@ -1,6 +1,7 @@
 ## Install dependency matrix
 
-    appraisal install
+    bundle install
+    bundle exec appraisal install
 
 This will re-generate Gemfiles in `gemfile` folder
 
@@ -10,16 +11,16 @@ Use rvm gemsets or similar to avoid global gem pollution
 
 For all supported Rails/ORM combinations:
 
-    appraisal rspec
+    bundle exec appraisal rspec
 
 Or for specific one:
 
-    appraisal rails_4.2 rspec
+    bundle exec appraisal rails_7.2 rspec
 
 Or for one particular test file
 
-    appraisal rails_4.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb
+    appraisal rails_7.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb
 
 Or down to one test case
 
-    appraisal rails_4.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb:92
+    appraisal rails_7.2_mongoid_5 rspec spec/unit/persistence/mongoid_persistence_multiple_spec.rb:92

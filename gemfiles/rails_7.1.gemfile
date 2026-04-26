@@ -3,12 +3,12 @@
 source "https://rubygems.org"
 
 gem "sqlite3", "~> 1.4", platforms: :ruby
-gem "rails", "~> 7.1.1"
-gem "after_commit_everywhere", "~> 1.0"
-gem "mongoid", github: "mongodb/mongoid"
+gem "rails", "~> 7.1.0"
+gem "after_commit_everywhere"
+gem "redis-objects"
+gem "mongoid"
 gem "sequel"
-gem "dynamoid", "~>3.3", platforms: :ruby
-gem "aws-sdk-dynamodb", "~> 1"
-gem "redis-objects", "1.6.0"
+gem "dynamoid"
+gem "aws-sdk-dynamodb"
 
 gemspec path: "../"
