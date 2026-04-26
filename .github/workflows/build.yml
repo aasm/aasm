@@ -16,8 +16,6 @@ jobs:
         gemfile:
           [
             norails,
-            rails_6.0,
-            rails_6.1,
             rails_7.0,
             rails_7.1,
           ]
@@ -69,6 +67,11 @@ jobs:
             os: ubuntu-latest
             redis-version: 6
             mongodb-version: 6.0
+          - ruby: 3.4
+            gemfile: rails_8.0
+            os: ubuntu-latest
+            redis-version: 6
+            mongodb-version: 6.0
         exclude:
           - ruby: '3.0'
             gemfile: rails_6.0
@@ -78,8 +81,6 @@ jobs:
             gemfile: rails_6.1
           - ruby: 3.4
             gemfile: rails_7.0
-          - ruby: truffleruby
-            gemfile: rails_6.1
           - ruby: truffleruby
             gemfile: rails_7.0
           - ruby: truffleruby

@@ -116,23 +116,18 @@ if defined?(ActiveRecord)
         end
       end
 
-      if ActiveRecord::VERSION::MAJOR >= 4 && ActiveRecord::VERSION::MINOR >= 1 # won't work with Rails <= 4.1
-        # Enum are introduced from Rails 4.1, therefore enum syntax will not work on Rails <= 4.1
-        context "when AASM enum setting is not enabled and aasm column not present" do
+      context "when AASM enum setting is not enabled and aasm column not present" do
 
-          let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
+        let(:multiple_with_enum_without_column) {MultipleWithEnumWithoutColumn.new}
 
-          it "should raise an error for transitions" do
-            if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
-              expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(RuntimeError, /Undeclared attribute type for enum 'status'/)
-            else
-              expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, /undefined method .status./)
-            end
+        it "should raise an error for transitions" do
+          if ActiveRecord.gem_version >= Gem::Version.new('7.1.0') && ActiveRecord.gem_version < Gem::Version.new('8')
+            expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(RuntimeError, /Undeclared attribute type for enum 'status'/)
+          else
+            expect{multiple_with_enum_without_column.send(:view, :left)}.to raise_error(NoMethodError, /undefined method .status./)
           end
         end
-
       end
-
     end
 
     context "when AASM is configured to use enum" do
@@ -272,18 +267,6 @@ if defined?(ActiveRecord)
       end
     end
 
-  end
-
-  if ActiveRecord::VERSION::MAJOR < 4 && ActiveRecord::VERSION::MINOR < 2 # won't work with Rails >= 4.2
-  describe "direct state column access" do
-    it "accepts false states" do
-      f = MultipleFalseState.create!
-      expect(f.aasm_state).to eql false
-      expect {
-        f.aasm(:left).events.map(&:name)
-      }.to_not raise_error
-    end
-  end
   end
 
   describe 'subclasses' do
