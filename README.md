@@ -1500,7 +1500,7 @@ Feel free to
 
 This software is provided "as is" and without any express or
 implied warranties, including, without limitation, the implied
-warranties of merchantibility and fitness for a particular
+warranties of merchantability and fitness for a particular
 purpose.
 
 ## License ##
