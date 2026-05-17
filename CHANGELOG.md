@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## unreleased
+* typo fixes, thanks @kumar-mithlesh [#870](https://github.com/aasm/aasm/pull/870)
 
 ## 5.5.2 (22 October 2025)
 * Fix another issue around keyword arguments for Ruby >3.2, thanks @segiddins [#873](https://github.com/aasm/aasm/pull/873)
