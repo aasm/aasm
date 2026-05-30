@@ -25,15 +25,14 @@ if defined?(ActiveRecord)
       subject { lambda{ gate.send(:aasm_column_looks_like_enum) } }
 
       let(:column_name) { "value" }
-      let(:columns_hash) { Hash[column_name, column] }
 
       before :each do
         allow(gate.class.aasm).to receive(:attribute_name).and_return(column_name.to_sym)
-        allow(gate.class).to receive(:columns_hash).and_return(columns_hash)
+        allow(gate.class).to receive(:type_for_attribute).with(column_name).and_return(OpenStruct.new(type: column))
       end
 
       context "when AASM column has integer type" do
-        let(:column) { double(Object, type: :integer) }
+        let(:column) { :integer }
 
         it "returns true" do
           expect(subject.call).to be_truthy
