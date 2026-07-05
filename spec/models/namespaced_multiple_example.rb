@@ -17,11 +17,11 @@ class NamespacedMultipleExample
     state :unapproved, :initial => true
     state :approved
 
-    event :approve_review do
+    event :approve do
       transitions :from => :unapproved, :to => :approved
     end
 
-    event :unapprove_review do
+    event :unapprove do
       transitions :from => :approved, :to => :unapproved
     end
   end
