@@ -6,6 +6,7 @@
 [![codecov](https://codecov.io/gh/aasm/aasm/branch/master/graph/badge.svg)](https://codecov.io/gh/aasm/aasm)
 
 ## Index
+- [Upgrade from version 5 to 6](#upgrade-from-version-5-to-6)
 - [Upgrade from version 3 to 4](#upgrade-from-version-3-to-4)
 - [Usage](#usage)
   - [Callbacks](#callbacks)
@@ -58,6 +59,10 @@ This package contains AASM, a library for adding finite state machines to Ruby c
 AASM started as the *acts_as_state_machine* plugin but has evolved into a more generic library
 that no longer targets only ActiveRecord models. It currently provides adapters for many
 ORMs but it can be used for any Ruby class, no matter what parent class it has (if any).
+
+## Upgrade from version 5 to 6
+
+Take a look at the [README_FROM_VERSION_5_TO_6](https://github.com/aasm/aasm/blob/master/README_FROM_VERSION_5_TO_6.md) for details how to switch from version 5.x to 6.0 of _AASM_.
 
 ## Upgrade from version 3 to 4
 
@@ -535,7 +540,9 @@ machine. If no namespace is provided, the latest definition "wins" and
 overrides previous definitions. Nonetheless, a warning is issued:
 `SimpleMultipleExample: overriding method 'run'!`.
 
-Alternatively, you can provide a namespace for each state machine:
+Alternatively, you can provide a namespace for each state machine. When a namespace
+is used, event methods are defined with the namespace as a suffix, preventing
+collisions between state machines that share event names:
 
 ```ruby
 class NamespacedMultipleExample

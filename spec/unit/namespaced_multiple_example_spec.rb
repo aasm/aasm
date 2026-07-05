@@ -60,6 +60,15 @@ describe 'state machine' do
     namespaced.return_car
   end
 
+  it 'does not define plain-named methods for namespaced events' do
+    expect(namespaced).not_to respond_to(:sell)
+    expect(namespaced).not_to respond_to(:sell!)
+    expect(namespaced).not_to respond_to(:may_sell?)
+    expect(namespaced).not_to respond_to(:return)
+    expect(namespaced).not_to respond_to(:return!)
+    expect(namespaced).not_to respond_to(:may_return?)
+  end
+
   it 'defines constants for each state name' do
     expect(NamespacedMultipleExample::STATE_UNAPPROVED).to eq(:unapproved)
     expect(NamespacedMultipleExample::STATE_APPROVED).to eq(:approved)
@@ -70,6 +79,4 @@ describe 'state machine' do
     expect(NamespacedMultipleExample::STATE_CAR_UNSOLD).to eq(:unsold)
     expect(NamespacedMultipleExample::STATE_CAR_SOLD).to eq(:sold)
   end
-
-
 end

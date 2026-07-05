@@ -1,9 +1,6 @@
 class Thief < ActiveRecord::Base
-  if ActiveRecord::VERSION::MAJOR >= 3
-    self.table_name = 'thieves'
-  else
-    set_table_name "thieves"
-  end
+  self.table_name = 'thieves'
+
   include AASM
   aasm do
     state :rich
@@ -14,11 +11,8 @@ class Thief < ActiveRecord::Base
 end
 
 class MultipleThief < ActiveRecord::Base
-  if ActiveRecord::VERSION::MAJOR >= 3
-    self.table_name = 'multiple_thieves'
-  else
-    set_table_name "multiple_thieves"
-  end
+  self.table_name = 'multiple_thieves'
+
   include AASM
   aasm :left, :column => :aasm_state do
     state :rich

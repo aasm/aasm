@@ -24,7 +24,7 @@ module AASM
       configure :skip_validation_on_save, false
 
       # raise if the model is invalid (in ActiveRecord)
-      configure :whiny_persistence, false
+      configure :whiny_persistence, true
 
       # Use transactions (in ActiveRecord)
       configure :use_transactions, true
@@ -114,31 +114,27 @@ module AASM
       aasm_name = @name.to_sym
       event = name.to_sym
 
+      # Compute method name with namespace (mirrors how states work on line 98)
+      method_name = namespace? ? "#{name}_#{namespace}" : name
+
       # an addition over standard aasm so that, before firing an event, you can ask
       # may_event? and get back a boolean that tells you whether the guard method
       # on the transition will let this happen.
-      safely_define_method klass, "may_#{name}?", ->(*args) do
+      safely_define_method klass, "may_#{method_name}?", ->(*args) do
         aasm(aasm_name).may_fire_event?(event, *args)
       end
 
-      safely_define_method klass, "#{name}!", ->(*args, &block) do
+      safely_define_method klass, "#{method_name}!", ->(*args, &block) do
         aasm(aasm_name).current_event = :"#{name}!"
         aasm_fire_event(aasm_name, event, {:persist => true}, *args, &block)
       end
 
-      safely_define_method klass, name, ->(*args, &block) do
+      safely_define_method klass, method_name, ->(*args, &block) do
         aasm(aasm_name).current_event = event
         aasm_fire_event(aasm_name, event, {:persist => false}, *args, &block)
       end
 
       skip_instance_level_validation(event, name, aasm_name, klass)
-
-      # Create aliases for the event methods. Keep the old names to maintain backwards compatibility.
-      if namespace?
-        klass.send(:alias_method, "may_#{name}_#{namespace}?", "may_#{name}?")
-        klass.send(:alias_method, "#{name}_#{namespace}!", "#{name}!")
-        klass.send(:alias_method, "#{name}_#{namespace}", name)
-      end
 
     end
 
@@ -264,7 +260,8 @@ module AASM
     def skip_instance_level_validation(event, name, aasm_name, klass)
       # Overrides the skip_validation config for an instance (If skip validation is set to false in original config) and
       # restores it back to the original value after the event is fired.
-      safely_define_method klass, "#{name}_without_validation!", ->(*args, &block) do
+      method_name = namespace? ? "#{name}_#{namespace}" : name
+      safely_define_method klass, "#{method_name}_without_validation!", ->(*args, &block) do
         original_config = AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save
         begin
           AASM::StateMachineStore.fetch(self.class, true).machine(aasm_name).config.skip_validation_on_save = true unless original_config
