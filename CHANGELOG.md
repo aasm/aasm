@@ -2,6 +2,13 @@
 
 ## unreleased
 
+## 6.0.0 (5 July 2026)
+* Let `whiny_persistence: true` be the default now [#378](https://github.com/aasm/aasm/pull/378)
+* Stopped support for Ruby v2 [#865](https://github.com/aasm/aasm/pull/865)
+* Stopped support for Ruby on Rails v6 [#866](https://github.com/aasm/aasm/pull/866)
+* Add MFA requirement to gemspec metadata [#879](https://github.com/aasm/aasm/pull/879)
+* Avoid namespace naming collisions [#880](https://github.com/aasm/aasm/pull/880)
+
 ## 5.5.2 (22 October 2025)
 * Fix another issue around keyword arguments for Ruby >3.2, thanks @segiddins [#873](https://github.com/aasm/aasm/pull/873)
 * Upgrade rails tests and move concurrent to load only necessary class, thanks @allcentury [#852](https://github.com/aasm/aasm/pull/852)
