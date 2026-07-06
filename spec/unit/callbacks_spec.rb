@@ -77,8 +77,8 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:exit_open).once.ordered
       # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
       # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
-      expect(callback).to receive(:after_all_transitions).once.ordered
       expect(callback).to receive(:after_transition).once.ordered
+      expect(callback).to receive(:after_all_transitions).once.ordered
       expect(callback).to receive(:before_enter_closed).once.ordered
       expect(callback).to receive(:enter_closed).once.ordered
       expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)  # this is when the state changes
@@ -111,8 +111,8 @@ describe 'callbacks for the new DSL' do
       expect(callback).to receive(:exit_open).once.ordered
       # expect(callback).to receive(:event_guard).once.ordered.and_return(true)
       # expect(callback).to receive(:transition_guard).once.ordered.and_return(true)
-      expect(callback).to receive(:after_all_transitions).once.ordered
       expect(callback).to receive(:after_transition).once.ordered
+      expect(callback).to receive(:after_all_transitions).once.ordered
       expect(callback).to receive(:before_enter_closed).once.ordered
       expect(callback).to receive(:enter_closed).once.ordered
       expect(callback).to receive(:aasm_write_state).once.ordered.and_return(true)   # this is when the state changes
