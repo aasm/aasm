@@ -41,6 +41,13 @@ module AASM
     # Configure a logger, with default being a Logger to STDERR
     attr_accessor :logger
 
+    # Hide warnings
+    attr_writer :hide_warnings
+
+    def hide_warnings
+      self.class.hide_warnings || @hide_warnings
+    end
+
     class << self
       attr_accessor :hide_warnings
     end
