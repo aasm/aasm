@@ -125,6 +125,33 @@ describe 'aasm.from_states_for_state' do
   end
 end
 
+describe "aasm.from_states_for_event" do
+  it "should be callable" do
+    expect(SimpleExample.aasm).to respond_to(:from_states_for_event)
+  end
+
+  it "should return all from states (flattened)" do
+    froms = ComplexExample.aasm.from_states_for_event(:suspend)
+    [:passive, :pending, :active].each {|from| expect(froms).to include(from)}
+  end
+
+  it "should return all from states for any transitions on an event" do
+    froms = ParametrisedEvent.aasm.from_states_for_event(:dress)
+    [:sleeping, :showering].each {|from| expect(froms).to include(from)}
+  end
+end
+
+describe "aasm.to_states_for_event" do
+  it "should be callable" do
+    expect(SimpleExample.aasm).to respond_to(:to_states_for_event)
+  end
+
+  it "should return all to states for any transitions on an event" do
+    to_states = ParametrisedEvent.aasm.to_states_for_event(:dress)
+    [:working, :dating, :prettying_up].each {|to| expect(to_states).to include(to)}
+  end
+end
+
 describe 'permitted events' do
   let(:foo) {Foo.new}
 
