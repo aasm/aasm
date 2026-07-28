@@ -142,7 +142,7 @@ module AASM::Core
         args.unshift(to_state)
         to_state = nil
       end
-      
+
       # nop, to_state is a valid to-state
 
       transitions.each do |transition|
