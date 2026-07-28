@@ -13,4 +13,10 @@ describe StatesOnOneLineExample do
       expect(example.aasm(:one_line).states.map(&:name)).to eq [:initial, :first, :second]
     end
   end
+
+  describe 'states_names' do
+    it 'should have all 3 states defined' do
+      expect(example.aasm(:one_line).state_names).to eq [:initial, :first, :second]
+    end
+  end
 end
