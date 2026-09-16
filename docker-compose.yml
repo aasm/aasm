@@ -1,5 +1,3 @@
-version: "2"
-
 services:
   aasm:
     image: aasm/aasm
@@ -23,18 +21,19 @@ services:
       - rethinkdb
     volumes:
       - .:/application
-    volumes_from:
-      - bundle
-  bundle:
-    image: aasm/aasm
-    command: echo Bundler data container
-    volumes:
-      - /bundle
+      - bundle:/bundle
+
   dynamodb:
-    image: cnadiminti/dynamodb-local:2017-02-16
+    image: amazon/dynamodb-local:latest
+
   mongo:
-    image: mongo:3.6.1
+    image: mongo:6.0
+
   redis:
-    image: redis:4.0.6-alpine
+    image: redis:6-alpine
+
   rethinkdb:
-    image: rethinkdb:2.3.6
+    image: rethinkdb:2.4
+
+volumes:
+  bundle:

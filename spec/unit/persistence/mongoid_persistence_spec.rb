@@ -69,6 +69,26 @@ if defined?(Mongoid::Document)
 
     end
 
+    describe "aliased state field" do
+      # https://github.com/aasm/aasm/issues/793
+      # https://github.com/aasm/aasm/issues/535
+      #
+      # When the AASM state column is a Mongoid aliased field
+      # (field :as, as: :aasm_state), `attribute_names` and `attributes`
+      # are keyed by the storage name (:as) while AASM's attribute_name
+      # resolves to the alias (:aasm_state). As a result
+      # `attribute_names.include?("aasm_state")` is false, which used to
+      # make `aasm_ensure_initial_state` call `nil.empty?` and raise
+      # NoMethodError on instantiation.
+      it "does not raise NoMethodError on instantiation" do
+        expect { AliasedFieldMongoid.new }.not_to raise_error
+      end
+
+      it "resolves the initial state on instantiation" do
+        expect(AliasedFieldMongoid.new.aasm.current_state).to eql :new
+      end
+    end
+
     describe "relations object" do
 
       it "should load relations object ids" do
