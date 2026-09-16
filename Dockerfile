@@ -1,42 +1,36 @@
-FROM ruby:2.3.4-slim
+FROM ruby:3.3-slim
 
 LABEL maintainer="AASM"
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    LANGUAGE=C.UTF-8 \
+    APP_HOME=/application
 
-# ~~~~ System locales ~~~~
-RUN apt-get update && apt-get install -y locales && \
-    dpkg-reconfigure locales && \
-    locale-gen C.UTF-8 && \
-    /usr/sbin/update-locale LANG=C.UTF-8 && \
-    echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
-    locale-gen
-
-# Set default locale for the environment
-ENV LC_ALL C.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV APP_HOME /application
-
-# ~~~~ Application dependencies ~~~~
-RUN apt-get update
-RUN apt-get install -y libsqlite3-dev \
-                       build-essential \
-                       git
+# ~~~~ System dependencies ~~~~
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      git \
+      libsqlite3-dev \
+      tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
 # ~~~~ Bundler ~~~~
-RUN gem install bundler
+RUN gem install bundler -v '~> 2.5'
 
 WORKDIR $APP_HOME
-RUN mkdir -p $APP_HOME/lib/aasm/
 
+# ~~~~ Pre-install base dependencies for layer caching ~~~~
+RUN mkdir -p $APP_HOME/lib/aasm/
 COPY Gemfile* $APP_HOME/
 COPY *.gemspec $APP_HOME/
 COPY lib/aasm/version.rb $APP_HOME/lib/aasm/
 
 ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
-  BUNDLE_JOBS=8 \
-  BUNDLE_PATH=/bundle
+    BUNDLE_JOBS=8 \
+    BUNDLE_PATH=/bundle
 
 RUN bundle install
 
