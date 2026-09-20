@@ -77,4 +77,34 @@ class StateMachineTest < Minitest::Spec
     end
   end
 
+  # Using the `_(obj).must_foo` / `value(obj).must_foo` wrapper is the
+  # form recommended by Minitest itself (the bare `obj.must_foo` form
+  # used throughout this file relies on Minitest's own deprecated
+  # global-expectations mechanism, which Minitest 6.0 removed). See #875.
+  describe "with the _() expectation wrapper" do
+    it "works for must_transition_from / wont_transition_from" do
+      _(simple).must_transition_from :initialised, to: :filled_out, on_event: :fill_out
+      _(simple).wont_transition_from :initialised, to: :authorised, on_event: :fill_out
+    end
+
+    it "works for must_allow_transition_to / wont_allow_transition_to" do
+      _(simple).must_allow_transition_to :filled_out
+      _(simple).wont_allow_transition_to :authorised
+    end
+
+    it "works for must_have_state / wont_have_state" do
+      _(simple).must_have_state :initialised
+      _(simple).wont_have_state :filled_out
+      simple.fill_out
+      _(simple).must_have_state :filled_out
+    end
+
+    it "works for must_allow_event / wont_allow_event" do
+      _(simple).must_allow_event :fill_out
+      _(simple).wont_allow_event :authorise
+      simple.fill_out
+      _(simple).must_allow_event :authorise
+    end
+  end
+
 end
