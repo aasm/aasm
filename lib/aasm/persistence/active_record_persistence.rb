@@ -150,8 +150,21 @@ module AASM
 
         def aasm_column_is_blank?(state_machine_name)
           attribute_name = self.class.aasm(state_machine_name).attribute_name
-          attribute_names.include?(attribute_name.to_s) &&
-            (send(attribute_name).respond_to?(:empty?) ? !!send(attribute_name).empty? : !send(attribute_name))
+          # Skip the check when the state column wasn't loaded (e.g. a partial select).
+          # This runs after_initialize on every record, and attribute_names.include? builds
+          # an attribute object for every column of the record, so it is slow on wide
+          # tables. has_attribute? answers the same question with a single lookup.
+          # Exception: has_attribute? resolves alias_attribute names and attribute_names
+          # doesn't, so aliased state columns keep the original check.
+          loaded = if self.class.attribute_alias?(attribute_name)
+            attribute_names.include?(attribute_name.to_s)
+          else
+            has_attribute?(attribute_name)
+          end
+          return false unless loaded
+
+          value = send(attribute_name)
+          value.respond_to?(:empty?) ? !!value.empty? : !value
         end
 
         def aasm_validate_states

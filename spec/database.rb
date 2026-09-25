@@ -5,7 +5,7 @@ ActiveRecord::Migration.suppress_messages do
     end
   end
 
-  %w(simple_new_dsls multiple_simple_new_dsls implemented_abstract_class_dsls users multiple_namespaceds).each do |table_name|
+  %w(simple_new_dsls multiple_simple_new_dsls implemented_abstract_class_dsls users multiple_namespaceds aliased_states).each do |table_name|
     ActiveRecord::Migration.create_table table_name, :force => true do |t|
       t.string "status"
     end

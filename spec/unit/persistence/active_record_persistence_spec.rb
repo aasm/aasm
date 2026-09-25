@@ -275,13 +275,43 @@ if defined?(ActiveRecord)
         expect(Gate.new.aasm.current_state).to eql :opened
       end
 
+      it "should initialize a blank aasm state" do
+        expect(Gate.new(:aasm_state => '').aasm_state).to eql 'opened'
+      end
+
       it "should not initialize the aasm state if it has not been loaded" do
         # we have to create a gate in the database, for which we only want to
         # load the id, and not the state
         gate = Gate.create!
 
         # then we just load the gate ids
-        Gate.select(:id).where(id: gate.id).first
+        loaded = Gate.select(:id).where(id: gate.id).first
+        expect(loaded.attributes.keys).to eq(['id'])
+        expect(loaded).not_to be_changed
+      end
+
+      it "should keep the aasm state of a loaded record" do
+        gate = Gate.create!(:aasm_state => 'closed')
+
+        loaded = Gate.find(gate.id)
+        expect(loaded.aasm_state).to eql 'closed'
+        expect(loaded).not_to be_changed
+      end
+
+      it "should not build the full attribute list of loaded records" do
+        gate = Gate.create!
+
+        expect_any_instance_of(Gate).not_to receive(:attribute_names)
+        Gate.find(gate.id)
+        Gate.where(id: gate.id).to_a
+      end
+
+      it "should not initialize the aasm state through an aliased attribute" do
+        # an aliased column is not in attribute_names, so it has never been initialized
+        # (initializing it would raise while guessing the enum from columns_hash)
+        aliased = nil
+        expect { aliased = AliasedState.new }.not_to raise_error
+        expect(aliased.status).to be_nil
       end
     end
 
