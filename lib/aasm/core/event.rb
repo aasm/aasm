@@ -81,6 +81,12 @@ module AASM::Core
       from_state = obj.aasm(state_machine.name).current_state
       transition = @valid_transitions[obj.object_id][from_state]
       transition.invoke_success_callbacks(obj, *args) if transition
+      clear_valid_transitions(obj)
+    end
+
+    # Non-persisted and failed fires never reach fire_transition_callbacks,
+    # so the caller clears the entry once the fire is over.
+    def clear_valid_transitions(obj)
       @valid_transitions.delete(obj.object_id)
     end
 

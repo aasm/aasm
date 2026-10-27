@@ -117,6 +117,7 @@ private
       raise(e)
       false
     ensure
+      event.clear_valid_transitions(self)
       event.fire_callbacks(:ensure, self, *process_args(event, aasm(state_machine_name).current_state, *args))
       event.fire_global_callbacks(:ensure_on_all_events, self, *process_args(event, aasm(state_machine_name).current_state, *args))
     end
