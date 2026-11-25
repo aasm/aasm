@@ -57,9 +57,14 @@ module AASM
             require 'after_commit_everywhere'
             raise LoadError unless Gem::Version.new(::AfterCommitEverywhere::VERSION) >= Gem::Version.new('0.1.5')
 
-            self.extend ::AfterCommitEverywhere
-            after_commit do
-              yield
+            if ::AfterCommitEverywhere.respond_to?(:after_commit)
+              # after_commit_everywhere >= 1.1.0; extending the record invalidates constant caches
+              ::AfterCommitEverywhere.after_commit { yield }
+            else
+              self.extend ::AfterCommitEverywhere
+              after_commit do
+                yield
+              end
             end
           rescue LoadError
             warn <<-MSG

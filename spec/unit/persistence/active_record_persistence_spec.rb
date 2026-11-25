@@ -595,6 +595,24 @@ if defined?(ActiveRecord)
           expect(validator.name).to eq("name")
         end
 
+        it "should not extend the record with AfterCommitEverywhere" do
+          validator = Validator.create(:name => 'name')
+          validator.run!
+          expect(validator.name).to eq("name changed")
+          expect(validator.singleton_class.include?(AfterCommitEverywhere)).to eq(false)
+        end
+
+        it "should fire :after_commit with an after_commit_everywhere version without the module-level API" do
+          require 'after_commit_everywhere'
+          allow(AfterCommitEverywhere).to receive(:respond_to?).and_call_original
+          allow(AfterCommitEverywhere).to receive(:respond_to?).with(:after_commit).and_return(false)
+
+          validator = Validator.create(:name => 'name')
+          validator.run!
+          expect(validator.name).to eq("name changed")
+          expect(validator.singleton_class.include?(AfterCommitEverywhere)).to eq(true)
+        end
+
         context "nested transaction" do
           it "should fire :after_commit if root transaction was successful" do
             validator = Validator.create(:name => 'name')
